@@ -1,0 +1,11 @@
+.searcher{
+    display: flex;
+}
+
+.left{
+    flex: 1;
+}
+
+.right{
+    margin-left : auto;
+}

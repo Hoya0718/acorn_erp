@@ -1,0 +1,57 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+header {
+  width: 100%;
+  height: 5%; /* Adjust the height as needed */
+  background-color: #71AAB2; /* Optional: For better visual separation */
+  display: flex;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.container {
+  border: 1px solid red;
+  width: 100%; /* 부모 요소인 layout의 가로 전체를 차지하도록 설정 */
+  height: 100vh;
+  display: flex;
+}
+
+.sidebar {
+  border: 1px solid yellow;
+  height: 100%;
+  width: 10%; /* sidebar의 너비를 조절할 수 있습니다. */
+}
+
+.main-content {
+  border: 1px solid blue;
+  width: 90%; /* 남은 공간을 모두 차지하도록 설정 */
+  padding: 20px;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+footer {
+  border: 1px solid green;
+  width: 100%;
+  text-align: center;
+  background-color: #f0f0f0; /* Optional: For better visual separation */
+  padding: 10px 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin: 10px 0;
+}
