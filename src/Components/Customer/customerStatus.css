@@ -1,0 +1,41 @@
+/* 세팅 버튼 스타일 */
+.settingbutton {
+    width: 30px; /* 이미지 버튼의 너비 */
+    height: 30px; /* 이미지 버튼의 높이 */
+    display: block; /* 블록 수준 요소로 변환하여 가로 중앙 정렬을 위해 */
+    margin: 0 auto;
+}
+/*가운데 정렬*/
+.centered-content { 
+	display: flex; /* 부모 요소를 Flexbox 컨테이너로 설정 */
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center;
+}
+/*오른쪽 정렬*/
+.centered-right-content { 
+	display: flex; /* 부모 요소를 Flexbox 컨테이너로 설정 */
+    justify-content: flex-end; /* 수평 가운데 정렬 */
+    align-items: center;
+}   
+/*표 가운데 정렬*/
+  .table-centerd {
+        text-align: center; /* 글자 오른쪽 정렬 */
+    }
+/*표 오른쪽 정렬*/
+   .table-right {
+        text-align: right; /* 글자 오른쪽 정렬 */
+    }
+ 
+     .modal-body input {
+        margin-bottom: 10px;
+    }
+/*  Light
+👦 128102	1F466	Boy 10대
+👧	128103	1F467	Girl
+👨	&#128104	1F468	Man 2~60대
+👩	&#128105;&#127995;	1F469	Woman
+👴	128116	1F474	Older man70대
+👵	128117	1F475	Older woman
+
+⏶	9206	23F6	Up triangle
+⏷	9207	23F7	Down triangle*/
