@@ -5,6 +5,7 @@ import Sales_mgmt from '../Components/Sales/Sales_mgmt.js';
 import Financial_mgmt from '../Components/Financial/Financial_mgmt.js';
 import Reservation_mgmt from '../Components/Reservation/Reservation_mgmt.js';
 import Board from '../Components/Board/Board.js';
+import Customer_status from '../Components/Customer/Customer_status.js'
 
 export const RouterInfo = [
   {
@@ -15,6 +16,11 @@ export const RouterInfo = [
       {
         path: "Customer_mgmt",
         element: <Customer_mgmt />,
+        label: 'customer'
+      },
+      {
+        path: "Customer_status",
+        element: <Customer_status />,
         label: 'customer'
       },
       {
