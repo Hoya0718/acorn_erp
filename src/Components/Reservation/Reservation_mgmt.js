@@ -6,7 +6,7 @@ const Reservation_mgmt= ()=> {
         <div>
     
           <div className="Middle classification">
-            <span> 예약 안녕</span>
+            <span> 예약 </span>
           </div>
     
           <hr />
