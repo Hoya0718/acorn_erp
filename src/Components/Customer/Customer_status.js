@@ -1,10 +1,6 @@
 import * as React from 'react'
 import "../Main/Main.css"
-import Dist from "./status/Dist.js"
-import Goal from './status/Goal.js'
 import CustomerMain from './status/CustomerMain.js'
-import Rank from './status/Rank.js'
-import CustomerTable from './status/CustomerTable.js'
 
 const Customer_status = ()=> {
     return (
@@ -15,8 +11,7 @@ const Customer_status = ()=> {
           <hr /> 
           <div>
             <section>
-              <CustomerMain></CustomerMain>
-
+              <CustomerMain/>
             </section>
           </div>
         </div>

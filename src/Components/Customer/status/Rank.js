@@ -48,7 +48,7 @@ const Rank = () => {
                         {/* <!-- 최고매출고객 -->     */}
                         <div className="col-md-6 col-lg-6" style={{marginTop: "10px"}}>
                             <div className="app-card app-card-stats-table h-100 shadow-sm" style={{backgroundColor: 'white', marginTop: '30px'}}>
-                                <div className="app-card-header p-3" style="margin-bottom: -20px; ">
+                                <div className="app-card-header p-3" style={{ marginBottom: "-20px"}}>
                                     <h3 className="app-card-title">최고 매출 고객 랭킹</h3>
                                 </div>
                                 <div className="app-card-body p-3 p-lg-4">

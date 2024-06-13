@@ -27,12 +27,12 @@ const CustomerTable = () => {
                     type="button" 
                     className="btn btn-outline-primary centered-right-content"
                     value="고객현황"
-                    onclick="window.location.href = '/TeamProject/status.do';" /> &nbsp;&nbsp;
+                    onClick={() => (window.location.href = '/TeamProject/status.do')} /> &nbsp;&nbsp;
                   <input 
                     type="submit" 
                     className="btn btn-primary centered-right-content" 
                     value="데이터"
-                    onclick="window.location.href = '/TeamProject/delete.do';" />
+                    onClick={() => (window.location.href = '/TeamProject/delete.do')} />
                 </div>
                 <div className="col-1 centered-content">
                   <form 
@@ -41,7 +41,6 @@ const CustomerTable = () => {
                     <input 
                       type="image" 
                       className="settingbutton"
-                      src="${pageContext.request.contextPath}/picture/settingbutton.png" 
                     />
                   </form>
                 </div>
@@ -55,10 +54,10 @@ const CustomerTable = () => {
                   </div>
                   <div className="col-6" id="search_box">
                     <div className="radio centered-right-content ">
-                      <input type="radio" name="serch_for" id="3months" onclick="handleSubmit()" />&nbsp;3개월&nbsp;&nbsp;
-                      <input type="radio" name="serch_for" id="6months" onclick="handleSubmit()" />&nbsp;6개월&nbsp;&nbsp;
-                      <input type="radio" name="serch_for" id="1year" onclick="handleSubmit()" />&nbsp;1년&nbsp;&nbsp;
-                      <input type="radio" name="serch_for" id="custom" onclick="handleSubmit()" />&nbsp;사용자 지정<br />
+                      <input type="radio" name="serch_for" id="3months" onClick={()=>{}} />&nbsp;3개월&nbsp;&nbsp;
+                      <input type="radio" name="serch_for" id="6months" onClick={()=>{}} />&nbsp;6개월&nbsp;&nbsp;
+                      <input type="radio" name="serch_for" id="1year" onClick={()=>{}} />&nbsp;1년&nbsp;&nbsp;
+                      <input type="radio" name="serch_for" id="custom" onClick={()=>{}} />&nbsp;사용자 지정<br />
                     </div>
                     <div className="date centered-right-content">
                       {/* <!-- 사용자 지정 체크여부에 따라 활성화 --> */}
@@ -102,7 +101,7 @@ const CustomerTable = () => {
                   </thead>
                   <tbody className="table-group-divider">
                       <tr>
-                        <th scope="row"><input className="form-check-input" type="checkbox" id="flexCheckDefault" name="orderNum" value="${data.order_num}" /></th>
+                        <th scope="row"><input className="form-check-input" type="checkbox" id="flexCheckDefault" name="orderNum"/></th>
                         <th scope="row">{}</th>
                         <td></td>
                         <td></td>
@@ -121,7 +120,7 @@ const CustomerTable = () => {
                             type="submit" 
                             value="수정" 
                             className="btn btn-outline-secondary" 
-                            onclick="passOrderNum(this)" /></td>
+                            onClick={()=>{}} /></td>
                       </tr>
                   </tbody>
                 </table>
