@@ -18,9 +18,16 @@ const Layout = () => {
             <li>
               <Link to="/inventory_mgmt">재고관리</Link>
             </li>
-            <li>
-              <Link to="/sales_mgmt">판매관리</Link>
-            </li>
+            <ul>
+              <li>
+                <Link to="/sales_mgmt">판매관리</Link>
+                <ul>
+                  <li><Link to="/sales_mgmt/Orders">주문 관리</Link></li>
+                  <li><Link to="/sales_mgmt/Items">상품 관리</Link></li>
+                  <li><Link to="/sales_mgmt/ItemInventory">상품 재고 관리</Link></li>
+                </ul>
+              </li>
+            </ul>
             <li>
               <Link to="/financial_mgmt">재무관리</Link>
             </li>
