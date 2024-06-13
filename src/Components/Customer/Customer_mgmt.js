@@ -28,7 +28,7 @@ const Customer_mgmt = ()=> {
             <div className="right">
               <input type="text" placeholder='검색' /><button>조회</button>
             </div>
-    
+    d
           </div>
     
           <div>
