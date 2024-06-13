@@ -8,24 +8,24 @@ const Layout = () => {
       <header>
         <span>ACORN ERP</span>
       </header>
-      <div className="container">
+      <div className="container1">
         <div className="sidebar">
         <nav>
           <ul>
             <li>
-              <Link to="/customer_mgmt">고객관리</Link>
+              <Link to="/customerMgmt">고객관리</Link>
             </li>
             <li>
-              <Link to="/inventory_mgmt">재고관리</Link>
+              <Link to="/inventoryMgmt">재고관리</Link>
             </li>
             <li>
-              <Link to="/sales_mgmt">판매관리</Link>
+              <Link to="/salesMgmt">판매관리</Link>
             </li>
             <li>
-              <Link to="/financial_mgmt">재무관리</Link>
+              <Link to="/financialMgmt">재무관리</Link>
             </li>
             <li>
-              <Link to="/reservation_mgmt">예약관리</Link>
+              <Link to="/reservationMgmt">예약관리</Link>
             </li>
             <li>
               <Link to="/board">커뮤니티</Link>

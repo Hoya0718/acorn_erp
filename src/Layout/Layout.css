@@ -14,7 +14,7 @@ header {
   z-index: 2;
 }
 
-.container {
+.container1 {
   border: 1px solid red;
   width: 100%; /* 부모 요소인 layout의 가로 전체를 차지하도록 설정 */
   height: 100vh;
