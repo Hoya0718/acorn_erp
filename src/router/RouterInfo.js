@@ -1,5 +1,4 @@
 import Layout from '../Layout/Layout.js';
-<<<<<<< HEAD
 
 // 회원 관리
 import CustomerMgmt from '../Components/Customer/CustomerMgmt.js';
@@ -25,14 +24,8 @@ import IncomeMgmt from '../Components/Financial/IncomeMgmt.js';
 import ExportMgmt from '../Components/Financial/ExportMgmt.js';
 
 // 예약 관리
-=======
-import CustomerMgmt from '../Components/Customer/CustomerMgmt.js';
-import InventoryMgmt from '../Components/Inventory/InventoryMgmt.js';
-import SalesMgmt from '../Components/Sales/Sales_mgmt.js';
-import FinancialMgmt from '../Components/Financial/FinancialMgmt.js';
->>>>>>> 205aede3a4b70a2fac3d1f8ba3d6584d2875f101
 import ReservationMgmt from '../Components/Reservation/ReservationMgmt.js';
-import Board from '../Components/Board/Board.js';
+
 
 // 로그인 & 회원가입
 import Login from '../Components/Login/Login.js';
@@ -40,6 +33,10 @@ import FindId from '../Components/Login/FindId.js';
 import FindPw from '../Components/Login/FindPw.js';
 import SignUp from '../Components/Login/SignUp.js';
 
+//게시판
+import Board from '../Components/Board/Board.js';
+
+//Router 
 import { createBrowserRouter } from 'react-router-dom';
 
 export const RouterInfo = createBrowserRouter([
@@ -48,7 +45,6 @@ export const RouterInfo = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-<<<<<<< HEAD
         path: "customerMgmt",
         element: <CustomerMgmt />,
         children: [
@@ -118,8 +114,7 @@ export const RouterInfo = createBrowserRouter([
       },
       {
         path: "reservationMgmt",
-        element: <ReservationMgmt />
-=======
+        element: <ReservationMgmt />,
         path: "CustomerMgmt",
         element: <CustomerMgmt />,
         label: 'customer'
@@ -143,11 +138,11 @@ export const RouterInfo = createBrowserRouter([
         path: "ReservationMgmt",
         element: <ReservationMgmt />,
         label: 'reservation'
->>>>>>> 205aede3a4b70a2fac3d1f8ba3d6584d2875f101
       },
       {
         path: "board",
-        element: <Board />
+        element: <Board />,
+        label: 'board'
       }
     ]
   },

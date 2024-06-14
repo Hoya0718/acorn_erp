@@ -1,7 +1,7 @@
 import * as React from 'react'
 import "../Main/Main.css"
 
-const InventoryMgmt = ()=> {
+const OrderMgmt = ()=> {
     return (
         <div>
     
@@ -40,4 +40,4 @@ const InventoryMgmt = ()=> {
     );
 }
 
-export default InventoryMgmt;
+export default OrderMgmt;
