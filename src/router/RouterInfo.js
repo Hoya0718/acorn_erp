@@ -7,10 +7,10 @@ import CusStatus from '../Components/Customer/CusStatus.js';
 
 // 재고 관리
 import StockMgmt from '../Components/Stock/StockMgmt.js';
-import DistributionMgmt from '../Components/Stock/DistributionMgmt.js';
-import MeterialMgmt from '../Components/Stock/MeterialMgmt.js';
-import PurchaseMgmt from '../Components/Stock/PurchaseMgmt.js';
-import VendorMgmt from '../Components/Stock/VendorMgmt.js';
+//import DistributionMgmt from '../Components/Stock/DistributionMgmt.js';
+//import MeterialMgmt from '../Components/Stock/MeterialMgmt.js';
+import Purchase from '../Components/Stock/Purchase/Purchase.js';
+import Vendor from '../Components/Stock/Vendor/Vendor.js';
 
 // 판매 관리
 import SalesMgmt from '../Components/Sales/SalesMgmt.js';
@@ -63,20 +63,18 @@ export const RouterInfo = createBrowserRouter([
         element: <StockMgmt />,
         children: [
           {
-            path: "distributionMgmt",
-            element: <DistributionMgmt />
+           
           },
           {
-            path: "meterialMgmt",
-            element: <MeterialMgmt />
+            
           },
           {
-            path: "purchaseMgmt",
-            element: <PurchaseMgmt />
+            path: "Purchase",
+            element: <Purchase />
           },
           {
-            path: "vendorMgmt",
-            element: <VendorMgmt />
+            path: "Vendor",
+            element: <Vendor />
           }
         ]
       },
