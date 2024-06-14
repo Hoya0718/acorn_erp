@@ -1,43 +1,34 @@
 import * as React from 'react'
 import "../Main/Main.css"
+import CustomerMain from './status/CustomerMain.js'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGear } from '@fortawesome/free-solid-svg-icons';
 
-const CusStatus = ()=> {
+const Customer_status = ()=> {
     return (
-        <div>
-    
-          <div className="Middle classification">
-            <span>고객 현황</span>
+        <div className="Customer_status">
+          <div className="title">
+            <span>
+              <span> 회원 현황 </span>
+            </span>
+            <span className="row">
+              <span className="col-5 centered-right-content " >
+                <input type="submit" className="btn btn-outline-primary centered-right-content" value="데이터"
+                  onClick={() => (window.location.href = '/')}/>
+              </span>
+              <span className="col-1 centered-content">
+                <FontAwesomeIcon icon={faGear} />
+              </span>
+            </span>
           </div>
-    
-          <hr />
-    
-          <div className="subTitle"> 
-            <span>(소분류 버튼) or (등록,수정,삭제 버튼)</span>
-          </div>
-    
-          <br />
-          
-          <div className="searcher">
-            
-            <div className="left">
-              <label for="date">날짜를 선택하세요:
-                <input type="date" id="date" max="2077-06-20" min="2077-06-05" value="2024-07-18" />
-              </label>
-            </div>
-    
-            <div className="right">
-              <input type="text" placeholder='검색' /><button>조회</button>
-            </div>
-    
-          </div>
-    
-          <div>
+          <hr /> 
+          <div className="content">
             <section>
-              테이블링.
+              <CustomerMain/>
             </section>
           </div>
         </div>
     );
 }
 
-export default CusStatus;
+export default Customer_status;
