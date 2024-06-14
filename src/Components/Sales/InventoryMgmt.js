@@ -1,26 +1,12 @@
-<<<<<<< HEAD
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-
-const FinancialMgmt = () => {
-  return (
-    <div>
-      <Outlet /> {/* 하위 라우트가 렌더링될 위치 */}
-    </div>
-  );
-};
-
-export default FinancialMgmt;
-=======
 import * as React from 'react'
 import "../Main/Main.css"
 
-const CusStatus = ()=> {
+const InventoryMgmt = ()=> {
     return (
         <div>
     
           <div className="Middle classification">
-            <span>고객 현황</span>
+            <span>상품 재고 관리</span>
           </div>
     
           <hr />
@@ -54,5 +40,4 @@ const CusStatus = ()=> {
     );
 }
 
-export default CusStatus;
->>>>>>> 205aede3a4b70a2fac3d1f8ba3d6584d2875f101
+export default InventoryMgmt;

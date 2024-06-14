@@ -1,12 +1,20 @@
 import * as React from 'react'
 import "../Main/Main.css"
 
-const Reservation_mgmt= ()=> {
+<<<<<<< HEAD
+const ReservationMgmt= ()=> {
+=======
+const IncomeMgmt= ()=> {
+>>>>>>> 205aede3a4b70a2fac3d1f8ba3d6584d2875f101
     return (
         <div>
     
           <div className="Middle classification">
-            <span> 예약 </span>
+<<<<<<< HEAD
+            <span>예약 현황</span>
+=======
+            <span>매입 관리</span>
+>>>>>>> 205aede3a4b70a2fac3d1f8ba3d6584d2875f101
           </div>
     
           <hr />
@@ -40,4 +48,8 @@ const Reservation_mgmt= ()=> {
     );
 }
 
-export default Reservation_mgmt;
+<<<<<<< HEAD
+export default ReservationMgmt;
+=======
+export default IncomeMgmt;
+>>>>>>> 205aede3a4b70a2fac3d1f8ba3d6584d2875f101
