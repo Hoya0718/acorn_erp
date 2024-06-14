@@ -16,6 +16,7 @@ const Layout = () => {
       </header>
       <div className="container1">
         <div className="sidebar">
+<<<<<<< HEAD
           <nav>
             <ul>
               {menuItems.map((menuItem, index) => (
@@ -30,6 +31,30 @@ const Layout = () => {
               ))}
             </ul>
           </nav>
+=======
+        <nav>
+          <ul>
+            <li>
+              <Link to="/customerMgmt">고객관리</Link>
+            </li>
+            <li>
+              <Link to="/inventoryMgmt">재고관리</Link>
+            </li>
+            <li>
+              <Link to="/salesMgmt">판매관리</Link>
+            </li>
+            <li>
+              <Link to="/financialMgmt">재무관리</Link>
+            </li>
+            <li>
+              <Link to="/reservationMgmt">예약관리</Link>
+            </li>
+            <li>
+              <Link to="/board">커뮤니티</Link>
+            </li>
+          </ul>
+        </nav>
+>>>>>>> 205aede3a4b70a2fac3d1f8ba3d6584d2875f101
         </div>
         <main className="main-content">
           <Outlet />
