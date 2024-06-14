@@ -1,12 +1,12 @@
 import * as React from 'react'
 import "../Main/Main.css"
 
-const Reservation_mgmt= ()=> {
+const ItemMgmt = ()=> {
     return (
         <div>
     
           <div className="Middle classification">
-            <span> 예약 </span>
+            <span>상품 관리</span>
           </div>
     
           <hr />
@@ -40,4 +40,4 @@ const Reservation_mgmt= ()=> {
     );
 }
 
-export default Reservation_mgmt;
+export default ItemMgmt;

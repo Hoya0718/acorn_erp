@@ -1,12 +1,12 @@
 import * as React from 'react'
 import "../Main/Main.css"
 
-const Financial_mgmt= ()=> {
+const meterialMgmt= ()=> {
     return (
         <div>
     
           <div className="Middle classification">
-            <span> 재무 </span>
+            <span>자재 관리</span>
           </div>
     
           <hr />
@@ -40,4 +40,4 @@ const Financial_mgmt= ()=> {
     );
 }
 
-export default Financial_mgmt;
+export default meterialMgmt;

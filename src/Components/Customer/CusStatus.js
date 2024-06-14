@@ -1,12 +1,12 @@
 import * as React from 'react'
 import "../Main/Main.css"
 
-const Customer_mgmt = ()=> {
+const CusStatus = ()=> {
     return (
         <div>
     
           <div className="Middle classification">
-            <span> 회원 </span>
+            <span>고객 현황</span>
           </div>
     
           <hr />
@@ -40,4 +40,4 @@ const Customer_mgmt = ()=> {
     );
 }
 
-export default Customer_mgmt;
+export default CusStatus;
