@@ -4,6 +4,7 @@ import Rank from './Rank.js'
 import CustomerTable from './CustomerTable.js'
 import Dist from "./Dist.js"
 import Goal from './Goal.js'
+import MarginTop from './MarginTop.js'
 
 const CustomerMain = () => {
   return (
@@ -22,7 +23,7 @@ const CustomerMain = () => {
           </div>
           {/*상품별 선호도 내용*/}
           <div className="row second" id="section1" style={{ marginTop: "20px" }}>
-
+            <MarginTop/>
           </div>
           {/*고객구매실적*/}
           <div className="row third rank" style={{ marginTop: "20px" }}>

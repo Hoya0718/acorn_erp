@@ -1,103 +1,87 @@
 import * as React from 'react'
-import "../Main/Main.css"
+import "../../Main/Main.css"
 
-
-const Customer_status = ()=> {
-    return (
-	<div>
-		{/* <!-- 상품별 선호도 --> */}
-		<div>
-			{/* <!-- 상단 탭메뉴 --> */}
-			<DIV style="margin-top: 10px">
-			    <h3>상품별 고객 선호도</h3>
-			    {/* <!--메뉴탭 --> */}
-			    <div style="margin-top: 20px">
-			    <ul class="nav nav-tabs">
-			        <li class="nav-item">
-			            <a class="nav-link ${empty param.prod || param.prod eq 'most' ? 'active' : ''}" aria-current="${empty param.prod || param.prod eq 'most' ? 'page' : ''}" href="/TeamProject/status.do?prod=most#section1" onclick="selectTab(this); sendRequest()">최다거래상품 TOP3</a>
-			        </li>
-			        <li class="nav-item">
-			            <a class="nav-link ${param.prod eq 'top' ? 'active' : ''}" aria-current="${param.prod eq 'top' ? 'page' : ''}" href="/TeamProject/status.do?prod=top#section1" onclick="selectTab(this); sendRequest()">최고매출상품 TOP3</a>
-			        </li>
-			        <li class="nav-item">
-			            <a class="nav-link ${param.prod eq 'favo' ? 'active' : ''}" aria-current="${param.prod eq 'favo' ? 'page' : ''}" href="/TeamProject/status.do?prod=favo#section1" onclick="selectTab(this); sendRequest()">인기상품 TOP3</a>
-			        </li>
-			    </ul>
-			    </div>
-			</DIV>
-
-		</div>
-		<div class="row">
-			{/* <!-- top1,2,3 --> */}
-			<c:forEach var="i" begin="1" end="3">
-				<c:set var="prod" value="${param.prod}" />
-				<c:set var="index" value="${i - 1}" />
-				<div class="col-12 col-lg-4"style="margin-top: 10px">
-					<div class="app-card app-card-chart h-100 shadow-sm" style="background-color: white" >
-						<div class="app-card-header p-3 border-0" style="margin-bottom: -20px">
-							<h4 class="app-card-title">TOP ${i}</h4>
+// 테스트를 위한 데이터 세팅: 동적 데이터 변경해야함
+const MarginTop = () => {
+    const [prod, setProd] = React.useState('most'); // 기본값을 'most'로 설정
+    const most = [
+        { m_prod: 'Product A', g_num: '여성', a_num: '20대', r_num: '서울' },
+        { m_prod: 'Product B', g_num: '남성', a_num: '30대', r_num: '부산' },
+        { m_prod: 'Product C', g_num: '여성', a_num: '40대', r_num: '대구' }
+    ];
+    const top = [
+        { t_prod: 'Product D', g_price: '여성', a_price: '20대', r_price: '서울' },
+        { t_prod: 'Product E', g_price: '남성', a_price: '30대', r_price: '부산' },
+        { t_prod: 'Product F', g_price: '여성', a_price: '40대', r_price: '대구' }
+    ];
+    const favo = [
+        { f_prod: 'Product G', g_favo: '여성', a_favo: '20대', r_favo: '서울' },
+        { f_prod: 'Product H', g_favo: '남성', a_favo: '30대', r_favo: '부산' },
+        { f_prod: 'Product I', g_favo: '여성', a_favo: '40대', r_favo: '대구' }
+    ];
+// 
+const renderProducts = (products) => {
+    return products.map((product, index) => (
+        <div className="col-12 col-lg-4" style={{ marginTop: '10px' }} key={index}>
+            <div className="app-card app-card-chart h-100 shadow-sm" style={{ backgroundColor: 'white' }}>
+                <div className="app-card-header p-3 border-0" style={{ marginBottom: '-20px' }}>
+                    <h4 className="app-card-title">TOP {index + 1}</h4>
+                </div>
+                <div className="app-card-body p-4">
+                    <div className="section row">
+                        <div className="name col-7">
+                            <div className="prod_name"><h2>{product.prod}</h2></div>                            
 						</div>
-						<div class="app-card-body p-4">
-						
-							<c:choose>
-								<c:when test="${prod eq 'most'}">
-									<div class="section row">
-										<div class="name col-7">
-											<div class="prod_name"><h2> ${most[index].getM_prod()}</h2></div>
-										</div>
-										<div class="preference col-5">
-											<div class="gender_preference centered-right-content"><h5> 	${most[index].getG_num() === "여성" ? '&#128105;&#127995;' : '&#128104;&#127995;'} ${most[index].getG_num()}</h5></div>
-											<div class="age_preference centered-right-content"><h5> ${most[index].getA_num()}</h5></div>
-											<div class="region_preference centered-right-content"><h5> ${most[index].getR_num()}</h5></div>
-										</div>
-									</div>
-								</c:when>
-								<c:when test="${prod eq 'top'}">
-									<div class="section row">
-										<div class="name col-7">
-											<div class="prod_name"><h2> ${top[index].getT_prod()}</h2></div>
-									</div>
-										<div class="preference col-5">
-											<div class="gender_preference centered-right-content"><h5> ${top[index].getG_price() === "여성" ? '&#128105;&#127995;' : '&#128104;&#127995;'}	${top[index].getG_price()}</h5></div>
-									<div class="age_preference centered-right-content"><h5> ${top[index].getA_price()}</h5></div>
-									<div class="region_preference centered-right-content"><h5> ${top[index].getR_price()}</h5></div>
-									</div>
-									</div>
-								</c:when>
-								<c:when test="${prod eq 'favo'}">
-									<div class="section row">
-										<div class="name col-7">
-											<div class="prod_name"><h2>  ${favo[index].getF_prod()}</h2></div>
-									</div>
-										<div class="preference col-5">
-											<div class="gender_preference centered-right-content"><h5> ${favo[index].getG_favo() === "여성" ? '&#128105;&#127995;' : '&#128104;&#127995;'}	${favo[index].getG_favo()}</h5></div>
-											<div class="age_preference centered-right-content"><h5>${favo[index].getA_favo()}</h5></div>
-											<div class="region_preference centered-right-content"><h5> ${favo[index].getR_favo()}</h5></div>
-											</div>
-											</div>
-								</c:when>
-								<c:otherwise>
-									<c:if test="${empty param.prod}">
-										<div class="section row">
-										<div class="name col-7">
-											<div class="prod_name"><h2>  ${most[index].getM_prod()}</h2></div>
-										</div>
-										<div class="preference col-5">
-											<div class="gender_preference centered-right-content"><h5> ${most[index].getG_num() eq "여성" ? '&#128105;&#127995;' : '&#128104;&#127995;'}	${most[index].getG_num()}</h5></div>
-											<div class="age_preference centered-right-content"><h5>${most[index].getA_num()}</h5></div>
-											<div class="region_preference centered-right-content"><h5> ${most[index].getR_num()}</h5></div>
-											</div>
-											</div>
-									</c:if>
-								</c:otherwise>
-							</c:choose>
-							</div> 
-						</div>				
-					</div>	
-							
-			</c:forEach>
-		</div>	
-	</div>
-)}
+                        <div className="preference col-5">
+                        	<div className="gender_preference centered-right-content"><h5>{product.g_num === "여성" ? '👩' : '👨'} {product.g_num}</h5></div>
+                            <div className="age_preference centered-right-content"><h5>{product.a_num}</h5></div>
+                            <div className="region_preference centered-right-content"><h5>{product.r_num}</h5></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ));
+};
+const handleTabClick = (newProd) => {
+	setProd(newProd);
+};
 
+let currentProducts = [];
+if (prod === 'most') {
+	currentProducts = most;
+} else if (prod === 'top') {
+	currentProducts = top;
+} else if (prod === 'favo') {
+	currentProducts = favo;
+}
+
+return (
+	<div>
+		<div>
+			<div style={{ marginTop: '10px' }}>
+				<h3>상품별 고객 선호도</h3>
+				<div style={{ marginTop: '20px' }}>
+					<ul className="nav nav-tabs">
+						<li className="nav-item">
+							<button className={`nav-link ${prod === 'most' ? 'active' : ''}`} onClick={() => handleTabClick('most')}>최다거래상품 TOP3</button>
+						</li>
+						<li className="nav-item">
+							<button className={`nav-link ${prod === 'top' ? 'active' : ''}`} onClick={() => handleTabClick('top')}>최고매출상품 TOP3</button>
+						</li>
+						<li className="nav-item">
+							<button className={`nav-link ${prod === 'favo' ? 'active' : ''}`} onClick={() => handleTabClick('favo')}>인기상품 TOP3</button>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div className="row">
+			{renderProducts(currentProducts)}
+		</div>
+	</div>
+);
+};
+
+export default MarginTop;
 
