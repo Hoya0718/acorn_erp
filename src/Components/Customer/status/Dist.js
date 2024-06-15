@@ -1,7 +1,64 @@
 import * as React from 'react'
+import { Doughnut } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import "../../Main/Main.css"
+import "../Customer.css"
+
+// Chart.js 요소 등록
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Dist = () => {
+    const genderData = {
+        labels: ['남성', '여성'],
+        datasets: [{
+            data: [60, 40],
+            backgroundColor: ['#36A2EB', '#FF6384'],
+        }]
+    };
+    const ageData = {
+        labels: ['10대', '20대', '30대', '40대', '50대', '60대 이상'],
+        datasets: [{
+            data: [10, 20, 30, 15, 15, 10],
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
+        }]
+    };
+    const regionData = {
+        labels: ['서울', '경기', '인천', '부산', '대구', '기타'],
+        datasets: [{
+            data: [30, 25, 15, 10, 10, 10],
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
+        }]
+    };
+    const centerTextPlugin = {
+        id: 'centerText',
+        beforeDraw: (chart) => {
+            const { width, height, ctx } = chart;
+            ctx.save();
+            const text = chart.config.options.plugins.centerText.text;
+            const textX = width / 2;
+            const textY = height / 2;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.font = '20px Arial';
+            ctx.fillText(text, textX, textY);
+            ctx.restore();
+        }
+    };
+
+    const createOptions = (label) => ({
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                enabled: false
+            },
+            centerText: {
+                text: label
+            }
+        }
+    });
+
     return (
         <div className="c_dist">
                 <section>
@@ -19,7 +76,7 @@ const Dist = () => {
                                     <h4 className="app-card-title" style={{marginBottom: '-15px'}}>성별</h4>
                                 </div>
                                 <div className="app-card-body p-3 p-lg-4 centered-content" >
-                                    <canvas id="gender_Chart"></canvas>
+                                    <Doughnut data={genderData}  options={createOptions(genderData.labels[0])} plugins={[centerTextPlugin]}/>
                                 </div>
                             </div>
                         </div>
@@ -30,7 +87,7 @@ const Dist = () => {
                                     <h4 className="app-card-title" style={{marginBottom: '-15px'}}>연령별</h4>
                                 </div>
                                 <div className="app-card-body p-3 p-lg-4 centered-content" >
-                                    <canvas id="age_Chart"></canvas>
+                                    <Doughnut data={ageData}  options={createOptions(ageData.labels[0])} plugins={[centerTextPlugin]}  />
                                 </div>
                             </div>
                         </div>
@@ -41,7 +98,7 @@ const Dist = () => {
                                     <h4 className="app-card-title" style={{marginBottom: '-15px'}}>지역별</h4>
                                 </div>
                                 <div className="app-card-body p-3 p-lg-4 centered-content" >
-                                    <canvas id="region_Chart"></canvas>
+                                    <Doughnut data={regionData}  options={createOptions(regionData.labels[0])} plugins={[centerTextPlugin]} />
                                 </div>
                             </div>
                         </div>

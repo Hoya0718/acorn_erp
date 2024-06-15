@@ -1,0 +1,30 @@
+.CustomerMain {
+    overflow-y: auto;
+    max-height: 100vh;
+  }
+.righted {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.lefted {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .table-centered {
+    text-align: center;
+}
+
+.table-righted {
+    text-align: right;
+}
+
+.table-lefted {
+    text-align: left;
+}
