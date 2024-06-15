@@ -69,11 +69,11 @@ export const RouterInfo = createBrowserRouter([
             
           },
           {
-            path: "Purchase",
+            path: "purchase",
             element: <Purchase />
           },
           {
-            path: "Vendor",
+            path: "vendor",
             element: <Vendor />
           }
         ]

@@ -1,40 +1,29 @@
-import React, {useState} from 'react';
-//import './Purchase.css';
+import React, {useState, useEffect} from 'react';
+import './Purchase.css';
 //import '../../Main/Main.css'
 
-const PurchaseAdd = () => {
-    const [showModal, setShowModal] = useState(false);
+const PurchaseAdd = ({ checkAll }) => {
+  const [isChecked, setIsChecked] = useState(false);
 
-    const openModal = () => {
-        setShowModal(true);
-      };
-    
-      const closeModal = () => {
-        setShowModal(false);
-      };
-
+  useEffect(() => {
+    setIsChecked(checkAll);
+  }, [checkAll]); // checkAll 상태가 변할 때마다 isChecked 업데이트
+   
   return (
     <>
-        <tr>
-            <td><input type='checkbox'></input></td>
-            <td><input type='text'></input></td>
-            <td><input type='text'></input></td>
-            <td><input type='text'></input></td>
-            <td><input type='text'></input></td>
-            <td><input type='number'></input></td>
-            <td><input type='number' step='100'></input></td>
-            <td><input type='text'></input></td>
+        <tr className='inputField'>
+            <td><input type='checkbox' checked={isChecked} onChange={()=>{}}></input></td>
+            <td><input type='text' placeholder='코드'></input></td>
+            <td><input type='text' placeholder='이름'></input></td>
+            <td><input type='text' placeholder='단위'></input></td>
+            <td><input type='text' placeholder='발주 일자'></input></td>
+            <td><input type='number' placeholder='발주 수량'></input></td>
+            <td><input type='number' step='100' placeholder='원가'></input></td>
+            <td><input type='text' placeholder='특이사항'></input></td>
             <button>추가</button>
-            <button>기본값</button>
+      
         </tr> 
-        {showModal ? (
-            <div className="modal">
-              <div className="modal-content">
-                <span className="close" onClick={closeModal}>&times;</span>
-                <p>기본값으로 설정되었습니다.</p>
-              </div>
-            </div>
-          ) : null}
+
 </>
  
   )
