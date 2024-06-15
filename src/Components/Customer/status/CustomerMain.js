@@ -1,7 +1,6 @@
 import * as React from 'react'
 import "../../Main/Main.css"
 import Rank from './Rank.js'
-import CustomerTable from './CustomerTable.js'
 import Dist from "./Dist.js"
 import Goal from './Goal.js'
 import TopProd from './TopProd.js'

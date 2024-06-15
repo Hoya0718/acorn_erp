@@ -74,13 +74,19 @@ const TopProd = () => {
                     <div style={{ marginTop: '20px' }}>
                         <ul className="nav nav-tabs">
                             <li className="nav-item">
-                                <button className={`nav-link ${prod === 'most' ? 'active' : ''}`} onClick={() => handleTabClick('most')}>최다거래상품 TOP3</button>
+                                <button className={`nav-link ${prod === 'most' ? 'active' : ''}`} 
+                                onClick={() => handleTabClick('most')}>
+                                    최다거래상품 TOP3</button>
                             </li>
                             <li className="nav-item">
-                                <button className={`nav-link ${prod === 'top' ? 'active' : ''}`} onClick={() => handleTabClick('top')}>최고매출상품 TOP3</button>
+                                <button className={`nav-link ${prod === 'top' ? 'active' : ''}`} 
+                                onClick={() => handleTabClick('top')}>
+                                    최고매출상품 TOP3</button>
                             </li>
                             <li className="nav-item">
-                                <button className={`nav-link ${prod === 'favo' ? 'active' : ''}`} onClick={() => handleTabClick('favo')}>인기상품 TOP3</button>
+                                <button className={`nav-link ${prod === 'favo' ? 'active' : ''}`} 
+                                onClick={() => handleTabClick('favo')}>
+                                    인기상품 TOP3</button>
                             </li>
                         </ul>
                     </div>

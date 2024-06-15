@@ -35,11 +35,14 @@ const Dist = () => {
             const { width, height, ctx } = chart;
             ctx.save();
             const text = chart.config.options.plugins.centerText.text;
-            const textX = width / 2;
-            const textY = height / 2;
+            const color = chart.config.options.plugins.centerText.color || 'gray';
+            const fontSize = chart.config.options.plugins.centerText.fontSize || 50;
+            ctx.font = `${fontSize}px Arial`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.font = '20px Arial';
+            ctx.fillStyle = color;
+            const textX = Math.round(width / 2);
+            const textY = Math.round(height / 2);
             ctx.fillText(text, textX, textY);
             ctx.restore();
         }
@@ -54,7 +57,10 @@ const Dist = () => {
                 enabled: false
             },
             centerText: {
-                text: label
+                text: label,
+                color: 'gray',
+                fontSize: 50,
+
             }
         }
     });
