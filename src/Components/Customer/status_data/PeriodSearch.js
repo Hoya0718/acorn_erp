@@ -19,14 +19,14 @@ const CustomerStatusPeriodSerchBox = () => {
         {/* 사용자 지정 체크 여부에 따라 활성화 */}
         <input type="date" id="startDate" disabled />&nbsp;~&nbsp;
         <input type="date" id="endDate" disabled />&nbsp;
-        <div class="dropdown">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <div className="dropdown">
+          <button className="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             검색
           </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">고객명</a></li>
-            <li><a class="dropdown-item" href="#">상품평</a></li>
-            <li><a class="dropdown-item" href="#">특이사항</a></li>
+          <ul className="dropdown-menu">
+            <li><a className="dropdown-item" href="#">고객명</a></li>
+            <li><a className="dropdown-item" href="#">상품평</a></li>
+            <li><a className="dropdown-item" href="#">특이사항</a></li>
           </ul>
         </div>&nbsp;
         <div className="input-group">

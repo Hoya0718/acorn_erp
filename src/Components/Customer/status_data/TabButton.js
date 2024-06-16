@@ -46,10 +46,10 @@ const CustomerTableTabButton = ({ activeTab, setActiveTab }) => {
 
   return (
     <div className="customer-table-tabbutton">
-      <ul class="nav nav-underline">
-        <li class="nav-item">
+      <ul className="nav nav-underline">
+        <li className="nav-item">
           <a
-            class={`nav-link ${activeTab === 'distribution' ? 'active' : ''}`}
+            className={`nav-link ${activeTab === 'distribution' ? 'active' : ''}`}
             aria-current="page"
             onClick={handleDistributionClick}
             style={{ color: `${activeTab === 'distribution' ? '#71AAB2' : 'gray'}` }}
@@ -57,18 +57,18 @@ const CustomerTableTabButton = ({ activeTab, setActiveTab }) => {
             {distributionLabel}
           </a>
         </li>
-        <li class="nav-item">
+        <li className="nav-item">
           <a
-            class={`nav-link ${activeTab === 'product' ? 'active' : ''}`}
+            className={`nav-link ${activeTab === 'product' ? 'active' : ''}`}
             onClick={handleProductClick}
             style={{ color: `${activeTab === 'product' ? '#71AAB2' : 'gray'}` }}
             href="#">
             {productLabel}
           </a>
         </li>
-        <li class="nav-item">
+        <li className="nav-item">
           <a
-            class={`nav-link ${activeTab === 'ranking' ? 'active' : ''}`}
+            className={`nav-link ${activeTab === 'ranking' ? 'active' : ''}`}
             onClick={handleRankingClick}
             style={{ color: `${activeTab === 'ranking' ? '#71AAB2' : 'gray'}` }}
             href="#">

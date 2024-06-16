@@ -8,7 +8,6 @@ import "../../Main/Main.css"
 // 테스트를 위한 데이터 세팅: 동적 데이터 변경해야함
 const TopProd = () => {
     const [prod, setProd] = React.useState('most'); // 기본값을 'most'로 설정
-    const prods =['most', 'top', 'favo'];
     const most = [
         { prod: '고구마식빵', gender: '여성', ageGroup: '20대', region: '서울' },
         { prod: '소금빵', gender: '남성', ageGroup: '30대', region: '부산' },

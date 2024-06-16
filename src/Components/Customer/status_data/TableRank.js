@@ -67,15 +67,15 @@ const CustomerStatusTable_Rank = () => {
         <tbody className="table-group-divider">
         {rows.map((row, index) => (
           <tr key={index}>
-            <td scope="row" className="table-centered">
+            <th scope="row" className="table-centered">
               <input
                 className="form-check-input"
                 type="checkbox"
                 checked={!!selectedRows[index]}
                 onChange={() => handleRowSelect(index)}
                />
-            </td>
-            <td scope="row" className="table-centered">{index + 1}</td>
+            </th>
+            <th scope="row" className="table-centered">{index + 1}</th>
             <td className="table-centered">{row.customerName}</td>
             <td className="table-righted">{formatNumber(row.orderCount)}</td>
             <td className="table-centered">{row.orderCount_prod}</td>

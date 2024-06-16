@@ -21,7 +21,7 @@ const Customer_status = ()=> {
                 </Link>
               </div>
               <div className="col-1 centered">
-                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#SettingModal">
+                <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#SettingModal">
                   <FontAwesomeIcon icon={faGear} />
                 </button>
               </div>

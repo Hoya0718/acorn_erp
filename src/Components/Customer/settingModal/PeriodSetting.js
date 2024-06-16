@@ -1,6 +1,5 @@
 import * as React from 'react'
 import "../../Main/Main.css"
-import PeriodSearch from '../status_data/PeriodSearch'
 
 const SettingModal_Period = () => {
     const [selectedOption, setSelectedOption] = React.useState('1year');

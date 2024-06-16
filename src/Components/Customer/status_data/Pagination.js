@@ -15,26 +15,26 @@ const CustomerStatusPagination = () => {
       }}
     >
       <nav aria-label="...">
-        <ul class="pagination">
-          <li class="page-item">
-            <a class="page-link"
+        <ul className="pagination">
+          <li className="page-item">
+            <a className="page-link"
               style={{
                 'color': 'gray',
               }}>
               &lt;
             </a>
           </li>
-          <li class="page-item">
-            <a class="page-link"
+          <li className="page-item">
+            <a className="page-link"
               href="#"
               style={{
                 'color': 'gray',
               }}  >
               1</a>
           </li>
-          <li class="page-item active" 
+          <li className="page-item active" 
           aria-current="page" >
-            <a class="page-link active-link"
+            <a className="page-link active-link"
               href="#"
               style={{
                 'color': 'white',
@@ -42,9 +42,9 @@ const CustomerStatusPagination = () => {
               2
             </a>
           </li>
-          <li class="page-item">
+          <li className="page-item">
             <a
-              class="page-link"
+              className="page-link"
               href="#"
               style={{
                 'color': 'gray',
@@ -52,8 +52,8 @@ const CustomerStatusPagination = () => {
               3
             </a>
           </li>
-          <li class="page-item">
-            <a class="page-link" href="#" style={{
+          <li className="page-item">
+            <a className="page-link" href="#" style={{
               'color': 'gray',
             }}  >&gt;</a>
           </li>

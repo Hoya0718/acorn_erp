@@ -106,7 +106,7 @@ const CustomerStatusSettingModal = () => {
                         {rangeValue}위 까지 보입니다.
                     </div>
                 </div>
-                <input type="range" class="form-range" min="5" max="20" id="customRange2"
+                <input type="range" className="form-range" min="5" max="20" id="customRange2"
                     value={rangeValue}
                     onChange={handleRangeChange} />
                 <hr></hr>
