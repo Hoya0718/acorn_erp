@@ -37,12 +37,19 @@ const rows = [
 const formatNumber = (num) => {
     return num.toLocaleString();
 };
+  // 합계를 계산하는 함수
+  const calculateTotal = (key) => {
+    return rows.reduce((sum, row) => sum + row[key], 0);
+  };
+  const totalOrderCount = calculateTotal('orderCount');
+  const totalOrderAmount = calculateTotal('orderAmount');
+  
   return (
     <div className=" customer-status-table">
       <table className="table table-hover" style={{ wordBreak: 'break-all' }}>
         <thead>
           <tr>
-            <th scope="col">
+            <th scope="col" className="table-centered">
               <input
                 className="form-check-input"
                 type="checkbox"
@@ -50,22 +57,22 @@ const formatNumber = (num) => {
                 onChange={handleSelectAll}
                 id="flexCheckDefault" />
             </th>
-            <th scope="col">번호</th>
-            <th scope="col">고객등급</th>
-            <th scope="col">고객명</th>
-            <th scope="col">생년월일</th>
-            <th scope="col">성별</th>
-            <th scope="col">연령그룹</th>
-            <th scope="col">지역그룹</th>
-            <th scope="col">거래횟수</th>
-            <th scope="col">거래금액</th>
-            <th scope="col">특이사항</th> 
+            <th scope="col" className="table-centered">번호</th>
+            <th scope="col" className="table-centered">고객등급</th>
+            <th scope="col" className="table-centered">고객명</th>
+            <th scope="col" className="table-centered">생년월일</th>
+            <th scope="col" className="table-centered">성별</th>
+            <th scope="col" className="table-centered">연령그룹</th>
+            <th scope="col" className="table-centered">지역그룹</th>
+            <th scope="col" className="table-centered">거래횟수</th>
+            <th scope="col" className="table-centered">거래금액</th>
+            <th scope="col" className="table-centered">특이사항</th> 
             {/* 가장최근 특이사항만 가능하게 수정 */}
           </tr>
         </thead>
         <tbody className="table-group-divider">
         {rows.map((row, index) => (
-          <tr key={index}>
+          <tr key={index} className="table-centered">
             <td scope="row">
               <input
                 className="form-check-input"
@@ -74,18 +81,29 @@ const formatNumber = (num) => {
                 onChange={() => handleRowSelect(index)}
                />
             </td>
-            <td scope="row">{index + 1}</td>
-            <td>{row.customerGrade}</td>
-            <td>{row.customerName}</td>
-            <td>{row.birthDate}</td>
-            <td>{row.gender}</td>
-            <td>{row.ageGroup}</td>
-            <td>{row.regionGroup}</td>
-            <td>{formatNumber(row.orderCount)}</td>
-            <td>{formatNumber(row.orderAmount)}</td>
-            <td>{row.remarks}</td>
+            <td scope="row" className="table-centered">{index + 1}</td>
+            <td className="table-centered">{row.customerGrade}</td>
+            <td className="table-centered">{row.customerName}</td>
+            <td className="table-centered">{row.birthDate}</td>
+            <td className="table-centered">{row.gender}</td>
+            <td className="table-centered">{row.ageGroup}</td>
+            <td className="table-centered">{row.regionGroup}</td>
+            <td className="table-righted">{formatNumber(row.orderCount)}</td>
+            <td className="table-righted">{formatNumber(row.orderAmount)}</td>
+            <td className="table-centered">{row.remarks}</td>
           </tr>
         ))}
+        <tr>
+          <td colSpan="3" className="table-centered"><strong>Total</strong></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td className="table-righted"><strong>{formatNumber(totalOrderCount)}</strong></td>
+          <td className="table-righted"><strong>{formatNumber(totalOrderAmount)}</strong></td>
+          <td></td>
+        </tr>
         </tbody>
       </table>
     </div>
