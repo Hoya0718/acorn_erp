@@ -6,12 +6,7 @@ const SettingModal_Region = () => {
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
     }
-    //전국 지역 분류
-    const allRegions = [
-        '서울', '인천', '경기', '강원', '대전', '세종', '충북', '충남', 
-        '광주', '전북', '전남', '부산', '대구', '울산', '경북', '경남', '제주'
-    ];
-    //
+    
     return (
         <div>
             <h4>지역분류선택</h4>
