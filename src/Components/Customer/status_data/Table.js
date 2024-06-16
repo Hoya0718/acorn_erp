@@ -35,7 +35,7 @@ const rows = [
   // 필요한 만큼 데이터를 추가
 ];
   return (
-    <div className=" customer-status-table">
+    <div className="customer-status-table">
       <table className="table table-hover" style={{ wordBreak: 'break-all' }}>
         <thead>
           <tr>

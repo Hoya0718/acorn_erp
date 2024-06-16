@@ -30,10 +30,13 @@ const CustomerStatusTable_Dist = () => {
   };
 // 예제 데이터를 rows 배열에 추가
 const rows = [
-  { customerName: '홍길동', birthDate: '1990-01-01', gender: '남성', ageGroup: '30대', regionGroup: '서울', orderCount: 10, orderAmount: 100000, remarks: '특이사항1' },
-  { customerName: '김영희', birthDate: '1985-05-15', gender: '여성', ageGroup: '30대', regionGroup: '부산', orderCount: 5, orderAmount: 5000000, remarks: '특이사항2' },
+  { customerGrade: '우수', customerName: '홍길동', birthDate: '1990-01-01', gender: '남성', ageGroup: '30대', regionGroup: '서울', orderCount: 10, orderAmount: 100000, remarks: '특이사항1' },
+  { customerGrade: '일반', customerName: '김영희', birthDate: '1985-05-15', gender: '여성', ageGroup: '30대', regionGroup: '부산', orderCount: 5, orderAmount: 5000000, remarks: '특이사항2' },
   // 필요한 만큼 데이터를 추가
 ];
+const formatNumber = (num) => {
+    return num.toLocaleString();
+};
   return (
     <div className=" customer-status-table">
       <table className="table table-hover" style={{ wordBreak: 'break-all' }}>
@@ -48,6 +51,7 @@ const rows = [
                 id="flexCheckDefault" />
             </th>
             <th scope="col">번호</th>
+            <th scope="col">고객등급</th>
             <th scope="col">고객명</th>
             <th scope="col">생년월일</th>
             <th scope="col">성별</th>
@@ -71,13 +75,14 @@ const rows = [
                />
             </td>
             <td scope="row">{index + 1}</td>
+            <td>{row.customerGrade}</td>
             <td>{row.customerName}</td>
             <td>{row.birthDate}</td>
             <td>{row.gender}</td>
             <td>{row.ageGroup}</td>
             <td>{row.regionGroup}</td>
-            <td>{row.orderCount}</td>
-            <td>{row.orderAmount}</td>
+            <td>{formatNumber(row.orderCount)}</td>
+            <td>{formatNumber(row.orderAmount)}</td>
             <td>{row.remarks}</td>
           </tr>
         ))}

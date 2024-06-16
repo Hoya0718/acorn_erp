@@ -2,8 +2,8 @@ import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
 
-const CustomerTableTabButton = () => {
-  const [activeTab, setActiveTab] = React.useState('distribution'); // 활성화된 탭 상태
+const CustomerTableTabButton = ({ activeTab, setActiveTab }) => {
+  // const [activeTab, setActiveTab] = React.useState('distribution'); // 활성화된 탭 상태
   const [distributionLabel, setDistributionLabel] = React.useState('고객분포');
   const [productLabel, setProductLabel] = React.useState('상품별');
   const [rankingLabel, setRankingLabel] = React.useState('고객랭킹');

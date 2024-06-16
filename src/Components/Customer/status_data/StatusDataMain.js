@@ -7,8 +7,25 @@ import { Link } from 'react-router-dom';
 import TabButton from './TabButton';
 import Table from './Table';
 import PeriodSearch from './PeriodSearch';
+import Table_Dist from './TableDist';
+import Table_Prod from './TableTopProd';
+import Table_Rank from './TableRank';
 
 const Customer_status = ()=> {
+  const [activeTab, setActiveTab] = React.useState('distribution');
+
+  const renderTable = () => {
+    switch (activeTab) {
+      case 'distribution':
+        return <Table_Dist />;
+      case 'product':
+        return <Table_Prod />;
+      case 'ranking':
+        return <Table_Rank />;
+      default:
+        return null;
+    }
+  };
     return (
         <div className="Customer_status">
           <div className="row">
@@ -29,13 +46,13 @@ const Customer_status = ()=> {
             <section>
               <div className='row'>
                 <div className='col'>
-                  <TabButton/>
+                  <TabButton activeTab={activeTab} setActiveTab={setActiveTab} />
                 </div>
                 <div className='col'>
                   <PeriodSearch/>
                 </div>
               </div>
-                <Table/>
+                {renderTable()}
             </section>
           </div>
         </div>
