@@ -1,22 +1,21 @@
 import * as React from 'react'
-import "../Main/Main.css"
-import "./Customer.css"
-import CustomerMain from './status/CustomerMain.js'
+import "../../Main/Main.css"
+import "../Customer.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
-import "./Customer.css"
 import { Link } from 'react-router-dom';
+import StatusDataTable from './StatusDataTable';
 
 const Customer_status = ()=> {
     return (
         <div className="Customer_status">
           <div className="row">
             <div className="col title">
-              <span> 회원 현황 </span>
+              <span> 회원 현황 데이터 </span>
             </div>
               <div className="col-3  righted" >
-                <Link to="/customerMgmt/StatusDataMain">
-                  <input type="submit" className="btn btn-outline-dark" value="데이터"/>
+                <Link to="/customerMgmt/cusStatus">
+                    <input type="submit" className="btn btn-dark" value="데이터"/>
                 </Link>
               </div>
               <div className="col-1 centered">
@@ -26,7 +25,7 @@ const Customer_status = ()=> {
           <hr /> 
           <div className="content">
             <section>
-              <CustomerMain/>
+                <StatusDataTable/>
             </section>
           </div>
         </div>
