@@ -107,8 +107,8 @@ const menuItems = [
   {
     title: "재무 관리",
     subMenuItems: [
-      { title: "매출 관리", path: "/financialMgmt/incomeMgmt" },
-      { title: "매입 관리", path: "/financialMgmt/exportMgmt" }
+      { title: "매출 관리", path: "/financialMgmt/exportMgmt" },
+      { title: "매입 관리", path: "/financialMgmt/incomeMgmt" }
     ]
   },
   { title: "예약 관리", path: "/reservationMgmt" },
