@@ -20,6 +20,11 @@
     justify-content: flex-start;
     align-items: center;
   }
+/* 위쪽정렬 */
+.uppered {
+  display: flex;
+  align-items: flex-start;
+}
 /* 테이블 가운데 정렬 */
   .table-centered {
     text-align: center;

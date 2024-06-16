@@ -4,7 +4,9 @@ import "../Customer.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-import StatusDataTable from './StatusDataTable';
+import TabButton from './TabButton';
+import Table from './Table';
+import PeriodSearch from './PeriodSearch';
 
 const Customer_status = ()=> {
     return (
@@ -25,7 +27,15 @@ const Customer_status = ()=> {
           <hr /> 
           <div className="content">
             <section>
-                <StatusDataTable/>
+              <div className='row'>
+                <div className='col'>
+                  <TabButton/>
+                </div>
+                <div className='col'>
+                  <PeriodSearch/>
+                </div>
+              </div>
+                <Table/>
             </section>
           </div>
         </div>
