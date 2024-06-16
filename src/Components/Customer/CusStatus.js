@@ -16,7 +16,7 @@ const Customer_status = ()=> {
             </div>
               <div className="col-3  righted" >
                 <Link to="/customerMgmt/StatusDataMain">
-                  <input type="submit" className="btn btn-outline-primary" value="데이터"/>
+                  <input type="submit" className="btn btn-outline-dark" value="데이터"/>
                 </Link>
               </div>
               <div className="col-1 centered">

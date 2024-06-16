@@ -39,51 +39,17 @@ const CustomerTable = () => {
         <section id="sec">
           <div className="row">
             <div className="col-6">
-              <table>
-                <tbody>
-                  <tr>
-                    <td className="table-centered">
-                      <input
-                        type="submit"
-                        value={distributionLabel}
-                        className={distributionLabel === distributionLabels[0] ? 'btn btn-outline-secondary' : 'btn btn-primary'}
-                        style={{
-                          '--bs-btn-padding-y': '.25rem',
-                          '--bs-btn-padding-x': '.5rem',
-                          '--bs-btn-font-size': '.75rem',
-                        }}
-                        onClick={handleDistributionClick}
-                      />
-                    </td>
-                    <td className="table-centered">
-                      <input
-                        type="submit"
-                        value={productLabel}
-                        className={productLabel === productLabels[0] ? 'btn btn-outline-secondary' : 'btn btn-primary'}
-                        style={{
-                          '--bs-btn-padding-y': '.25rem',
-                          '--bs-btn-padding-x': '.5rem',
-                          '--bs-btn-font-size': '.75rem',
-                        }}
-                        onClick={handleProductClick}
-                      />
-                    </td>
-                    <td className="table-lefted" >
-                      <input
-                        type="submit"
-                        value={rankingLabel}
-                        className={rankingLabel === rankingLabels[0] ? 'btn btn-outline-secondary' : 'btn btn-primary'}
-                        style={{
-                          '--bs-btn-padding-y': '.25rem',
-                          '--bs-btn-padding-x': '.5rem',
-                          '--bs-btn-font-size': '.75rem',
-                        }}
-                        onClick={handleRankingClick}
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <ul class="nav nav-underline">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page"  onClick={handleDistributionClick} href="#">{distributionLabel}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link"  onClick={handleProductClick} href="#">{productLabel}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" onClick={handleRankingClick} href="#">{rankingLabel}</a>
+              </li>
+            </ul>
             </div>
             <div className="col-6" id="search_box">
               <div className="radio righted">
@@ -96,8 +62,11 @@ const CustomerTable = () => {
                 {/* 사용자 지정 체크 여부에 따라 활성화 */}
                 <input type="date" id="startDate" disabled />&nbsp;~&nbsp;
                 <input type="date" id="endDate" disabled />&nbsp;
-                <input type="text" id="keyword" />&nbsp;
-                <input type="submit" value="조회" className="btn btn-secondary" />
+                <div className="input-group">
+                  <span className="input-group-text"><i className="fas fa-search"></i></span>
+                  <input type="text" id="keyword" className="form-control" placeholder="검색" />
+                </div>&nbsp;
+                <input type="submit" value="조회 >" className="btn btn-dark" />
               </div>
             </div>
           </div>
