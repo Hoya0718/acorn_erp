@@ -72,7 +72,7 @@ const formatNumber = (num) => {
         </thead>
         <tbody className="table-group-divider">
         {rows.map((row, index) => (
-          <tr key={index} className="table-centered">
+          <tr key={index}>
             <td scope="row">
               <input
                 className="form-check-input"

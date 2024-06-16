@@ -8,20 +8,21 @@ import "../../Main/Main.css"
 // 테스트를 위한 데이터 세팅: 동적 데이터 변경해야함
 const TopProd = () => {
     const [prod, setProd] = React.useState('most'); // 기본값을 'most'로 설정
+    const prods =['most', 'top', 'favo'];
     const most = [
-        { prod: '고구마식빵', g_num: '여성', a_num: '20대', r_num: '서울' },
-        { prod: '소금빵', g_num: '남성', a_num: '30대', r_num: '부산' },
-        { prod: '소세지빵', g_num: '여성', a_num: '40대', r_num: '대구' }
+        { prod: '고구마식빵', gender: '여성', ageGroup: '20대', region: '서울' },
+        { prod: '소금빵', gender: '남성', ageGroup: '30대', region: '부산' },
+        { prod: '소세지빵', gender: '여성', ageGroup: '40대', region: '대구' }
     ];
     const top = [
-        { t_prod: 'Product D', g_price: '여성', a_price: '20대', r_price: '서울' },
-        { t_prod: 'Product E', g_price: '남성', a_price: '30대', r_price: '부산' },
-        { t_prod: 'Product F', g_price: '여성', a_price: '40대', r_price: '대구' }
+        { prod: 'Product D', gender: '여성', ageGroup: '20대',region: '경기' },
+        { prod: 'Product E', gender: '여성', ageGroup: '30대', region: '대전' },
+        { prod: 'Product F', gender: '여성', ageGroup: '40대', region: '포천' }
     ];
     const favo = [
-        { f_prod: 'Product G', g_favo: '여성', a_favo: '20대', r_favo: '서울' },
-        { f_prod: 'Product H', g_favo: '남성', a_favo: '30대', r_favo: '부산' },
-        { f_prod: 'Product I', g_favo: '여성', a_favo: '40대', r_favo: '대구' }
+        { prod: 'Product G', gender: '남성', ageGroup: '20대', region: '양주' },
+        { prod: 'Product H', gender: '남성', ageGroup: '30대', region: '일동' },
+        { prod: 'Product I', gender: '남성', ageGroup: '40대', region: '수원' }
     ];
 
 
@@ -42,9 +43,9 @@ const TopProd = () => {
                             </div>
                             <div className="preference col-5">
                                 {/* 선호 성별, 연령, 지역 */}
-                                <div className="gender_preference righted"><h5>{product.g_num === "여성" ? '👩' : '👨'} {product.g_num}</h5></div>
-                                <div className="age_preference righted"><h5>{product.a_num}</h5></div>
-                                <div className="region_preference righted"><h5>{product.r_num}</h5></div>
+                                <div className="gender_preference righted"><h5>{product.gender === "여성" ? '👩' : '👨'} {product.g_num}</h5></div>
+                                <div className="age_preference righted"><h5>{product.ageGroup}</h5></div>
+                                <div className="region_preference righted"><h5>{product.region}</h5></div>
                             </div>
                         </div>
                     </div>

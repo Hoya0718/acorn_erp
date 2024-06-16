@@ -10,6 +10,8 @@ import PeriodSearch from './PeriodSearch';
 import Table_Dist from './TableDist';
 import Table_Prod from './TableTopProd';
 import Table_Rank from './TableRank';
+import Pagination from './Pagination';
+import CustomerStatusSettingModal from '../settingModal/settingModal.js';
 
 const Customer_status = ()=> {
   const [activeTab, setActiveTab] = React.useState('distribution');
@@ -38,7 +40,9 @@ const Customer_status = ()=> {
                 </Link>
               </div>
               <div className="col-1 centered">
-                <FontAwesomeIcon icon={faGear} />
+                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#SettingModal">
+                  <FontAwesomeIcon icon={faGear} />
+                </button>
               </div>
           </div>
           <hr /> 
@@ -54,7 +58,9 @@ const Customer_status = ()=> {
               </div>
                 {renderTable()}
             </section>
+            <Pagination/>
           </div>
+          <CustomerStatusSettingModal />
         </div>
     );
 }

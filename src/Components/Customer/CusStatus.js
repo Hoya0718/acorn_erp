@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import "./Customer.css"
 import { Link } from 'react-router-dom';
+import CustomerStatusSettingModal from './settingModal/settingModal.js';
 
 const Customer_status = ()=> {
     return (
@@ -20,8 +21,11 @@ const Customer_status = ()=> {
                 </Link>
               </div>
               <div className="col-1 centered">
-                <FontAwesomeIcon icon={faGear} />
+                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#SettingModal">
+                  <FontAwesomeIcon icon={faGear} />
+                </button>
               </div>
+              
           </div>
           <hr /> 
           <div className="content">
@@ -29,6 +33,7 @@ const Customer_status = ()=> {
               <CustomerMain/>
             </section>
           </div>
+          <CustomerStatusSettingModal />
         </div>
     );
 }
