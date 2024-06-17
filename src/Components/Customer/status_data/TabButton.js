@@ -1,8 +1,10 @@
+// 작성자: 박승희
+// 고객현황 데이터 페이지 소주제 탭버튼 컴포넌트
 import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
 
-const CustomerTableTabButton = ({ activeTab, setActiveTab }) => {
+const CustomerTableTabButton = ({ activeTab, setActiveTab, setActiveLabel }) => {
   // const [activeTab, setActiveTab] = React.useState('distribution'); // 활성화된 탭 상태
   const [distributionLabel, setDistributionLabel] = React.useState('고객분포');
   const [productLabel, setProductLabel] = React.useState('상품별');
@@ -20,6 +22,7 @@ const CustomerTableTabButton = ({ activeTab, setActiveTab }) => {
     setDistributionLabel((prev) => {
       const currentIndex = distributionLabels.indexOf(prev);
       const nextIndex = (currentIndex + 1) % distributionLabels.length;
+      setActiveLabel(distributionLabels[nextIndex]); // 다음 레이블로 설정
       return distributionLabels[nextIndex];
     });
   };
@@ -30,6 +33,7 @@ const CustomerTableTabButton = ({ activeTab, setActiveTab }) => {
     setProductLabel((prev) => {
       const currentIndex = productLabels.indexOf(prev);
       const nextIndex = (currentIndex + 1) % productLabels.length;
+      setActiveLabel(productLabels[nextIndex]); // 다음 레이블로 설정
       return productLabels[nextIndex];
     });
   };
@@ -40,6 +44,7 @@ const CustomerTableTabButton = ({ activeTab, setActiveTab }) => {
     setRankingLabel((prev) => {
       const currentIndex = rankingLabels.indexOf(prev);
       const nextIndex = (currentIndex + 1) % rankingLabels.length;
+      setActiveLabel(rankingLabels[nextIndex]);
       return rankingLabels[nextIndex];
     });
   };

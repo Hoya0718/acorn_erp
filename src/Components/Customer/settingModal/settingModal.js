@@ -1,3 +1,5 @@
+// 작성자: 박승희
+// 고객현황 세팅모달 페이지
 import * as React from 'react';
 import "../../Main/Main.css";
 import Goal from './GoalSetting';

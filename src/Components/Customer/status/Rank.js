@@ -1,5 +1,5 @@
 // 작성자: 박승희
-// 고객랭킹차트
+// 고객현황 데이터 시각화 "고객랭킹차트" 컴포넌트
 
 import * as React from 'react'
 import "../../Main/Main.css"
@@ -35,10 +35,8 @@ const Rank = () => {
     ];
     //전월 대비 랭킹 변동사항 확인
     //변동사항 특이사항으로 저장하기
-    console.log("{}월 최다거래고객 || 최고매출고객 랭킹에서  {}위 고객입니다.");
     const getRankChange = (rank, prevRank) => {
         if (prevRank === null || prevRank === undefined|| prevRank>10) {
-            console.log("최다거래고객 || 최고매출고객 랭킹에 진입하였습니다.")
             return { icon: <span className="badge text-bg-success">New</span>, text: '' }; // new
         }
         if (rank < prevRank) {
@@ -54,6 +52,7 @@ const Rank = () => {
     };
     const renderCustomers = (customers, type) => {
         return customers.map((customer, index) => {
+            
             const rankChange = getRankChange(customer.rank, customer.prevRank);
             return(
             <tr key={index}>
@@ -69,6 +68,17 @@ const Rank = () => {
             );
         });
     };
+    
+    // const createRemarkCustomerRanking =()=>{
+    //     if(prevRank === null || prevRank === undefined|| prevRank>10){
+    //         const msg = "최다거래고객 || 최고매출고객 랭킹에 진입하였습니다.";
+    //     }
+    //     else{
+    //         msg = "{}월 최다거래고객 || 최고매출고객 랭킹에서  {}위 고객입니다.";
+    //     }
+    //     return create(msg);
+    // }
+
     return (
         <div className="c_rank">
             <section>

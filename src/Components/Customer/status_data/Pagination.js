@@ -1,61 +1,64 @@
+// 작성자: 박승희
+// 고객현황 데이터 페이지 페이지네이션 컴포넌트
 import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
 
-const CustomerStatusPagination = () => {
+const CustomerStatusPagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      onPageChange(page);
+    }
+  };
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(
+        <li key={i} className={`page-item ${i === currentPage ? 'active' : ''}`}>
+          <a 
+            className="page-link"
+            href="#!"
+            style={{ color: i === currentPage ? 'white' : 'black' }}
+            onClick={() => handlePageChange(i)}
+          >
+            {i}
+          </a>
+        </li>
+      );
+    }
+    return pageNumbers;
+  };
   return (
     <div
       className="customer-status-pagination centerd"
       style={{
-        'width': '100%',
-        'display': 'flex',
-        'justify-content': 'center',
-        'align-items': 'center',
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
-      <nav aria-label="...">
+      <nav aria-label="Page navigation">
         <ul className="pagination">
-          <li className="page-item">
+          <li className='page-item'>
             <a className="page-link"
-              style={{
-                'color': 'gray',
-              }}>
+              onClick={() => handlePageChange(currentPage - 1)}
+              href="#!"
+              style={{ color: currentPage === 1 ? 'gray' : 'black' }}
+            >
               &lt;
             </a>
           </li>
-          <li className="page-item">
+          {renderPageNumbers()}
+          <li className='page-item'>
             <a className="page-link"
-              href="#"
-              style={{
-                'color': 'gray',
-              }}  >
-              1</a>
-          </li>
-          <li className="page-item active" 
-          aria-current="page" >
-            <a className="page-link active-link"
-              href="#"
-              style={{
-                'color': 'white',
-              }}  >
-              2
+              href="#!"
+              style={{ color: currentPage === totalPages ? 'gray' : 'black' }}
+              onClick={() => handlePageChange(currentPage + 1)}>
+              &gt;
             </a>
-          </li>
-          <li className="page-item">
-            <a
-              className="page-link"
-              href="#"
-              style={{
-                'color': 'gray',
-              }}  >
-              3
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#" style={{
-              'color': 'gray',
-            }}  >&gt;</a>
           </li>
         </ul>
       </nav>

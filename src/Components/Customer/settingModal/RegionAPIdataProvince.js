@@ -1,3 +1,5 @@
+// 작성자: 박승희
+// 고객현황 세팅모달의 지역구분(광역시도) 데이터 세팅 페이지
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 

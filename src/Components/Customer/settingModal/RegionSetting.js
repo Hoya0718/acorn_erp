@@ -1,3 +1,5 @@
+// 작성자: 박승희
+// 고객현황 세팅모달의 지역 데이터 세팅 페이지
 import * as React from 'react'
 import "../../Main/Main.css"
 import LocationSelector_Provinces from './RegionAPIdataProvince'
