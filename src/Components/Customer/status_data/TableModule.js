@@ -48,8 +48,8 @@ const TableModule = ({ data, columns }) => {
     const totalRow = columns.reduce((acc, column) => {
         if (column.key && typeof data[0][column.key] === 'number') {
             acc[column.key] = {
-            total: calculateTotal(column.key),
-            average: calculateAverage(column.key),
+                total: calculateTotal(column.key),
+                average: calculateAverage(column.key),
             }
         }
         return acc;
@@ -98,9 +98,9 @@ const TableModule = ({ data, columns }) => {
                         <td colSpan={1} className="table-centered"><strong>Total</strong></td>
                         {columns.map((column) => (
                             <td key={column.key} className={column.className || 'table-centered'}>
-                                {column.key === 'salesRating' && totalRow[column.key]  ? <strong>{formatNumber(totalRow[column.key].average)}</strong> : ''}
-                                {column.key !== 'salesRating' && totalRow[column.key] 
-                                    ? <strong>{formatNumber(totalRow[column.key].total)}</strong> 
+                                {column.key === 'salesRating' && totalRow[column.key] ? <strong>{formatNumber(totalRow[column.key].average)}</strong> : ''}
+                                {column.key !== 'salesRating' && totalRow[column.key]
+                                    ? <strong>{formatNumber(totalRow[column.key].total)}</strong>
                                     : ''}
                             </td>
                         ))}
