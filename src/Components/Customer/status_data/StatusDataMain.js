@@ -1,3 +1,5 @@
+// 작성자: 박승희
+// 고객현황 데이터 페이지 메인 페이지
 import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
@@ -16,10 +18,7 @@ const Customer_status = () => {
   const [activeTab, setActiveTab] = React.useState('distribution');
   const [activeLabel, setActiveLabel] = React.useState('고객분포');
  
-  
-
   const renderTable = () => {
-
     switch (activeTab) {
       case 'distribution':
         return <Table_Dist activeLabel={activeLabel} />;

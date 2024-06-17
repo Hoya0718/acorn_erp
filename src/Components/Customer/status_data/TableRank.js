@@ -1,3 +1,6 @@
+// 작성자: 박승희
+// 고객현황 데이터 페이지 고객랭킨 테이블 컴포넌트
+
 import * as React from 'react'
 import "../../Main/Main.css"
 import TableModule from "./TableModule"
@@ -14,11 +17,30 @@ const [rows, setRows] = React.useState([
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = rows.slice(startIndex, endIndex);
+  //const [filteredRows, setFilteredRows] = React.useState(rows);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  
+  // const handleSearch = ({ selectedOption_dropdown, keyword, startDate, endDate }) => {
+  //   const filteredData = rows.filter((row) => {
+  //     const dateInRange = new Date(row.date) >= new Date(startDate) && new Date(row.date) <= new Date(endDate);
+  //     if (!dateInRange) return false;
+
+  //     switch (selectedOption_dropdown) {
+  //       case '고객명':
+  //         return row.customerName.includes(keyword);
+  //       case '상품명':
+  //         return row.orderCount_prod.includes(keyword) || row.salesRating_prod.includes(keyword);
+  //       case '특이사항':
+  //         return row.remarks.includes(keyword);
+  //       default:
+  //         return false;
+  //     }
+  //   });
+  //   setFilteredRows(filteredData);
+  //   setCurrentPage(1); // 검색 시 첫 페이지로 이동
+  // };
  
   const getColumns = (label) => {
     switch (label) {

@@ -1,22 +1,18 @@
+// 작성자: 박승희
+// 고객현황 데이터 페이지 기간선택 및 검색버튼 컴포넌트
 import * as React from 'react'
 import "../../Main/Main.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
-const CustomerStatusPeriodSerchBox = () => {
+const CustomerStatusPeriodSerchBox = ({ onSearch }) => {
   const [selectedOption, setSelectedOption] = React.useState('1년');
   const [isAbled, setIsAbled] = React.useState(false);
   const [startDate, setStartDate] = React.useState('');
   const [endDate, setEndDate] = React.useState(''); 
   const [selectedOption_dropdown, setSelectedOption_dropdown] = React.useState('검색');
-
-  const handleSelect = (option) => {
-    setSelectedOption(option);
-  };
-  const handleSelect_dropdown = (option) => {
-    setSelectedOption_dropdown(option);
-  }
-
+  const [keyword, setKeyword] = React.useState('');
+  
   const datas = ['3개월', '6개월', '1년', '사용자 지정']
 
   React.useEffect(() => {
@@ -52,6 +48,7 @@ const CustomerStatusPeriodSerchBox = () => {
         break;
     }
   }, [selectedOption]);
+  //라디오 옵션 변경
   const handleOptionChange = (event) => {
     const value = event.target.value;
     setSelectedOption(value);
@@ -63,6 +60,23 @@ const CustomerStatusPeriodSerchBox = () => {
   const handleEndDateChange = (event) => {
     setEndDate(event.target.value);
   }
+  //드롭다운 옵션 변경
+  const handleSelect_dropdown = (option) => {
+    setSelectedOption_dropdown(option);
+  }
+  const handleSelect = (option) => {
+    setSelectedOption(option);
+  };
+  //키워드 입력값 변경
+  // const handleKeywordChange = (event) => {
+  //   setKeyword(event.target.value);
+  // };
+
+  // const handleSearch = (event) => {
+  //   event.preventDefault();
+  //   onSearch({ selectedOption_dropdown, keyword, startDate, endDate });
+  // };
+
   return (
     <div className="customer-status-period-serchbox">
       <div className="radio righted">
@@ -99,9 +113,9 @@ const CustomerStatusPeriodSerchBox = () => {
         </div>&nbsp;
         <div className="input-group">
           <span className="input-group-text"><FontAwesomeIcon icon={faSearch} /></span>
-          <input type="text" id="keyword" className="form-control" placeholder="검색" />
+          <input type="text" id="keyword" className="form-control" value={keyword} onChange={()=>{}} placeholder="검색" />
         </div>&nbsp;
-        <input type="submit" value="조회" className="btn btn-dark" />
+        <input type="submit" value="조회" className="btn btn-dark" onClick={()=>{}} />
       </div>
     </div>
   );

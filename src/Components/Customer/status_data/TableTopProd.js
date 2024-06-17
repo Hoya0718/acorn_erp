@@ -1,3 +1,6 @@
+// 작성자: 박승희
+// 고객현황 데이터 페이지 상품별고객선호도 테이블 컴포넌트
+
 import * as React from 'react'
 import "../../Main/Main.css"
 import TableModule from "./TableModule"
@@ -37,7 +40,12 @@ const CustomerStatusTable_TopProd = ({ activeLabel}) => {
     { productName: '상품28', salesCount: 52, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
     { productName: '상품29', salesCount: 45, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
     { productName: '상품30', salesCount: 15, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-  // 필요한 만큼 데이터를 추가
+    { productName: '상품26', salesCount: 3, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품27', salesCount: 5555, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품28', salesCount: 52, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품29', salesCount: 45, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+
+    // 필요한 만큼 데이터를 추가
   ]);
 
   const [currentPage, setCurrentPage] = React.useState(1);

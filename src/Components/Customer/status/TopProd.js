@@ -1,7 +1,5 @@
-/* 
-MarginTop
-상품별 고객선호도 컴포넌트
-*/
+// 작성자: 박승희
+// 고객현황 데이터 시각화 "상품별 고객선호도" 컴포넌트
 import * as React from 'react'
 import "../../Main/Main.css"
 
@@ -24,11 +22,8 @@ const TopProd = () => {
         { prod: 'Product I', gender: '남성', ageGroup: '40대', region: '수원' }
     ];
 
-
-    //상품의 고객선호도를 보여주는 박스
     const renderProducts = (products) => {
         return products.map((product, index) => (
-            //
             <div className="col-12 col-lg-4" style={{ marginTop: '10px' }} key={index}>
                 <div className="app-card app-card-chart h-100 shadow-sm" style={{ backgroundColor: 'white' }}>
                     <div className="app-card-header p-3 border-0" style={{ marginBottom: '-20px' }}>

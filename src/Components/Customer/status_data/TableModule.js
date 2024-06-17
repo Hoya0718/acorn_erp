@@ -1,3 +1,6 @@
+// 작성자: 박승희
+// 고객현황 데이터 페이지 고객분포도 표 모듈
+
 import React, { useState, useEffect } from 'react';
 import "../../Main/Main.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
