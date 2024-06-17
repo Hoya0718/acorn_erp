@@ -1,10 +1,13 @@
+// 작성자: 박승희
+// 고객랭킹차트
+
 import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
-
+//예제 데이터
 const Rank = () => {
     const count = [
         { rank: 1, name: '박승희', count: 2000, prod: '소세지빵', prevRank: 2 },
@@ -30,8 +33,12 @@ const Rank = () => {
         { rank: 9, name: '이지아', amount: 200000, prod: '도넛', prevRank: 11 },
         { rank: 10, name: '박민준', amount: 100000, prod: '샌드위치', prevRank: '' },
     ];
+    //전월 대비 랭킹 변동사항 확인
+    //변동사항 특이사항으로 저장하기
+    console.log("{}월 최다거래고객 || 최고매출고객 랭킹에서  {}위 고객입니다.");
     const getRankChange = (rank, prevRank) => {
         if (prevRank === null || prevRank === undefined|| prevRank>10) {
+            console.log("최다거래고객 || 최고매출고객 랭킹에 진입하였습니다.")
             return { icon: <span className="badge text-bg-success">New</span>, text: '' }; // new
         }
         if (rank < prevRank) {

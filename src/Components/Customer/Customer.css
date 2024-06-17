@@ -20,6 +20,11 @@
     justify-content: flex-start;
     align-items: center;
   }
+/* 위쪽정렬 */
+.uppered {
+  display: flex;
+  align-items: flex-start;
+}
 /* 테이블 가운데 정렬 */
   .table-centered {
     text-align: center;
@@ -38,4 +43,15 @@
 }
 .nav-tabs .nav-link.active {
   color: #000; /* 활성화된 탭은 검정색 */
+}
+
+/* 페이지네이션 스타일 */
+.page-item.active .page-link {
+  background-color: black;
+  border: none;
+}
+.active-link {
+  background-color: black !important;
+  border: none;
+
 }

@@ -4,7 +4,6 @@ import "../Customer.css"
 
 const Goal = () => {
     const [goalData, setGoalData] = React.useState({ 
-        name: '도토리묵 빵집', 
         goal: '1000',
         curr: '600' });
         const { name, goal, curr } = goalData;
