@@ -7,7 +7,15 @@ const CustomerStatusPeriodSerchBox = () => {
   const [selectedOption, setSelectedOption] = React.useState('1년');
   const [isAbled, setIsAbled] = React.useState(false);
   const [startDate, setStartDate] = React.useState('');
-  const [endDate, setEndDate] = React.useState('');
+  const [endDate, setEndDate] = React.useState(''); 
+  const [selectedOption_dropdown, setSelectedOption_dropdown] = React.useState('검색');
+
+  const handleSelect = (option) => {
+    setSelectedOption(option);
+  };
+  const handleSelect_dropdown = (option) => {
+    setSelectedOption_dropdown(option);
+  }
 
   const datas = ['3개월', '6개월', '1년', '사용자 지정']
 
@@ -75,14 +83,18 @@ const CustomerStatusPeriodSerchBox = () => {
         {/* 사용자 지정 체크 여부에 따라 활성화 */}
         <input type="date" id="startDate" disabled={!isAbled} value={startDate}  style={{minWidth:'110px'}} onChange={handleStartDateChange}/>&nbsp;~&nbsp;
         <input type="date" id="endDate" disabled={!isAbled} value={endDate} style={{minWidth:'110px'}} onChange={handleEndDateChange}/>&nbsp;
-        <div className="dropdown">
-          <button className="btn btn-outline-secondary dropdown-toggle btn-sm " type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            검색
+        <div className="dropdown ">
+          <button 
+            className="btn btn-outline-secondary dropdown-toggle btn-sm " 
+            type="button" 
+            data-bs-toggle="dropdown" 
+            aria-expanded="false">
+            {selectedOption_dropdown}
           </button>
           <ul className="dropdown-menu">
-            <li><a className="dropdown-item" href="#">고객명</a></li>
-            <li><a className="dropdown-item" href="#">상품평</a></li>
-            <li><a className="dropdown-item" href="#">특이사항</a></li>
+            <li><a className="dropdown-item" name="customerName" href="#" onClick={() => handleSelect_dropdown('고객명')}>고객명</a></li>
+            <li><a className="dropdown-item" name="productName" href="#" onClick={() => handleSelect_dropdown('상품명')}>상품명</a></li>
+            <li><a className="dropdown-item" name="remarks" href="#" onClick={() => handleSelect_dropdown('특이사항')}>특이사항</a></li>
           </ul>
         </div>&nbsp;
         <div className="input-group">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import "../../Main/Main.css";
 
-const TableModule = ({ data, columns }) => {
+const TableModule = ({  data = [], columns = [] }) => {
     const [selectAll, setSelectAll] = useState(false);
     const [selectedRows, setSelectedRows] = useState({});
 
@@ -46,7 +46,7 @@ const TableModule = ({ data, columns }) => {
         return total / data.length;
     };
     const totalRow = columns.reduce((acc, column) => {
-        if (column.key && typeof data[0][column.key] === 'number') {
+        if (column.key  && data.length > 0 && typeof data[0][column.key] === 'number') {
             acc[column.key] = {
                 total: calculateTotal(column.key),
                 average: calculateAverage(column.key),
@@ -83,7 +83,7 @@ const TableModule = ({ data, columns }) => {
                                 <input
                                     className="form-check-input"
                                     type="checkbox"
-                                    checked={!!selectedRows[index]} s
+                                    checked={!!selectedRows[index]}
                                     onChange={() => handleRowSelect(index)}
                                 />
                             </th>
@@ -95,7 +95,7 @@ const TableModule = ({ data, columns }) => {
                         </tr>
                     ))}
                     <tr>
-                        <td colSpan={1} className="table-centered"><strong>Total</strong></td>
+                        <td colSpan={1} className="table-centered" style={{borderTop: "12px solid balck"}}><strong>Total</strong></td>
                         {columns.map((column) => (
                             <td key={column.key} className={column.className || 'table-centered'}>
                                 {column.key === 'salesRating' && totalRow[column.key] ? <strong>{formatNumber(totalRow[column.key].average)}</strong> : ''}
