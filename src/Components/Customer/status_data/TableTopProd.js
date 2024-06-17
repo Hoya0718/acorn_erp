@@ -1,34 +1,55 @@
 import * as React from 'react'
 import "../../Main/Main.css"
 import TableModule from "./TableModule"
+import CustomerStatusPagination from './Pagination';
 
 
 const CustomerStatusTable_TopProd = ({ activeLabel}) => {
-  const itemsPerPage = 10; // 페이지당 항목 수
-
+ // 예제 데이터
   const [rows, setRows] = React.useState([
     { productName: '상품1', salesCount: 10, salesAmount: 1000, salesRating: 4.7, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    { productName: '상품2', salesCount: 5, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품2', salesCount: 9, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품3', salesCount: 58, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품4', salesCount: 51, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품5', salesCount: 51, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품6', salesCount: 51, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품7', salesCount: 52, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품8', salesCount: 54, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품9', salesCount: 15, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품10', salesCount: 51, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품11', salesCount: 45, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품12', salesCount: 65, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품13', salesCount: 25, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품14', salesCount: 15, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품15', salesCount: 15, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품16', salesCount: 25, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품17', salesCount: 15, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품18', salesCount: 15, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품19', salesCount: 25, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품20', salesCount: 25, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품21', salesCount: 35, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품22', salesCount: 95, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품23', salesCount: 55, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품24', salesCount: 55, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품25', salesCount: 2, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품26', salesCount: 3, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품27', salesCount: 5555, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품28', salesCount: 52, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품29', salesCount: 45, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
+    { productName: '상품30', salesCount: 15, salesAmount: 500, salesRating: 2.8, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
   // 필요한 만큼 데이터를 추가
   ]);
+
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const itemsPerPage = 10; // 페이지당 항목 수
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentData = rows.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   const getColumns = (activeLabel) => {
     switch (activeLabel) {
       case '최고매출':
@@ -95,7 +116,13 @@ const CustomerStatusTable_TopProd = ({ activeLabel}) => {
 
   return (
     <div>
-      <TableModule data={rows} columns={getColumns(activeLabel)} />
+      <TableModule data={currentData} columns={getColumns(activeLabel)} />
+      <CustomerStatusPagination
+          totalItems={rows.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+           /> 
     </div>
   );
 }

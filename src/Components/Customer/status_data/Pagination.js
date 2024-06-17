@@ -2,13 +2,30 @@ import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
 
-const CustomerStatusPagination = () => {
-  // const totalPages = Math.ceil(totalItems / itemsPerPage);
+const CustomerStatusPagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
   
-  const handlePageChange = () => {
-  //   if (page >= 1 && page <= totalPages) {
-  //     onPageChange(page);
-  //   }
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      onPageChange(page);
+    }
+  };
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(
+        <li key={i} className={`page-item ${i === currentPage ? 'active' : ''}`}>
+          <a
+            className="page-link"
+            href="#!"
+            onClick={() => handlePageChange(i)}
+          >
+            {i}
+          </a>
+        </li>
+      );
+    }
+    return pageNumbers;
   };
   return (
     <div
@@ -24,15 +41,15 @@ const CustomerStatusPagination = () => {
         <ul className="pagination">
           <li className='page-item'>
             <a className="page-link"
-              style={{
-                color: 'gray',
-              }}
-              onClick={() => handlePageChange()}
+              onClick={() => handlePageChange(currentPage - 1)}
+              href="#!"
+              style={{ color: currentPage === 1 ? 'gray' : 'black' }}
               >
               &lt;
             </a>
           </li>
-            <li className='page-item'>
+          {renderPageNumbers()}
+            {/* <li className='page-item'>
               <a
                 className="page-link"
                 href="#"
@@ -61,13 +78,14 @@ const CustomerStatusPagination = () => {
               >
                 3
               </a>
-            </li>
+            </li> */}
           <li className='page-item'>
-            <a className="page-link" href="{currentPage+1}" style={{
-              color: 'gray',
-            }}  
-            onClick={() => handlePageChange()}>
-              &gt;</a>
+            <a className="page-link" 
+              href="#!" 
+              style={{ color: currentPage === totalPages ? 'gray' : 'black' }}
+              onClick={() => handlePageChange()}>
+              &gt;
+            </a>
           </li>
         </ul>
       </nav>

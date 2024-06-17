@@ -10,23 +10,15 @@ import PeriodSearch from './PeriodSearch';
 import Table_Dist from './TableDist';
 import Table_Prod from './TableTopProd';
 import Table_Rank from './TableRank';
-import CustomerStatusPagination from './Pagination';
 import CustomerStatusSettingModal from '../settingModal/settingModal.js';
 
 const Customer_status = () => {
   const [activeTab, setActiveTab] = React.useState('distribution');
   const [activeLabel, setActiveLabel] = React.useState('고객분포');
-  // const [currentPage, setCurrentPage] = React.useState(1);
-  // const itemsPerPage = 10; // 페이지당 항목 수
  
-  // const handlePageChange = (page) => {
-  //   setCurrentPage(page);
-  // };
+  
 
   const renderTable = () => {
-    // const startIndex = (currentPage - 1) * itemsPerPage;
-    // const endIndex = startIndex + itemsPerPage;
-    // const currentData = data.slice(startIndex, endIndex);
 
     switch (activeTab) {
       case 'distribution':
@@ -70,12 +62,6 @@ const Customer_status = () => {
           </div>
           {renderTable()}
         </section>
-         <CustomerStatusPagination
-          // totalItems={data.length}
-          // itemsPerPage={itemsPerPage}
-          // currentPage={currentPage}
-          // onPageChange={handlePageChange}
-           /> 
       </div>
       <CustomerStatusSettingModal />
     </div>
