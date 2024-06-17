@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import "../../Main/Main.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
 const TableModule = ({  data = [], columns = [] }) => {
+    const [tableData, setTableData] = useState(data);
     const [selectAll, setSelectAll] = useState(false);
     const [selectedRows, setSelectedRows] = useState({});
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
 
     useEffect(() => {
+        setTableData(data);
         setSelectedRows({});
         setSelectAll(false);
     }, [data]);
@@ -16,11 +21,32 @@ const TableModule = ({  data = [], columns = [] }) => {
 
         const newSelectedRows = {};
         if (newSelectAll) {
-            data.forEach((row, index) => {
+            tableData.forEach((row, index) => {
                 newSelectedRows[index] = true;
             });
         }
         setSelectedRows(newSelectedRows);
+    };
+    const handleSort = (key) => {
+        let direction = 'ascending';
+        if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+            direction = 'descending';
+        } else if (sortConfig.key === key && sortConfig.direction === 'descending') {
+            direction = null;
+        }
+
+        setSortConfig({ key, direction });
+
+        if (direction) {
+            const sortedData = [...tableData].sort((a, b) => {
+                if (a[key] < b[key]) return direction === 'ascending' ? -1 : 1;
+                if (a[key] > b[key]) return direction === 'ascending' ? 1 : -1;
+                return 0;
+            });
+            setTableData(sortedData);
+        } else {
+            setTableData(data);
+        }
     };
 
     const handleRowSelect = (index) => {
@@ -38,15 +64,15 @@ const TableModule = ({  data = [], columns = [] }) => {
     };
 
     const calculateTotal = (key) => {
-        return data.reduce((sum, row) => sum + row[key], 0);
+        return tableData.reduce((sum, row) => sum + row[key], 0);
     };
     const calculateAverage = (key) => {
-        if (data.length === 0) return 0;
+        if (tableData.length === 0) return 0;
         const total = calculateTotal(key);
-        return total / data.length;
+        return total / tableData.length;
     };
     const totalRow = columns.reduce((acc, column) => {
-        if (column.key  && data.length > 0 && typeof data[0][column.key] === 'number') {
+        if (column.key  && tableData.length > 0 && typeof data[0][column.key] === 'number') {
             acc[column.key] = {
                 total: calculateTotal(column.key),
                 average: calculateAverage(column.key),
@@ -70,14 +96,23 @@ const TableModule = ({  data = [], columns = [] }) => {
                             />
                         </th>
                         {columns.map((column) => (
-                            <th scope="col" className="table-centered" key={column.key}>
+                            <th 
+                            scope="col" 
+                            className="table-centered" 
+                            key={column.key} 
+                            onClick={() => handleSort(column.key)}
+                            >
                                 {column.header}
+                                {sortConfig.key === column.key && (
+                                    sortConfig.direction === 'ascending' ? <FontAwesomeIcon icon={faCaretDown}/> :
+                                    sortConfig.direction === 'descending' ? <FontAwesomeIcon icon={faCaretUp}/> : ''
+                                )}
                             </th>
                         ))}
                     </tr>
                 </thead>
                 <tbody className="table-group-divider">
-                    {data.map((row, index) => (
+                    {tableData.map((row, index) => (
                         <tr key={index}>
                             <th scope="row" className="table-centered">
                                 <input
