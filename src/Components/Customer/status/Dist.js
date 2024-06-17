@@ -36,7 +36,7 @@ const Dist = () => {
             ctx.save();
             const text = chart.config.options.plugins.centerText.text;
             const color = chart.config.options.plugins.centerText.color || 'gray';
-            const fontSize = chart.config.options.plugins.centerText.fontSize || 50;
+            const fontSize = chart.config.options.plugins.centerText.fontSize || 40;
             ctx.font = `${fontSize}px Arial`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -59,7 +59,7 @@ const Dist = () => {
             centerText: {
                 text: label,
                 color: 'gray',
-                fontSize: 50,
+                fontSize: 40,
 
             }
         }
