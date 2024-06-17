@@ -1,0 +1,47 @@
+.type {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #ccc; 
+    border-width: 1px 0;  
+  }
+  
+  .type > div {
+    flex: 1;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  
+  .divider {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 10px 0;
+  }
+  
+  .content {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-width: 1px 0;  
+  }
+  
+  .row {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .cell {
+    flex: 1;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  
+  .row + .row {
+    border-top: 1px solid #ccc; 
+  }
+
+  .checkbox-cell {
+    display: flex;
+    align-items: center;
+  }
