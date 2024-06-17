@@ -19,7 +19,7 @@ const PurchaseUpdate = ({ checkAll }) => {
             <td><input type='number' placeholder='30'></input></td>
             <td><input type='number' step='100' placeholder='3000'></input></td>
             <td><input type='text' ></input></td>
-            <button>확인</button>
+            <td><button>확인</button></td>
         </tr> 
 
  

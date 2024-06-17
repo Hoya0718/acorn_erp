@@ -27,7 +27,6 @@
 
 /* 추가/확인 버튼*/
 .inputField button {
-    margin-top: 17px;
     background-color: black;
     color: beige;
     border-radius: 7px;
@@ -105,7 +104,7 @@
     display: flex;
     justify-content: flex-end; /*버튼 오른쪽 정렬*/
     margin-top: 20px;
-    margin-right: 80px;
+    margin-right: 10px;
 }
 .print button {
     margin-left: 20px; /*버튼 사이 간격*/
