@@ -4,7 +4,6 @@ import "./Customer.css"
 import CustomerMain from './status/CustomerMain.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
-import "./Customer.css"
 import { Link } from 'react-router-dom';
 
 const Customer_status = ()=> {
@@ -15,7 +14,7 @@ const Customer_status = ()=> {
               <span> 회원 현황 </span>
             </div>
               <div className="col-3  righted" >
-                <Link to="/customerMgmt/StatusDataMain">
+                <Link to="../StatusDataMain">
                   <input type="submit" className="btn btn-outline-dark" value="데이터"/>
                 </Link>
               </div>
