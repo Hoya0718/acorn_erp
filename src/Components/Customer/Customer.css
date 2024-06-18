@@ -58,3 +58,7 @@
   background-color: black !important;
   border: none;
 }
+
+.searchBox {
+  display: flex;
+}

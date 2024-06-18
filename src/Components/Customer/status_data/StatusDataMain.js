@@ -13,6 +13,8 @@ import Table_Dist from './TableDist';
 import Table_Prod from './TableTopProd';
 import Table_Rank from './TableRank';
 import CustomerStatusSettingModal from '../settingModal/settingModal.js';
+import SearchButton from '../modules/SearchButtonModule.js'
+import KeywordSearch from '../modules/KeywordSearchModule.js'
 
 const Customer_status = () => {
   const [activeTab, setActiveTab] = React.useState('distribution');
@@ -55,8 +57,12 @@ const Customer_status = () => {
             <div className='col'>
               <TabButton activeTab={activeTab} setActiveTab={setActiveTab} setActiveLabel={setActiveLabel} />
             </div>
-            <div className='col'>
+            <div className='col righted'>
               <PeriodSearch />
+              <KeywordSearch />
+            </div>
+            <div className='col-1 centered'>
+              <SearchButton />
             </div>
           </div>
           {renderTable()}
