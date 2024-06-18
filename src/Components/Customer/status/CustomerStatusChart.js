@@ -1,9 +1,12 @@
+// 작성자: 박승희
+// 고객현황 데이터 시각화 메인 페이지
+
 import * as React from 'react'
 import "../../Main/Main.css"
-import Rank from './Rank.js'
-import Dist from "./Dist.js"
-import Goal from './Goal.js'
-import TopProd from './TopProd.js'
+import Rank from './RankChart.js'
+import Dist from "./DistChart.js"
+import Goal from './GoalChart.js'
+import TopProd from './TopProdChart.js'
 import "../Customer.css"
 
 const CustomerMain = () => {
@@ -23,7 +26,7 @@ const CustomerMain = () => {
           </div>
           {/*상품별 선호도 내용*/}
           <div className="row second" id="section1" style={{ marginTop: "20px" }}>
-            <TopProd/>
+            <TopProd />
           </div>
           {/*고객구매실적*/}
           <div className="row third rank" style={{ marginTop: "20px" }}>

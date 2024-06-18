@@ -1,10 +1,13 @@
+// 작성자: 박승희
+// 고객현황 데이터 시각화 "고객랭킹차트" 컴포넌트
+
 import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
-
+//예제 데이터
 const Rank = () => {
     const count = [
         { rank: 1, name: '박승희', count: 2000, prod: '소세지빵', prevRank: 2 },
@@ -30,6 +33,8 @@ const Rank = () => {
         { rank: 9, name: '이지아', amount: 200000, prod: '도넛', prevRank: 11 },
         { rank: 10, name: '박민준', amount: 100000, prod: '샌드위치', prevRank: '' },
     ];
+    //전월 대비 랭킹 변동사항 확인
+    //변동사항 특이사항으로 저장하기
     const getRankChange = (rank, prevRank) => {
         if (prevRank === null || prevRank === undefined|| prevRank>10) {
             return { icon: <span className="badge text-bg-success">New</span>, text: '' }; // new
@@ -47,6 +52,7 @@ const Rank = () => {
     };
     const renderCustomers = (customers, type) => {
         return customers.map((customer, index) => {
+            
             const rankChange = getRankChange(customer.rank, customer.prevRank);
             return(
             <tr key={index}>
@@ -62,6 +68,17 @@ const Rank = () => {
             );
         });
     };
+    
+    // const createRemarkCustomerRanking =()=>{
+    //     if(prevRank === null || prevRank === undefined|| prevRank>10){
+    //         const msg = "최다거래고객 || 최고매출고객 랭킹에 진입하였습니다.";
+    //     }
+    //     else{
+    //         msg = "{}월 최다거래고객 || 최고매출고객 랭킹에서  {}위 고객입니다.";
+    //     }
+    //     return create(msg);
+    // }
+
     return (
         <div className="c_rank">
             <section>
