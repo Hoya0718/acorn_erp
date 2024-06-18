@@ -18,6 +18,7 @@ import SalesMgmt from '../Components/Sales/SalesMgmt.js';
 import InventoryMgmt from '../Components/Sales/InventoryMgmt.js';
 import ItemMgmt from '../Components/Sales/ItemMgmt.js';
 import OrderMgmt from '../Components/Sales/OrderMgmt.js';
+import Return from '../Components/Sales/Return.js';
 
 // 재무 관리
 import FinancialMgmt from '../Components/Financial/FinancialMgmt.js';
@@ -98,6 +99,10 @@ export const RouterInfo = createBrowserRouter([
           {
             path: "orderMgmt",
             element: <OrderMgmt />
+          },
+          {
+            path: "Return",
+            element: <Return />
           }
         ]
       },
