@@ -1,5 +1,3 @@
-// 작성자: 박승희
-// 고객현황 데이터 페이지 메인 페이지
 import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
@@ -13,6 +11,8 @@ import Table_Dist from './TableDist';
 import Table_Prod from './TableTopProd';
 import Table_Rank from './TableRank';
 import CustomerStatusSettingModal from '../settingModal/settingModal.js';
+import SearchButton from '../modules/SearchButtonModule.js'
+import KeywordSearch from '../modules/KeywordSearchModule.js'
 
 const Customer_status = () => {
   const [activeTab, setActiveTab] = React.useState('distribution');
@@ -44,7 +44,7 @@ const Customer_status = () => {
         </div>
         <div className="col-1 centered">
           <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#SettingModal">
-            <FontAwesomeIcon icon={faGear} />
+            <FontAwesomeIcon icon={faGear} style={{ fontSize: '2em' }}  />
           </button>
         </div>
       </div>
@@ -55,8 +55,12 @@ const Customer_status = () => {
             <div className='col'>
               <TabButton activeTab={activeTab} setActiveTab={setActiveTab} setActiveLabel={setActiveLabel} />
             </div>
-            <div className='col'>
+            <div className='col righted'>
               <PeriodSearch />
+              <KeywordSearch />
+            </div>
+            <div className='col-1 centered'>
+              <SearchButton />
             </div>
           </div>
           {renderTable()}
