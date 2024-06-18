@@ -1,5 +1,3 @@
-// 작성자: 박승희
-// 고객현황 데이터 페이지 메인 페이지
 import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
@@ -13,31 +11,9 @@ import Table_Dist from './TableDist';
 import Table_Prod from './TableTopProd';
 import Table_Rank from './TableRank';
 import CustomerStatusSettingModal from '../settingModal/settingModal.js';
+import SearchButton from '../modules/SearchButtonModule.js'
+import KeywordSearch from '../modules/KeywordSearchModule.js'
 
-<<<<<<< HEAD
-const Customer_status = ()=> {
-    return (
-        <div className="Customer_status">
-          <div className="row">
-            <div className="col title">
-              <span> 회원 현황 데이터 </span>
-            </div>
-              <div className="col-3  righted" >
-                <Link to="../cusStatus">
-                    <input type="submit" className="btn btn-dark" value="데이터"/>
-                </Link>
-              </div>
-              <div className="col-1 centered">
-                <FontAwesomeIcon icon={faGear} />
-              </div>
-          </div>
-          <hr /> 
-          <div className="content">
-            <section>
-                <StatusDataTable/>
-            </section>
-          </div>
-=======
 const Customer_status = () => {
   const [activeTab, setActiveTab] = React.useState('distribution');
   const [activeLabel, setActiveLabel] = React.useState('고객분포');
@@ -60,7 +36,6 @@ const Customer_status = () => {
       <div className="row">
         <div className="col title">
           <span> 회원 현황 데이터 </span>
->>>>>>> 7c7a354e8ee0cc8f4093007e9714bc96f55b12ac
         </div>
         <div className="col-3  righted" >
           <Link to="/customerMgmt/cusStatus">
@@ -69,7 +44,7 @@ const Customer_status = () => {
         </div>
         <div className="col-1 centered">
           <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#SettingModal">
-            <FontAwesomeIcon icon={faGear} />
+            <FontAwesomeIcon icon={faGear} style={{ fontSize: '2em' }}  />
           </button>
         </div>
       </div>
@@ -80,8 +55,12 @@ const Customer_status = () => {
             <div className='col'>
               <TabButton activeTab={activeTab} setActiveTab={setActiveTab} setActiveLabel={setActiveLabel} />
             </div>
-            <div className='col'>
+            <div className='col righted'>
               <PeriodSearch />
+              <KeywordSearch />
+            </div>
+            <div className='col-1 centered'>
+              <SearchButton />
             </div>
           </div>
           {renderTable()}
