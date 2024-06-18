@@ -4,7 +4,9 @@ import { RouterInfo } from './router/RouterInfo';
 
 function App() {
   return (
+    <div>
     <RouterProvider router={RouterInfo} />
+    </div>
   );
 }
 
