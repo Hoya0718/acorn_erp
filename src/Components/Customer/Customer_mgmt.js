@@ -116,7 +116,7 @@ const Customer_mgmt = () => {
       <div className="searcher">
         <div className="left">
           <label htmlFor="date">날짜를 선택하세요:
-            <input type="date" id="date" max="2077-06-20" min="2077-06-05" value="2024-07-18" />
+            <input type="date" id="date" max="2077-06-20" min="2077-06-05" value="2024-06-18" />
           </label>
         </div>
 
@@ -124,7 +124,7 @@ const Customer_mgmt = () => {
           <input type="text" placeholder='검색' /><button>조회</button>
         </div>
       </div>
-
+    <hr/>
       <table {...getTableProps()} className="table">
         <thead>
           {headerGroups.map(headerGroup => (
