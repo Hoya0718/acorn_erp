@@ -4,6 +4,7 @@ import Layout from '../Layout/Layout.js';
 import CustomerMgmt from '../Components/Customer/CustomerMgmt.js';
 import CusMgmt from '../Components/Customer/CusMgmt.js';
 import CusStatus from '../Components/Customer/CusStatus.js';
+import StatusDataMain from '../Components/Customer/status_data/StatusDataMain.js'
 
 // 재고 관리
 import StockMgmt from '../Components/Stock/StockMgmt.js';
@@ -55,6 +56,10 @@ export const RouterInfo = createBrowserRouter([
           {
             path: "cusStatus",
             element: <CusStatus />
+          },
+          {
+            path: "StatusDataMain",
+            element: <StatusDataMain />
           }
         ]
       },

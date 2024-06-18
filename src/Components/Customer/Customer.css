@@ -1,0 +1,57 @@
+.CustomerMain {
+    overflow-y: auto;
+    max-height: 100vh;
+  }
+/* 오른쪽 정렬 */
+.righted {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+/* 가운데정렬 */
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* 왼쪽 정렬 */
+.lefted {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+/* 위쪽정렬 */
+.uppered {
+  display: flex;
+  align-items: flex-start;
+}
+/* 테이블 가운데 정렬 */
+  .table-centered {
+    text-align: center;
+}
+/* 테이블 오른쪽정렬 */
+.table-righted {
+    text-align: right;
+}
+/* 테이블 왼쪽정렬 */
+.table-lefted {
+    text-align: left;
+}
+/* 상품별 선호도 탭버튼 스타일 */
+.nav-tabs .nav-link {
+  color: #999; /* 옅은 회색 */
+}
+.nav-tabs .nav-link.active {
+  color: #000; /* 활성화된 탭은 검정색 */
+}
+
+/* 페이지네이션 스타일 */
+.page-item.active .page-link {
+  background-color: black;
+  border: none;
+}
+.active-link {
+  background-color: black !important;
+  border: none;
+
+}
