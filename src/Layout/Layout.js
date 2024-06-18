@@ -100,8 +100,8 @@ const menuItems = [
     subMenuItems: [
       { title: "자재 관리", path: "/stockMgmt/meterialMgmt" },
       { title: "물류 관리", path: "/stockMgmt/distributionMgmt" },
-      { title: "발주 관리", path: "/stockMgmt/purchase" },
-      { title: "거래처 관리", path: "/stockMgmt/vendor" }
+      { title: "발주 관리", path: "/stockMgmt/purchaseMgmt" },
+      { title: "거래처 관리", path: "/stockMgmt/vendorMgmt" }
     ]
   },
   {
