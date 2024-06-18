@@ -43,7 +43,7 @@ const PurchaseUpdate = ({ checkAll, purchaseData, onUpdatePurchase, index }) => 
             <td><input type='number' placeholder={purchaseData.orderQuantity} name='orderQuantity' value={updatedPurchase.orderQuantity} onChange={handleChange}></input></td>
             <td><input type='number' step='100' placeholder={purchaseData.unitPrice} name='unitPrice' value={updatedPurchase.unitPrice} onChange={handleChange}></input></td>
             <td><input type='text' placeholder={purchaseData.purchaseRemark} name='purchaseRemark' value={updatedPurchase.purchaseRemark} onChange={handleChange}></input></td>
-            <td><button onClick={handleUpdate}>확인</button></td>
+            {index === 0 && <td><button onClick={handleUpdate}>확인</button></td>}
         </tr> 
 
 </>
