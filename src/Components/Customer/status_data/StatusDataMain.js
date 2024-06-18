@@ -44,7 +44,7 @@ const Customer_status = () => {
         </div>
         <div className="col-1 centered">
           <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#SettingModal">
-            <FontAwesomeIcon icon={faGear} />
+            <FontAwesomeIcon icon={faGear} style={{ fontSize: '2em' }}  />
           </button>
         </div>
       </div>

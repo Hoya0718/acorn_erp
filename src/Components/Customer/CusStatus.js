@@ -34,13 +34,11 @@ const Customer_status = () => {
         </div>
         <hr />
         <CustomerStatusProvider>
-        <div className="content">
-          {/* 데이터시각화자료 메인 페이지 */}
-          <section>
+        {/* 데이터시각화자료 메인 페이지 */}
+        <div className="content customerStatusMainContent">
             <CustomerMain />
-          </section>
         </div>
-        {/* 설장 모달 */}
+        {/* 설정창 모달 */}
         <CustomerStatusSettingModal />
         </CustomerStatusProvider>
       </div>

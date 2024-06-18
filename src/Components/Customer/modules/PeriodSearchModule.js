@@ -18,6 +18,7 @@ const CustomerStatusPeriodSerchBox = ({ onSearch }) => {
   React.useEffect(() => {
     const now = new Date();
     const today = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().split('T')[0]; // 오늘 날짜로 설정
+    
     setEndDate(today);
 
     const calculateStartDate = (monthsAgo) => {
@@ -29,12 +30,15 @@ const CustomerStatusPeriodSerchBox = ({ onSearch }) => {
     switch (selectedOption) {
       case '3개월':
         setStartDate(calculateStartDate(3));
+        setIsAbled(false);
         break;
       case '6개월':
         setStartDate(calculateStartDate(6));
+        setIsAbled(false);
         break;
       case '1년':
         setStartDate(calculateStartDate(12));
+        setIsAbled(false);
         break;
       case '사용자 지정':
         setIsAbled(true);
@@ -48,6 +52,12 @@ const CustomerStatusPeriodSerchBox = ({ onSearch }) => {
         break;
     }
   }, [selectedOption]);
+  
+  React.useEffect(() => {
+    // 초기값 설정
+    setSelectedOption('1년');
+  }, []);
+  
   //라디오 옵션 변경
   const handleOptionChange = (event) => {
     const value = event.target.value;

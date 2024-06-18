@@ -14,7 +14,7 @@ const SettingModal_Goal = () => {
 
     React.useEffect(() => {
         setGoalOption ("전체고객수");
-    }, [ goalOption]);
+    }, []);
 
     const handleGoalEditmodeClick = () => {
         setIsEditMode(false);
