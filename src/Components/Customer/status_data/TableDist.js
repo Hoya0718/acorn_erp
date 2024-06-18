@@ -3,7 +3,7 @@
 
 import * as React from 'react'
 import "../../Main/Main.css"
-import TableModule from "./TableModule"
+import TableModule from "../modules/TableModule"
 
 const CustomerStatusTable_Dist = ({ activeLabel }) => {
   // 예제 데이터를 rows 배열에 추가

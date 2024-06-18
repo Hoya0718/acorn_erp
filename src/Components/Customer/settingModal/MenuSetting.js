@@ -3,20 +3,11 @@
 import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
+import {useCustomerStatus} from './CustomerStatusSettingContext';
 
 const CustomerStatusSettingModal = () => {
-
-    const [checkboxes_dist, setCheckboxes_dist] = React.useState({
-        gender: true,
-        age: true,
-        region: true,
-    });
-    const [checkboxes_prod, setCheckboxes_prod] = React.useState({
-        amount: true,
-        count: true,
-        reaction: true,
-    });
-    const [rangeValue, setRangeValue] = React.useState(10);
+    const { checkboxes_dist, setCheckboxes_dist, checkboxes_prod, setCheckboxes_prod, rangeValue, setRangeValue } = useCustomerStatus();
+    
     const handleCheckboxChangeProd = (event) => {
         const { name, checked } = event.target;
         const selectedCount_prod = Object.values(checkboxes_prod).filter(value => value).length;

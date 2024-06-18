@@ -6,9 +6,9 @@ import "../Customer.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-import TabButton from './TabButton';
+import TabButton from '../modules/TabButtonModule';
 import Table from './Table';
-import PeriodSearch from './PeriodSearch';
+import PeriodSearch from '../modules/PeriodSearchModule';
 import Table_Dist from './TableDist';
 import Table_Prod from './TableTopProd';
 import Table_Rank from './TableRank';

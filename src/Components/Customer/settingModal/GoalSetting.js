@@ -2,27 +2,33 @@
 // 고객현황 세팅모달의 Goal차트 데이터 세팅 페이지
 import * as React from 'react'
 import "../../Main/Main.css"
+import {useCustomerStatus} from './CustomerStatusSettingContext';
 
 const SettingModal_Goal = () => {
-    const [customerCount, setCustomerCount] = React.useState(60000);
-    const [customerTarget, setCustomerTarget] = React.useState('');
-    const [selectedOption, setSelectedOption] = React.useState('전체고객수');
+    const { 
+        customerCount, setCustomerCount,
+        customerTarget, setCustomerTarget, 
+        goalOption, setGoalOption 
+    } = useCustomerStatus();
     const [isEditMode, setIsEditMode] = React.useState(true);
 
-    const handleGoalClick = () => {
+    React.useEffect(() => {
+        setGoalOption ("전체고객수");
+    }, [ goalOption]);
+
+    const handleGoalEditmodeClick = () => {
         setIsEditMode(false);
     }
-    const formatNumber = (num) => {
-        return num.toLocaleString();
-    }
+    const formatNumber = (num) => num.toLocaleString();
+    
     const handleOptionChange = (event) => {
-        setSelectedOption(event.target.value);
+        setGoalOption(event.target.value);
     }
     const handleInputChange = (event) => {
         const rawValue = event.target.value.replace(/,/g, '');
         setCustomerTarget(rawValue);
     }
-    const handleDoubleClick = () => {
+    const handleDoubleEditmodeClick = () => {
         setIsEditMode(true);
     }
     return (
@@ -40,7 +46,7 @@ const SettingModal_Goal = () => {
                         placeholder='목표 인원을 작성해주세요'
                         value={customerTarget}
                         onChange={handleInputChange} />
-                    <button type="button" className="btn btn-outline-dark btn-sm" onClick={handleGoalClick}>저장</button>
+                    <button type="button" className="btn btn-outline-dark btn-sm" onClick={handleGoalEditmodeClick}>저장</button>
                 </div>
             ) : (
                 <div>
@@ -53,7 +59,7 @@ const SettingModal_Goal = () => {
                         }}
                         value={formatNumber(Number(customerTarget))}
                         readOnly
-                        onDoubleClick={handleDoubleClick} />명
+                        onDoubleClick={handleDoubleEditmodeClick} />명
                 </div>
             )}
             <div><strong>현재 고객수</strong>&nbsp;&nbsp;{ }
@@ -72,7 +78,7 @@ const SettingModal_Goal = () => {
                     <input type='radio'
                         name="goalOption"
                         value="전체고객수"
-                        checked={selectedOption === '전체고객수'}
+                        checked={goalOption === '전체고객수'}
                         onChange={handleOptionChange}
                     /> 전체고객수
                 </label>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -80,7 +86,7 @@ const SettingModal_Goal = () => {
                     <input type='radio'
                         name="goalOption"
                         value="목표고객수"
-                        checked={selectedOption === '목표고객수'}
+                        checked={goalOption === '목표고객수'}
                         onChange={handleOptionChange} /> 당해연도 목표고객수
                 </label>&nbsp;
             </div>

@@ -6,9 +6,36 @@ import Goal from './GoalSetting';
 import Menu from './MenuSetting';
 import Period from './PeriodSetting';
 import Region from './RegionSetting';
+import {useCustomerStatus} from './CustomerStatusSettingContext';
 
 const CustomerStatusSettingModal = () => {
+    const { 
+        customerCount, setCustomerCount,
+        customerTarget, setCustomerTarget,
+        selectedOption, setSelectedOption,
+        period, setPeriod,
+        startDate, setStartDate,
+        checkboxes_dist, setCheckboxes_dist,
+        checkboxes_prod, setCheckboxes_prod,
+        endDate, setEndDate,
+        selectedRegion, setSelectedRegion,
+        rangeValue, setRangeValue
+    } = useCustomerStatus();
 
+const handleSettingClick=()=>{
+      console.log({
+        customerCount, 
+        customerTarget, 
+        selectedOption, 
+        period, 
+        startDate, 
+        checkboxes_dist,
+        checkboxes_prod,
+        endDate, 
+        selectedRegion, 
+        rangeValue, 
+    });
+}
     return (
         <div className="modal fade" id="SettingModal" tabIndex="-1" aria-labelledby="SettingModalLabel" aria-hidden="true">
             <div className="modal-dialog  modal-dialog-centered modal-dialog-scrollable">
@@ -18,14 +45,14 @@ const CustomerStatusSettingModal = () => {
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div className="modal-body">
-                        <Goal />
-                        <Period />
-                        <Menu />
-                        <Region />
+                            <Goal />
+                            <Period />
+                            <Menu />
+                            <Region />
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
-                        <button type="button" className="btn btn-dark">저장</button>
+                        <button type="button" className="btn btn-outline-dark" data-bs-dismiss="modal"c>취소</button>
+                        <button type="button" className="btn btn-dark"onClick={handleSettingClick}>저장</button>
                     </div>
                 </div>
             </div>
