@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import TabButton from '../modules/TabButtonModule';
-import Table from './Table';
 import PeriodSearch from '../modules/PeriodSearchModule';
 import Table_Dist from './TableDist';
 import Table_Prod from './TableTopProd';
@@ -57,8 +56,8 @@ const Customer_status = () => {
             <div className='col'>
               <TabButton activeTab={activeTab} setActiveTab={setActiveTab} setActiveLabel={setActiveLabel} />
             </div>
-            <div className='col righted'>
-              <PeriodSearch />
+            <div className='col-4'>
+              <PeriodSearch /><br/>
               <KeywordSearch />
             </div>
             <div className='col-1 centered'>
