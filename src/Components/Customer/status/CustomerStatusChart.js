@@ -3,10 +3,10 @@
 
 import * as React from 'react'
 import "../../Main/Main.css"
-import Rank from './Rank.js'
-import Dist from "./Dist.js"
-import Goal from './Goal.js'
-import TopProd from './TopProd.js'
+import Rank from './RankChart.js'
+import Dist from "./DistChart.js"
+import Goal from './GoalChart.js'
+import TopProd from './TopProdChart.js'
 import "../Customer.css"
 
 const CustomerMain = () => {

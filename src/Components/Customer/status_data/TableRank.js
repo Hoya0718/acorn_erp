@@ -3,8 +3,8 @@
 
 import * as React from 'react'
 import "../../Main/Main.css"
-import TableModule from "./TableModule"
-import CustomerStatusPagination from './Pagination';
+import TableModule from "../modules/TableModule"
+import CustomerStatusPagination from '../modules/PaginationModule';
 
 const CustomerStatusTable_Rank = ({ activeLabel }) => {
   // 예제 데이터
