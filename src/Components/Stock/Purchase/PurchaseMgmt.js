@@ -4,6 +4,7 @@ import '../../Main/Main.css'
 import PurchaseAdd from './PurchaseAdd';
 import PurchaseUpdate from './PurchaseUpdate';
 import NewDatePicker from './DatePicker';
+import Search from './Search';
 import { AiOutlinePrinter } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { PiFileArrowUp } from "react-icons/pi";
@@ -27,6 +28,22 @@ const Purchase = () => {
   // 체크된 항목 관리 상태
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedItemIndexes, setSelectedItemIndexes] = useState([]);
+
+  // 검색어 상태 관리
+  const [userInput, setUserInput] = useState(''); // 사용자 입력값
+    // 검색어 변경 시 데이터 필터링
+    useEffect(() => {
+      const filteredData = addPurchase.filter((purchase) =>
+        purchase.purchaseName.toLowerCase().includes(userInput.toLowerCase())
+      );
+      setAddPurchase(filteredData);
+    }, [userInput]);
+
+    const handleSearch = (keyword) => {
+      // 검색어 업데이트
+      setUserInput(keyword);
+    };
+
 
 ///
   // 체크박스 전체 선택 상태 변경 함수
@@ -55,7 +72,6 @@ const Purchase = () => {
       setSelectedItemIndexes([...selectedItemIndexes, index]);
     }
   }
-
 
 
   const handleAddClick = () => {
@@ -150,14 +166,10 @@ const Purchase = () => {
           </select>
         </label>
      </div>
-
+    </div>
 
       {/* 검색창 */}
-      <div className="right">
-        <input type="text" placeholder='검색' />&nbsp;
-        <button>조회 &gt;</button>
-      </div>
-    </div>  
+      <Search onSearch={handleSearch} />
 
       <br/><br/><br/>
       {/* 테이블 */}
