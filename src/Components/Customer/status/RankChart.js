@@ -1,14 +1,27 @@
+// 작성자: 박승희
+// 고객현황 데이터 시각화 "고객랭킹차트" 컴포넌트
+
 import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
-
+//예제 데이터
 const Rank = () => {
+    const [rangeValue, setRangeValue] = React.useState(10);
+
+    React.useEffect(() => {
+        const savedSettings = localStorage.getItem('customerStatusSettings');
+        if (savedSettings) {
+            const { rangeValue } = JSON.parse(savedSettings);
+            setRangeValue(Number(rangeValue));
+        }
+    }, []);
+
     const count = [
         { rank: 1, name: '박승희', count: 2000, prod: '소세지빵', prevRank: 2 },
-        { rank: 2, name: '김철수', count: 18, prod: '피자빵', prevRank: 1 },
+        { rank: 2, name: '송지환', count: 18, prod: '피자빵', prevRank: 1 },
         { rank: 3, name: '이영희', count: 16, prod: '케이크', prevRank: 3 },
         { rank: 4, name: '최민수', count: 15, prod: '도넛', prevRank: 4 },
         { rank: 5, name: '정수연', count: 14, prod: '샌드위치', prevRank: 6 },
@@ -31,37 +44,52 @@ const Rank = () => {
         { rank: 10, name: '박민준', amount: 100000, prod: '샌드위치', prevRank: '' },
     ];
     const getRankChange = (rank, prevRank) => {
-        if (prevRank === null || prevRank === undefined|| prevRank>10) {
+        if (prevRank === null || prevRank === undefined || prevRank > 10) {
             return { icon: <span className="badge text-bg-success">New</span>, text: '' }; // new
         }
         if (rank < prevRank) {
-            return { icon: <FontAwesomeIcon icon={faCaretUp} style={{ color: 'blue' }}/>, text: ` ${Math.abs(prevRank - rank)}` }; // 상승
+            return { icon: <FontAwesomeIcon icon={faCaretUp} style={{ color: 'blue' }} />, text: ` ${Math.abs(prevRank - rank)}` }; // 상승
         }
         if (rank > prevRank) {
-            return { icon: <FontAwesomeIcon icon={faCaretDown} style={{ color: 'red' }}/>, text: ` ${Math.abs(prevRank - rank)}` }; // 하락
+            return { icon: <FontAwesomeIcon icon={faCaretDown} style={{ color: 'red' }} />, text: ` ${Math.abs(prevRank - rank)}` }; // 하락
         }
         return { icon: "-", text: '' }; // 동일
+
     };
     const formatNumber = (num) => {
         return num.toLocaleString();
     };
-    const renderCustomers = (customers, type) => {
-        return customers.map((customer, index) => {
+    //전월 대비 랭킹 변동사항 확인: 변동사항 특이사항으로 저장하기
+    const createRemarkCustomerRanking = (rank, prevRank, chartName) => {
+        if (prevRank === null || prevRank === undefined || prevRank > rangeValue) {
+            const newMsg = `${chartName} 랭킹에 진입`;
+            console.log(newMsg);
+        } else {
+            const rankMsg = `{}월 ${chartName} 랭킹에서  ${rank}위 고객`;
+            console.log(rankMsg);
+        return;
+    }
+}
+
+    const renderCustomers = (customers, type, chartName) => {
+        return customers.slice(0, rangeValue).map((customer, index) => {
             const rankChange = getRankChange(customer.rank, customer.prevRank);
-            return(
-            <tr key={index}>
-                <td className="table-centered rank ">{customer.rank}</td>
-                <td className="table-righted name"><a href="">{customer.name}</a></td>
-                <td className="table-lefted">
-                        {rankChange.icon}&nbsp; 
+            createRemarkCustomerRanking(customer.rank, customer.prevRank, chartName); 
+            return (
+                <tr key={index}>
+                    <td className="table-centered rank ">{customer.rank}</td>
+                    <td className="table-righted name"><a href="">{customer.name}</a></td>
+                    <td className="table-lefted">
+                        {rankChange.icon}&nbsp;
                         {rankChange.text && <span> {rankChange.text}</span>}
                     </td>
-                <td className="table-righted">{formatNumber(type === 'count' ? customer.count : customer.amount)}</td>
-                <td className="table-centered prod">{customer.prod}</td>
-            </tr>
+                    <td className="table-righted">{formatNumber(type === 'count' ? customer.count : customer.amount)}</td>
+                    <td className="table-centered prod">{customer.prod}</td>
+                </tr>
             );
         });
     };
+
     return (
         <div className="c_rank">
             <section>
@@ -84,7 +112,7 @@ const Rank = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {renderCustomers(amount, 'amount')}
+                                        {renderCustomers(amount, 'amount', '최고 매출 고객')}
                                     </tbody>
                                 </table>
                             </div>
@@ -107,7 +135,7 @@ const Rank = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {renderCustomers(count, 'count')}
+                                        {renderCustomers(count, 'count', '최다 거래 고객')}
                                     </tbody>
                                 </table>
                             </div>

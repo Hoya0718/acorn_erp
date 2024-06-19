@@ -1,17 +1,29 @@
+// 작성자: 박승희
+// 고객현황 데이터 시각화 "고객유치목표" 컴포넌트
 import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
 
 const Goal = () => {
-    const [goalData, setGoalData] = React.useState({ 
-        name: '도토리묵 빵집', 
-        goal: '1000',
-        curr: '600' });
-        const { name, goal, curr } = goalData;
-        const percentage = Math.round((curr / goal) * 100);
+    const [goalData, setGoalData] = React.useState({ goal: 0, curr: 0 });
+    
+    React.useEffect(() => {
+        const savedSettings = localStorage.getItem('customerStatusSettings');
+        if (savedSettings) {
+            const { customerTarget, customerCount } = JSON.parse(savedSettings);
+            setGoalData({
+                goal: Number(customerTarget),
+                curr: Number(customerCount)
+            });
+        }
+    }, []);
+
+        const { goal, curr } = goalData;
+        const percentage = goal > 0 ? Math.round((curr / goal) * 100) : 0;
         const FormatNumber = ({ value }) => {
             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         };
+
     return (
         <div className="c_goal">
             <section>
@@ -29,7 +41,7 @@ const Goal = () => {
                                     left: '50%',
                                     top: '50%',
                                     transform: 'translate(-50%, -50%)',
-                                    color: '#fff',
+                                    color:  percentage > 50 ? '#fff' : 'darkgray',
                                     fontWeight: 'bold'
                                 }}>
                                     {percentage}%
