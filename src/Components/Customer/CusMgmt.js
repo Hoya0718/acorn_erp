@@ -109,6 +109,9 @@ const CusMgmt = () => {
 
       <div className="subTitle">
         <span>(소분류 버튼) </span>
+        <button className="edit-button">수정</button>
+        <button className="add-button">추가</button>
+        <button className="delete-button">삭제</button>
       </div>
 
       <br />
