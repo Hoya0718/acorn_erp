@@ -6,7 +6,7 @@ import "../../Main/Main.css"
 import TableModule from "../modules/TableModule"
 import CustomerStatusPagination from '../modules/PaginationModule';
 
-const CustomerStatusTable_Rank = ({ activeLabel }) => {
+const CustomerStatusTable_Rank = ({ activeLabel, data, onSort }) => {
   // 예제 데이터
 const [rows, setRows] = React.useState([
   { customerName: '홍길동', orderCount: 10, orderCount_prod: '고구마식빵', salesRating: 4.5, salesRating_prod: '소금빵', orderAmount: 1000, orderAmount_prod: '고구마식빵', remarks: '특이사항1' },
@@ -97,7 +97,7 @@ const [rows, setRows] = React.useState([
 
   return (
     <div>
-      <TableModule data={currentData} columns={getColumns(activeLabel)} />
+      <TableModule data={currentData} columns={getColumns(activeLabel)} onSort={onSort} />
       <CustomerStatusPagination
           totalItems={rows.length}
           itemsPerPage={itemsPerPage}
