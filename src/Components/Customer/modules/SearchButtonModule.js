@@ -7,7 +7,7 @@ const CustomerStatusSearchButton = ({ onSearch }) => {
 
   return (
       <div className="righted searchBox">
-        <input type="submit" value="조회" className="btn btn-dark" onClick={()=>{}} />
+        <input type="submit" value="조회" className="btn btn-dark" onClick={ onSearch } />
       </div>
   );
 }
