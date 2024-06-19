@@ -10,6 +10,8 @@ import { useCustomerStatus } from './CustomerStatusSettingContext';
 
 const CustomerStatusSettingModal = () => {
     const {
+        customerCount_lastyear, setCustomerCount_lastyear,
+        goalOption, setGoalOption,
         customerCount, setCustomerCount,
         customerTarget, setCustomerTarget,
         selectedOption, setSelectedOption,
@@ -19,16 +21,18 @@ const CustomerStatusSettingModal = () => {
         startDate, setStartDate,
         endDate, setEndDate,
         selectedRegion, setSelectedRegion,
-        rangeValue, setRangeValue
+        rangeValue, setRangeValue,
+        selectedProvince, setSelectedProvince,
+        selectedCity, setSelectedCity,
     } = useCustomerStatus();
-
-    const modalRef = React.useRef(null);
 
     const handleSettingClick = () => {
         const settings = {
+            customerCount_lastyear,
             customerCount,
             customerTarget,
             selectedOption,
+            goalOption,
             period,
             startDate,
             checkboxes_dist,
@@ -36,15 +40,10 @@ const CustomerStatusSettingModal = () => {
             endDate,
             selectedRegion,
             rangeValue,
+            selectedProvince,
+            selectedCity,
         };
-        // 설정값 localStorage에 저장
         localStorage.setItem('customerStatusSettings', JSON.stringify(settings));
-        // // 모달 닫기
-        // if (modalRef.current) {
-        //     const modalInstance = window.bootstrap.Modal.getInstance(modalRef.current);
-        //     modalInstance.hide();
-        // }
-
         window.location.reload();
     }
     React.useEffect(() => {
@@ -52,8 +51,10 @@ const CustomerStatusSettingModal = () => {
         if (savedSettings) {
             const {
                 customerCount,
+                customerCount_lastyear,
                 customerTarget,
                 selectedOption,
+                goalOption,
                 period,
                 startDate,
                 checkboxes_dist,
@@ -61,18 +62,24 @@ const CustomerStatusSettingModal = () => {
                 endDate,
                 selectedRegion,
                 rangeValue,
+                selectedProvince,
+                selectedCity,
             } = JSON.parse(savedSettings);
 
             setCustomerCount(customerCount);
             setCustomerTarget(customerTarget);
             setSelectedOption(selectedOption);
             setPeriod(period);
+            setGoalOption(goalOption);
             setStartDate(startDate);
             setCheckboxes_dist(checkboxes_dist);
             setCheckboxes_prod(checkboxes_prod);
             setEndDate(endDate);
             setSelectedRegion(selectedRegion);
             setRangeValue(rangeValue);
+            setCustomerCount_lastyear(customerCount_lastyear);
+            setSelectedProvince(selectedProvince);
+            setSelectedCity(selectedCity);
 
         }
         // const modalElement = modalRef.current;

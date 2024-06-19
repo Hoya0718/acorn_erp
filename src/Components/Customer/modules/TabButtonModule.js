@@ -51,7 +51,7 @@ const CustomerTableTabButton = ({ activeTab, setActiveTab, setActiveLabel }) => 
 
   return (
     <div className="customer-table-tabbutton">
-      <ul className="nav nav-underline">
+      <ul className="nav nav-underline" style={{border: "none"}}>
         <li className="nav-item">
           <a
             className={`nav-link ${activeTab === 'distribution' ? 'active' : ''}`}

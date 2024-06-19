@@ -94,7 +94,7 @@ const TopProd = () => {
                 <div style={{ marginTop: '10px' }}>
                     <h3>상품별 고객 선호도</h3>
                     <div style={{ marginTop: '20px' }}>
-                        <ul className="nav nav-tabs">
+                        <ul className="nav nav-tabs "  style={{border: "none"}}>
                         {chartNames.includes('most') && (
                                 <li className="nav-item">
                                     <button className={`nav-link ${prod === 'most' ? 'active' : ''}`} 

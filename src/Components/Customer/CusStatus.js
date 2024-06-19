@@ -10,7 +10,6 @@ import {CustomerStatusProvider} from './settingModal/CustomerStatusSettingContex
 
 const Customer_status = ()=> {
     return (
-      <div>
         <div className="Customer_status">
           <div className="row">
             <div className="col title">
@@ -21,16 +20,6 @@ const Customer_status = ()=> {
                   <input type="submit" className="btn btn-outline-dark" value="데이터"/>
                 </Link>
               </div>
-              <div className="col-1 centered">
-                <FontAwesomeIcon icon={faGear} />
-              </div>
-          </div>
-          <hr /> 
-          <div className="content">
-            <section>
-              <CustomerMain/>
-            </section>
-          </div>
           <div className="col-1 centered">
             {/* 설정모달창 연결 버튼 */}
             <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#SettingModal">

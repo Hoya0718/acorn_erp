@@ -21,9 +21,11 @@ const Customer_status = () => {
   const [filteredData, setFilteredData] = React.useState([]);
 
   const handleSearch = () => {
-    const data = { header: '10대이하', key: 'age_10', format: (value) => value.toLocaleString(), className: 'table-centered' };
+    const data = [{ header: '10대이하', key: 'age_10', format: (value) => value.toLocaleString(), className: 'table-centered' }];
     const filtered = data.filter(item => {
-      const withinPeriod = setPeriod(); // 기간 필터링 로직을 여기에 작성
+      const withinPeriod = period.startDate && period.endDate ? 
+      new Date(item.date) >= new Date(period.startDate) && new Date(item.date) <= new Date(period.endDate) : 
+      true;
       const matchesKeyword = item.name.includes(keyword); // 키워드 필터링 로직을 여기에 작성
       return withinPeriod && matchesKeyword;
     });
@@ -50,17 +52,13 @@ const Customer_status = () => {
           <span> 회원 현황 데이터 </span>
         </div>
         <div className="col-3  righted" >
-          <Link to="/customerMgmt/cusStatus">
+          <Link to="/layout/customerMgmt/cusStatus">
             <input type="submit" className="btn btn-dark" value="데이터" />
           </Link>
         </div>
         <div className="col-1 centered">
           <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#SettingModal">
-
             <FontAwesomeIcon icon={faGear} style={{ fontSize: '2em' }} />
-
-            <FontAwesomeIcon icon={faGear} style={{ fontSize: '2em' }} />
-
           </button>
         </div>
       </div>
@@ -74,23 +72,12 @@ const Customer_status = () => {
                 <TabButton activeTab={activeTab} setActiveTab={setActiveTab} setActiveLabel={setActiveLabel} />
               </div>
               <div className='col-4'>
-                <PeriodSearch setPeriod={setPeriod} /><br />
-                <KeywordSearch />
+                <PeriodSearch setPeriod={setPeriod} />
+                <KeywordSearch setKeyword={setKeyword} />
+                <br></br>
               </div>
               <div className='col-1 centered'>
                 <SearchButton onSearch={handleSearch} />
-              </div>
-            </div>
-            <div className='row'>
-              <div className='col'>
-                <TabButton activeTab={activeTab} setActiveTab={setActiveTab} setActiveLabel={setActiveLabel} />
-              </div>
-              <div className='col righted'>
-                <PeriodSearch />
-                <KeywordSearch />
-              </div>
-              <div className='col-1 centered'>
-                <SearchButton />
               </div>
             </div>
             {renderTable()}
