@@ -38,7 +38,7 @@ const PurchaseAdd = ({ checkAll, onAddPurchase }) => {
   }
   // 체크박스 상태 변화 훅
   useEffect(() => {
-    setIsChecked(checkAll);
+    setIsChecked(checkAll || false);
   }, [checkAll]); // checkAll 상태가 변할 때마다 isChecked 업데이트
    
   return (

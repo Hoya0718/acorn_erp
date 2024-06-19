@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './Purchase.css';
 import '../../Main/Main.css'
 import PurchaseAdd from './PurchaseAdd';
 import PurchaseUpdate from './PurchaseUpdate';
 import NewDatePicker from './DatePicker';
+import Search from './Search';
 import { AiOutlinePrinter } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { PiFileArrowUp } from "react-icons/pi";
@@ -26,6 +27,23 @@ const Purchase = () => {
 
   // 체크된 항목 관리 상태
   const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItemIndexes, setSelectedItemIndexes] = useState([]);
+
+  // 검색어 상태 관리
+  const [userInput, setUserInput] = useState(''); // 사용자 입력값
+    // 검색어 변경 시 데이터 필터링
+    useEffect(() => {
+      const filteredData = addPurchase.filter((purchase) =>
+        purchase.purchaseName.toLowerCase().includes(userInput.toLowerCase())
+      );
+      setAddPurchase(filteredData);
+    }, [userInput]);
+
+    const handleSearch = (keyword) => {
+      // 검색어 업데이트
+      setUserInput(keyword);
+    };
+
 
 ///
   // 체크박스 전체 선택 상태 변경 함수
@@ -35,22 +53,25 @@ const Purchase = () => {
       // 전체 선택 시 모든 항목을 선택된 항목으로 설정
       const allPurchaseCodes = addPurchase.map(purchase => purchase.purchaseCode);
       setSelectedItems(allPurchaseCodes);
+      setSelectedItemIndexes(Array.from({ length:addPurchase.length }, (_, index) => index))
     } else {
       // 전체 선택 해제 시 선택된 항목 비우기
       setSelectedItems([]);
+      setSelectedItemIndexes([]);
     }
   }
   
-  const handleSingleCheckChange = (purchaseCode) => {
+  const handleSingleCheckChange = (purchaseCode, index) => {
     if (selectedItems.includes(purchaseCode)) {
       // 이미 선택된 항목이면 제거
       setSelectedItems(selectedItems.filter(item => item !== purchaseCode));
+      setSelectedItemIndexes(selectedItemIndexes.filter(item => item !== index));
     } else {
       // 선택된 항목이 아니면 추가
       setSelectedItems([...selectedItems, purchaseCode]);
+      setSelectedItemIndexes([...selectedItemIndexes, index]);
     }
   }
-
 
 
   const handleAddClick = () => {
@@ -68,6 +89,7 @@ const Purchase = () => {
     const remainingItems = addPurchase.filter(purchase => !selectedItems.includes(purchase.purchaseCode));
     setAddPurchase(remainingItems);
     setSelectedItems([]); // 선택된 항목 비우기
+    setSelectedItemIndexes([]);
   }
 
   // purchaseAdd 파트
@@ -75,11 +97,25 @@ const Purchase = () => {
     // 새로운 추가 데이터를 기존 테이블에 추가
     setAddPurchase([newAddPurchase, ...addPurchase ]);
   }
+  useEffect(() => {
+    // 데이터 추가 후에 수행할 작업
+  }, [addPurchase]); // addPurchase 상태가 변경될 때마다 실행됨
 
   // purchaseUpdate 파트
-  const handleUpdatePurchase = () => {
+  const handleUpdatePurchase = (updatedPurchase) => {
+    // Logic to update the purchase in addPurchase state
+    const updatedList = addPurchase.map((purchase, index) => {
+      if (selectedItemIndexes.includes(index)) {
+        return updatedPurchase;
+      }
+      return purchase;
+    });
+    setAddPurchase(updatedList);
+    setIsUpdateClicked(false); // Close the update mode after updating
+    setSelectedItems([]);
+    setSelectedItemIndexes([]);
+  }
 
-  };
 
 
 
@@ -95,8 +131,8 @@ const Purchase = () => {
     <div className="subTitle"> 
       <span>
         <button onClick={handleAddClick}>{isAddClicked ? '취소' : '등록'}</button>
-        <button onClick={handleUpdateClick}>{isAddClicked ? '취소' : '수정'}</button>
-        <button onClick={handleDeleteClick}>삭제</button>
+        <button onClick={handleUpdateClick} disabled={selectedItems.length === 0}>{isUpdateClicked ? '취소' : '수정'}</button>
+        <button onClick={handleDeleteClick} disabled={selectedItems.length === 0}>삭제</button>
         {isAddClicked && <button>기본값</button>}
       </span>
     </div>
@@ -130,14 +166,10 @@ const Purchase = () => {
           </select>
         </label>
      </div>
-
+    </div>
 
       {/* 검색창 */}
-      <div className="right">
-        <input type="text" placeholder='검색' />&nbsp;
-        <button>조회 &gt;</button>
-      </div>
-    </div>  
+      <Search onSearch={handleSearch} />
 
       <br/><br/><br/>
       {/* 테이블 */}
@@ -151,21 +183,40 @@ const Purchase = () => {
               </tr>
             </thead>
             <tbody>
-              {isAddClicked ? <PurchaseAdd checkAll={checkAll} onAddPurchase={handleAddPurchase}/> : null} 
-              {isUpdateClicked ? <PurchaseUpdate checkAll={checkAll}/> : null}
-              {addPurchase.map((purchase, index) => (
-                <tr key={index}>
-                  <td><input type='checkbox' checked={selectedItems.includes(purchase.purchaseCode)} onChange={() => handleSingleCheckChange(purchase.purchaseCode)}></input></td>
-                  <td>{purchase.purchaseCode}</td>
-                  <td>{purchase.purchaseName}</td>
-                  <td>{purchase.purchaseUnit}</td>
-                  <td>{purchase.orderDate}</td>
-                  <td>{purchase.orderQuantity}</td>
-                  <td>{purchase.unitPrice}</td>
-                  <td>{purchase.purchaseRemark}</td>
-                  <td></td>
-                </tr>
-              ))}
+              {isAddClicked ? (
+                <PurchaseAdd checkAll={checkAll} onAddPurchase={handleAddPurchase} />
+              ) : null}
+              {isUpdateClicked ? (
+                selectedItemIndexes.map((index) => (
+                  <PurchaseUpdate
+                    key={index}
+                    purchaseData={addPurchase[index]}
+                    onUpdatePurchase={handleUpdatePurchase}
+                    checkAll={checkAll}
+                    index={index}
+                  />
+                ))
+              ) : (
+                addPurchase.map((purchase, index) => (
+                  <tr key={index}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selectedItems.includes(purchase.purchaseCode)}
+                        onChange={() => handleSingleCheckChange(purchase.purchaseCode, index)}
+                      />
+                    </td>
+                    <td>{purchase.purchaseCode}</td>
+                    <td>{purchase.purchaseName}</td>
+                    <td>{purchase.purchaseUnit}</td>
+                    <td>{purchase.orderDate}</td>
+                    <td>{purchase.orderQuantity}</td>
+                    <td>{purchase.unitPrice}</td>
+                    <td>{purchase.purchaseRemark}</td>
+                    <td></td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

@@ -5,7 +5,7 @@ import * as React from 'react'
 import "../../Main/Main.css"
 import TableModule from "../modules/TableModule"
 
-const CustomerStatusTable_Dist = ({ activeLabel }) => {
+const CustomerStatusTable_Dist = ({ activeLabel, filteredData }) => {
   // 예제 데이터를 rows 배열에 추가
   const [rows, setRows] = React.useState([
     { region_seoul: '200', region_jeju:'1', region_kyungsang:'10', region_junla:'10', region_chungcheong:'15', region_gyunggi:'30', region_kangwon:'1', female: '1000', male: '50',  age_10: '10', age_20:'20', age_30:'30', age_40:'40', age_50:'45', age_60:'60',age_70:'80'},
