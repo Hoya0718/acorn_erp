@@ -28,8 +28,29 @@ const Customer_status = ()=> {
               <CustomerMain/>
             </section>
           </div>
+
+          <div className="col-1 centered">
+            {/* 설정모달창 연결 버튼 */}
+            <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#SettingModal">
+              <FontAwesomeIcon icon={faGear} style={{ fontSize: '2em' }} />
+            </button>
+          </div>
+        </div>
+        <hr />
+        <CustomerStatusProvider>
+        {/* 데이터시각화자료 메인 페이지 */}
+        <div className="content customerStatusMainContent">
+            <CustomerMain />
+        </div>
+        {/* 설정창 모달 */}
+        <CustomerStatusSettingModal />
+        </CustomerStatusProvider>
+      </div>
+  );
+
         </div>
     );
+
 }
 
 export default Customer_status;
