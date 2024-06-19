@@ -1,0 +1,90 @@
+.right-mid {
+    padding: 20px;
+  }
+  
+  .nav-underline .nav-link {
+    cursor: pointer;
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .table-group-divider {
+    border-top: 2px solid #dee2e6;
+  }
+  
+  .righted {
+    text-align: right;
+  }
+  
+  .input-group-text {
+    background-color: #e9ecef;
+  }
+  
+  .btn-dark {
+    background-color: #343a40;
+    color: #fff;
+  }
+  
+  #search_box {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .bold-and-large {
+    font-size: 1.5em; /* 원하는 크기로 조정 */
+    font-weight: bold;
+  }
+
+  .date input[type="date"] {
+    padding: 8px;
+    font-size: 16px; /* 원하는 크기로 조정 */
+  }
+
+  #search_box .date label {
+    margin-right: 10px;
+  }
+  
+  .input-group-text {
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+  }
+  
+  .form-control {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 0.375rem 0.75rem;
+  }
+  
+  .btn {
+    margin-right: 10px;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+  }
+  
+  .btn-secondary .fa-file-excel, .btn-secondary .fa-print {
+    margin-right: 5px;
+  }
+  
+  .mt-3 {
+    margin-top: 1rem;
+  }
+
+  .modal-wide .modal-dialog {
+    max-width: 80%;
+  }
+
+  .sort-arrow {
+    color: black;
+  }
+  
