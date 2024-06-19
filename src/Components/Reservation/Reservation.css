@@ -114,3 +114,105 @@
 .custom-right-column {
   margin-top: 7rem
 }
+
+
+
+/* ResTable.css */
+
+/* 테이블 스타일 */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 20px; /* 예시로 추가한 상단 마진 */
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.table tbody tr:hover {
+  background-color: #e9ecef;
+}
+
+/* 체크박스 스타일 */
+.table input[type='checkbox'] {
+  margin: 0;
+}
+
+/* 검색창 스타일 */
+.right input[type='text'] {
+  border: none;
+  background-color: #f0f0f0;
+  padding: 8px;
+  border-radius: 4px;
+  width: 300px;
+  margin-bottom: 10px; /* 예시로 추가한 하단 마진 */
+}
+
+/* 조회 버튼 스타일 */
+.searcher .right button {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-left: 10px; /* 예시로 추가한 왼쪽 마진 */
+}
+
+.searcher .right button:hover {
+  background-color: #333;
+}
+
+/* 등록 수정 삭제 버튼 스타일 */
+.items-subTitle {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px; /* 예시로 추가한 상단 마진 */
+}
+
+.items-subTitle button {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-right: 10px; /* 예시로 추가한 오른쪽 마진 */
+}
+
+.items-subTitle button:hover {
+  background-color: #333;
+}
+
+.btn-register {
+  background-color: black; /* 예약 등록 버튼 배경색 */
+  color: #fff; /* 텍스트 색상 */
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-search {
+  background-color: black; /* 예약 조회 버튼 배경색 */
+  color: #fff; /* 텍스트 색상 */
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}

@@ -141,10 +141,10 @@ const ReservationMgmt = () => {
                   <div className="right-up">
                     {/* <button className="btn btn-outline-primary" onClick={handleMainRegClick}>예약 등록</button> */}
                     <Link to="mainReg">
-                      <button className="btn btn-primary">예약 등록</button>
+                      <button className="btn btn-primary btn-register">예약 등록</button>
                     </Link>
                     <Link to="resTable">
-                      <button className="btn btn-primary">예약 조회</button>
+                      <button className="btn btn-primary btn-search">예약 조회</button>
                     </Link>
                   </div>
                   {/* right-mid */}
