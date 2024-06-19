@@ -131,6 +131,10 @@ export const RouterInfo = createBrowserRouter([
     {
       path: "mainReg",
       element: <MainReg />
+    },
+    {
+      path: "resTable",
+      element: <ResTable />
     }
   ]
 },
