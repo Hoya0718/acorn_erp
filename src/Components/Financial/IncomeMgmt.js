@@ -2,6 +2,21 @@ import React, { useState } from 'react';
 import './Financial.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileExcel, faPrint } from '@fortawesome/free-solid-svg-icons';
+
+
+import TableComponent from './TableComponent';
+import RegistrationModal from './RegistrationModal';
+
+const FinanceTable = () => {
+  const [data, setData] = useState([
+    { "상품번호": "B001", "상품구분": "식재료", "상품명": "강력분", "매입처": "(주)음바페", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "30,000", "단가": "30,000", "수량": "1", "특이사항": "", checked: false },
+    { "상품번호": "B002", "상품구분": "식재료", "상품명": "박력분", "매입처": "(주)할란드", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "16,000", "단가": "8,000", "수량": "2", "특이사항": "", checked: false },
+    { "상품번호": "B003", "상품구분": "식재료", "상품명": "호두", "매입처": "(주)벨링엄", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "30,000", "단가": "10,000", "수량": "3", "특이사항": "", checked: false },
+    { "상품번호": "B004", "상품구분": "식재료", "상품명": "건포도", "매입처": "(주)비니시우스", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "20,000", "단가": "5,000", "수량": "4", "특이사항": "", checked: false },
+    { "상품번호": "B005", "상품구분": "포장지", "상품명": "OPP봉투", "매입처": "(주)포든", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "150,000", "단가": "30,000", "수량": "5", "특이사항": "", checked: false },
+  ]);
+
+
 import ModalForm from './ModalForm';
 
 const TableComponent = ({ columns, data, toggleAllCheckboxes, toggleSingleCheckbox, handleSort, sortConfig }) => (
@@ -73,6 +88,7 @@ const FinanceTable = () => {
     "수량": '',
     "특이사항": '',
   });
+
   const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
 
   const toggleAllCheckboxes = () => {
@@ -86,7 +102,11 @@ const FinanceTable = () => {
     setData(updatedData);
   };
 
+
+  const columns = ["상품번호", "상품구분", "상품명", "매입처", "거래일시", "결제상태", "금액", "단가", "수량", "특이사항"];
+
   const columns = ["상품번호", "상품구분", "상품명", "고객명", "거래일시", "결제상태", "금액", "단가", "수량", "특이사항"];
+
 
   const handleSearch = () => {
     console.log('검색 버튼 클릭');
@@ -99,6 +119,7 @@ const FinanceTable = () => {
   const handlePrint = () => {
     console.log('인쇄 버튼 클릭');
   };
+
 
   const handleModalShow = (content) => {
     if (content === '수정') {
@@ -158,6 +179,7 @@ const FinanceTable = () => {
     }
   };
 
+
   const handleSort = (key) => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
@@ -183,11 +205,15 @@ const FinanceTable = () => {
         <span> 매입 관리 </span>
       </div>
 
+
+      <RegistrationModal data={data} setData={setData} />
+
       <div className="righted" style={{ textAlign: 'right', marginTop: '10px' }}>
         <input type="button" value="등록 >" className="btn btn-dark mr-2" onClick={() => handleModalShow('등록')} />
         <input type="button" value="수정 >" className="btn btn-dark mr-2" onClick={() => handleModalShow('수정')} />
         <input type="button" value="삭제 >" className="btn btn-dark" onClick={handleDelete} />
       </div>
+
 
       <hr />
 
@@ -235,6 +261,7 @@ const FinanceTable = () => {
         </ul>
       </nav>
 
+
       <ModalForm
         show={showModal}
         handleClose={handleModalClose}
@@ -244,6 +271,7 @@ const FinanceTable = () => {
         columns={columns}
         modalContent={modalContent}
       />
+
     </div>
   );
 };
