@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import "../Main/Main.css";
+import React, { useState, useEffect } from 'react'
+import "../Main/Main.css"
 import { Link, useLocation } from 'react-router-dom';
-import OrderTable from './OrderTable';
+import ReturnTable from './ReturnTable';
 
-const OrderMgmt = () => {
+const Return = () => {
   const location = useLocation();
-  const [selectedLink, setSelectedLink] = useState('');
+  const [selectedLink, setSelectedLink] = useState(location.pathname);
 
   useEffect(() => {
     setSelectedLink(location.pathname);
@@ -16,13 +16,13 @@ const OrderMgmt = () => {
   };
 
   return (
-    <div className="Orders">
+    <div className="Return">
       <div className="Middle classification">
         <h4> 주문 관리 </h4>
       </div>
       <hr />
 
-      <div className="order-subTitle">
+      <div className="order-subTitle"> 
         <span>
           <button
             className={selectedLink === '/salesMgmt/orderMgmt' ? 'selected' : ''}
@@ -37,11 +37,11 @@ const OrderMgmt = () => {
         </span>
       </div>
       <br />
-
+      
       <div className="searcher">
         <div className="left">
-          <label htmlFor="date">날짜를 선택하세요 :
-            <input type="date" id="date" max="2077-06-20" min="2077-06-05" defaultValue="2024-07-18" />
+          <label for="date">날짜를 선택하세요 : 
+            <input type="date" id="date" max="2077-06-20" min="2077-06-05" value="2024-07-18" />
           </label>
         </div>
 
@@ -52,16 +52,15 @@ const OrderMgmt = () => {
       <br />
       <div>
         <section>
-          <OrderTable />
+          <ReturnTable />
         </section>
       </div>
-
       <div className="excel-print">
         <button>엑셀 다운</button>
         <button>인쇄</button>
       </div>
     </div>
   );
-}
+};
 
-export default OrderMgmt;
+export default Return;
