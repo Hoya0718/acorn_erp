@@ -39,7 +39,7 @@ const PurchaseUpdate = ({ checkAll, purchaseData, onUpdatePurchase, index }) => 
     <>
         <tr className='inputField'>
             <td><input type='checkbox' checked={isChecked} readOnly onChange={()=>setIsChecked(!isChecked)}></input></td>
-            <td><input type='text' placeholder={purchaseData.purchaseCode} name='purchaseCode' value={localPurchase.purchaseCode} readOnly={!isEditing} onChange={handleChange} readOnly></input></td>
+            <td><input type='text' placeholder={purchaseData.purchaseCode} name='purchaseCode' value={localPurchase.purchaseCode} readOnly={!isEditing} onChange={handleChange}></input></td>
             <td><input type='text' placeholder={purchaseData.purchaseName} name='purchaseName' value={localPurchase.purchaseName} onChange={handleChange}></input></td>
             <td><input type='text' placeholder={purchaseData.purchaseUnit} name='purchaseUnit' value={localPurchase.purchaseUnit} onChange={handleChange}></input></td>
             <td><input type='text' placeholder={purchaseData.orderDate} name='orderDate' value={localPurchase.orderDate} onChange={handleChange}></input></td>
