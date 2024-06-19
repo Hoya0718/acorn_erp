@@ -48,10 +48,10 @@ const Rank = () => {
             return { icon: <span className="badge text-bg-success">New</span>, text: '' }; // new
         }
         if (rank < prevRank) {
-            return { icon: <FontAwesomeIcon icon={faCaretUp} style={{ color: 'blue' }} />, text: ` ${Math.abs(prevRank - rank)}` }; // 상승
+            return { icon: <FontAwesomeIcon icon={faCaretUp}  className="icon-up"/>, text: ` ${Math.abs(prevRank - rank)}` }; // 상승
         }
         if (rank > prevRank) {
-            return { icon: <FontAwesomeIcon icon={faCaretDown} style={{ color: 'red' }} />, text: ` ${Math.abs(prevRank - rank)}` }; // 하락
+            return { icon: <FontAwesomeIcon icon={faCaretDown} className="icon-down"  />, text: ` ${Math.abs(prevRank - rank)}` }; // 하락
         }
         return { icon: "-", text: '' }; // 동일
 

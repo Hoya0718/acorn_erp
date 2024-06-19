@@ -52,7 +52,7 @@ const Customer_status = () => {
           <span> 회원 현황 데이터 </span>
         </div>
         <div className="col-3  righted" >
-          <Link to="/customerMgmt/cusStatus">
+          <Link to="/layout/customerMgmt/cusStatus">
             <input type="submit" className="btn btn-dark" value="데이터" />
           </Link>
         </div>
