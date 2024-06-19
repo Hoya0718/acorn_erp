@@ -6,14 +6,14 @@ import "../../Main/Main.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
-const TableModule = ({  data = [], columns = [] }) => {
-    const [tableData, setTableData] = useState(data);
+const TableModule = ({  data = [], columns = [], onSort }) => {
+//     const [tableDta, setTableData] = useState(data);
     const [selectAll, setSelectAll] = useState(false);
     const [selectedRows, setSelectedRows] = useState({});
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
 
     useEffect(() => {
-        setTableData(data);
+        // setTableData(data);
         setSelectedRows({});
         setSelectAll(false);
     }, [data]);
@@ -24,7 +24,7 @@ const TableModule = ({  data = [], columns = [] }) => {
 
         const newSelectedRows = {};
         if (newSelectAll) {
-            tableData.forEach((row, index) => {
+            data.forEach((row, index) => {
                 newSelectedRows[index] = true;
             });
         }
@@ -39,17 +39,18 @@ const TableModule = ({  data = [], columns = [] }) => {
         }
 
         setSortConfig({ key, direction });
+        onSort(key, direction, data);
 
-        if (direction) {
-            const sortedData = [...tableData].sort((a, b) => {
-                if (a[key] < b[key]) return direction === 'ascending' ? -1 : 1;
-                if (a[key] > b[key]) return direction === 'ascending' ? 1 : -1;
-                return 0;
-            });
-            setTableData(sortedData);
-        } else {
-            setTableData(data);
-        }
+        // if (direction) {
+        //     const sortedData = [...tableData].sort((a, b) => {
+        //         if (a[key] < b[key]) return direction === 'ascending' ? -1 : 1;
+        //         if (a[key] > b[key]) return direction === 'ascending' ? 1 : -1;
+        //         return 0;
+        //     });
+        //     setTableData(sortedData);
+        // } else {
+        //     setTableData(data);
+        // }
     };
 
     const handleRowSelect = (index) => {
@@ -67,15 +68,15 @@ const TableModule = ({  data = [], columns = [] }) => {
     };
 
     const calculateTotal = (key) => {
-        return tableData.reduce((sum, row) => sum + row[key], 0);
+        return data.reduce((sum, row) => sum + row[key], 0);
     };
     const calculateAverage = (key) => {
-        if (tableData.length === 0) return 0;
+        if (data.length === 0) return 0;
         const total = calculateTotal(key);
-        return total / tableData.length;
+        return total / data.length;
     };
     const totalRow = columns.reduce((acc, column) => {
-        if (column.key  && tableData.length > 0 && typeof data[0][column.key] === 'number') {
+        if (column.key  && data.length > 0 && typeof data[0][column.key] === 'number') {
             acc[column.key] = {
                 total: calculateTotal(column.key),
                 average: calculateAverage(column.key),
@@ -115,7 +116,7 @@ const TableModule = ({  data = [], columns = [] }) => {
                     </tr>
                 </thead>
                 <tbody className="table-group-divider">
-                    {tableData.map((row, index) => (
+                    {data.map((row, index) => (
                         <tr key={index}>
                             <th scope="row" className="table-centered">
                                 <input

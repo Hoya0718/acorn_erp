@@ -7,7 +7,7 @@ import TableModule from "../modules/TableModule"
 import CustomerStatusPagination from '../modules/PaginationModule';
 
 
-const CustomerStatusTable_TopProd = ({ activeLabel}) => {
+const CustomerStatusTable_TopProd = ({ activeLabel, data, onSort}) => {
  // 예제 데이터
   const [rows, setRows] = React.useState([
     { productName: '상품1', salesCount: 10, salesAmount: 1000, salesRating: 4.7, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
@@ -124,7 +124,7 @@ const CustomerStatusTable_TopProd = ({ activeLabel}) => {
 
   return (
     <div>
-      <TableModule data={currentData} columns={getColumns(activeLabel)} />
+      <TableModule data={currentData} columns={getColumns(activeLabel)} onSort={onSort} />
       <CustomerStatusPagination
           totalItems={rows.length}
           itemsPerPage={itemsPerPage}

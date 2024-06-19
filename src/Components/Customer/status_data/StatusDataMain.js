@@ -19,10 +19,13 @@ const Customer_status = () => {
   const [period, setPeriod] = React.useState({});
   const [keyword, setKeyword] = React.useState('');
   const [filteredData, setFilteredData] = React.useState([]);
-
+  const [tableData, setTableData] = React.useState([]);
+  React.useEffect(() => {
+    setFilteredData(tableData);
+  }, [tableData]);
   const handleSearch = () => {
     const data = [{ header: '10대이하', key: 'age_10', format: (value) => value.toLocaleString(), className: 'table-centered' }];
-    const filtered = data.filter(item => {
+    const filtered = tableData.filter(item => {
       const withinPeriod = period.startDate && period.endDate ? 
       new Date(item.date) >= new Date(period.startDate) && new Date(item.date) <= new Date(period.endDate) : 
       true;
@@ -31,15 +34,26 @@ const Customer_status = () => {
     });
     setFilteredData(filtered);
   };
-
+  const handleSort = (key, direction) => {
+    if (direction) {
+      const sortedData = [...filteredData].sort((a, b) => {
+        if (a[key] < b[key]) return direction === 'ascending' ? -1 : 1;
+        if (a[key] > b[key]) return direction === 'ascending' ? 1 : -1;
+        return 0;
+      });
+      setFilteredData(sortedData);
+    } else {
+      setFilteredData(tableData);
+    }
+  };
   const renderTable = () => {
     switch (activeTab) {
       case 'distribution':
-        return <Table_Dist activeLabel={activeLabel} filteredData={filteredData} />;
+        return <Table_Dist activeLabel={activeLabel} data={filteredData} onSort={handleSort}/>;
       case 'product':
-        return <Table_Prod activeLabel={activeLabel} filteredData={filteredData} />;
+        return <Table_Prod activeLabel={activeLabel} data={filteredData} onSort={handleSort}/>;
       case 'ranking':
-        return <Table_Rank activeLabel={activeLabel} filteredData={filteredData} />;
+        return <Table_Rank activeLabel={activeLabel} data={filteredData} onSort={handleSort}/>;
       default:
         return null;
     }
