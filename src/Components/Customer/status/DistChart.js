@@ -55,7 +55,11 @@ const Dist = () => {
             setChartNames(charts);
         }
     }, []);
-    //1등라벨 찾기 함수
+
+    const findMaxLabel = (data) => {
+        const maxIndex = data.datasets[0].data.indexOf(Math.max(...data.datasets[0].data));
+        return data.labels[maxIndex];
+    };
 
     //도넛차트 안쪽 텍스트 설정
     const centerTextPlugin = {
@@ -76,12 +80,12 @@ const Dist = () => {
             ctx.restore();
         }
     };
-    const createOptions = (label) => ({
+    const createOptions = (data) => ({
         plugins: {
             legend: { display: false },
             tooltip: { enabled: false },
             centerText: {
-                text: label,
+                text: findMaxLabel(data),
                 color: 'gray',
                 fontSize: 30,
             }
@@ -105,7 +109,7 @@ const Dist = () => {
                                         <h4 className="app-card-title" style={{ marginBottom: '-15px' }}>{chart.label}</h4>
                                     </div>
                                     <div className="app-card-body p-3 p-lg-4 centered-content" >
-                                        <Doughnut data={chart.data} options={createOptions(chart.label)} plugins={[centerTextPlugin]} />
+                                        <Doughnut data={chart.data} options={createOptions(chart.data)} plugins={[centerTextPlugin]} />
                                     </div>
                                 </div>
                             </div>
