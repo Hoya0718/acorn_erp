@@ -14,13 +14,10 @@ const CustomerStatusTable_Dist = ({ activeLabel, data, onSort }) => {
   ]);
   const getColumns = (activeLabel) => {
     switch (activeLabel) {
-      case '성별':
+      case '고객분포':
         return [
           { header: '여성', key: 'female', className: 'table-centered' },
           { header: '남성', key: 'male', className: 'table-centered' },
-           ];
-      case '연령별':
-        return [
           { header: '10대이하', key: 'age_10', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '20대', key: 'age_20', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '30대', key: 'age_30', format: (value) => value.toLocaleString(), className: 'table-centered' },
@@ -28,9 +25,6 @@ const CustomerStatusTable_Dist = ({ activeLabel, data, onSort }) => {
           { header: '50대', key: 'age_50', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '60대', key: 'age_60', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '70대이상', key: 'age_70', format: (value) => value.toLocaleString(), className: 'table-centered' },
-        ];
-      case '지역별':
-        return [
           { header: '서울', key: 'region_seoul', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '경기', key: 'region_gyunggi', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '강원', key: 'region_kangwon', format: (value) => value.toLocaleString(), className: 'table-centered' },
@@ -39,37 +33,77 @@ const CustomerStatusTable_Dist = ({ activeLabel, data, onSort }) => {
           { header: '경상', key: 'region_kyungsang', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '제주', key: 'region_jeju', format: (value) => value.toLocaleString(), className: 'table-centered' },
         ];
-        default:
-          return [
-            { header: '서울', key: 'region_seoul', format: (value) => value.toLocaleString(), className: 'table-centered' },
-            { header: '경기', key: 'region_gyunggi', format: (value) => value.toLocaleString(), className: 'table-centered' },
-            { header: '강원', key: 'region_kangwon', format: (value) => value.toLocaleString(), className: 'table-centered' },
-            { header: '충청', key: 'region_chungcheong', format: (value) => value.toLocaleString(), className: 'table-centered' },
-            { header: '전라', key: 'region_junla', format: (value) => value.toLocaleString(), className: 'table-centered' },
-            { header: '경상', key: 'region_kyungsang', format: (value) => value.toLocaleString(), className: 'table-centered' },
-            { header: '제주', key: 'region_jeju', format: (value) => value.toLocaleString(), className: 'table-centered' },
-          ];
     };
   }
 
-  React.useEffect(() => {
-    handleTable(activeLabel);
-  }, [activeLabel]);
+  // React.useEffect(() => {
+  //   handleTable(activeLabel);
+  // }, [activeLabel]);
 
-  const handleTable = (label) => {
-    let sortedRows = [...rows];
-    if (label === '최고금액고객') {
-      sortedRows.sort((a, b) => b.orderAmount - a.orderAmount);
-    }
-    if (label === '최다거래고객') {
-      sortedRows.sort((a, b) => b.orderCount - a.orderCount);
-    }
-    setRows(sortedRows);
-  }
+  // const handleTable = (label) => {
+  //   let sortedRows = [...rows];
+  //   if (label === '최고금액고객') {
+  //     sortedRows.sort((a, b) => b.orderAmount - a.orderAmount);
+  //   }
+  //   if (label === '최다거래고객') {
+  //     sortedRows.sort((a, b) => b.orderCount - a.orderCount);
+  //   }
+  //   setRows(sortedRows);
+  // }
 
   return (
     <div>
       <TableModule data={rows} columns={getColumns(activeLabel)} onSort={onSort} />
+      <div className="customer-status-table">
+            {/* <table className="table table-hover" style={{ wordBreak: 'break-all' }}>
+                <thead>
+                    <tr>
+                        <th scope="col" className="table-centered">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                checked={selectAll}
+                                onChange={handleSelectAll}
+                                id="flexCheckDefault"
+                            />
+                        </th>
+                        {columns.map((column) => (
+                            <th 
+                            scope="col" 
+                            className="table-centered" 
+                            key={column.key} 
+                            onClick={() => handleSort(column.key)}
+                            >
+                                {column.header}
+                                {sortConfig.key === column.key && (
+                                    sortConfig.direction === 'ascending' ? <FontAwesomeIcon icon={faCaretDown}/> :
+                                    sortConfig.direction === 'descending' ? <FontAwesomeIcon icon={faCaretUp}/> : ''
+                                )}
+                            </th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody className="table-group-divider">
+                    {data.map((row, index) => (
+                        <tr key={index}>
+                            <th scope="row" className="table-centered">
+                                <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    checked={!!selectedRows[index]}
+                                    onChange={() => handleRowSelect(index)}
+                                />
+                            </th>
+                            {columns.map((column) => (
+                                <td key={column.key} className={column.className || 'table-centered'}>
+                                    {column.format ? column.format(row[column.key]) : row[column.key]}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table> */}
+        </div>
     </div>
   );
 }
