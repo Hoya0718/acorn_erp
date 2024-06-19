@@ -11,13 +11,13 @@ const Layout = () => {
   };
 
   return (
-    <div className="layout">
-      <header className='header'>
+    <div className="layout1">
+      <header className='header1'>
         <span style={{fontSize:"18px"}}>ACORN ERP</span>
         <MemoPad></MemoPad>
       </header>
       <div className="container1">
-        <div className="sidebar">
+        <div className="sidebar1">
           <nav>
             <ul>
               {menuItems.map((menuItem, index) => (
@@ -37,7 +37,7 @@ const Layout = () => {
               </div>
           </nav>
         </div>
-        <main className="main-content">
+        <main className="main-content1">
           <Outlet />
         </main>
       </div>
@@ -71,7 +71,7 @@ const MenuItem = ({ title, subMenuItems, expanded, onClick, path }) => {
         )}
       </div>
       {subMenuItems && (
-        <div className={`submenu ${expanded ? 'active' : ''}`} ref={contentRef}>
+        <div className={`submenu1 ${expanded ? 'active' : ''}`} ref={contentRef}>
           <ul>
             {subMenuItems.map((subMenuItem, index) => (
               <li key={index}>
