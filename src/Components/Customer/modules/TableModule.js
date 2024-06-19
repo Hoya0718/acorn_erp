@@ -39,7 +39,7 @@ const TableModule = ({  data = [], columns = [], onSort }) => {
         }
 
         setSortConfig({ key, direction });
-        onSort(key, direction, data);
+        onSort(key, direction);
 
         // if (direction) {
         //     const sortedData = [...tableData].sort((a, b) => {
