@@ -134,7 +134,7 @@ const ReservationMgmt = () => {
               </div>
   
               {/* col-md-6 */}
-              <div className="col-md-5 col-xs-12 rightFrame">
+              <div className="col-md-5 col-xs-12 custom-right-column">
                 {/* right */}
                 <div className="right">
                   {/* right-up */}
@@ -171,7 +171,7 @@ const ReservationMgmt = () => {
         </div>
         {/* footer_Frame */}
         <div id="footer_Frame">
-          <footer> 최하단 </footer>
+          <footer> </footer>
         </div>
       </div>
     </div>

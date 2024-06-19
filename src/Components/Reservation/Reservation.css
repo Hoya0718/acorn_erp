@@ -1,6 +1,7 @@
 #Frame {
     display: flex;
-    justify-content: space-between;
+    justify-content:column;
+    height : 100vh;
 
   }
 
@@ -93,6 +94,7 @@
 .today {
   position: relative;
   color: black;
+  background-color: antiquewhite;
 }
 
 .today::before {
@@ -109,3 +111,6 @@
   content: '';
 }
 
+.custom-right-column {
+  margin-top: 7rem
+}
