@@ -143,7 +143,7 @@ const ReservationMgmt = () => {
                     <Link to="mainReg">
                       <button className="btn btn-primary">예약 등록</button>
                     </Link>
-                    <Link to="">
+                    <Link to="resTable">
                       <button className="btn btn-primary">예약 조회</button>
                     </Link>
                   </div>
