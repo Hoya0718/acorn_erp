@@ -3,11 +3,11 @@ import './Sales.css';
 
 const initialOrders = [
   {
-    orderNumber: '1001',
-    returnType: '빵',
+    itemNumber: '1001',
+    itemType: '빵',
     itemName: '단팥빵',
-    returnStatus: '판매 중',
-    totalPrice: '100000',
+    itemStatus: '판매 중',
+    unitPrice: '1000',
     quantity: 100
   },
 ];
@@ -16,8 +16,12 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
   const [orders, setOrders] = useState(initialOrders);
   const [selectAll, setSelectAll] = useState(false);
   const [selectedOrders, setSelectedOrders] = useState([]);
-  const [editIndex, setEditIndex] = useState(null);  // 현재 편집 중인 행의 인덱스를 저장하는 상태
-  const [editData, setEditData] = useState(null);    // 현재 편집 중인 행의 데이터를 저장하는 상태
+
+  // 테이블 추가/수정 변수
+ const [add, setAddPurchase] = useState([]); // 추가할 데이터를 배열로 받는다.
+ const [updatePurchase, setUpdatePurchase] = useState([]); // 수정할 데이터를 배열로 받는다.
+
+
 
   // 전체 선택 토글
   const toggleSelectAll = () => {
@@ -44,54 +48,14 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
   // 전체 선택 체크박스의 상태
   const selectAllCheckboxState = selectAll || (selectedOrders.length === orders.length && orders.length > 0);
 
-  // 폼 제출 핸들러
   const handleFormSubmitInternal = (e) => {
     e.preventDefault();
-    if (editIndex !== null) {
-      // 편집 모드인 경우 기존 데이터를 업데이트
-      const updatedOrders = [...orders];
-      updatedOrders[editIndex] = editData;
-      setOrders(updatedOrders);
-      setEditIndex(null);
-      setEditData(null);
-    } else {
-      // 새로운 데이터를 추가
-      setOrders([formData, ...orders]);
-    }
+    setOrders([formData, ...orders]);
     handleFormSubmit();
   };
 
-  // 편집 모드 취소 핸들러
   const handleCancel = () => {
     handleFormSubmit(); // 취소 시 입력폼 초기화
-    setEditIndex(null);
-    setEditData(null);
-  };
-
-  // 편집 중인 데이터 변경 핸들러
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    setEditData({
-      ...editData,
-      [name]: value,
-    });
-  };
-
-  // 편집 모드 시작 핸들러
-  const startEdit = () => {
-    if (selectedOrders.length === 1) {
-      const index = orders.findIndex(order => order.orderNumber === selectedOrders[0].orderNumber);
-      setEditIndex(index);
-      setEditData(orders[index]);
-    } else {
-      alert("수정할 항목을 하나만 선택하세요.");
-    }
-  };
-
-  // 선택한 주문 삭제 핸들러
-  const deleteSelectedOrders = () => {
-    setOrders(orders.filter(order => !selectedOrders.includes(order)));
-    setSelectedOrders([]);
   };
 
   return (
@@ -112,7 +76,7 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
               <td></td>
               <td><input type="text" name="orderNumber" value={formData.orderNumber} onChange={handleInputChange} /></td>
               <td>
-                <select name="returnType" value={formData.returnType} onChange={handleInputChange}>
+                <select name="itemType" value={formData.itemType} onChange={handleInputChange}>
                   <option value="">선택하세요</option>
                   <option value="빵">빵</option>
                   <option value="케이크">케이크</option>
@@ -122,7 +86,7 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
               </td>
               <td><input type="text" name="itemName" value={formData.itemName} onChange={handleInputChange} /></td>
               <td>
-                <select name="returnStatus" value={formData.returnStatus} onChange={handleInputChange}>
+                <select name="itemStatus" value={formData.itemStatus} onChange={handleInputChange}>
                   <option value="">선택하세요</option>
                   <option value="판매 중">판매 중</option>
                   <option value="품절">품절</option>
@@ -132,7 +96,7 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
               <td><input type="text" name="totalPrice" value={formData.totalPrice} onChange={handleInputChange} /></td>
               <td><input type="number" name="quantity" value={formData.quantity} onChange={handleInputChange} /></td>
               <td>
-                <button onClick={handleFormSubmitInternal}>저장</button>
+                <button onClick={handleFormSubmitInternal}>추가</button>
                 <button onClick={handleCancel}>취소</button>
               </td>
             </tr>
@@ -140,47 +104,15 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
         </thead>
         <tbody>
           {orders.map((order, index) => (
-            editIndex === index ? (
-              <tr key={index}>
-                <td><input type="checkbox" checked={selectedOrders.some(selectedOrder => selectedOrder.orderNumber === order.orderNumber)} onChange={() => toggleOrderSelection(order)} /></td>
-                <td><input type="text" name="orderNumber" value={editData.orderNumber} onChange={handleEditChange} /></td>
-                <td>
-                  <select name="returnType" value={editData.returnType} onChange={handleEditChange}>
-                    <option value="">선택하세요</option>
-                    <option value="빵">빵</option>
-                    <option value="케이크">케이크</option>
-                    <option value="디저트">디저트</option>
-                    <option value="쿠키">쿠키</option>
-                  </select>
-                </td>
-                <td><input type="text" name="itemName" value={editData.itemName} onChange={handleEditChange} /></td>
-                <td>
-                  <select name="returnStatus" value={editData.returnStatus} onChange={handleEditChange}>
-                    <option value="">선택하세요</option>
-                    <option value="판매 중">판매 중</option>
-                    <option value="품절">품절</option>
-                    <option value="판매 중단">판매 중단</option>
-                  </select>
-                </td>
-                <td><input type="text" name="totalPrice" value={editData.totalPrice} onChange={handleEditChange} /></td>
-                <td><input type="number" name="quantity" value={editData.quantity} onChange={handleEditChange} /></td>
-                <td>
-                  <button onClick={handleFormSubmitInternal}>저장</button>
-                  <button onClick={handleCancel}>취소</button>
-                </td>
-              </tr>
-            ) : (
-              <tr key={index}>
-                <td><input type="checkbox" checked={selectedOrders.some(selectedOrder => selectedOrder.orderNumber === order.orderNumber)} onChange={() => toggleOrderSelection(order)} /></td>
-                <td>{order.orderNumber}</td>
-                <td>{order.returnType}</td>
-                <td>{order.itemName}</td>
-                <td>{order.returnStatus}</td>
-                <td>{order.totalPrice}</td>
-                <td>{order.quantity}</td>
-                <td></td>
-              </tr>
-            )
+            <tr key={index}>
+              <td><input type="checkbox" checked={selectedOrders.some(selectedOrder => selectedOrder.orderNumber === order.orderNumber)} onChange={() => toggleOrderSelection(order)} /></td>
+              <td>{order.itemNumber}</td>
+              <td>{order.itemType}</td>
+              <td>{order.itemName}</td>
+              <td>{order.itemStatus}</td>
+              <td>{order.unitPrice}</td>
+              <td>{order.quantity}</td>
+            </tr>
           ))}
         </tbody>
       </table>

@@ -14,10 +14,12 @@ const ItemMgmt = () => {
     quantity: ''
   });
 
+  // '등록' 버튼 클릭 시 폼을 보이게 하는 함수
   const handleAddButtonClick = () => {
     setIsFormVisible(true);
   };
 
+  // 폼 입력 값이 변경될 때 상태를 업데이트하는 함수
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -26,8 +28,8 @@ const ItemMgmt = () => {
     });
   };
 
+  // 폼 제출 시 호출되는 함수, 폼 데이터를 초기화하고 폼을 숨김
   const handleFormSubmit = () => {
-    // 폼 제출 후 초기화 및 폼 숨기기
     setFormData({
       orderNumber: '',
       returnType: '',
@@ -37,16 +39,6 @@ const ItemMgmt = () => {
       quantity: ''
     });
     setIsFormVisible(false);
-  };
-
-  // 수정 버튼 클릭 핸들러
-  const handleEditButtonClick = () => {
-    // 수정 버튼 클릭 시 폼을 보이도록 설정
-    setIsFormVisible(true);
-  };
-
-  const handleDeleteButtonClick = () => {
-    // 삭제 버튼 클릭 핸들러
   };
 
   return (
@@ -59,8 +51,8 @@ const ItemMgmt = () => {
       <div className="items-subTitle">
         <span>
           <button onClick={handleAddButtonClick}>등록</button>
-          <button onClick={handleEditButtonClick}>수정</button>
-          <button onClick={handleDeleteButtonClick}>삭제</button>
+          <button>수정</button>
+          <button>삭제</button>
         </span>
       </div>
       <br />

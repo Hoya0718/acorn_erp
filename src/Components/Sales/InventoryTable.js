@@ -3,17 +3,18 @@ import './Sales.css';
 
 const orders = [
   {
-    orderNumber: '1001',
-    returnType: '환불완료 ',
+    itemNumber: '1002',
     itemName: '단팥빵 ',
-    csName: '홍길동',
-    orderDate: '2023-06-15 10:30',
-    csAddress: '서울시 강남구',
-    csPhoneNumber: '010-1234-5678',
-    quantity: 100,
-    totalPrice: 100000,
-    returnReason: '',
-    returnStatus: '환불 완료'
+    stockIn: 10,
+    stockOut: 5,
+    stockQuantity: 5,
+  },
+  {
+    itemNumber: '1001',
+    itemName: '단팥빵 ',
+    stockIn: 10,
+    stockOut: 5,
+    stockQuantity: 5,
   },
 ];
 
@@ -67,7 +68,7 @@ const InventoryTable = () => {
               <td>{order.itemName}</td>
               <td>{order.stockIn}</td>
               <td>{order.stockOut}</td>
-              <td>{order.stock_quantity}</td>
+              <td>{order.stockQuantity}</td>
             </tr>
           ))}
         </tbody>

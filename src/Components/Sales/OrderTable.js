@@ -15,21 +15,7 @@ const orders = [
     orderDate: '2023-06-15 10:30',
     itemReq: '',
     orderStatus: '결제 완료'
-  },
-  {
-    orderNumber: '1002',
-    itemName: '초코파이',
-    csName: '김철수',
-    csPhoneNumber: '010-9876-5432',
-    csAddress: '경기도 분당구',
-    unitPrice: 120000,
-    quantity: 50,
-    deliveryFee: 7000,
-    totalPrice: 121000,
-    orderDate: '2023-06-16 14:45',
-    itemReq: '달달한 거 좋아해요',
-    orderStatus: '배송 중'
-  },
+  }
 ];
 
 const OrderTable = () => {

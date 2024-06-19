@@ -101,7 +101,7 @@ export const RouterInfo = createBrowserRouter([
             element: <OrderMgmt />
           },
           {
-            path: "Return",
+            path: "return",
             element: <Return />
           }
         ]
