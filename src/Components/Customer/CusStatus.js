@@ -1,13 +1,16 @@
 import * as React from 'react'
 import "../Main/Main.css"
 import "./Customer.css"
-import CustomerMain from './status/CustomerMain.js'
+import CustomerMain from './status/CustomerStatusChart.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import CustomerStatusSettingModal from './settingModal/settingModal.js'
+import {CustomerStatusProvider} from './settingModal/CustomerStatusSettingContext.js'
 
 const Customer_status = ()=> {
     return (
+      <div>
         <div className="Customer_status">
           <div className="row">
             <div className="col title">
@@ -28,7 +31,6 @@ const Customer_status = ()=> {
               <CustomerMain/>
             </section>
           </div>
-
           <div className="col-1 centered">
             {/* 설정모달창 연결 버튼 */}
             <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#SettingModal">
@@ -45,12 +47,8 @@ const Customer_status = ()=> {
         {/* 설정창 모달 */}
         <CustomerStatusSettingModal />
         </CustomerStatusProvider>
-      </div>
+     </div>
   );
-
-        </div>
-    );
-
 }
 
 export default Customer_status;

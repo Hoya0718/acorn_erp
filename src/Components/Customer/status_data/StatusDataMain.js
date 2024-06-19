@@ -23,7 +23,7 @@ const Customer_status = () => {
   const handleSearch = () => {
     const data = { header: '10대이하', key: 'age_10', format: (value) => value.toLocaleString(), className: 'table-centered' };
     const filtered = data.filter(item => {
-      const withinPeriod = true; // 기간 필터링 로직을 여기에 작성
+      const withinPeriod = setPeriod(); // 기간 필터링 로직을 여기에 작성
       const matchesKeyword = item.name.includes(keyword); // 키워드 필터링 로직을 여기에 작성
       return withinPeriod && matchesKeyword;
     });
@@ -59,7 +59,7 @@ const Customer_status = () => {
 
             <FontAwesomeIcon icon={faGear} style={{ fontSize: '2em' }} />
 
-            <FontAwesomeIcon icon={faGear} style={{ fontSize: '2em' }}  />
+            <FontAwesomeIcon icon={faGear} style={{ fontSize: '2em' }} />
 
           </button>
         </div>
@@ -80,21 +80,21 @@ const Customer_status = () => {
               <div className='col-1 centered'>
                 <SearchButton onSearch={handleSearch} />
               </div>
-
-          <div className='row'>
-            <div className='col'>
-              <TabButton activeTab={activeTab} setActiveTab={setActiveTab} setActiveLabel={setActiveLabel} />
             </div>
-            <div className='col righted'>
-              <PeriodSearch />
-              <KeywordSearch />
+            <div className='row'>
+              <div className='col'>
+                <TabButton activeTab={activeTab} setActiveTab={setActiveTab} setActiveLabel={setActiveLabel} />
+              </div>
+              <div className='col righted'>
+                <PeriodSearch />
+                <KeywordSearch />
+              </div>
+              <div className='col-1 centered'>
+                <SearchButton />
+              </div>
             </div>
-            <div className='col-1 centered'>
-              <SearchButton />
-
-            </div>
+            {renderTable()}
           </form>
-          {renderTable()}
         </section>
       </div>
       <CustomerStatusSettingModal />
