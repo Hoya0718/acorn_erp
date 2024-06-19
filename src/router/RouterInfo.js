@@ -28,6 +28,7 @@ import ExportMgmt from '../Components/Financial/ExportMgmt.js';
 // 예약 관리
 import ReservationMgmt from '../Components/Reservation/ReservationMgmt.js';
 import MainReg from '../Components/Reservation/MainReg.js';
+import ResTable from '../Components/Reservation/ResTable.js';
 
 // 로그인 & 회원가입
 import Login from '../Components/Login/Login.js';
@@ -120,11 +121,19 @@ export const RouterInfo = createBrowserRouter([
         ]
       },
       {
-        path: "reservationMgmt",
-        element: <ReservationMgmt />,
-      
-         
-      },
+  path: "reservationMgmt",
+  element: <ReservationMgmt />,
+  children: [
+    {
+      index: true,
+      element: <ResTable />
+    },
+    {
+      path: "mainReg",
+      element: <MainReg />
+    }
+  ]
+},
       {
         path: "board",
         element: <Board />,

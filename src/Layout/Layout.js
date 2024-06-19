@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import './Layout.css';
+import MemoPad from '../Components/MemoPad';
 
 const Layout = () => {
   const [expandedItem, setExpandedItem] = useState(null);
@@ -11,8 +12,9 @@ const Layout = () => {
 
   return (
     <div className="layout">
-      <header>
-        <span>ACORN ERP</span>
+      <header className='header'>
+        <span style={{fontSize:"18px"}}>ACORN ERP</span>
+        <MemoPad></MemoPad>
       </header>
       <div className="container1">
         <div className="sidebar">
@@ -30,7 +32,7 @@ const Layout = () => {
               ))}
             </ul>
               <div>
-                <button>환경설정</button>
+                <button>다크모드</button>
                 <button>로그아웃</button>
               </div>
           </nav>

@@ -85,3 +85,7 @@ li {
 .submenu.active {
   max-height: 1000px; /* Adjust this value as needed */
 }
+
+.header {
+  height: 50px;
+}
