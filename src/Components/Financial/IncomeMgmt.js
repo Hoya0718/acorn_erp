@@ -3,7 +3,7 @@ import './Financial.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileExcel, faPrint } from '@fortawesome/free-solid-svg-icons';
 import TableComponent from './TableComponent';
-import RegistrationModal from './RegistrationModal';
+import IncomeRegistrationModal from './IncomeRegistrationModal';
 
 const FinanceTable = () => {
   const [data, setData] = useState([
@@ -63,12 +63,12 @@ const FinanceTable = () => {
   return (
     <div>
       <div className="Middle classification bold-and-large">
-        <span> 매입 관리 </span>
+        <h4> 매입 관리 </h4>
       </div>
 
-      <RegistrationModal data={data} setData={setData} />
-
       <hr />
+
+      <IncomeRegistrationModal data={data} setData={setData} />
 
       <div className="row">
         <div className="col-md-4">
@@ -79,11 +79,10 @@ const FinanceTable = () => {
         </div>
         <div className="col-md-8">
           <div className="input-group mb-3">
-            <input type="text" id="keyword" className="form-control" placeholder="검색" />
+            <input type="text" id="keyword" className="form-control" placeholder='🔍 검색' />
             <button className="btn btn-dark ml-2" onClick={handleSearch}>조회</button>
           </div>
         </div>
-        <ul className="nav nav-underline"></ul>
       </div>
 
       <TableComponent

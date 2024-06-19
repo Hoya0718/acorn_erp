@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ModalForm from './ModalForm';
 
-const RegistrationModal = ({ data, setData }) => {
+const ExportRegistrationModal = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState('');
   const [formData, setFormData] = useState({
@@ -93,4 +93,4 @@ const RegistrationModal = ({ data, setData }) => {
   );
 };
 
-export default RegistrationModal;
+export default ExportRegistrationModal;

@@ -10,12 +10,16 @@
     background-color: #f5f5f5;
   }
   
-  .table-group-divider {
-    border-top: 2px solid #dee2e6;
+  .righted {
+    margin-bottom: 20px; /* Add some space between the buttons and the underline */
   }
   
-  .righted {
-    text-align: right;
+  nav + .righted {
+    margin-top: 10px;
+  }
+  
+  .table th {
+    cursor: pointer;
   }
   
   .input-group-text {
