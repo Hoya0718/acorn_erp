@@ -49,6 +49,32 @@
 }
 
 
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+.table .table-row {
+  border-bottom: 1px solid #ddd;
+}
+
+.table .table-row:last-child {
+  border-bottom: none;
+}
+
+
 /* 페이지네이션 스타일 */
 .page-item.active .page-link {
   background-color: black;
@@ -57,8 +83,10 @@
 .active-link {
   background-color: black !important;
   border: none;
+
 }
 
 .searchBox {
   display: flex;
+
 }

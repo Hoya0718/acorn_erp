@@ -1,5 +1,3 @@
-// 작성자: 박승희
-// 고객현황 데이터 페이지 메인 페이지
 import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
@@ -58,13 +56,18 @@ const Customer_status = () => {
         </div>
         <div className="col-1 centered">
           <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#SettingModal">
+
             <FontAwesomeIcon icon={faGear} style={{ fontSize: '2em' }} />
+
+            <FontAwesomeIcon icon={faGear} style={{ fontSize: '2em' }}  />
+
           </button>
         </div>
       </div>
       <hr />
       <div className="content">
         <section>
+
           <form>
             <div className='row'>
               <div className='col'>
@@ -77,6 +80,18 @@ const Customer_status = () => {
               <div className='col-1 centered'>
                 <SearchButton onSearch={handleSearch} />
               </div>
+
+          <div className='row'>
+            <div className='col'>
+              <TabButton activeTab={activeTab} setActiveTab={setActiveTab} setActiveLabel={setActiveLabel} />
+            </div>
+            <div className='col righted'>
+              <PeriodSearch />
+              <KeywordSearch />
+            </div>
+            <div className='col-1 centered'>
+              <SearchButton />
+
             </div>
           </form>
           {renderTable()}

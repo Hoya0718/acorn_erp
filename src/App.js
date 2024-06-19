@@ -5,9 +5,14 @@ import { CustomerStatusProvider } from './Components/Customer/settingModal/Custo
 
 function App() {
   return (
+
+    <div>
+
     <CustomerStatusProvider>
       <RouterProvider router={RouterInfo} />
     </CustomerStatusProvider>
+    </div>
+
   );
 }
 
