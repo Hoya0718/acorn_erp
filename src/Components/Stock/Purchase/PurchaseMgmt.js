@@ -4,21 +4,25 @@ import '../../Main/Main.css'
 import PurchaseAdd from './PurchaseAdd';
 import PurchaseUpdate from './PurchaseUpdate';
 import NewDatePicker from './DatePicker';
-import Search from './Search';
+import Modal from './Modal';
 import { AiOutlinePrinter } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { PiFileArrowUp } from "react-icons/pi";
 import { AiOutlineCalendar } from 'react-icons/ai';
 
 
-const Purchase = () => {
+const PurchaseMgmt = () => {
   const [isAddClicked, setIsAddClicked] = useState(false);
   const [isUpdateClicked, setIsUpdateClicked] = useState(false);
   const [isDeleteClicked, setIsDeleteClicked] = useState(false);
   const [checkAll, setCheckAll] = useState(false); // 체크박스 전체 선택
-
+  const [updateData, setUpdateData] = useState(null); // 수정된 데이터를 저장할 상태
   // 테이블 추가/수정 변수
-  const [addPurchase, setAddPurchase] = useState([]); // 추가할 데이터를 배열로 받는다.
+  const [addPurchase, setAddPurchase] = useState([
+    // 초기 데이터 예시
+    { purchaseCode: 'P001', purchaseName: 'Product A', purchaseUnit: 'Unit A', orderDate: '2023-06-01', orderQuantity: 100, unitPrice: 50, purchaseRemark: '' },
+    { purchaseCode: 'P002', purchaseName: 'Product B', purchaseUnit: 'Unit B', orderDate: '2023-06-02', orderQuantity: 150, unitPrice: 70, purchaseRemark: '' },
+  ]); // 추가할 데이터를 배열로 받는다.
   const [updatePurchase, setUpdatePurchase] = useState([]); // 수정할 데이터를 배열로 받는다.
 
   // 캘린더 날짜 변수
@@ -29,20 +33,6 @@ const Purchase = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedItemIndexes, setSelectedItemIndexes] = useState([]);
 
-  // 검색어 상태 관리
-  const [userInput, setUserInput] = useState(''); // 사용자 입력값
-    // 검색어 변경 시 데이터 필터링
-    useEffect(() => {
-      const filteredData = addPurchase.filter((purchase) =>
-        purchase.purchaseName.toLowerCase().includes(userInput.toLowerCase())
-      );
-      setAddPurchase(filteredData);
-    }, [userInput]);
-
-    const handleSearch = (keyword) => {
-      // 검색어 업데이트
-      setUserInput(keyword);
-    };
 
 
 ///
@@ -84,13 +74,8 @@ const Purchase = () => {
     setIsAddClicked(false);
     setIsDeleteClicked(false);
   }
-  const handleDeleteClick = () => {
-    // 선택된 항목을 삭제하는 로직을 구현
-    const remainingItems = addPurchase.filter(purchase => !selectedItems.includes(purchase.purchaseCode));
-    setAddPurchase(remainingItems);
-    setSelectedItems([]); // 선택된 항목 비우기
-    setSelectedItemIndexes([]);
-  }
+
+
 
   // purchaseAdd 파트
   const handleAddPurchase = (newAddPurchase) => {
@@ -101,22 +86,36 @@ const Purchase = () => {
     // 데이터 추가 후에 수행할 작업
   }, [addPurchase]); // addPurchase 상태가 변경될 때마다 실행됨
 
-  // purchaseUpdate 파트
-  const handleUpdatePurchase = (updatedPurchase) => {
-    // Logic to update the purchase in addPurchase state
-    const updatedList = addPurchase.map((purchase, index) => {
-      if (selectedItemIndexes.includes(index)) {
-        return updatedPurchase;
+    // 데이터 수정 함수
+    const handleUpdatePurchase = (updatedPurchase, index) => {
+      const updatedList = [...addPurchase];
+      updatedList[index] = updatedPurchase;
+      setAddPurchase(updatedList);
+      setIsUpdateClicked(false); // 수정 모드 종료
+      setSelectedItems([]);
+      setSelectedItemIndexes([]);
+    };
+
+    // 삭제 파트
+    const handleDeleteClick = () => {
+      if (selectedItems.length === 0) {
+        window.alert('삭제할 항목을 선택해 주세요.');
+      } else {
+        if (window.confirm('선택된 항목을 삭제하시겠습니까?')) {
+          const remainingItems = addPurchase.filter(purchase => !selectedItems.includes(purchase.purchaseCode));
+          setAddPurchase(remainingItems);
+          setSelectedItems([]);
+          setSelectedItemIndexes([]);
+        }
       }
-      return purchase;
-    });
-    setAddPurchase(updatedList);
-    setIsUpdateClicked(false); // Close the update mode after updating
+    };
+
+     const handleCancelUpdate = () => {
+    setIsAddClicked(false); // 등록 취소 시 부모 컴포넌트만 보이도록 설정
+    setIsUpdateClicked(false);
     setSelectedItems([]);
     setSelectedItemIndexes([]);
-  }
-
-
+  };
 
 
   return (
@@ -130,10 +129,22 @@ const Purchase = () => {
 
     <div className="subTitle"> 
       <span>
-        <button onClick={handleAddClick}>{isAddClicked ? '취소' : '등록'}</button>
-        <button onClick={handleUpdateClick} disabled={selectedItems.length === 0}>{isUpdateClicked ? '취소' : '수정'}</button>
-        <button onClick={handleDeleteClick} disabled={selectedItems.length === 0}>삭제</button>
-        {isAddClicked && <button>기본값</button>}
+        {!isUpdateClicked && (
+          <>
+            {isAddClicked ? (
+              <>
+                <button onClick={handleCancelUpdate}>취소</button>
+                <button>기본값</button>
+              </>
+            ) : (
+              <button onClick={handleAddClick}>등록</button>
+            )}
+            {!isAddClicked && <button onClick={handleUpdateClick} disabled={selectedItems.length === 0}>수정</button>}
+            {!isAddClicked && <button onClick={handleDeleteClick} disabled={selectedItems.length === 0}>삭제</button>}
+          </>
+        )}
+        {isUpdateClicked && <button onClick={() => handleUpdatePurchase(updatePurchase)}>확인</button>}
+        {isUpdateClicked && <button onClick={handleCancelUpdate}>취소</button>}
       </span>
     </div>
 
@@ -169,7 +180,7 @@ const Purchase = () => {
     </div>
 
       {/* 검색창 */}
-      <Search onSearch={handleSearch} />
+      
 
       <br/><br/><br/>
       {/* 테이블 */}
@@ -232,4 +243,4 @@ const Purchase = () => {
   )
 
 }
-export default Purchase;
+export default PurchaseMgmt;
