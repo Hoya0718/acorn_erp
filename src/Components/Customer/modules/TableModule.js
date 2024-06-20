@@ -13,7 +13,6 @@ const TableModule = ({  data = [], columns = [], onSort }) => {
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
 
     useEffect(() => {
-        // setTableData(data);
         setSelectedRows({});
         setSelectAll(false);
     }, [data]);
@@ -33,6 +32,7 @@ const TableModule = ({  data = [], columns = [], onSort }) => {
     const handleSort = (key) => {
         let direction = 'ascending';
         if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+            console.log('')
             direction = 'descending';
         } else if (sortConfig.key === key && sortConfig.direction === 'descending') {
             direction = null;
