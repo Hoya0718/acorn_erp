@@ -7,35 +7,25 @@ const LocationSelector_Cities = ({ selectedProvince }) => {
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState('');
 
-
   console.log("LocationSelector_Citie 실행", selectedProvince);
+
   useEffect(() => {
     if (selectedProvince) {
       // 선택된 광역시도의 시군구 데이터를 가져오는 함수
       const fetchCities = async () => {
         try {
-          const response = await axios.get('http://apis.data.go.kr/1741000/StanReginCd', {
-            params: {
-              ServiceKey: '66YBzAOO09yTFDqEcgyss5LcVKGuoQ7Gnq2XFo7El6I028k6zKPcRXRJ6zwWRQidZUDukhMF9TY5qc3IaE0gjg%3D%3D', 
-              type: 'json',
-              flag: 'Y',
-              pageNo: 1,
-              numOfRows: 100,
-              locatadd_nm: selectedProvince
-            }
+          const response = await axios.get('http://localhost:5000/api/cities',{
+          params: { province: selectedProvince }
           });
-          setCities(response.data.response.body.items);
+          setCities(response.data);
         } catch (error) {
           console.error('Error fetching cities:', error);
-          console.error('Error message:', error.message);
-          console.error('Error code:', error.code);
-          console.error('Error config:', error.config);
-          console.error('Error request:', error.request);
-          console.error('Error response:', error.response);
         }
       };
 
       fetchCities();
+    } else {
+      setCities([]);
     }
   }, [selectedProvince]);
 
@@ -47,9 +37,9 @@ const LocationSelector_Cities = ({ selectedProvince }) => {
       disabled={!selectedProvince}
     >
       <option value="">시군구</option>
-      {cities.map((city) => (
-        <option key={city.region_cd} value={city.locatadd_nm}>
-          {city.locatadd_nm}
+      {cities.map((city, index) => (
+        <option key={index} value={city}>
+          {city}
         </option>
       ))}
     </select>
