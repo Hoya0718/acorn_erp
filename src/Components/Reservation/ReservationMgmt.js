@@ -134,17 +134,17 @@ const ReservationMgmt = () => {
               </div>
   
               {/* col-md-6 */}
-              <div className="col-md-5 col-xs-12 rightFrame">
+              <div className="col-md-5 col-xs-12 custom-right-column">
                 {/* right */}
                 <div className="right">
                   {/* right-up */}
                   <div className="right-up">
                     {/* <button className="btn btn-outline-primary" onClick={handleMainRegClick}>예약 등록</button> */}
                     <Link to="mainReg">
-                      <button className="btn btn-primary">예약 등록</button>
+                      <button className="btn btn-primary btn-register">예약 등록</button>
                     </Link>
                     <Link to="resTable">
-                      <button className="btn btn-primary">예약 조회</button>
+                      <button className="btn btn-primary btn-search">예약 조회</button>
                     </Link>
                   </div>
                   {/* right-mid */}
@@ -171,7 +171,7 @@ const ReservationMgmt = () => {
         </div>
         {/* footer_Frame */}
         <div id="footer_Frame">
-          <footer> 최하단 </footer>
+          <footer> </footer>
         </div>
       </div>
     </div>
