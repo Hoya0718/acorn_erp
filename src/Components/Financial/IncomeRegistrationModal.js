@@ -18,17 +18,16 @@ const IncomeRegistrationModal = ({ data, setData }) => {
   });
 
   const handleModalShow = (content) => {
-    if (content === '수정') {
+    if (content === '거래명세서 작성') {
       const selectedData = data.find(row => row.checked);
       if (selectedData) {
         setFormData(selectedData);
+        setModalContent('거래명세서 작성');
+        setShowModal(true);
       } else {
         alert('수정할 항목을 선택해주세요.');
-        return;
       }
     }
-    setModalContent(content);
-    setShowModal(true);
   };
 
   const handleModalClose = () => {
@@ -56,29 +55,25 @@ const IncomeRegistrationModal = ({ data, setData }) => {
   };
 
   const handleFormSubmit = () => {
-    if (modalContent === '등록') {
+    if (modalContent === '거래명세서 작성') {
       setData([...data, { ...formData, checked: false }]);
-    } else if (modalContent === '수정') {
-      const updatedData = data.map((row) =>
-        row.checked ? { ...formData, checked: row.checked } : row
-      );
-      setData(updatedData);
+      handleModalClose();
     }
-    handleModalClose();
+  };
+
+  const handleDelete = () => {
+    if (window.confirm('정말 삭제하시겠습니까?')) {
+      const updatedData = data.filter((row) => !row.checked);
+      setData(updatedData);
+      window.alert('삭제가 완료되었습니다.');
+    }
   };
 
   return (
     <>
       <div className="righted" style={{ textAlign: 'right', marginTop: '10px' }}>
-        <input type="button" value="등록 >" className="btn btn-dark mr-2" onClick={() => handleModalShow('등록')} />
-        <input type="button" value="수정 >" className="btn btn-dark mr-2" onClick={() => handleModalShow('수정')} />
-        <input type="button" value="삭제 >" className="btn btn-dark" onClick={() => {
-          if (window.confirm('정말 삭제하시겠습니까?')) {
-            const updatedData = data.filter((row) => !row.checked);
-            setData(updatedData);
-            window.alert('삭제가 완료되었습니다.');
-          }
-        }} />
+        <input type="button" value="거래명세서 작성 >" className="btn btn-dark mr-2" onClick={() => handleModalShow('거래명세서 작성')} />
+        <input type="button" value="삭제 >" className="btn btn-dark" onClick={handleDelete} />
       </div>
       <ModalForm
         show={showModal}

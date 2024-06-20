@@ -35,10 +35,12 @@ const FinanceTable = () => {
 
   const handleExcelDownload = () => {
     console.log('엑셀 다운로드 버튼 클릭');
+    // 여기에 엑셀 다운로드 로직 추가
   };
 
   const handlePrint = () => {
     console.log('인쇄 버튼 클릭');
+    // 여기에 인쇄 로직 추가
   };
 
   const handleSort = (key) => {
