@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const app = express();
 const port = 5000;
+const covid_baseURL = "/1741000/StanReginCd";
 
 // CORS 설정
 app.use(cors());
@@ -11,9 +12,9 @@ app.use(cors());
 // 기본 라우트 설정
 app.get('/api/provinces', async (req, res) => {
     try {
-      const response = await axios.get('http://apis.data.go.kr/1741000/StanReginCd/getStanReginCdList', {
+      const response = await axios.get(`${covid_baseURL}/getStanReginCdList`, {
         params: {
-          ServiceKey: decodeURIComponent('66YBzAOO09yTFDqEcgyss5LcVKGuoQ7Gnq2XFo7El6I028k6zKPcRXRJ6zwWRQidZUDukhMF9TY5qc3IaE0gjg%3D%3D'),
+          ServiceKey: process.env.REACT_APP_API_KEY,
           type: 'json',
           pageNo: 1,
           numOfRows: 100,
@@ -29,7 +30,7 @@ app.get('/api/provinces', async (req, res) => {
           console.error('Error response status:', error.response.status); // 에러 응답 상태 출력
           console.error('Error response headers:', error.response.headers); // 에러 응답 헤더 출력
       }
-      res.status(500).send('Error fetching data');
+      res.status(500).send('Error fetching data 500');
     }
   });
   app.listen(port, () => {

@@ -9,12 +9,6 @@ const CustomerStatusPagination = ({ totalItems, itemsPerPage, currentPage, onPag
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
-  
-  console.log("Total Items:", totalItems);
-  console.log("Items Per Page:", itemsPerPage);
-  console.log("Current Page:", currentPage);
-  console.log("Total Pages:", totalPages);
-
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
       onPageChange(page);
@@ -36,7 +30,6 @@ const CustomerStatusPagination = ({ totalItems, itemsPerPage, currentPage, onPag
         </li>
       );
     }
-    console.log("Page Numbers Rendered:", pageNumbers);
     return pageNumbers;
   };
   return (

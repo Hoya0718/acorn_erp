@@ -5,11 +5,11 @@ import "../../Main/Main.css"
 import LocationSelector_Provinces from './RegionAPIdataProvince'
 import LocationSelector_Cities from './RegionAPIdataCities'
 import {useCustomerStatus} from './CustomerStatusSettingContext';
-
 const SettingModal_Region = () => {
     // 전국 선택시 실제 데이터: 광역시도로 데이터 세팅
     // 광역시도 선택시(예:경기도): (경기도)시군구로 데이터 세팅
     // 시군구 선택시(예: 경기도 수원시): (경기도)(수원시)읍면동 데이터로 세팅
+
     const {
         selectedRegion, setSelectedRegion,
         selectedProvince, setSelectedProvince,

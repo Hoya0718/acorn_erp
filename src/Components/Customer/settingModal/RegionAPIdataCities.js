@@ -8,6 +8,7 @@ const LocationSelector_Cities = ({ selectedProvince }) => {
   const [selectedCity, setSelectedCity] = useState('');
 
 
+  console.log("LocationSelector_Citie 실행", selectedProvince);
   useEffect(() => {
     if (selectedProvince) {
       // 선택된 광역시도의 시군구 데이터를 가져오는 함수
@@ -15,7 +16,7 @@ const LocationSelector_Cities = ({ selectedProvince }) => {
         try {
           const response = await axios.get('http://apis.data.go.kr/1741000/StanReginCd', {
             params: {
-              ServiceKey: '66YBzAOO09yTFDqEcgyss5LcVKGuoQ7Gnq2XFo7El6I028k6zKPcRXRJ6zwWRQidZUDukhMF9TY5qc3IaE0gjg%3D%3D',  // 여기에 본인의 인증키를 입력하세요
+              ServiceKey: '66YBzAOO09yTFDqEcgyss5LcVKGuoQ7Gnq2XFo7El6I028k6zKPcRXRJ6zwWRQidZUDukhMF9TY5qc3IaE0gjg%3D%3D', 
               type: 'json',
               flag: 'Y',
               pageNo: 1,
@@ -26,6 +27,11 @@ const LocationSelector_Cities = ({ selectedProvince }) => {
           setCities(response.data.response.body.items);
         } catch (error) {
           console.error('Error fetching cities:', error);
+          console.error('Error message:', error.message);
+          console.error('Error code:', error.code);
+          console.error('Error config:', error.config);
+          console.error('Error request:', error.request);
+          console.error('Error response:', error.response);
         }
       };
 

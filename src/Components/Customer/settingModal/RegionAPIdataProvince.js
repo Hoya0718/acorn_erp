@@ -6,6 +6,7 @@ import axios from 'axios';
 const LocationSelector_Provinces = ({ onSelectProvince }) => {
   const [provinces, setProvinces] = useState([]);
 
+  console.log("LocationSelector_Provinces 실행", onSelectProvince);
   useEffect(() => {
     // 광역시도 데이터를 가져오는 함수
     const fetchProvinces = async () => {
