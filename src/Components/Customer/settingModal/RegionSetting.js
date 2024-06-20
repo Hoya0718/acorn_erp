@@ -71,7 +71,8 @@ const SettingModal_Region = () => {
                             </span>&nbsp;&nbsp;
                             <span>
                                 <LocationSelector_Cities
-                                    selectedProvince={selectedProvince} />
+                                    selectedProvince={selectedProvince}
+                                    onSelectCity={setSelectedCity}  />
                             </span>
                         </span>
                     )}

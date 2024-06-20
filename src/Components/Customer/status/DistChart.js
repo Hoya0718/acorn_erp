@@ -6,15 +6,19 @@ import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import "../../Main/Main.css"
 import "../Customer.css"
+// import { useCustomerStatus } from './CustomerStatusSettingContext';
 // Chart.js 요소 등록
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Dist = () => {
     const [chartNames, setChartNames] = React.useState([]);
+    // const { selectedRegion, selectedProvince, selectedCity } = useCustomerStatus();
+    const [chartData, setChartData] = React.useState(null);
+    const [chartLabel, setChartLabel] = React.useState('');
 
     React.useEffect(() => {
         const savedSettings = localStorage.getItem('customerStatusSettings');
-        
+
         if (savedSettings) {
             const { checkboxes_dist } = JSON.parse(savedSettings);
             //예제데이터
@@ -52,9 +56,48 @@ const Dist = () => {
                 charts.push({ data: regionData, label: '지역별' });
             }
 
+
             setChartNames(charts);
         }
     }, []);
+
+//  세팅모달 설정에 따른 도넛차트 보이기 설정
+//   React.useEffect(() => {
+//     const fetchData = async () => {
+//       let endpoint = '';
+//       let params = {};
+
+//       if (selectedCity) {
+//         endpoint = 'http://localhost:5000/api/towns';
+//         params = { city: selectedCity };
+//       } else if (selectedProvince) {
+//         endpoint = 'http://localhost:5000/api/cities';
+//         params = { province: selectedProvince };
+//       } else {
+//         endpoint = 'http://localhost:5000/api/provinces';
+//       }
+
+//       try {
+//         const response = await axios.get(endpoint, { params });
+//         const data = response.data;
+
+//         const chartData = {
+//           labels: data,
+//           datasets: [{
+//             data: data.map(() => Math.floor(Math.random() * 100)), // 예시 데이터 생성
+//             backgroundColor: data.map(() => `#${Math.floor(Math.random() * 16777215).toString(16)}`),
+//           }]
+//         };
+
+//         setChartData(chartData);
+//         setChartLabel(selectedCity || selectedProvince || selectedRegion);
+//       } catch (error) {
+//         console.error('Error fetching data:', error);
+//       }
+//     };
+
+//     fetchData();
+//   }, [selectedRegion, selectedProvince, selectedCity]);
 
     const findMaxLabel = (data) => {
         const maxIndex = data.datasets[0].data.indexOf(Math.max(...data.datasets[0].data));

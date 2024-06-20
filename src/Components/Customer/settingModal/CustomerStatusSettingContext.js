@@ -30,38 +30,6 @@ export const CustomerStatusProvider = ({ children }) => {
   const [selectedProvince, setSelectedProvince,] = useState('');
   const [selectedCity, setSelectedCity,] = useState('');
 
-  // useEffect(() => {
-  //   const savedSettings = localStorage.getItem('customerStatusSettings');
-  //   if (savedSettings) {
-  //     const {
-  //       customerCount_lastyear,
-  //       customerCount,
-  //       customerTarget,
-  //       selectedOption,
-  //       period,
-  //       startDate,
-  //       checkboxes_dist,
-  //       checkboxes_prod,
-  //       endDate,
-  //       selectedRegion,
-  //       rangeValue,
-  //     } = JSON.parse(savedSettings);
-
-  //     setCustomerCount_lastyear(customerCount_lastyear || 50000);
-  //     setCustomerCount(customerCount || 60000);
-  //     setCustomerTarget(customerTarget || '');
-  //     setGoalOption(goalOption || '전체고객수');
-  //     setSelectedOption(selectedOption || '');
-  //     setPeriod(period || '1년');
-  //     setStartDate(startDate || '');
-  //     setEndDate(endDate || '');
-  //     setCheckboxes_dist(checkboxes_dist || { gender: true, age: true, region: true });
-  //     setCheckboxes_prod(checkboxes_prod || { amount: true, count: true, reaction: true });
-  //     setSelectedRegion(selectedRegion || '전국');
-  //     setRangeValue(rangeValue || 5);
-  //   }
-  // }, []);
-
   return (
     <CustomerStatusContext.Provider value={{
       customerCount_lastyear, setCustomerCount_lastyear,
