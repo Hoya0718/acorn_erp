@@ -15,31 +15,31 @@ const MainReg = () => {
       <main>
         <div>
           <form>
-            <table id="calculator_table" border="1" align="center">
+            <table id="calculator_table" border="1" align="center" style={{ width: '100%', maxWidth: '800px' }}>
               <thead>
                 <tr>
-                  <th scope="col" style={{ width: '150px', fontSize: '16px' }}>예약자 이름</th>
-                  <td style={{ width: '200px' }}><input type="text" name="menu" placeholder="예약자 이름" style={{ fontSize: '15px' }} /></td>
-                  <th style={{ width: '150px', fontSize: '16px' }}>휴대전화</th>
-                  <td style={{ width: '200px' }}><input type="text" name="price" placeholder="휴대전화" style={{ fontSize: '15px' }} /></td>
+                  <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>예약자 이름</th>
+                  <td style={{ width: '30%' }}><input type="text" name="menu" placeholder="예약자 이름" style={{ fontSize: '15px', width: '100%' }} /></td>
+                  <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>휴대전화</th>
+                  <td style={{ width: '30%' }}><input type="text" name="price" placeholder="휴대전화" style={{ fontSize: '15px', width: '100%' }} /></td>
                 </tr>
                 <tr>
-                  <th style={{ width: '150px', fontSize: '16px' }}>결제 방식</th>
-                  <td style={{ width: '200px' }}><input type="text" name="price" placeholder="결제 방식" style={{ fontSize: '15px' }} /></td>
-                  <th style={{ width: '150px', fontSize: '16px' }}>추가 요청사항</th>
-                  <td style={{ width: '200px' }}><input type="text" name="price" placeholder="추가 요청사항" style={{ fontSize: '15px' }} /></td>
+                  <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>결제 방식</th>
+                  <td style={{ width: '30%' }}><input type="text" name="price" placeholder="결제 방식" style={{ fontSize: '15px', width: '100%' }} /></td>
+                  <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>추가 요청사항</th>
+                  <td style={{ width: '30%' }}><input type="text" name="price" placeholder="추가 요청사항" style={{ fontSize: '15px', width: '100%' }} /></td>
                 </tr>
                 <tr>
-                  <th scope="col" style={{ width: '150px', fontSize: '16px' }}>성별</th>
-                  <td style={{ width: '200px' }}><input type="text" name="price" placeholder="성별" style={{ fontSize: '15px' }} /></td>
-                  <th style={{ width: '150px', fontSize: '16px' }}>예약 일시</th>
-                  <td style={{ width: '200px' }}><input type="text" name="price" placeholder="예약 일시" style={{ fontSize: '15px' }} /></td>
+                  <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>성별</th>
+                  <td style={{ width: '30%' }}><input type="text" name="price" placeholder="성별" style={{ fontSize: '15px', width: '100%' }} /></td>
+                  <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>예약 일시</th>
+                  <td style={{ width: '30%' }}><input type="text" name="price" placeholder="예약 일시" style={{ fontSize: '15px', width: '100%' }} /></td>
                 </tr>
                 <tr>
-                  <th style={{ width: '150px', fontSize: '16px' }}>예약 번호</th>
-                  <td style={{ width: '200px' }}><input type="text" name="price" placeholder="예약 번호" style={{ fontSize: '15px' }} /></td>
-                  <th style={{ width: '150px', fontSize: '16px' }}>인원 수</th>
-                  <td style={{ width: '200px' }}><input type="text" name="price" placeholder="인원 수" style={{ fontSize: '15px' }} /></td>
+                  <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>예약 번호</th>
+                  <td style={{ width: '30%' }}><input type="text" name="price" placeholder="예약 번호" style={{ fontSize: '15px', width: '100%' }} /></td>
+                  <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>인원 수</th>
+                  <td style={{ width: '30%' }}><input type="text" name="price" placeholder="인원 수" style={{ fontSize: '15px', width: '100%' }} /></td>
                 </tr>
               </thead>
             </table>
