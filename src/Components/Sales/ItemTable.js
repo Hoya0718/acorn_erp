@@ -1,62 +1,33 @@
 import React, { useState } from 'react';
 import './Sales.css';
 
-const initialOrders = [
-  {
-    itemNumber: '1001',
-    itemType: '빵',
-    itemName: '단팥빵',
-    itemStatus: '판매 중',
-    unitPrice: '1000',
-    quantity: 100
-  },
-];
-
-const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmit }) => {
-  const [orders, setOrders] = useState(initialOrders);
-  const [selectAll, setSelectAll] = useState(false);
-  const [selectedOrders, setSelectedOrders] = useState([]);
-
-  // 테이블 추가/수정 변수
- const [add, setAddPurchase] = useState([]); // 추가할 데이터를 배열로 받는다.
- const [updatePurchase, setUpdatePurchase] = useState([]); // 수정할 데이터를 배열로 받는다.
-
-
+const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmit, orders, selectedOrders, setSelectedOrders }) => {
+  const [selectAll, setSelectAll] = useState(false); // 전체 선택 상태
 
   // 전체 선택 토글
   const toggleSelectAll = () => {
     setSelectAll(!selectAll);
     if (!selectAll) {
-      setSelectedOrders([...orders]);
+      setSelectedOrders([...orders]); // 전체 선택 시 모든 주문을 선택된 목록에 추가
     } else {
-      setSelectedOrders([]);
+      setSelectedOrders([]); // 선택 해제 시 선택된 목록 초기화
     }
   };
 
-  // 개별 주문 선택
+  // 개별 주문 선택 토글
   const toggleOrderSelection = (order) => {
-    const selectedIndex = selectedOrders.findIndex((selectedOrder) => selectedOrder.orderNumber === order.orderNumber);
+    const selectedIndex = selectedOrders.findIndex((selectedOrder) => selectedOrder.itemNumber === order.itemNumber);
     if (selectedIndex === -1) {
-      setSelectedOrders([...selectedOrders, order]);
+      setSelectedOrders([...selectedOrders, order]); // 선택되지 않은 경우 선택된 목록에 추가
     } else {
       const updatedOrders = [...selectedOrders];
-      updatedOrders.splice(selectedIndex, 1);
+      updatedOrders.splice(selectedIndex, 1); // 선택된 경우 선택된 목록에서 제거
       setSelectedOrders(updatedOrders);
     }
   };
 
   // 전체 선택 체크박스의 상태
   const selectAllCheckboxState = selectAll || (selectedOrders.length === orders.length && orders.length > 0);
-
-  const handleFormSubmitInternal = (e) => {
-    e.preventDefault();
-    setOrders([formData, ...orders]);
-    handleFormSubmit();
-  };
-
-  const handleCancel = () => {
-    handleFormSubmit(); // 취소 시 입력폼 초기화
-  };
 
   return (
     <div>
@@ -74,7 +45,7 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
           {isFormVisible && (
             <tr>
               <td></td>
-              <td><input type="text" name="orderNumber" value={formData.orderNumber} onChange={handleInputChange} /></td>
+              <td><input type="text" name="itemNumber" value={formData.itemNumber} onChange={handleInputChange} /></td>
               <td>
                 <select name="itemType" value={formData.itemType} onChange={handleInputChange}>
                   <option value="">선택하세요</option>
@@ -93,19 +64,15 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
                   <option value="판매 중단">판매 중단</option>
                 </select>
               </td>
-              <td><input type="text" name="totalPrice" value={formData.totalPrice} onChange={handleInputChange} /></td>
+              <td><input type="text" name="unitPrice" value={formData.unitPrice} onChange={handleInputChange} /></td>
               <td><input type="number" name="quantity" value={formData.quantity} onChange={handleInputChange} /></td>
-              <td>
-                <button onClick={handleFormSubmitInternal}>추가</button>
-                <button onClick={handleCancel}>취소</button>
-              </td>
             </tr>
           )}
         </thead>
         <tbody>
           {orders.map((order, index) => (
             <tr key={index}>
-              <td><input type="checkbox" checked={selectedOrders.some(selectedOrder => selectedOrder.orderNumber === order.orderNumber)} onChange={() => toggleOrderSelection(order)} /></td>
+              <td><input type="checkbox" checked={selectedOrders.some(selectedOrder => selectedOrder.itemNumber === order.itemNumber)} onChange={() => toggleOrderSelection(order)} /></td>
               <td>{order.itemNumber}</td>
               <td>{order.itemType}</td>
               <td>{order.itemName}</td>
