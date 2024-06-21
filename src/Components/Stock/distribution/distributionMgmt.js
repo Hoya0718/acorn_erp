@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import DistributionTable from './distributiontable';
+import DistributionDelete from './DistributionDelete';
+import DistributionAdd from './DistributionAdd';
+import DistributionUpdate from './DistributionUpdate';
 import "../../Main/Main.css";
-import "./distribution.css";
+import "./Distribution.css";
 
 const DistributionMgmt = () => {
     const initialNewItemState = {
@@ -16,7 +18,7 @@ const DistributionMgmt = () => {
         plannedEntryDate: ''
     };
 
-    const [Items, setItems] = useState([
+    const [items, setItems] = useState([
         { id: 1, code: '12345', name: '케이크', entryDate: '2024.01.01', entryQuantity: 3, initialStock: 1, exitQuantity: 0, totalStock: 4, plannedEntryDate: '2024.01.08' },
         { id: 2, code: '12346', name: '파이', entryDate: '2024.01.01', entryQuantity: 3, initialStock: 1, exitQuantity: 0, totalStock: 4, plannedEntryDate: '2024.01.08' },
         { id: 3, code: '12347', name: '빵', entryDate: '2024.01.01', entryQuantity: 3, initialStock: 1, exitQuantity: 0, totalStock: 4, plannedEntryDate: '2024.01.08' },
@@ -28,6 +30,7 @@ const DistributionMgmt = () => {
     const [showNewItemForm, setShowNewItemForm] = useState(false);
     const [newItem, setNewItem] = useState(initialNewItemState);
     const [editingItemId, setEditingItemId] = useState(null);
+    const [checkAll, setCheckAll] = useState(false);
 
     const handleCheckboxChange = (itemId) => {
         const selectedIndex = selectedItems.indexOf(itemId);
@@ -49,8 +52,8 @@ const DistributionMgmt = () => {
     };
 
     const handleConfirmDelete = () => {
-        alert("삭제완료 했습니다.");
-        const updatedItems = Items.filter(item => !selectedItems.includes(item.id));
+        alert("삭제 완료했습니다.");
+        const updatedItems = items.filter(item => !selectedItems.includes(item.id));
         setItems(updatedItems);
         setDeletedItems([...deletedItems, ...selectedItems]);
         setSelectedItems([]);
@@ -58,22 +61,18 @@ const DistributionMgmt = () => {
 
     const handleInputChange = (event, itemId, field) => {
         const { value } = event.target;
-    
-        // `Items` 배열에서 수정할 항목을 찾아 해당 필드를 업데이트
-        const updatedItems = Items.map(item => {
+        const updatedItems = items.map(item => {
             if (item.id === itemId) {
                 return { ...item, [field]: value };
             }
             return item;
         });
-    
-        // 수정된 항목들로 상태 업데이트
         setItems(updatedItems);
     };
 
     const handleRegisterClick = () => {
-        const newId = Items.length + 1;
-        setItems([...Items, { ...newItem, id: newId }]);
+        const newId = items.length + 1;
+        setItems([...items, { ...newItem, id: newId }]);
         setNewItem(initialNewItemState);
         setShowNewItemForm(false);
     };
@@ -87,31 +86,32 @@ const DistributionMgmt = () => {
         setShowNewItemForm(!showNewItemForm);
     };
 
+    const handleAddDistribution = (newDistribution) => {
+        const newId = items.length + 1;
+        setItems([...items, { ...newDistribution, id: newId }]);
+    };
+
     const handleEditClick = (itemId) => {
         setEditingItemId(itemId);
     };
 
     const handleSaveClick = (itemId) => {
-        setEditingItemId(null); // 수정 완료 후 편집 상태 해제
-        // 필요에 따라 저장 후 추가 작업 수행 가능
+        setEditingItemId(null);
     };
 
     return (
         <div>
             <div className="Middle classification">
-                <span> <h2>물류관리</h2> </span>
+                <span><h2>물류관리</h2></span>
             </div>
-    
             <hr />
-    
             <div className="top-buttons">
+                <span><button className='btn1' onClick={handleCancelClick}>취소</button></span>
                 <span><button onClick={toggleNewItemForm}>등록</button></span>
-                <span><button onClick={() => handleEditClick(selectedItems[0])} disabled={selectedItems.length === 0}>수정</button></span>
-                <span><button onClick={handleDeleteClick} disabled={selectedItems.length === 0}>삭제</button></span>
+                <span><button onClick={() => handleEditClick(selectedItems[0])} disabled={selectedItems.length !== 1}>수정</button></span>
+                <span><DistributionDelete handleDeleteClick={handleDeleteClick} selectedItems={selectedItems} /></span>
             </div>
-    
             <br />
-    
             <div className="searcher">
                 <div className="left">
                     <div className="middle-buttons">
@@ -133,29 +133,61 @@ const DistributionMgmt = () => {
                     </div>
                 </div>
             </div>
-    
             <section className="distribution-table-container">
-                <DistributionTable
-                    items={Items}
-                    selectedItems={selectedItems}
-                    showNewItemForm={showNewItemForm}
-                    handleCheckboxChange={handleCheckboxChange}
-                    handleRegisterClick={handleRegisterClick}
-                    handleInputChange={handleInputChange}
-                    newItem={newItem}
-                    handleCancelClick={handleCancelClick}
-                    handleEditClick={handleEditClick}
-                    handleSaveClick={handleSaveClick}
-                    editingItemId={editingItemId}
-                />
+                <table className='distribution-table'>
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" onChange={() => {}} disabled /></th>
+                            <th>품목코드</th>
+                            <th>품목이름</th>
+                            <th>입고일자</th>
+                            <th>입고수량</th>
+                            <th>기초재고</th>
+                            <th>출고수량</th>
+                            <th>집계재고</th>
+                            <th>입고예정일</th>
+                            {showNewItemForm && <th></th>}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {showNewItemForm && 
+                            <DistributionAdd
+                                onAddDistribution={handleAddDistribution}
+                                handleCancelClick={handleCancelClick}
+                            />
+                        }
+                        {items.map(item => (
+                            <tr key={item.id}>
+                                <td><input type="checkbox" onChange={() => handleCheckboxChange(item.id)} checked={selectedItems.includes(item.id)} /></td>
+                                {editingItemId === item.id ? (
+                                    <DistributionUpdate 
+                                        item={item}
+                                        handleInputChange={handleInputChange}
+                                        handleSaveClick={handleSaveClick}
+                                    />
+                                ) : (
+                                    <>
+                                        <td>{item.code}</td>
+                                        <td>{item.name}</td>
+                                        <td>{item.entryDate}</td>
+                                        <td>{item.entryQuantity}</td>
+                                        <td>{item.initialStock}</td>
+                                        <td>{item.exitQuantity}</td>
+                                        <td>{item.totalStock}</td>
+                                        <td>{item.plannedEntryDate}</td>
+                                    </>
+                                )}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </section>
-    
             <div className="bottom-buttons">
                 <span><button>엑셀다운</button></span>
                 <span><button>인쇄</button></span>
             </div>
         </div>
-    );
-}
+    ); //
+};
 
 export default DistributionMgmt;
