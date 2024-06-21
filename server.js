@@ -8,19 +8,18 @@ const port = 5000;
 const baseURL = "https://apis.data.go.kr/1741000/StanReginCd/getStanReginCdList";
 
 app.use(cors());
-// ServiceKey: '66YBzAOO09yTFDqEcgyss5LcVKGuoQ7Gnq2XFo7El6I028k6zKPcRXRJ6zwWRQidZUDukhMF9TY5qc3IaE0gjg%3D%3D',
 let cachedData = null; // 데이터를 캐싱할 변수
 
 async function fetchPageData(pageNo, numOfRows, retries = 3) {
   try {
     const response = await axios.get(baseURL, {
       params: {
-        ServiceKey: '66YBzAOO09yTFDqEcgyss5LcVKGuoQ7Gnq2XFo7El6I028k6zKPcRXRJ6zwWRQidZUDukhMF9TY5qc3IaE0gjg%3D%3D',
+        ServiceKey: 'WYyFpNUl0WJKt0wYKORHCGdVLFVENK+bfSIQHwerjw+aRVwaaBonxFjFYlrsuGrRrje9jawqfln2FVPyKVsZsQ==',
         type: 'json',
         pageNo: pageNo,
         numOfRows: numOfRows,
         flag: 'Y',
-      }
+      },
     });
 
     return response.data;
@@ -60,33 +59,6 @@ async function fetchAllData() {
   return allData;
 }
 
-// async function initializeData() {
-//   const allData = await fetchAllData();
-
-//   const seen = new Set();
-//   const extractedData = allData.map(item => {
-//     const firstWord = item1.locatadd_nm.split(' ')[0];
-//     const secondWord = item2.locatadd_nm.split(' ')[1];
-//     const thirdWord = item3.locatadd_nm.split(' ')[2];
-//     return {
-//       ...item1,
-//       locatadd_nm: firstWord,
-//       ...item2,
-//       locatadd_nm: secondWord,
-//       ...item3,
-//       locatadd_nm: thirdWord
-//     };
-//   }).filter(item => {
-//     if (seen.has(item.locatadd_nm)) {
-//       return false;
-//     } else {
-//       seen.add(item.locatadd_nm);
-//       return true;
-//     }
-//   });
-
-//   return extractedData;
-// }
 async function initializeData() {
   const allData = await fetchAllData();
 
