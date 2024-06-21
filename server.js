@@ -6,7 +6,8 @@ const cors = require('cors');
 const app = express();
 const port = 5000;
 const baseURL = "https://apis.data.go.kr/1741000/StanReginCd/getStanReginCdList";
-
+const serverKey_En = process.env.Enconding_API_KEY
+const serverKey_De = process.env.Decoding_API_KEY
 app.use(cors());
 let cachedData = null; // 데이터를 캐싱할 변수
 
@@ -14,7 +15,7 @@ async function fetchPageData(pageNo, numOfRows, retries = 3) {
   try {
     const response = await axios.get(baseURL, {
       params: {
-        ServiceKey: 'WYyFpNUl0WJKt0wYKORHCGdVLFVENK+bfSIQHwerjw+aRVwaaBonxFjFYlrsuGrRrje9jawqfln2FVPyKVsZsQ==',
+        ServiceKey: serverKey_De,
         type: 'json',
         pageNo: pageNo,
         numOfRows: numOfRows,
@@ -115,5 +116,6 @@ app.get('/api/towns', (req, res) => {
 });
 
 app.listen(port, () => {
+  console.log(serverKey_De);
   console.log(`Server running on port ${port}`);
 });
