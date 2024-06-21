@@ -1,17 +1,18 @@
-// src/App.js
 import React from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { RouterInfo } from './router/RouterInfo';
-import { createBrowserRouter } from 'react-router-dom';
+import { CustomerStatusProvider } from './Components/Customer/settingModal/CustomerStatusSettingContext';
 
-
-const RouterObject = createBrowserRouter(RouterInfo);
-
-const App = () => {
+function App() {
   return (
-    <React.StrictMode>
-      <RouterProvider router={RouterObject} />
-    </React.StrictMode>
+
+    <div>
+
+    <CustomerStatusProvider>
+      <RouterProvider router={RouterInfo} />
+    </CustomerStatusProvider>
+    </div>
+
   );
 }
 

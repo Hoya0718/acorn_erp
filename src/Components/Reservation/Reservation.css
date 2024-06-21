@@ -1,126 +1,218 @@
-@charset "EUC-KR";
-
-* {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  box-sizing: border-box;
-}
-  
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
 #Frame {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content:column;
+  height : 100vh;
 
-  }
+}
 
 .calendar {
-  width: 600px;
-  margin: 10px;
-  margin-left: 0px;
+width: 600px;
+margin: 10px;
+margin-left: 0px;
 }
 
 .flex-shrink-0 {
-  width: 100px; /* 醫뚯륫 �곹깭諛� �덈퉬 �ㅼ젙 */
+width: 100px; 
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+display: flex;
+justify-content: space-between;
+align-items: center;
 }
 
 .year-month {
-  font-size: 35px;
+font-size: 35px;
 }
 
 .nav {
-  display: flex;
-  border: 1px solid #333333;
-  border-radius: 5px;
+display: flex;
+border: 1px solid #333333;
+border-radius: 5px;
 }
 
 .nav-btn {
-  width: 28px;
-  height: 30px;
-  border: none;
-  font-size: 16px;
-  line-height: 34px;
-  background-color: transparent;
-  cursor: pointer;
+width: 28px;
+height: 30px;
+border: none;
+font-size: 16px;
+line-height: 34px;
+background-color: transparent;
+cursor: pointer;
 }
 
 .go-today {
-  width: 75px;
-  border-left: 1px solid #333333;
-  border-right: 1px solid #333333;
+width: 75px;
+border-left: 1px solid #333333;
+border-right: 1px solid #333333;
 }
 
 .days {
-  display: flex;
-  margin: 25px 0 10px;
+display: flex;
+margin: 25px 0 10px;
 }
 
 .day {
-  width: calc(100% / 7);
-  text-align: center;
+width: calc(100% / 7);
+text-align: center;
 }
 
 .dates {
-  display: flex;
-  flex-flow: row wrap;
-  height: 500px;
-  border-top: 1px solid #333333;
-  border-right: 1px solid #333333;
+display: flex;
+flex-flow: row wrap;
+height: 500px;
+border-top: 1px solid #333333;
+border-right: 1px solid #333333;
 }
 
 .date {
-  width: calc(100% / 7);
-  padding: 15px;
-  text-align: right;
-  border-bottom: 1px solid #333333;
-  border-left: 1px solid #333333;
+width: calc(100% / 7);
+padding: 15px;
+text-align: right;
+border-bottom: 1px solid #333333;
+border-left: 1px solid #333333;
 }
 
 .day:nth-child(7n + 1),
 .date:nth-child(7n + 1) {
-  color: #D13E3E;
+color: #D13E3E;
 }
 
 .day:nth-child(7n),
 .date:nth-child(7n) {
-  color: #396EE2;
+color: #396EE2;
 }
 
 .other {
-  opacity: .3;
+opacity: .3;
 }
 
 .date:hover {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
 .today {
-  position: relative;
-  color: #FFFFFF;
+position: relative;
+color: black;
+background-color: antiquewhite;
 }
 
 .today::before {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: -1;
-  display: block;
-  width: 30px;
-  height: 30px;
-  background-color: #FF0000;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  content: '';
+position: absolute;
+top: 50%;
+left: 50%;
+z-index: -1;
+display: block;
+width: 30px;
+height: 30px;
+background-color: #FF0000;
+border-radius: 50%;
+transform: translate(-50%, -50%);
+content: '';
+}
+
+.custom-right-column {
+margin-top: 7rem
+}
+
+
+
+/* ResTable.css */
+
+/* 테이블 스타일 */
+.table {
+width: 100%;
+border-collapse: collapse;
+border-spacing: 0;
+font-size: 14px;
+text-align: center;
+margin-top: 20px; /* 예시로 추가한 상단 마진 */
+}
+
+.table th,
+.table td {
+padding: 10px;
+border-bottom: 1px solid #ddd;
+}
+
+.table th {
+background-color: #f2f2f2;
+color: #333;
+}
+
+.table tbody tr:nth-child(even) {
+background-color: #f9f9f9;
+}
+
+.table tbody tr:hover {
+background-color: #e9ecef;
+}
+
+/* 체크박스 스타일 */
+.table input[type='checkbox'] {
+margin: 0;
+}
+
+/* 검색창 스타일 */
+.right input[type='text'] {
+border: none;
+background-color: #f0f0f0;
+padding: 8px;
+border-radius: 4px;
+width: 300px;
+margin-bottom: 10px; /* 예시로 추가한 하단 마진 */
+}
+
+/* 조회 버튼 스타일 */
+.searcher .right button {
+background-color: #000;
+color: #fff;
+border: none;
+padding: 8px 16px;
+cursor: pointer;
+border-radius: 4px;
+margin-left: 10px; /* 예시로 추가한 왼쪽 마진 */
+}
+
+.searcher .right button:hover {
+background-color: #333;
+}
+
+/* 등록 수정 삭제 버튼 스타일 */
+.items-subTitle {
+display: flex;
+justify-content: flex-end;
+margin-top: 20px; /* 예시로 추가한 상단 마진 */
+}
+
+.items-subTitle button {
+background-color: #000;
+color: #fff;
+border: none;
+padding: 8px 16px;
+cursor: pointer;
+border-radius: 4px;
+margin-right: 10px; /* 예시로 추가한 오른쪽 마진 */
+}
+
+.items-subTitle button:hover {
+background-color: #333;
+}
+
+.btn-register {
+background-color: black; /* 예약 등록 버튼 배경색 */
+color: #fff; /* 텍스트 색상 */
+border: none;
+padding: 8px 16px;
+cursor: pointer;
+border-radius: 4px;
+}
+
+.btn-search {
+background-color: black; /* 예약 조회 버튼 배경색 */
+color: #fff; /* 텍스트 색상 */
+border: none;
+padding: 8px 16px;
+cursor: pointer;
+border-radius: 4px;
 }
