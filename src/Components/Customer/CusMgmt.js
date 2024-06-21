@@ -1,10 +1,10 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import { useTable } from 'react-table';
 import Checkbox from './Checkbox';
 
 const CusMgmt = () => {
   const [data, setData] = useState([
-    // 데이터 배열 초기화
+    // 초기 데이터 배열
   ]);
   const [formData, setFormData] = useState({
     id: '',
@@ -17,6 +17,13 @@ const CusMgmt = () => {
     notes: '',
   });
   const [showModal, setShowModal] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState(data);
+
+  useEffect(() => {
+    setFilteredData(data);
+  }, [data]);
 
   const handleCheckboxChange = useCallback((index) => {
     setData(prevData => {
@@ -33,7 +40,27 @@ const CusMgmt = () => {
   };
 
   const handleAddRow = () => {
+    setEditIndex(null); // 새로운 항목 추가 시 editIndex 초기화
+    setFormData({
+      id: '',
+      name: '',
+      gender: '',
+      contact: '',
+      dob: '',
+      joinDate: '',
+      membership: '',
+      notes: '',
+    });
     setShowModal(true);
+  };
+
+  const handleEditRows = () => {
+    const selectedRow = data.findIndex(item => item.checked);
+    if (selectedRow !== -1) {
+      setEditIndex(selectedRow);
+      setFormData(data[selectedRow]);
+      setShowModal(true);
+    }
   };
 
   const handleModalClose = () => {
@@ -41,9 +68,28 @@ const CusMgmt = () => {
   };
 
   const handleSaveChanges = () => {
-    const newDataItem = { ...formData, checked: false };
-    setData(prevData => [...prevData, newDataItem]);
+    if (editIndex !== null) {
+      setData(prevData => {
+        const updatedData = [...prevData];
+        updatedData[editIndex] = { ...formData, checked: false };
+        return updatedData;
+      });
+    } else {
+      const newDataItem = { ...formData, checked: false };
+      setData(prevData => [...prevData, newDataItem]);
+    }
     setShowModal(false);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearch = () => {
+    const filtered = data.filter(item =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredData(filtered);
   };
 
   const columns = useMemo(
@@ -54,7 +100,7 @@ const CusMgmt = () => {
         Cell: ({ row }) => (
           <Checkbox
             checked={row.original.checked}
-            onChange={() => handleCheckboxChange(row.original.index)}
+            onChange={() => handleCheckboxChange(row.index)}
           />
         ),
       },
@@ -72,7 +118,7 @@ const CusMgmt = () => {
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
-    data,
+    data: filteredData,
   });
 
   return (
@@ -84,7 +130,7 @@ const CusMgmt = () => {
       <hr />
 
       <div className="subTitle">
-        <button className="edit-button">
+        <button className="edit-button" onClick={handleEditRows}>
           수정
         </button>
         <button className="add-button" onClick={handleAddRow}>
@@ -106,8 +152,14 @@ const CusMgmt = () => {
         </div>
 
         <div className="right">
-          <input type="text" placeholder="검색" />
-          <button>조회</button>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="검색"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+          <button className="search-button" onClick={handleSearch}>조회</button>
         </div>
       </div>
 
