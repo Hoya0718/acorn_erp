@@ -7,7 +7,7 @@ import TableModule from "../modules/TableModule"
 import CustomerStatusPagination from '../modules/PaginationModule';
 
 
-const CustomerStatusTable_TopProd = ({ activeLabel, data, onSort}) => {
+const CustomerStatusTable_TopProd = ({ activeLabel, data, onSort, totalItems, itemsPerPage, currentPage, onPageChange}) => {
  // 예제 데이터
   const [rows, setRows] = React.useState([
     { productName: '상품1', salesCount: 10, salesAmount: 1000, salesRating: 4.7, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
@@ -48,15 +48,13 @@ const CustomerStatusTable_TopProd = ({ activeLabel, data, onSort}) => {
     // 필요한 만큼 데이터를 추가
   ]);
 
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const itemsPerPage = 10; // 페이지당 항목 수
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = rows.slice(startIndex, endIndex);
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
+  
+  // const handlePageChange = (page) => {
+  //   setCurrentPage(page);
+  // };
 
   const getColumns = (activeLabel) => {
     switch (activeLabel) {
@@ -126,10 +124,10 @@ const CustomerStatusTable_TopProd = ({ activeLabel, data, onSort}) => {
     <div>
       <TableModule data={currentData} columns={getColumns(activeLabel)} onSort={onSort} />
       <CustomerStatusPagination
-          totalItems={rows.length}
-          itemsPerPage={itemsPerPage}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
+        totalItems={totalItems}
+        itemsPerPage={itemsPerPage}
+        currentPage={currentPage}
+        onPageChange={onPageChange}
            /> 
     </div>
   );
