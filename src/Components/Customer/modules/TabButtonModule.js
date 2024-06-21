@@ -10,7 +10,7 @@ const CustomerTableTabButton = ({ activeTab, setActiveTab, setActiveLabel }) => 
   const [productLabel, setProductLabel] = React.useState('상품별');
   const [rankingLabel, setRankingLabel] = React.useState('고객랭킹');
 
-  const distributionLabels = ['고객분포', '성별', '지역별', '연령별'];
+  const distributionLabels = ['고객분포'];
   const productLabels = ['상품별', '최고매출', '최다거래', '반응좋은'];
   const rankingLabels = ['고객랭킹', '최고금액고객', '최다거래고객'];
 

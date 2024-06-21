@@ -6,22 +6,19 @@ import "../../Main/Main.css"
 import TableModule from "../modules/TableModule"
 import CustomerStatusPagination from '../modules/PaginationModule';
 
-const CustomerStatusTable_Rank = ({ activeLabel, data, onSort }) => {
+const CustomerStatusTable_Rank = ({ activeLabel, data, onSort, totalItems, itemsPerPage, currentPage, onPageChange}) => {
   // 예제 데이터
 const [rows, setRows] = React.useState([
   { customerName: '홍길동', orderCount: 10, orderCount_prod: '고구마식빵', salesRating: 4.5, salesRating_prod: '소금빵', orderAmount: 1000, orderAmount_prod: '고구마식빵', remarks: '특이사항1' },
   { customerName: '김영희', orderCount: 5, orderCount_prod: '소금빵', salesRating: 4.9, salesRating_prod: '소금빵', orderAmount: 500, orderrCount_prod: '고구마식빵', remarks: '특이사항2' },
 ]);
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const itemsPerPage = 10; // 페이지당 항목 수
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = rows.slice(startIndex, endIndex);
-  //const [filteredRows, setFilteredRows] = React.useState(rows);
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
+  // const handlePageChange = (page) => {
+  //   setCurrentPage(page);
+  // };
   // const handleSearch = ({ selectedOption_dropdown, keyword, startDate, endDate }) => {
   //   const filteredData = rows.filter((row) => {
   //     const dateInRange = new Date(row.date) >= new Date(startDate) && new Date(row.date) <= new Date(endDate);
@@ -97,13 +94,13 @@ const [rows, setRows] = React.useState([
 
   return (
     <div>
-      <TableModule data={currentData} columns={getColumns(activeLabel)} onSort={onSort} />
-      <CustomerStatusPagination
-          totalItems={rows.length}
-          itemsPerPage={itemsPerPage}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-           /> 
+      <TableModule data={rows} columns={getColumns(activeLabel)} onSort={onSort} />
+      {/* <CustomerStatusPagination
+        totalItems={totalItems}
+        itemsPerPage={itemsPerPage}
+        currentPage={currentPage}
+        onPageChange={onPageChange}
+      />  */}
     </div>
   );
 }

@@ -50,14 +50,14 @@ const Goal = () => {
                     <div className="app-card-body p-3 p-lg-4">
                         {/* <!-- 달성도 바 -->*/}
                         <div className="progress" style={{ height: '30px', position: 'relative' }}>
-                            <div className="progress-bar bg-success" role="progressbar" style={{ width: `${percentage}%` }}
+                            <div className="progress-bar bg-success" role="progressbar" style={{ width: `${displayPercentage}%` }}
                                 aria-valuenow={displayPercentage} aria-valuemin="0" aria-valuemax="100">
                                 <span style={{
                                     position: 'absolute',
                                     left: '50%',
                                     top: '50%',
                                     transform: 'translate(-50%, -50%)',
-                                    color: percentage > 50 ? '#fff' : 'darkgray',
+                                    color: displayPercentage > 50 ? '#fff' : 'darkgray',
                                     fontWeight: 'bold'
                                 }}>
                                     {displayPercentage}%
