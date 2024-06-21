@@ -2,22 +2,28 @@
 // 고객현황 세팅모달의 Goal차트 데이터 세팅 페이지
 import * as React from 'react'
 import "../../Main/Main.css"
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { Popover } from 'bootstrap'; // 명시적으로 Popover 가져오기
 import { useCustomerStatus } from './CustomerStatusSettingContext';
 
 const SettingModal_Goal = () => {
+
     const {
         customerCount_lastyear,
         customerCount,
         customerTarget, setCustomerTarget,
         goalOption, setGoalOption,
     } = useCustomerStatus();
-    console.log('goalOption:', goalOption); // goalOption 값을 확인하기 위해 추가
     const [isEditMode, setIsEditMode] = React.useState(false);
 
     React.useEffect(() => {
         setGoalOption("전체고객수");
     }, []);
-
+    React.useEffect(() => {
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new Popover(popoverTriggerEl));
+    }, []);
     const handleGoalEditmodeClick = () => {
         setIsEditMode(false);
     }
@@ -74,10 +80,16 @@ const SettingModal_Goal = () => {
                 <div>
                     <strong>{targetLabel}</strong>&nbsp;&nbsp;
                     <input type='text'
+                        class="btn btn-lg btn-danger" 
+                        data-bs-toggle="popover" 
+                        data-bs-placement="top" 
+                        data-bs-content="[당해연도 목표 고객수] 목표 고객수-전년도 고객 수  [현재 달성 고객수] 현재 고객수-전년도 고객수"
                         style={{
                             border: 'none',
                             width: '230px',
-                            textAlign: 'right'
+                            textAlign: 'right',
+                            backgroundColor: 'transparent',
+                            color: 'black',
                         }}
                         value={targetValue}
                         readOnly
@@ -92,6 +104,7 @@ const SettingModal_Goal = () => {
                         width: '230px',
                         textAlign: 'right',
                     }}
+                    
                     value={currentValue}
                 />명
             </div>
