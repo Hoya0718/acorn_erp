@@ -27,7 +27,7 @@ const TableComponent = ({ columns, data, toggleAllCheckboxes, toggleSingleCheckb
         ))}
       </tr>
     </thead>
-    <tbody className="table-group-divider">
+    <tbody>
       {data.map((row, rowIndex) => (
         <tr key={rowIndex}>
           <td>
