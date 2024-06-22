@@ -1,11 +1,11 @@
 /* Layout.css */
-.layout {
+.layout1 {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-header {
+header1 {
   width: 100%;
   height: 5%;
   background-color: #71AAB2;
@@ -24,14 +24,14 @@ header {
   display: flex;
 }
 
-.sidebar {
+.sidebar1 {
   border: 1px solid yellow;
   height: 100%;
   width: 15%;
   overflow-y: auto;
 }
 
-.main-content {
+.main-content1 {
   border: 1px solid blue;
   width: 85%;
   padding: 20px;
@@ -39,7 +39,7 @@ header {
   box-sizing: border-box;
 }
 
-footer {
+footer1 {
   border: 1px solid green;
   width: 100%;
   text-align: center;
@@ -60,28 +60,32 @@ li {
   margin: 10px 0;
 }
 
-.sidebar nav ul li ul {
+.sidebar1 nav ul li ul {
   padding-left: 20px;
 }
 
-.sidebar nav a {
+.sidebar1 nav a {
   text-decoration: none;
   color: black;
   display: block;
   padding: 5px 10px;
 }
 
-.sidebar nav a:hover {
+.sidebar1 nav a:hover {
   background-color: #f0f0f0;
 }
 
 /* New CSS for smooth expand/collapse */
-.submenu {
+.submenu1 {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s ease-out;
 }
 
-.submenu.active {
+.submenu1.active {
   max-height: 1000px; /* Adjust this value as needed */
+}
+
+.header {
+  height: 50px;
 }

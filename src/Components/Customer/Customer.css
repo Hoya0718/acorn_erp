@@ -1,7 +1,8 @@
-.CustomerMain {
-    overflow-y: auto;
-    max-height: 100vh;
+.customerStatusMainContent {
+    display: flex;
+    justify-content: center;
   }
+
 /* 오른쪽 정렬 */
 .righted {
   display: flex;
@@ -37,6 +38,8 @@
 .table-lefted {
     text-align: left;
 }
+
+
 /* 상품별 선호도 탭버튼 스타일 */
 .nav-tabs .nav-link {
   color: #999; /* 옅은 회색 */
@@ -44,6 +47,38 @@
 .nav-tabs .nav-link.active {
   color: #000; /* 활성화된 탭은 검정색 */
 }
+
+.icon-up {
+  color: blue !important;
+}
+.icon-down {
+  color: red !important;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+.table .table-row {
+  border-bottom: 1px solid #ddd;
+}
+
+.table .table-row:last-child {
+  border-bottom: none;
+}
+
 
 /* 페이지네이션 스타일 */
 .page-item.active .page-link {
@@ -53,5 +88,10 @@
 .active-link {
   background-color: black !important;
   border: none;
+
+}
+
+.searchBox {
+  display: flex;
 
 }

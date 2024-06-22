@@ -24,6 +24,11 @@ const PurchaseAdd = ({ checkAll, onAddPurchase }) => {
 
   // 부모 컴포넌트로 업데이트된 데이터 전달
   const handleAdd = () => {
+    if (!purchaseData.purchaseCode) {
+      alert('코드를 입력해 주세요.'); // 코드 필드가 비어있을 경우 알림창 띄우기
+      return;
+    }
+
     onAddPurchase({...purchaseData, isChecked}); // 부모에게 데이터 전달
     // 추가 버튼을 누르면 입력 필드 초기화
     setPurchaseData({
@@ -38,7 +43,7 @@ const PurchaseAdd = ({ checkAll, onAddPurchase }) => {
   }
   // 체크박스 상태 변화 훅
   useEffect(() => {
-    setIsChecked(checkAll);
+    setIsChecked(checkAll || false);
   }, [checkAll]); // checkAll 상태가 변할 때마다 isChecked 업데이트
    
   return (

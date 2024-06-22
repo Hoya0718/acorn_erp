@@ -83,10 +83,10 @@ const SettingModal_Period = () => {
                         </label>
                     ))}
                 </div>
-                <div className="date centered">
+                <div className="dateSearch centered">
                     {/* 사용자 지정 체크 여부에 따라 활성화 */}
-                    <input type="date" id="startDate" disabled={!isAbled} value={startDate} onChange={handleStartDateChange}/>&nbsp;~&nbsp;
-                    <input type="date" id="endDate" disabled={!isAbled} value={endDate} onChange={handleEndDateChange} />&nbsp;
+                    <input type="date" id="startDate" disabled={!isAbled} value={startDate} required onChange={handleStartDateChange}/>&nbsp;~&nbsp;
+                    <input type="date" id="endDate" disabled={!isAbled} value={endDate} required onChange={handleEndDateChange} />&nbsp;
                 </div>
             </div>
             <hr></hr>
