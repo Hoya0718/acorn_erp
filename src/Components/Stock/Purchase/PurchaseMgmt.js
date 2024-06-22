@@ -70,10 +70,13 @@ const PurchaseMgmt = () => {
     setIsDeleteClicked(false);
   }
   const handleUpdateClick = () => {
-    setIsUpdateClicked(true);
-    setIsAddClicked(false);
-    setIsDeleteClicked(false);
-  }
+    if (selectedItems.length === 0) {
+      window.alert('수정할 항목을 선택해 주세요.');
+    } else {
+      setIsUpdateClicked(true);
+      setIsAddClicked(false);
+    }
+  };
 
 
 
@@ -139,9 +142,9 @@ const PurchaseMgmt = () => {
             ) : (
               <button onClick={handleAddClick}>등록</button>
             )}
-            {!isAddClicked && <button onClick={handleUpdateClick} disabled={selectedItems.length === 0}>수정</button>}
-            {!isAddClicked && <button onClick={handleDeleteClick} disabled={selectedItems.length === 0}>삭제</button>}
-          </>
+            {!isAddClicked && <button onClick={handleUpdateClick} >수정</button>}
+            {!isAddClicked && <button onClick={handleDeleteClick} >삭제</button>}
+        </>
         )}
         {isUpdateClicked && <button onClick={() => handleUpdatePurchase(updatePurchase)}>확인</button>}
         {isUpdateClicked && <button onClick={handleCancelUpdate}>취소</button>}
@@ -153,36 +156,42 @@ const PurchaseMgmt = () => {
       
       {/* 캘린더 */}
       <div className="left">
-      <div className="newDatePickerContainer">
-        <AiOutlineCalendar size={20} />
-            <NewDatePicker
-              className="newDatePicker"
-              selectedDate={startDate}
-              setSelectedDate={setStartDate}
-            />
-            <span>-</span>
-            <NewDatePicker
-              className="newDatePicker"
-              selectedDate={endDate}
-              setSelectedDate={setEndDate}
-            />
-          </div>
-        
-        {/* 정렬기준 */}
-        <label htmlFor="sorting">
-          <select name="purchaseSorting">
-            <option selected>발주 코드</option>
-            <option>발주 품목명</option>
-            <option>발주 품목가격</option>
-          </select>
-        </label>
-     </div>
+          <div className="newDatePickerContainer">
+                <NewDatePicker
+                  className="newDatePicker"
+                  selectedDate={startDate}
+                  setSelectedDate={setStartDate}
+                />
+                <span>  ~  </span>
+                <NewDatePicker
+                  className="newDatePicker"
+                  selectedDate={endDate}
+                  setSelectedDate={setEndDate}
+                />
+              </div>
+            
+            {/* 정렬기준 */}
+            <div className="sorting">
+              <select name="purchaseSorting">
+                <option selected>발주 코드</option>
+                <option>발주 품목명</option>
+                <option>발주 품목가격</option>
+              </select>
+            </div>
+       </div>
+
+        {/* 검색창 */}
+        <div className="right">
+          <input type="text" placeholder="검색" />
+          <button>조회</button>
+        </div>
+
     </div>
 
-      {/* 검색창 */}
+    
       
 
-      <br/><br/><br/>
+      <br/><br/><br/><br/><br/>
       {/* 테이블 */}
       <section>        
         <div>

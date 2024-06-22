@@ -20,16 +20,24 @@ const VendorUpdate = ({ checkAll, vendorData, onUpdateVendor, index }) => {
     onUpdateVendor(localVendor, index);
   };
 
+  const handleButtonClick = () => {
+    if (!isChecked) {
+      alert('체크박스를 선택해 주세요.');
+    } else {
+      handleUpdate();
+    }
+  };
+
   return (
     <tr className='inputField'>
       <td><input type='checkbox' checked={isChecked} onChange={() => setIsChecked(!isChecked)} /></td>
-      <td><input type='text' name='vendorCode' value={localVendor.vendorCode} onChange={handleChange} /></td>
-      <td><input type='text' name='vendoName' value={localVendor.vendoName} onChange={handleChange} /></td>
+      <td><input type='text' name='vendorCode' value={localVendor.vendorCode} onChange={handleChange} readOnly/></td>
+      <td><input type='text' name='vendorName' value={localVendor.vendorName} onChange={handleChange} /></td>
       <td><input type='text' name='vendorContact' value={localVendor.vendorContact} onChange={handleChange} /></td>
       <td><input type='text' name='vendorAddress' value={localVendor.vendorAddress} onChange={handleChange} /></td>
       <td><input type='text' name='vendorRemark' value={localVendor.vendorRemark} onChange={handleChange} /></td>
       <td><input type='text' name='deliverableStatus' value={localVendor.deliverableStatus} onChange={handleChange} /></td>
-      <td><button onClick={handleUpdate}>확인</button></td>
+      <td><button onClick={handleButtonClick}>확인</button></td>
     </tr>
   );
 };
