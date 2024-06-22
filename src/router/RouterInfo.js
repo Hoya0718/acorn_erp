@@ -9,7 +9,7 @@ import StatusDataMain from '../Components/Customer/status_data/StatusDataMain.js
 
 // 재고 관리
 import StockMgmt from '../Components/Stock/StockMgmt.js';
-import DistributionMgmt from '../Components/Stock/distribution/distributionMgmt.js';
+import DistributionMgmt from '../Components/Stock/Distribution/DistributionMgmt.js';
 import MeterialMgmt from '../Components/Stock/MeterialMgmt.js';
 import PurchaseMgmt from '../Components/Stock/Purchase/PurchaseMgmt.js';
 import VendorMgmt from '../Components/Stock/Vendor/VendorMgmt.js';
@@ -76,7 +76,7 @@ export const RouterInfo = createBrowserRouter([
             element: <MeterialMgmt />
           },
           {
-            path: "distributionMgmt",
+            path: "DistributionMgmt",
             element: <DistributionMgmt />
           },
           {
