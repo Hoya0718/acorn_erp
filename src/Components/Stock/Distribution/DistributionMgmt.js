@@ -187,7 +187,7 @@ const DistributionMgmt = () => {
                 <span><button>인쇄</button></span>
             </div>
         </div>
-    ); //
+    );
 };
 
 export default DistributionMgmt;

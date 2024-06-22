@@ -19,4 +19,4 @@ const DistributionUpdate = ({ item, handleInputChange, handleSaveClick }) => {
     );
 };
 
-export default DistributionUpdate;
+export default DistributionUpdate; 

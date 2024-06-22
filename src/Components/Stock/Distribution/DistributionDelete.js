@@ -8,4 +8,4 @@ const DistributionDelete = ({ handleDeleteClick, selectedItems }) => {
     );
 };
 
-export default DistributionDelete;
+export default DistributionDelete; 
