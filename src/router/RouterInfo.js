@@ -140,6 +140,10 @@ export const RouterInfo = createBrowserRouter([
     {
       path: "resTable",
       element: <ResTable />
+    },
+    {
+      path: "editReservation/:id",
+      element: <MainReg />
     }
   ]
 },
