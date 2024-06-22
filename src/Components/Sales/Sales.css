@@ -60,6 +60,16 @@
   border-radius: 4px;
   margin-right: 8px; /* 각 버튼 사이의 간격 설정 */
 }
+/* 추가 */
+.items-subTitle-button {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 5px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-right: 8px; /* 각 버튼 사이의 간격 설정 */
+}
 
 .items-subTitle button:hover {
   background-color: #333;
