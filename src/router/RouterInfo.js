@@ -40,6 +40,9 @@ import SignUp from '../Components/Login/SignUp.js';
 
 // 게시판
 import Board from '../Components/Board/Board.js';
+import Orders from '../Components/Sales/Orders/Orders.js';
+import Items from '../Components/Sales/Items/Items.js';
+import ItemInventory from '../Components/Sales/ItemInventory/ItemInventory.js';
 
 // Router 
 import { createBrowserRouter } from 'react-router-dom';
@@ -90,6 +93,20 @@ export const RouterInfo = createBrowserRouter([
         ]
       },
       {
+
+        path: "Sales_mgmt",
+        element: <Sales_mgmt />,
+        label: 'sales',
+        children: [
+          {
+            path: "Orders", element: <Orders />, // 상품 관리 컴포넌트
+          },
+          {
+            path: "Items", element: <Items />, // 상품 관리 컴포넌트
+          },
+          {
+            path: "ItemInventory", element: <ItemInventory />, // 상품 재고 관리 컴포넌트
+
         path: "salesMgmt",
         element: <SalesMgmt />,
         children: [
@@ -108,6 +125,7 @@ export const RouterInfo = createBrowserRouter([
           {
             path: "return",
             element: <Return />
+            
           }
         ]
       },

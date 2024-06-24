@@ -16,6 +16,39 @@ const Layout = () => {
         <span style={{fontSize:"18px"}}>ACORN ERP</span>
         <MemoPad></MemoPad>
       </header>
+
+      <div className="container">
+        <div className="sidebar">
+        <nav>
+          <ul>
+            <li>
+              <Link to="/customer_mgmt">고객관리</Link>
+            </li>
+            <li>
+              <Link to="/inventory_mgmt">재고관리</Link>
+            </li>
+            <ul>
+              <li>
+                <Link to="/sales_mgmt">판매관리</Link>
+                <ul>
+                  <li><Link to="/sales_mgmt/Orders">주문 관리</Link></li>
+                  <li><Link to="/sales_mgmt/Items">상품 관리</Link></li>
+                  <li><Link to="/sales_mgmt/ItemInventory">상품 재고 관리</Link></li>
+                </ul>
+              </li>
+            </ul>
+            <li>
+              <Link to="/financial_mgmt">재무관리</Link>
+            </li>
+            <li>
+              <Link to="/reservation_mgmt">예약관리</Link>
+            </li>
+            <li>
+              <Link to="/board">커뮤니티</Link>
+            </li>
+          </ul>
+        </nav>
+
       <div className="container1">
         <div className="sidebar1">
           <nav>
@@ -36,6 +69,7 @@ const Layout = () => {
                 <button>로그아웃</button>
               </div>
           </nav>
+
         </div>
         <main className="main-content1">
           <Outlet />

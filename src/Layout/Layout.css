@@ -55,7 +55,7 @@ footer {
   left: 0;
   z-index: 2;
 }
-
+/*
 ul {
   list-style-type: none;
   padding: 0;
@@ -64,6 +64,9 @@ ul {
 li {
   margin: 10px 0;
 }
+
+*/
+
 
 .sidebar1 nav ul li ul {
   padding-left: 20px;
@@ -90,4 +93,5 @@ li {
 .submenu1.active {
   max-height: 1000px; /* Adjust this value as needed */
 }
+
 
