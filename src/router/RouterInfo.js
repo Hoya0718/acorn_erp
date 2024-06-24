@@ -1,30 +1,99 @@
+// Router 설정 파일
 import Layout from '../Layout/Layout.js';
-import Customer_mgmt from '../Components/Customer/Customer_mgmt.js';
-import Inventory_mgmt from '../Components/Inventory/Inventory_mgmt.js';
-import Sales_mgmt from '../Components/Sales/Sales_mgmt.js';
-import Financial_mgmt from '../Components/Financial/Financial_mgmt.js';
-import Reservation_mgmt from '../Components/Reservation/Reservation_mgmt.js';
+
+// 회원 관리
+import CustomerMgmt from '../Components/Customer/CustomerMgmt.js';
+import CusMgmt from '../Components/Customer/CusMgmt.js';
+import CusStatus from '../Components/Customer/CusStatus.js';
+import StatusDataMain from '../Components/Customer/status_data/StatusDataMain.js';
+
+// 재고 관리
+import StockMgmt from '../Components/Stock/StockMgmt.js';
+import DistributionMgmt from '../Components/Stock/Distribution/DistributionMgmt.js';
+import MeterialMgmt from '../Components/Stock/MeterialMgmt.js';
+import PurchaseMgmt from '../Components/Stock/Purchase/PurchaseMgmt.js';
+import VendorMgmt from '../Components/Stock/Vendor/VendorMgmt.js';
+
+// 판매 관리
+import SalesMgmt from '../Components/Sales/SalesMgmt.js';
+import InventoryMgmt from '../Components/Sales/InventoryMgmt.js';
+import ItemMgmt from '../Components/Sales/ItemMgmt.js';
+import OrderMgmt from '../Components/Sales/OrderMgmt.js';
+import Return from '../Components/Sales/Return.js';
+
+// 재무 관리
+import FinancialMgmt from '../Components/Financial/FinancialMgmt.js';
+import IncomeMgmt from '../Components/Financial/IncomeMgmt.js';
+import ExportMgmt from '../Components/Financial/ExportMgmt.js';
+
+// 예약 관리
+import ReservationMgmt from '../Components/Reservation/ReservationMgmt.js';
+import MainReg from '../Components/Reservation/MainReg.js';
+import ResTable from '../Components/Reservation/ResTable.js';
+
+// 로그인 & 회원가입
+import Login from '../Components/Login/Login.js';
+import LoginForm from '../Components/Login/LoginForm.js'
+import FindEmail from '../Components/Login/FindEmail.js';
+import FindPw from '../Components/Login/FindPw.js';
+import SignUp from '../Components/Login/SignUp.js';
+
+// 게시판
 import Board from '../Components/Board/Board.js';
 import Orders from '../Components/Sales/Orders/Orders.js';
 import Items from '../Components/Sales/Items/Items.js';
 import ItemInventory from '../Components/Sales/ItemInventory/ItemInventory.js';
 
-export const RouterInfo = [
+// Router 
+import { createBrowserRouter } from 'react-router-dom';
+
+export const RouterInfo = createBrowserRouter([
   {
-    path: "/",
+    path: "/layout",
     element: <Layout />,
     children: [
       {
-        path: "Customer_mgmt",
-        element: <Customer_mgmt />,
-        label: 'customer'
+        path: "customerMgmt",
+        element: <CustomerMgmt />,
+        children: [
+          {
+            path: "cusMgmt",
+            element: <CusMgmt />
+          },
+          {
+            path: "cusStatus",
+            element: <CusStatus />
+          },
+          {
+            path: "statusDataMain",
+            element: <StatusDataMain />
+          }
+        ]
       },
       {
-        path: "Inventory_mgmt",
-        element: <Inventory_mgmt />,
-        label: 'inventory'
+        path: "stockMgmt",
+        element: <StockMgmt />,
+        children: [
+          {
+            path: "meterialMgmt",
+            element: <MeterialMgmt />
+          },
+          {
+            path: "DistributionMgmt",
+            element: <DistributionMgmt />
+          },
+          {
+            path: "purchaseMgmt",
+            element: <PurchaseMgmt />
+          },
+          {
+            path: "vendorMgmt",
+            element: <VendorMgmt />
+          }
+        ]
       },
       {
+
         path: "Sales_mgmt",
         element: <Sales_mgmt />,
         label: 'sales',
@@ -37,24 +106,99 @@ export const RouterInfo = [
           },
           {
             path: "ItemInventory", element: <ItemInventory />, // 상품 재고 관리 컴포넌트
+
+        path: "salesMgmt",
+        element: <SalesMgmt />,
+        children: [
+          {
+            path: "inventoryMgmt",
+            element: <InventoryMgmt />
+          },
+          {
+            path: "itemMgmt",
+            element: <ItemMgmt />
+          },
+          {
+            path: "orderMgmt",
+            element: <OrderMgmt />
+          },
+          {
+            path: "return",
+            element: <Return />
+            
           }
         ]
       },
       {
-        path: "Financial_mgmt",
-        element: <Financial_mgmt />,
-        label: 'financial'
+        path: "financialMgmt",
+        element: <FinancialMgmt />,
+        children: [
+          {
+            path: "incomeMgmt",
+            element: <IncomeMgmt />
+          },
+          {
+            path: "exportMgmt",
+            element: <ExportMgmt />
+          }
+        ]
       },
       {
-        path: "Reservation_mgmt",
-        element: <Reservation_mgmt />,
-        label: 'reservation'
-      },
+  path: "reservationMgmt",
+  element: <ReservationMgmt />,
+  children: [
+    {
+      index: true,
+      element: <ResTable />
+    },
+    {
+      path: "mainReg",
+      element: <MainReg />
+    },
+    {
+      path: "resTable",
+      element: <ResTable />
+    }
+  ]
+},
       {
-        path: "Board",
+        path: "board",
         element: <Board />,
-        label: 'board'
+      },
+      // 새로운 경로 설정 추가
+      {
+        path: "customerMgmt/cusStatus",
+        element: <CusStatus />
       },
     ]
   },
-];
+  {
+    path: "/mainReg",
+    element: <MainReg />
+  },
+  {
+    path: "/",
+    element: <Login />,
+    children: [
+      {
+        index: true,
+        element: <LoginForm />
+      },
+      {
+        path: "findEmail",
+        element: <FindEmail />
+      },
+      {
+        path: "findPw",
+        element: <FindPw />
+      },
+      {
+        path: "signUp",
+        element: <SignUp />
+      }
+    ]
+  },{
+    path: 'StatusDataMain',
+    element: <StatusDataMain />
+  }
+]);
