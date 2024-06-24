@@ -44,10 +44,15 @@ const ExportRegistrationModal = ({ data, setData }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    let updatedFormData = { ...formData, [name]: value };
+
+    if (name === '단가' || name === '수량') {
+      const 단가 = parseFloat(updatedFormData['단가']) || 0;
+      const 수량 = parseFloat(updatedFormData['수량']) || 0;
+      updatedFormData['금액'] = (단가 * 수량).toString();
+    }
+
+    setFormData(updatedFormData);
   };
 
   const handleFormSubmit = () => {
