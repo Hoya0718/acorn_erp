@@ -12,6 +12,8 @@ const NewDatePicker = (props) => {
   ));
 
   return (
+
+    
     <div>
       <DatePicker
         selected={props.selectedDate}

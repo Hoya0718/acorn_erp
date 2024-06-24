@@ -1,9 +1,10 @@
+/*
 .purchaseTable {
     border-width: 2px;
     width: 100%; /*테이블 전체 너비를 화면에 맞춤*/
-    border-collapse: collapse; /*셀 경계를 합침*/
-    
-}
+ /*   border-collapse: collapse; /*셀 경계를 합침*/
+  /*  
+}*/
 
 .purchaseTable td, .purchaseTable th {
     border-bottom: 2px solid gray; /* 테이블의 각 셀에 밑줄 추가 */
@@ -12,14 +13,16 @@
     padding-bottom: 20px;
     color: #000;
 }
-
+*/
 /* 첫 번째 행의 배경색을 회색으로 설정 */
+/*
 .purchaseTable th {
     background-color: #eaeaea; 
     color: #000;
-  }
-
+}
+*/
 /* 행에 마우스를 올렸을 때 연한 배경색 적용 */
+
 .purchaseTable tr:hover {
     background-color: #f2f2f2; 
 }
@@ -29,6 +32,7 @@
     width: 17px;
     height: 17px;
 }
+
 
 .inputField td input {
     max-width: '150px';
