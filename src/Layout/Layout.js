@@ -21,7 +21,7 @@ const Layout = () => {
   return (
     <div className="layout1">
       <header className='header1'>
-        <span className="erp-title">ACORN ERP</span>
+      <Link to="/layout"><span className="erp-title">ACORN ERP</span></Link>
         <MemoPad />
       </header>
       <div className="container1">

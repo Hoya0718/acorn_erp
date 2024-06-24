@@ -183,6 +183,8 @@ background-color: #333;
 display: flex;
 justify-content: flex-end;
 margin-top: 20px; /* 예시로 추가한 상단 마진 */
+gap: 10px; /* 버튼 간의 간격 */
+margin-bottom: 10px;
 }
 
 .items-subTitle button {
@@ -216,3 +218,30 @@ padding: 8px 16px;
 cursor: pointer;
 border-radius: 4px;
 }
+
+.reserved {
+position: relative;
+background-color: white; /* 예약된 날짜의 기본 배경색 */
+}
+
+.reserved::after {
+content: '';
+position: absolute;
+top: 50%; /* 막대를 셀 중간에 오도록 설정 */
+left: 10%; /* 막대를 좌우로 여백을 줘서 더 짧게 보이게 함 */
+width: 80%; /* 막대의 너비를 줄여 좌우 여백을 줌 */
+height: 10px; /* 막대의 높이 */
+background-color: skyblue; /* 막대의 색상 */
+border-radius: 5px; /* 둥근 막대 */
+transform: translateY(-50%); /* 막대를 정확히 중간에 맞추기 위한 이동 */
+}
+
+
+.acorn-image {
+width: 15px;  /* 원하는 크기로 조정 */
+height: 15px; /* 원하는 크기로 조정 */
+display: block;
+margin: 0 auto;  /* 이미지를 중앙에 배치 */
+}
+
+

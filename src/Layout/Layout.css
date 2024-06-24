@@ -58,7 +58,7 @@ li {
   overflow-y: auto;
   float: left;
   position: fixed;
-  padding-top: 80px;
+  padding-top: 10vh;
 }
 .sidebar1 nav ul li ul {
   padding-left: 20px;
