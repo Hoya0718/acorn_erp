@@ -3,30 +3,26 @@ import ModalForm from './ModalForm';
 
 const IncomeRegistrationModal = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
-  const [modalContent, setModalContent] = useState('');
   const [formData, setFormData] = useState({
     "상품번호": '',
     "상품구분": '',
     "상품명": '',
     "매입처": '',
     "거래일시": '',
-    "결제상태": '완료',
+    "결제상태": '완료', // 기본값 설정
     "금액": '',
     "단가": '',
     "수량": '',
     "특이사항": '',
   });
 
-  const handleModalShow = (content) => {
-    if (content === '거래명세서 작성') {
-      const selectedData = data.find(row => row.checked);
-      if (selectedData) {
-        setFormData(selectedData);
-        setModalContent('거래명세서 작성');
-        setShowModal(true);
-      } else {
-        alert('수정할 항목을 선택해주세요.');
-      }
+  const handleModalShow = () => {
+    const selectedData = data.find(row => row.checked);
+    if (selectedData) {
+      setFormData(selectedData);
+      setShowModal(true);
+    } else {
+      alert('수정할 항목을 선택해주세요.');
     }
   };
 
@@ -48,17 +44,23 @@ const IncomeRegistrationModal = ({ data, setData }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    let updatedFormData = { ...formData, [name]: value };
+
+    if (name === '단가' || name === '수량') {
+      const 단가 = parseFloat(updatedFormData['단가']) || 0;
+      const 수량 = parseFloat(updatedFormData['수량']) || 0;
+      updatedFormData['금액'] = (단가 * 수량).toString();
+    }
+
+    setFormData(updatedFormData);
   };
 
   const handleFormSubmit = () => {
-    if (modalContent === '거래명세서 작성') {
-      setData([...data, { ...formData, checked: false }]);
-      handleModalClose();
-    }
+    const updatedData = data.map((row) =>
+      row.checked ? { ...formData, checked: row.checked } : row
+    );
+    setData(updatedData);
+    handleModalClose();
   };
 
   const handleDelete = () => {
@@ -72,7 +74,7 @@ const IncomeRegistrationModal = ({ data, setData }) => {
   return (
     <>
       <div className="righted" style={{ textAlign: 'right', marginTop: '10px' }}>
-        <input type="button" value="거래명세서 작성 >" className="btn btn-dark mr-2" onClick={() => handleModalShow('거래명세서 작성')} />
+        <input type="button" value="거래명세서 수정 >" className="btn btn-dark mr-2" onClick={handleModalShow} />
         <input type="button" value="삭제 >" className="btn btn-dark" onClick={handleDelete} />
       </div>
       <ModalForm
@@ -82,7 +84,7 @@ const IncomeRegistrationModal = ({ data, setData }) => {
         handleSubmit={handleFormSubmit}
         formData={formData}
         columns={Object.keys(formData)}
-        modalContent={modalContent}
+        modalContent="수정"
       />
     </>
   );
