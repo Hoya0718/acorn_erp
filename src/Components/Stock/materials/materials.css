@@ -1,0 +1,44 @@
+.materials-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.materials-table th, .materials-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    background-color: white !important; /* 배경색 설정 */
+}
+
+.materials-table th {
+    background-color: #f2f2f2;
+}
+
+.materials-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.top-buttons {
+    display: flex;
+    justify-content: flex-end; /* 버튼들을 오른쪽으로 배치 */
+    gap: 7px; /* 버튼 사이 간격 */
+}
+
+.top-buttons span {
+    display: inline-block;
+}
+
+.middle-buttons {
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    gap: 10px; /* 요소 간의 간격 설정 */
+    margin-bottom: 13px; /* 아래쪽 간격 추가 */
+}
+
+.bottom-buttons {
+    display: flex;
+    justify-content: flex-end; /* 버튼들을 오른쪽으로 배치 */
+    gap: 7px; /* 버튼 사이 간격 */
+    margin-top: 15px; /* 테이블과의 간격 설정 */
+}
+

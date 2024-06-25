@@ -3,26 +3,27 @@
 import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
+import { useCustomerStatus } from '../settingModal/CustomerStatusSettingContext'; 
 
 const Goal = () => {
-    const [goalData, setGoalData] = React.useState({ goal: 0, curr: 0 });
-    
-    React.useEffect(() => {
-        const savedSettings = localStorage.getItem('customerStatusSettings');
-        if (savedSettings) {
-            const { customerTarget, customerCount } = JSON.parse(savedSettings);
-            setGoalData({
-                goal: Number(customerTarget),
-                curr: Number(customerCount)
-            });
-        }
-    }, []);
+    const { customerCount, customerTarget, customerCount_lastyear, goalOption } = useCustomerStatus();
 
-        const { goal, curr } = goalData;
-        const percentage = goal > 0 ? Math.round((curr / goal) * 100) : 0;
-        const FormatNumber = ({ value }) => {
-            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        };
+    const goal_thisyear = customerTarget - customerCount_lastyear;
+    const curr_thisyear = customerCount - customerCount_lastyear;
+
+    const percentage = customerTarget > 0 ? Math.round((customerCount / customerTarget) * 100) : 0;
+    const percentage_thisyear = goal_thisyear > 0 ? Math.round((curr_thisyear / goal_thisyear) * 100) : 0;
+
+    const FormatNumber = ({ value }) => {
+        if (typeof value !== 'number' || isNaN(value)) {
+            return "0";
+        }
+        return value.toLocaleString();
+    };
+
+    const displayGoal = goalOption === '전체고객수' ? customerTarget : goal_thisyear;
+    const displayCurr = goalOption === '전체고객수' ? customerCount : curr_thisyear;
+    const displayPercentage = goalOption === '전체고객수' ? percentage : percentage_thisyear;
 
     return (
         <div className="c_goal">
@@ -32,19 +33,19 @@ const Goal = () => {
                 </div>
                 <div className="app-card app-card-stat shadow-sm h-100 content" style={{ backgroundColor: 'white' }}>
                     <div className="app-card-body p-3 p-lg-4">
-                         {/* <!-- 달성도 바 -->*/}
+                        {/* <!-- 달성도 바 -->*/}
                         <div className="progress" style={{ height: '30px', position: 'relative' }}>
-                            <div className="progress-bar bg-success" role="progressbar" style={{ width: `${percentage}%`}}
-                                aria-valuenow={percentage} aria-valuemin="0" aria-valuemax="100">
+                            <div className="progress-bar bg-success" role="progressbar" style={{ width: `${displayPercentage}%` }}
+                                aria-valuenow={displayPercentage} aria-valuemin="0" aria-valuemax="100">
                                 <span style={{
                                     position: 'absolute',
                                     left: '50%',
                                     top: '50%',
                                     transform: 'translate(-50%, -50%)',
-                                    color:  percentage > 50 ? '#fff' : 'darkgray',
+                                    color: displayPercentage > 50 ? '#fff' : 'darkgray',
                                     fontWeight: 'bold'
                                 }}>
-                                    {percentage}%
+                                    {displayPercentage}%
                                 </span>
                             </div>
                         </div><br />
@@ -53,7 +54,7 @@ const Goal = () => {
                                 <h4>목표</h4>
                             </div>
                             <div className="col centered-right-content">
-                                <h5>{FormatNumber({ value: goal })}명</h5>
+                                <h5>{FormatNumber({ value: displayGoal })}명</h5>
                             </div>
                         </div>
                         <div className="row">
@@ -61,11 +62,11 @@ const Goal = () => {
                                 <h4>현재</h4>
                             </div>
                             <div className="col centered-right-content">
-                                <h5> {FormatNumber({ value: curr })}명</h5>
+                                <h5> {FormatNumber({ value: displayCurr })}명</h5>
                             </div>
                         </div>
                         <div className="row">
-                            <h6>{percentage >= 50 ? `이제 목표까지 ${100 - percentage}% 남았습니다!` : `목표를 벌써 ${percentage}% 달성했어요!`}</h6>
+                            <h6>{displayPercentage >= 50 ? `이제 목표까지 ${100 - displayPercentage}% 남았습니다!` : `목표를 벌써 ${displayPercentage}% 달성했어요!`}</h6>
                         </div>
                     </div>
                 </div>

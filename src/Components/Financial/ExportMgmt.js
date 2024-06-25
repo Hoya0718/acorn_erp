@@ -3,15 +3,15 @@ import './Financial.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileExcel, faPrint } from '@fortawesome/free-solid-svg-icons';
 import TableComponent from './TableComponent';
-import RegistrationModal from './RegistrationModal';
+import ExportRegistrationModal from './ExportRegistrationModal';
 
-const ExportMgmt = () => {  // 컴포넌트 이름 변경
+const ExportMgmt = () => {
   const [data, setData] = useState([
-    { "상품번호": "A001", "상품구분": "케이크", "상품명": "초콜릿 케이크", "고객명": "음바페", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "30,000", "단가": "30,000", "수량": "1", "특이사항": "", checked: false },
-    { "상품번호": "A002", "상품구분": "음료", "상품명": "커피", "고객명": "할란드", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "16,000", "단가": "8,000", "수량": "2", "특이사항": "", checked: false },
-    { "상품번호": "A003", "상품구분": "빵", "상품명": "스콘", "고객명": "벨링엄", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "30,000", "단가": "10,000", "수량": "3", "특이사항": "", checked: false },
-    { "상품번호": "A004", "상품구분": "빵", "상품명": "소보루", "고객명": "비니시우스", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "20,000", "단가": "5,000", "수량": "4", "특이사항": "", checked: false },
-    { "상품번호": "A005", "상품구분": "케이크", "상품명": "생크림 케이크", "고객명": "포든", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "150,000", "단가": "30,000", "수량": "5", "특이사항": "", checked: false },
+    { "상품번호": "A001", "상품구분": "케이크", "상품명": "초콜릿 케이크", "고객명": "음바페", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "30000", "단가": "30000", "수량": "1", "특이사항": "", checked: false },
+    { "상품번호": "A002", "상품구분": "음료", "상품명": "커피", "고객명": "할란드", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "16000", "단가": "8000", "수량": "2", "특이사항": "", checked: false },
+    { "상품번호": "A003", "상품구분": "빵", "상품명": "스콘", "고객명": "벨링엄", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "30000", "단가": "10000", "수량": "3", "특이사항": "", checked: false },
+    { "상품번호": "A004", "상품구분": "빵", "상품명": "소보루", "고객명": "비니시우스", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "20000", "단가": "5000", "수량": "4", "특이사항": "", checked: false },
+    { "상품번호": "A005", "상품구분": "케이크", "상품명": "생크림 케이크", "고객명": "포든", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "150000", "단가": "30000", "수량": "5", "특이사항": "", checked: false },
   ]);
 
   const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
@@ -63,12 +63,12 @@ const ExportMgmt = () => {  // 컴포넌트 이름 변경
   return (
     <div>
       <div className="Middle classification bold-and-large">
-        <span> 매출 관리 </span>
+        <h4> 매출 관리 </h4>
       </div>
 
-      <RegistrationModal data={data} setData={setData} />
-
       <hr />
+
+      <ExportRegistrationModal data={data} setData={setData} />
 
       <div className="row">
         <div className="col-md-4">
@@ -79,11 +79,10 @@ const ExportMgmt = () => {  // 컴포넌트 이름 변경
         </div>
         <div className="col-md-8">
           <div className="input-group mb-3">
-            <input type="text" id="keyword" className="form-control" placeholder="검색" />
+            <input type="text" id="keyword" className="form-control" placeholder='🔍 검색' />
             <button className="btn btn-dark ml-2" onClick={handleSearch}>조회</button>
           </div>
         </div>
-        <ul className="nav nav-underline"></ul>
       </div>
 
       <TableComponent
@@ -117,4 +116,4 @@ const ExportMgmt = () => {  // 컴포넌트 이름 변경
   );
 };
 
-export default ExportMgmt;  // 컴포넌트 이름 변경
+export default ExportMgmt;

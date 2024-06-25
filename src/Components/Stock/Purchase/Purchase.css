@@ -1,24 +1,38 @@
+/*
 .purchaseTable {
     border-width: 2px;
     width: 100%; /*테이블 전체 너비를 화면에 맞춤*/
-    border-collapse: collapse; /*셀 경계를 합침*/
-
-}
+ /*   border-collapse: collapse; /*셀 경계를 합침*/
+  /*  
+}*/
 
 .purchaseTable td, .purchaseTable th {
     border-bottom: 2px solid gray; /* 테이블의 각 셀에 밑줄 추가 */
     text-align: center; /*셀 내용 가운데 정렬*/
     padding-top: 20px; /*내용 주변 여백 설정*/    
     padding-bottom: 20px;
-    
+    color: #000;
 }
+*/
+/* 첫 번째 행의 배경색을 회색으로 설정 */
+/*
+.purchaseTable th {
+    background-color: #eaeaea; 
+    color: #000;
+}
+*/
+/* 행에 마우스를 올렸을 때 연한 배경색 적용 */
 
+.purchaseTable tr:hover {
+    background-color: #f2f2f2; 
+}
 
 /*테이블 체크박스*/
 .purchaseTable input[type='checkbox'] {
     width: 17px;
     height: 17px;
 }
+
 
 .inputField td input {
     max-width: '150px';
@@ -45,32 +59,24 @@
     margin-left: 10px;
     background-color: black;
     color: beige;
-    border-radius: 7px;
+    border-radius: 4px;
     padding: 5px 30px; /*상하 5px, 좌우 10px*/
 }
+.subTitle button:hover {
+    background-color: #696a6a;
+    cursor: pointer;
+}
 
-
-/* 달력 */
-.newDatePickerContainer {
-    display: flex;
-    align-items: center;
+/*왼쪽 정렬된 상단 바(달력, 기준 정렬)*/
+.left {
+    display: flex; /* Flexbox를 사용하여 자식 요소들을 한 줄로 정렬 */
+    align-items: center; /* 자식 요소들을 세로 중앙 정렬 */
   }
   
-  .newDatePicker {
-    border: 1px solid #ccc;
-    padding: px;
-    margin-right: 10px;
-    border-radius: 4px;
+  .newDatePickerContainer,
+  .sorting {
+    margin-right: 10px; /* 요소들 간의 간격 설정 */
   }
-  
-  .purchaseSorting {
-    border: 1px solid #ccc;
-    padding: 6px 10px;
-    margin-top: 10px;
-    border-radius: 4px;
-  }
-
-
 
 
 /* 검색창 */
@@ -81,21 +87,45 @@
     padding: 5px 10px; /*오른쪽 패딩은 아이콘 공간*/
     font-size: 16px;
     border: 1px solid gray;
-    border-radius: 5px;
+    border-radius: 4px;
     background-color: #f2f2f2; /* 연한 배경색 */
     flex: 1; /* input 요소가 가능한 최대 공간을 차지하도록 설정 */
     width: 500px;
    
   }
 .searcher .right button {
-    background-color: #71AAB2;
+    background-color: #000;
     color: beige;
-    border-radius: 7px;
-    padding: 7px 15px; /*상하 5px, 좌우 10px*/
+    border-radius: 4px;
+    padding: 7px 20px; /*상하 5px, 좌우 10px*/
     border: none;
 }
 .searcher .right button:hover {
-    background-color:  #5C8C95
+    background-color:  #696a6a
+}
+
+/* 정렬기준 */
+.sorting {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.sorting select {
+    padding: 8px;
+    border-radius: 4px; /* 수정: 조금 더 둥글게 */
+    background-color: #000;
+    font-size: 10px;
+    color: #fff;
+}
+
+.sorting select:hover {
+    background-color: #5a5858;
+    cursor: pointer;
+}
+
+.sorting select:focus {
+    outline: none;
 }
 
 

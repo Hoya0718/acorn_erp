@@ -1,25 +1,48 @@
 import React, { useState } from 'react';
-import '../Main/Main.css';
 import './Sales.css';
-import ItemTable from './ItemTable';
+import ItemTable from './ItemTable'; // ItemTable 컴포넌트 임포트
 
 const ItemMgmt = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [formData, setFormData] = useState({
-    orderNumber: '',
-    returnType: '',
+    itemNumber: '',
+    itemType: '',
     itemName: '',
-    returnStatus: '',
-    totalPrice: '',
+    itemStatus: '',
+    unitPrice: '',
     quantity: ''
   });
 
-  // '등록' 버튼 클릭 시 폼을 보이게 하는 함수
+  const [orders, setOrders] = useState([
+    {
+      itemNumber: '1001',
+      itemType: '빵',
+      itemName: '단팥빵',
+      itemStatus: '판매 중',
+      unitPrice: '1000',
+      quantity: 100
+    },
+    // 초기 주문 데이터 예시
+  ]);
+
+  const [selectedOrders, setSelectedOrders] = useState([]); // 선택된 주문 상태 추가
+
   const handleAddButtonClick = () => {
     setIsFormVisible(true);
   };
 
-  // 폼 입력 값이 변경될 때 상태를 업데이트하는 함수
+  const handleCancel = () => {
+    setIsFormVisible(false); // 폼 숨기기
+    setFormData({
+      itemNumber: '',
+      itemType: '',
+      itemName: '',
+      itemStatus: '',
+      unitPrice: '',
+      quantity: ''
+    });
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -28,17 +51,35 @@ const ItemMgmt = () => {
     });
   };
 
-  // 폼 제출 시 호출되는 함수, 폼 데이터를 초기화하고 폼을 숨김
   const handleFormSubmit = () => {
+    setOrders([formData, ...orders]); // 최신 항목을 배열의 맨 앞에 추가
     setFormData({
-      orderNumber: '',
-      returnType: '',
+      itemNumber: '',
+      itemType: '',
       itemName: '',
-      returnStatus: '',
-      totalPrice: '',
+      itemStatus: '',
+      unitPrice: '',
       quantity: ''
     });
-    setIsFormVisible(false);
+  };
+
+  const handleDeleteClick = () => {
+    if (window.confirm('선택된 항목을 삭제하시겠습니까?')) {
+      const remainingOrders = orders.filter(order => !selectedOrders.some(selectedOrder => selectedOrder.itemNumber === order.itemNumber));
+      setOrders(remainingOrders);
+      setSelectedOrders([]); // 선택된 항목 초기화
+    }
+  };
+
+  const toggleOrderSelection = (order) => {
+    const isSelected = selectedOrders.some(selectedOrder => selectedOrder.itemNumber === order.itemNumber);
+
+    if (isSelected) {
+      const updatedOrders = selectedOrders.filter(selectedOrder => selectedOrder.itemNumber !== order.itemNumber);
+      setSelectedOrders(updatedOrders);
+    } else {
+      setSelectedOrders([...selectedOrders, order]);
+    }
   };
 
   return (
@@ -47,12 +88,20 @@ const ItemMgmt = () => {
         <h4>상품 관리</h4>
       </div>
       <hr />
-
+     
       <div className="items-subTitle">
         <span>
-          <button onClick={handleAddButtonClick}>등록</button>
-          <button>수정</button>
-          <button>삭제</button>
+          {isFormVisible ? (
+            <button onClick={handleCancel}>취소</button>
+          ) : (
+            <button onClick={handleAddButtonClick}>등록</button>
+          )}
+          {!isFormVisible && (
+            <>
+              <button>수정</button>
+              <button onClick={handleDeleteClick}>삭제</button>
+            </>
+          )}
         </span>
       </div>
       <br />
@@ -70,17 +119,16 @@ const ItemMgmt = () => {
       </div>
       <br />
 
-      <div>
-        <section>
-          <ItemTable
-            isFormVisible={isFormVisible}
-            formData={formData}
-            handleInputChange={handleInputChange}
-            handleFormSubmit={handleFormSubmit}
-          />
-        </section>
-      </div>
-
+      <ItemTable
+        isFormVisible={isFormVisible}
+        formData={formData}
+        handleInputChange={handleInputChange}
+        handleFormSubmit={handleFormSubmit}
+        orders={orders}
+        setOrders={setOrders} // 상태 업데이트 함수 전달
+        selectedOrders={selectedOrders} // 선택된 주문 상태를 전달
+        setSelectedOrders={setSelectedOrders} // 선택된 주문 상태 업데이트 함수 전달
+      />
       <div className="excel-print">
         <button>엑셀 다운</button>
         <button>인쇄</button>

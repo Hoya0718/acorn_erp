@@ -48,7 +48,12 @@
   color: #000; /* 활성화된 탭은 검정색 */
 }
 
-
+.icon-up {
+  color: blue !important;
+}
+.icon-down {
+  color: red !important;
+}
 
 table {
   width: 100%;

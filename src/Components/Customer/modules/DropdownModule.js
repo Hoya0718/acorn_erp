@@ -2,10 +2,8 @@
 // 고객현황 데이터 페이지 기간선택 및 검색버튼 컴포넌트
 import * as React from 'react'
 import "../../Main/Main.css"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
-const CustomerStatusPeriodSerchBox = ({ onSearch }) => {
+const CustomerStatusPeriodSerchBox = ({  }) => {
   const [selectedOption_dropdown, setSelectedOption_dropdown] = React.useState('검색');
   //드롭다운 옵션 변경
   const handleSelect_dropdown = (option) => {
@@ -14,9 +12,9 @@ const CustomerStatusPeriodSerchBox = ({ onSearch }) => {
 
   return (
     <div className="customer-status-period-serchbox">
-      <div className="date righted">
+      <div className="date_module">
         {/* 사용자 지정 체크 여부에 따라 활성화 */}
-        <div className="dropdown ">
+        <div className="dropdown_module ">
           <button 
             className="btn btn-outline-secondary dropdown-toggle btn-sm " 
             type="button" 

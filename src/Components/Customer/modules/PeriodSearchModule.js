@@ -40,9 +40,10 @@ const CustomerStatusPeriodSerch = ({ setPeriod }) => {
         setEndDate(today);
         break;
     }
+  }, [selectedOption]);
+  React.useEffect(() => {
     setPeriod({ selectedOption, startDate, endDate });
-  }, [selectedOption, startDate, endDate]);
-
+  }, [startDate, endDate, setPeriod]);
   React.useEffect(() => {
     setSelectedOption('1년');
   }, []);
@@ -73,17 +74,19 @@ const CustomerStatusPeriodSerch = ({ setPeriod }) => {
           </label>
         ))}
       </div>
-      <div className="date righted searchBox">
+      <div className="dateSerchBox righted">
         <input type="date" id="startDate"
           disabled={selectedOption !== '사용자 지정'}
           value={startDate}
-          style={{ minWidth: '110px' }}
-          onChange={handleStartDateChange} />&nbsp;~&nbsp;
+          style={{ minWidth: '130px' }}
+          onChange={handleStartDateChange}
+          required />&nbsp;~&nbsp;
         <input type="date" id="endDate"
           disabled={selectedOption !== '사용자 지정'}
           value={endDate}
-          style={{ minWidth: '110px' }}
-          onChange={handleEndDateChange} />
+          style={{ minWidth: '130px' }}
+          onChange={handleEndDateChange}
+          required />
       </div>
     </div>
   );

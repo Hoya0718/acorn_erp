@@ -1,5 +1,7 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import { useTable } from 'react-table';
+import Checkbox from './Checkbox';
 import Checkbox from './Checkbox';
 
 const CusMgmt = () => {
@@ -133,6 +135,7 @@ const CusMgmt = () => {
     setFilteredData(filtered);
   };
 
+  
   const columns = useMemo(
     () => [
       {
@@ -143,7 +146,7 @@ const CusMgmt = () => {
             checked={row.original.checked}
             onChange={() => handleCheckboxChange(row.index)}
           />
-        ),
+        ),      
       },
       { Header: 'ID', accessor: 'id' },
       { Header: '이름', accessor: 'name' },
@@ -160,6 +163,7 @@ const CusMgmt = () => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
     data: filteredData,
+    data: filteredData,
   });
 
   return (
@@ -167,10 +171,19 @@ const CusMgmt = () => {
       <div className="Middle classification">
         <span>회원 관리</span>
       </div>
-
+    
       <hr />
 
       <div className="subTitle">
+        <button className="edit-button" onClick={handleEditRows}>
+          수정
+        </button>
+        <button className="add-button" onClick={handleAddRow}>
+          추가
+        </button>
+        <button className="delete-button" onClick={handleDeleteRows}>
+          삭제
+        </button>
         <button className="edit-button" onClick={handleEditRows}>
           수정
         </button>
@@ -188,6 +201,7 @@ const CusMgmt = () => {
         <div className="left">
           <label htmlFor="date">
             날짜를 선택하세요:
+
             <input type="date" id="date" max="2077-06-20" min="2077-06-05" value="2024-06-18" />
           </label>
         </div>
@@ -201,8 +215,19 @@ const CusMgmt = () => {
             onChange={handleSearchChange}
           />
           <button className="search-button" onClick={handleSearch}>조회</button>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="검색"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+          <button className="search-button" onClick={handleSearch}>조회</button>
         </div>
       </div>
+
+      <hr />
+
 
       <hr />
 
@@ -229,6 +254,64 @@ const CusMgmt = () => {
           })}
         </tbody>
       </table>
+
+      {showModal && (
+        <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h1 className="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" className="btn-close" onClick={handleModalClose} aria-label="Close"></button>
+              </div>
+              <div className="modal-body">
+                <div className="form-group">
+                  <label>ID:</label>
+                  <input type="text" className="form-control" value={formData.id} onChange={(e) => setFormData({ ...formData, id: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>이름:</label>
+                  <input type="text" className="form-control" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>성별:</label>
+                  <input type="text" className="form-control" value={formData.gender} onChange={(e) => setFormData({ ...formData, gender: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>연락처:</label>
+                  <input type="text" className="form-control" value={formData.contact} onChange={(e) => setFormData({ ...formData, contact: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>생년월일:</label>
+                  <input type="text" className="form-control" value={formData.dob} onChange={(e) => setFormData({ ...formData, dob: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>가입일:</label>
+                  <input type="text" className="form-control" value={formData.joinDate} onChange={(e) => setFormData({ ...formData, joinDate: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>회원등급:</label>
+                  <input type="text" className="form-control" value={formData.membership} onChange={(e) => setFormData({ ...formData, membership: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>특이사항:</label>
+                  <input type="text" className="form-control" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={handleModalClose}>Close</button>
+                <button type="button" className="btn btn-primary" onClick={handleSaveChanges}>Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showModal && (
         <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

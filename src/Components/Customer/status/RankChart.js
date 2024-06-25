@@ -4,8 +4,8 @@
 import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { GoTriangleDown } from "react-icons/go";
+import { GoTriangleUp } from "react-icons/go";
 
 //예제 데이터
 const Rank = () => {
@@ -48,10 +48,10 @@ const Rank = () => {
             return { icon: <span className="badge text-bg-success">New</span>, text: '' }; // new
         }
         if (rank < prevRank) {
-            return { icon: <FontAwesomeIcon icon={faCaretUp} style={{ color: 'blue' }} />, text: ` ${Math.abs(prevRank - rank)}` }; // 상승
+            return { icon: <GoTriangleUp style={{ color: 'blue' }}/>, text: ` ${Math.abs(prevRank - rank)}` }; // 상승
         }
         if (rank > prevRank) {
-            return { icon: <FontAwesomeIcon icon={faCaretDown} style={{ color: 'red' }} />, text: ` ${Math.abs(prevRank - rank)}` }; // 하락
+            return { icon: <GoTriangleDown style={{ color: 'red' }} />, text: ` ${Math.abs(prevRank - rank)}` }; // 하락
         }
         return { icon: "-", text: '' }; // 동일
 

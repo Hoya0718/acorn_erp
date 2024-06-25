@@ -6,15 +6,23 @@ import MemoPad from '../Components/MemoPad';
 const Layout = () => {
   const [expandedItem, setExpandedItem] = useState(null);
 
+  //글꼴
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Lilita+One&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+  }, []);
+
   const handleItemClick = (item) => {
-    setExpandedItem(expandedItem === item ? null : item);
+    setExpandedItem(item === expandedItem ? null : item);
   };
 
   return (
     <div className="layout1">
       <header className='header1'>
-        <span style={{fontSize:"18px"}}>ACORN ERP</span>
-        <MemoPad></MemoPad>
+      <Link to="/layout"><span className="erp-title">ACORN ERP</span></Link>
+        <MemoPad />
       </header>
       <div className="container1">
         <div className="sidebar1">
@@ -31,10 +39,10 @@ const Layout = () => {
                 />
               ))}
             </ul>
-              <div>
-                <button>다크모드</button>
-                <button>로그아웃</button>
-              </div>
+          <div className="sidebar1-bottom">
+            <button>다크모드</button>
+            <button>로그아웃</button>
+          </div>
           </nav>
         </div>
         <main className="main-content1">
@@ -49,29 +57,13 @@ const Layout = () => {
 };
 
 const MenuItem = ({ title, subMenuItems, expanded, onClick, path }) => {
-  const contentRef = useRef(null);
-
-  useEffect(() => {
-    if (contentRef.current) {
-      if (expanded) {
-        contentRef.current.style.maxHeight = contentRef.current.scrollHeight + 'px';
-      } else {
-        contentRef.current.style.maxHeight = '0px';
-      }
-    }
-  }, [expanded]);
-
   return (
     <li>
-      <div onClick={onClick}>
-        {subMenuItems ? (
-          <span>{title}</span>
-        ) : (
-          <Link to={path}>{title}</Link>
-        )}
+      <div className={`menu-item ${subMenuItems ? '' : 'no-submenu'}`} onClick={onClick}>
+        <Link to={subMenuItems ? subMenuItems[0].path : path}>{title}</Link>
       </div>
-      {subMenuItems && (
-        <div className={`submenu1 ${expanded ? 'active' : ''}`} ref={contentRef}>
+      {subMenuItems && expanded && (
+        <div className={`submenu1 active`}>
           <ul>
             {subMenuItems.map((subMenuItem, index) => (
               <li key={index}>
@@ -113,14 +105,18 @@ const menuItems = [
   {
     title: "재무 관리",
     subMenuItems: [
-
       { title: "매입 관리", path: "/layout/financialMgmt/incomeMgmt" },
       { title: "매출 관리", path: "/layout/financialMgmt/exportMgmt" }
-
     ]
   },
-  { title: "예약 관리", path: "/layout/reservationMgmt" },
-  { title: "커뮤니티", path: "/layout/board" }
+  {
+    title: "예약 관리",
+    path: "/layout/reservationMgmt"
+  },
+  {
+    title: "커뮤니티",
+    path: "/layout/board"
+  }
 ];
 
 export default Layout;

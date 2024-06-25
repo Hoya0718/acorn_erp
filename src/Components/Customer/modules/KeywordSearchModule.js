@@ -16,7 +16,7 @@ const CustomerStatusPeriodSerchBox = ({ setKeyword }) => {
 
   return (
     <div className="customer-status-period-serchbox">
-      <div className="date righted">
+      <div className="keyword righted">
         <div className="input-group">
           <span className="input-group-text"><FontAwesomeIcon icon={faSearch} /></span>
           <input type="text" id="keyword" className="form-control" value={keyword} onChange={handleKeywordChange} placeholder="검색" />

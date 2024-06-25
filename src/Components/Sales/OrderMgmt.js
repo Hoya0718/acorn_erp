@@ -25,14 +25,14 @@ const OrderMgmt = () => {
       <div className="order-subTitle">
         <span>
           <button
-            className={selectedLink === '/salesMgmt/orderMgmt' ? 'selected' : ''}
-            onClick={() => handleLinkClick('/salesMgmt/orderMgmt')}>
-            <Link to="/salesMgmt/orderMgmt">주문서 조회</Link>
+            className={selectedLink === '/layout/salesMgmt/orderMgmt' ? 'selected' : ''}
+            onClick={() => handleLinkClick('/layout/salesMgmt/orderMgmt')}>
+            <Link to="/layout/salesMgmt/orderMgmt">주문서 조회</Link>
           </button>
           <button
-            className={selectedLink === '/salesMgmt/return' ? 'selected' : ''}
-            onClick={() => handleLinkClick('/salesMgmt/return')}>
-            <Link to="/salesMgmt/return">반품 및 교환 조회</Link>
+            className={selectedLink === '/layout/salesMgmt/return' ? 'selected' : ''}
+            onClick={() => handleLinkClick('/slayout/alesMgmt/return')}>
+            <Link to="/layout/salesMgmt/return">반품 및 교환 조회</Link>
           </button>
         </span>
       </div>
