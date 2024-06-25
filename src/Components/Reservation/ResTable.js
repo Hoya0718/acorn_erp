@@ -45,7 +45,7 @@ const ResTable = () => {
             <th scope="col">예약자이름</th>
             <th scope="col">예약일시</th>
             <th scope="col">추가요청사항</th>
-            <th scope="col">결제내역</th>
+            <th scope="col">결제방식</th>
           </tr>
         </thead>
         <tbody className="table-group-divider">

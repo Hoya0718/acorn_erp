@@ -104,7 +104,7 @@ const MainReg = () => {
             <section id="calculator" align="center">
               <div id="calculator_addBtn">
                 <button type="submit" id="add_reg">{isEditMode ? '수정' : '등록'}</button>
-                <button type="button" id="add_cancel" onClick={() => navigate('/layout/reservationMgmt/resTable')}>취소</button>
+                <button type="button" id="add_cancel" onClick={() => navigate('/layout/reservationMgmt')}>취소</button>
               </div>
             </section>
           </form>

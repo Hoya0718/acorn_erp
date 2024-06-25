@@ -8,8 +8,8 @@ import acornImage from './Acorn-illustration-png.png';  // 이미지 경로 설�
 const ReservationMgmt = () => {
   const [date, setDate] = useState(new Date());
   const [reservations, setReservations] = useState([
-    { id: 1, name: '홍대희', date: '2024-02-14', requests: '준비물 X', payment: '2024-02-14 10:26 카드결제', phone: '010-1234-5678', gender: '남성', count: 2 },
-    { id: 2, name: '홍시진', date: '2024-02-14', requests: '주차 필요합니다.', payment: '2024-02-14 11:26 네이버페이', phone: '010-8765-4321', gender: '여성', count: 3 }
+    { id: 1, name: '홍대희', date: '2024-02-14', requests: '준비물 X', payment: '카드결제', phone: '010-1234-5678', gender: '남성', count: 2 },
+    { id: 2, name: '홍시진', date: '2024-02-14', requests: '주차 필요합니다.', payment: '네이버페이', phone: '010-8765-4321', gender: '여성', count: 3 }
   ]);
 
   const addReservation = (newReservation) => {
@@ -60,8 +60,8 @@ const ReservationMgmt = () => {
           className={`date ${condition} ${isToday ? 'today' : ''}`}
           onClick={() => handleDateClick(viewYear, viewMonth, date)}
         >
-          {isReserved && <img src={acornImage} alt="Reserved" className="acorn-image" />}
           <span>{date}</span>
+          {isReserved && <img src={acornImage} alt="Reserved" className="acorn-image" />}
         </div>
       );
     });
@@ -143,10 +143,10 @@ const ReservationMgmt = () => {
           <div className="body_flow">
             <div className="row">
               <div className="col--12"></div>
+              <span>예약 관리</span>
               <div className="col-md-7 col-xs-12">
                 <div className="left">
                   <div className="Middle classification">
-                    <span>예약 관리</span>
                   </div>
                   <div className="calendar">
                     <div className="header">
