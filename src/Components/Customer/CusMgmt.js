@@ -1,8 +1,8 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
-import React, { useMemo, useCallback, useState, useEffect } from 'react';
+
 import { useTable } from 'react-table';
 import Checkbox from './Checkbox';
-import Checkbox from './Checkbox';
+
 
 const CusMgmt = () => {
   const [data, setData] = useState([]);
