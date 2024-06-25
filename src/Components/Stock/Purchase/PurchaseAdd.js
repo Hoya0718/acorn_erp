@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import './Purchase.css';
+import axios from '../../../api/axios';
 //import '../../Main/Main.css'
 
 const PurchaseAdd = ({ checkAll, onAddPurchase }) => {
   const [isChecked, setIsChecked] = useState(false);
   // 추가하는 데이터 객체 
   const [purchaseData, setPurchaseData] = useState({
+    purchaseId: '',
     purchaseCode: '',
     purchaseName: '',
     purchaseUnit: '',
@@ -25,22 +27,30 @@ const PurchaseAdd = ({ checkAll, onAddPurchase }) => {
   // 부모 컴포넌트로 업데이트된 데이터 전달
   const handleAdd = () => {
     if (!purchaseData.purchaseCode) {
-      alert('코드를 입력해 주세요.'); // 코드 필드가 비어있을 경우 알림창 띄우기
+      alert('코드를 입력해 주세요.');
       return;
     }
 
-    onAddPurchase({...purchaseData, isChecked}); // 부모에게 데이터 전달
-    // 추가 버튼을 누르면 입력 필드 초기화
-    setPurchaseData({
-      purchaseCode: '',
-      purchaseName: '',
-      purchaseUnit: '',
-      orderDate: '',
-      orderQuantity: '',
-      unitPrice: '',
-      purchaseRemark: ''
-    });
-  }
+    axios.post('/purchase', purchaseData)
+      .then(response => {
+        onAddPurchase({ ...purchaseData, isChecked });
+        setPurchaseData({
+          purchaseCode: '',
+          purchaseName: '',
+          purchaseUnit: '',
+          orderDate: '',
+          orderQuantity: '',
+          unitPrice: '',
+          purchaseRemark: ''
+        });
+      })
+      .catch(error => {
+        console.error('Error adding purchase:', error);
+        // Handle error gracefully, show user feedback if needed
+      });
+  };
+
+
   // 체크박스 상태 변화 훅
   useEffect(() => {
     setIsChecked(checkAll || false);

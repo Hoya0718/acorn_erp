@@ -10,6 +10,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { PiFileArrowUp } from "react-icons/pi";
 import { AiOutlineCalendar } from 'react-icons/ai';
 import moment from 'moment';
+import axios from '../../../api/axios';
 
 
 const PurchaseMgmt = () => {
@@ -18,6 +19,16 @@ const PurchaseMgmt = () => {
   const [isDeleteClicked, setIsDeleteClicked] = useState(false);
   const [checkAll, setCheckAll] = useState(false); // 체크박스 전체 선택
   const [updateData, setUpdateData] = useState(null); // 수정된 데이터를 저장할 상태
+  const [newPurchase, setNewPurchase] = useState({
+      purchaseId: '',
+      purchaseCode: '',
+      purchaseName: '',
+      purchaseUnit: '',
+      orderDate: '',
+      orderQuantity: '',
+      unitPrice: '',
+      purchaseRemark: ''
+  });
   // 테이블 추가/수정 변수
   const [addPurchase, setAddPurchase] = useState([
     // 초기 데이터 예시
@@ -95,13 +106,42 @@ const PurchaseMgmt = () => {
 
 
   // purchaseAdd 파트
-  const handleAddPurchase = (newAddPurchase) => {
-    // 새로운 추가 데이터를 기존 테이블에 추가
-    setAddPurchase([newAddPurchase, ...addPurchase ]);
-  }
-  useEffect(() => {
-    // 데이터 추가 후에 수행할 작업
-  }, [addPurchase]); // addPurchase 상태가 변경될 때마다 실행됨
+  const handleAddPurchase = async (newPurchase) => {
+    try {
+      const response = await axios.post('/purchase', newPurchase); // 백엔드 API 엔드포인트
+      setAddPurchase([response.data, ...addPurchase]); // 새로운 데이터 추가
+      setNewPurchase({  purchaseId: '',
+                        purchaseCode: '',
+                        purchaseName: '',
+                        purchaseUnit: '',
+                        orderDate: '',
+                        orderQuantity: '',
+                        unitPrice: '',
+                        purchaseRemark: ''})
+    } catch (error) {
+      console.error('Error adding purchase: ', error);
+    }
+  };
+
+
+    useEffect(() => {
+        fetchData();
+      }, []);
+
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/purchase'); // 백엔드 API 엔드포인트
+        setAddPurchase(response.data); // 데이터 설정
+        setFilteredPurchase(response.data); // 필터링된 데이터 설정
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      }
+    };
+
+    
+
+
 
     // 데이터 수정 함수
     const handleUpdatePurchase = (updatedPurchase, index) => {
@@ -200,6 +240,10 @@ const PurchaseMgmt = () => {
       useEffect(() => {
         handleDateRangeChange();
       }, [startDate, endDate]);
+
+    
+    
+
     
 
 
@@ -312,7 +356,7 @@ const PurchaseMgmt = () => {
                 ))
               ) : (
                 filteredPurchase.map((purchase, index) => (
-                  <tr key={index}>
+                  <tr key={purchase.id}>
                     <td>
                       <input
                         type="checkbox"
