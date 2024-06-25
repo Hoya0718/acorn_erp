@@ -1,11 +1,9 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import { useTable } from 'react-table';
 import Checkbox from './Checkbox';
 
 const CusMgmt = () => {
-  const [data, setData] = useState([
-    // 데이터 배열 초기화
-  ]);
+  const [data, setData] = useState([]);
   const [formData, setFormData] = useState({
     id: '',
     name: '',
@@ -17,6 +15,20 @@ const CusMgmt = () => {
     notes: '',
   });
   const [showModal, setShowModal] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState(data);
+
+  useEffect(() => {
+    fetch('/api/customers')
+      .then(response => response.json())
+      .then(data => setData(data))
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
+
+  useEffect(() => {
+    setFilteredData(data);
+  }, [data]);
 
   const handleCheckboxChange = useCallback((index) => {
     setData(prevData => {
@@ -28,12 +40,47 @@ const CusMgmt = () => {
   }, []);
 
   const handleDeleteRows = () => {
-    const newData = data.filter((item) => !item.checked);
-    setData(newData);
+    const idsToDelete = data.filter(item => item.checked).map(item => item.id);
+    
+    fetch('/api/customers', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(idsToDelete),
+    })
+      .then(response => {
+        if (response.ok) {
+          setData(prevData => prevData.filter(item => !item.checked));
+        } else {
+          console.error('Failed to delete rows');
+        }
+      })
+      .catch(error => console.error('Error deleting rows:', error));
   };
 
   const handleAddRow = () => {
+    setEditIndex(null);
+    setFormData({
+      id: '',
+      name: '',
+      gender: '',
+      contact: '',
+      dob: '',
+      joinDate: '',
+      membership: '',
+      notes: '',
+    });
     setShowModal(true);
+  };
+
+  const handleEditRows = () => {
+    const selectedRow = data.findIndex(item => item.checked);
+    if (selectedRow !== -1) {
+      setEditIndex(selectedRow);
+      setFormData(data[selectedRow]);
+      setShowModal(true);
+    }
   };
 
   const handleModalClose = () => {
@@ -41,9 +88,49 @@ const CusMgmt = () => {
   };
 
   const handleSaveChanges = () => {
-    const newDataItem = { ...formData, checked: false };
-    setData(prevData => [...prevData, newDataItem]);
+    if (editIndex !== null) {
+      fetch(`/api/customers/${formData.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+        .then(response => response.json())
+        .then(updatedItem => {
+          setData(prevData => {
+            const updatedData = [...prevData];
+            updatedData[editIndex] = { ...updatedItem, checked: false };
+            return updatedData;
+          });
+        })
+        .catch(error => console.error('Error updating row:', error));
+    } else {
+      fetch('/api/customers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+        .then(response => response.json())
+        .then(newItem => {
+          setData(prevData => [...prevData, { ...newItem, checked: false }]);
+        })
+        .catch(error => console.error('Error adding row:', error));
+    }
     setShowModal(false);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearch = () => {
+    const filtered = data.filter(item =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredData(filtered);
   };
 
   const columns = useMemo(
@@ -54,7 +141,7 @@ const CusMgmt = () => {
         Cell: ({ row }) => (
           <Checkbox
             checked={row.original.checked}
-            onChange={() => handleCheckboxChange(row.original.index)}
+            onChange={() => handleCheckboxChange(row.index)}
           />
         ),
       },
@@ -72,7 +159,7 @@ const CusMgmt = () => {
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
-    data,
+    data: filteredData,
   });
 
   return (
@@ -84,7 +171,7 @@ const CusMgmt = () => {
       <hr />
 
       <div className="subTitle">
-        <button className="edit-button">
+        <button className="edit-button" onClick={handleEditRows}>
           수정
         </button>
         <button className="add-button" onClick={handleAddRow}>
@@ -106,8 +193,14 @@ const CusMgmt = () => {
         </div>
 
         <div className="right">
-          <input type="text" placeholder="검색" />
-          <button>조회</button>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="검색"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+          <button className="search-button" onClick={handleSearch}>조회</button>
         </div>
       </div>
 
