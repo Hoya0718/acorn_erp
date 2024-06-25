@@ -79,12 +79,14 @@ const CustomerStatusPeriodSerch = ({ setPeriod }) => {
           disabled={selectedOption !== '사용자 지정'}
           value={startDate}
           style={{ minWidth: '130px' }}
-          onChange={handleStartDateChange} />&nbsp;~&nbsp;
+          onChange={handleStartDateChange}
+          required />&nbsp;~&nbsp;
         <input type="date" id="endDate"
           disabled={selectedOption !== '사용자 지정'}
           value={endDate}
           style={{ minWidth: '130px' }}
-          onChange={handleEndDateChange} />
+          onChange={handleEndDateChange}
+          required />
       </div>
     </div>
   );

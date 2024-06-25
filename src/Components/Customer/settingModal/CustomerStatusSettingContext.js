@@ -2,12 +2,13 @@
 //고객현황 설정 사항 전역 관리를 위한 페이지
 
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import instance from '../../../api/axios';
 
 const CustomerStatusContext = createContext();
 
 export const CustomerStatusProvider = ({ children }) => {
-  const [customerCount_lastyear, setCustomerCount_lastyear] = useState(50000);
-  const [customerCount, setCustomerCount] = useState(60000);
+  const [customerCount_lastyear, setCustomerCount_lastyear] = useState(0);
+  const [customerCount, setCustomerCount] = useState(0);
   const [customerTarget, setCustomerTarget] = useState('');
   const [goalOption, setGoalOption] = useState('전체고객수');
   const [selectedOption, setSelectedOption] = useState('');
@@ -30,38 +31,23 @@ export const CustomerStatusProvider = ({ children }) => {
   const [selectedProvince, setSelectedProvince,] = useState('');
   const [selectedCity, setSelectedCity,] = useState('');
 
-  // useEffect(() => {
-  //   const savedSettings = localStorage.getItem('customerStatusSettings');
-  //   if (savedSettings) {
-  //     const {
-  //       customerCount_lastyear,
-  //       customerCount,
-  //       customerTarget,
-  //       selectedOption,
-  //       period,
-  //       startDate,
-  //       checkboxes_dist,
-  //       checkboxes_prod,
-  //       endDate,
-  //       selectedRegion,
-  //       rangeValue,
-  //     } = JSON.parse(savedSettings);
+  useEffect(() => {
+    const fetchCustomerCount = async () => {
+      try {
+        const response_all = await instance.get('/customer/getCountAll');
+        setCustomerCount(response_all.data);
+        console.log("전체고객수 :",response_all.data);
+        const response_lastyear = await instance.get('/customer/getCountLastyear', {
+          params: { year: 2023 }} );
+        setCustomerCount_lastyear(response_lastyear.data);
+        console.log("전년도고객수 :",response_lastyear.data);
+      } catch (error) {
+        console.error('Error fetching customer count:', error);
+      }
+    };
 
-  //     setCustomerCount_lastyear(customerCount_lastyear || 50000);
-  //     setCustomerCount(customerCount || 60000);
-  //     setCustomerTarget(customerTarget || '');
-  //     setGoalOption(goalOption || '전체고객수');
-  //     setSelectedOption(selectedOption || '');
-  //     setPeriod(period || '1년');
-  //     setStartDate(startDate || '');
-  //     setEndDate(endDate || '');
-  //     setCheckboxes_dist(checkboxes_dist || { gender: true, age: true, region: true });
-  //     setCheckboxes_prod(checkboxes_prod || { amount: true, count: true, reaction: true });
-  //     setSelectedRegion(selectedRegion || '전국');
-  //     setRangeValue(rangeValue || 5);
-  //   }
-  // }, []);
-
+    fetchCustomerCount();
+  }, []); // 빈 배열을 넣어 컴포넌트가 마운트될 때만 실행되도록 설정
   return (
     <CustomerStatusContext.Provider value={{
       customerCount_lastyear, setCustomerCount_lastyear,

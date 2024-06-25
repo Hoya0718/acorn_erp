@@ -9,7 +9,7 @@ import StatusDataMain from '../Components/Customer/status_data/StatusDataMain.js
 
 // 재고 관리
 import StockMgmt from '../Components/Stock/StockMgmt.js';
-import DistributionMgmt from '../Components/Stock/distribution/distributionMgmt.js';
+import DistributionMgmt from '../Components/Stock/Distribution/DistributionMgmt.js';
 import MeterialMgmt from '../Components/Stock/MeterialMgmt.js';
 import PurchaseMgmt from '../Components/Stock/Purchase/PurchaseMgmt.js';
 import VendorMgmt from '../Components/Stock/Vendor/VendorMgmt.js';
@@ -40,6 +40,7 @@ import SignUp from '../Components/Login/SignUp.js';
 
 // 게시판
 import Board from '../Components/Board/Board.js';
+
 
 // Router 
 import { createBrowserRouter } from 'react-router-dom';
@@ -76,7 +77,7 @@ export const RouterInfo = createBrowserRouter([
             element: <MeterialMgmt />
           },
           {
-            path: "distributionMgmt",
+            path: "DistributionMgmt",
             element: <DistributionMgmt />
           },
           {
@@ -126,23 +127,23 @@ export const RouterInfo = createBrowserRouter([
         ]
       },
       {
-  path: "reservationMgmt",
-  element: <ReservationMgmt />,
-  children: [
-    {
-      index: true,
-      element: <ResTable />
-    },
-    {
-      path: "mainReg",
-      element: <MainReg />
-    },
-    {
-      path: "resTable",
-      element: <ResTable />
-    }
-  ]
-},
+        path: "reservationMgmt",
+        element: <ReservationMgmt />,
+        children: [
+          {
+            index: true,
+            element: <ResTable />
+          },
+          {
+            path: "mainReg",
+            element: <MainReg />
+          },
+          {
+            path: "resTable",
+            element: <ResTable />
+          }
+        ]
+      },
       {
         path: "board",
         element: <Board />,
@@ -179,8 +180,10 @@ export const RouterInfo = createBrowserRouter([
         element: <SignUp />
       }
     ]
-  },{
+  },
+  {
     path: 'StatusDataMain',
     element: <StatusDataMain />
   }
-]);
+]
+)

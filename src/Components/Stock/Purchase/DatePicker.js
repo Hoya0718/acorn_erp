@@ -2,6 +2,7 @@ import { forwardRef } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Purchase.css";
+import "./DatePicker.css";
 
 const NewDatePicker = (props) => {
   const CustomInput = forwardRef((props, ref) => (
@@ -11,6 +12,8 @@ const NewDatePicker = (props) => {
   ));
 
   return (
+
+    
     <div>
       <DatePicker
         selected={props.selectedDate}

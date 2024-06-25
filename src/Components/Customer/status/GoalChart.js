@@ -3,43 +3,28 @@
 import * as React from 'react'
 import "../../Main/Main.css"
 import "../Customer.css"
+import { useCustomerStatus } from '../settingModal/CustomerStatusSettingContext'; 
 
 const Goal = () => {
-    const [goalData, setGoalData] = React.useState({ goal: 0, curr: 0, goal_thisyear: 0, curr_thisyear: 0 });
-    const [goalOption, setGoalOption] = React.useState('');
+    const { customerCount, customerTarget, customerCount_lastyear, goalOption } = useCustomerStatus();
 
-    React.useEffect(() => {
-        const savedSettings = localStorage.getItem('customerStatusSettings');
-        if (savedSettings) {
-            const { customerTarget, customerCount, customerCount_lastyear } = JSON.parse(savedSettings);
-            setGoalData({
-                goal: Number(customerTarget),
-                curr: Number(customerCount),
-                goal_thisyear: Number(customerTarget - customerCount_lastyear),
-                curr_thisyear: Number(customerCount - customerCount_lastyear)
-            });
-            if (goalOption) {
-                setGoalOption(goalOption);
-            }
-        }
-    }, []);
+    const goal_thisyear = customerTarget - customerCount_lastyear;
+    const curr_thisyear = customerCount - customerCount_lastyear;
 
-    const { goal, curr, goal_thisyear, curr_thisyear } = goalData;
-    const percentage = goal > 0 ? Math.round((curr / goal) * 100) : 0;
+    const percentage = customerTarget > 0 ? Math.round((customerCount / customerTarget) * 100) : 0;
     const percentage_thisyear = goal_thisyear > 0 ? Math.round((curr_thisyear / goal_thisyear) * 100) : 0;
+
     const FormatNumber = ({ value }) => {
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        if (typeof value !== 'number' || isNaN(value)) {
+            return "0";
+        }
+        return value.toLocaleString();
     };
-    // const handleOptionChange = (event) => {
-    //     const newGoalOption = event.target.value;
-    //     setGoalOption(newGoalOption);
-    //     const savedSettings = JSON.parse(localStorage.getItem('customerStatusSettings')) || {};
-    //     savedSettings.goalOption = newGoalOption;
-    //     localStorage.setItem('customerStatusSettings', JSON.stringify(savedSettings));
-    // };
-    const displayGoal = goalOption === '전체고객수' ? goal : goal_thisyear;
-    const displayCurr = goalOption === '전체고객수' ? curr : curr_thisyear;
+
+    const displayGoal = goalOption === '전체고객수' ? customerTarget : goal_thisyear;
+    const displayCurr = goalOption === '전체고객수' ? customerCount : curr_thisyear;
     const displayPercentage = goalOption === '전체고객수' ? percentage : percentage_thisyear;
+
     return (
         <div className="c_goal">
             <section>
@@ -50,14 +35,14 @@ const Goal = () => {
                     <div className="app-card-body p-3 p-lg-4">
                         {/* <!-- 달성도 바 -->*/}
                         <div className="progress" style={{ height: '30px', position: 'relative' }}>
-                            <div className="progress-bar bg-success" role="progressbar" style={{ width: `${percentage}%` }}
+                            <div className="progress-bar bg-success" role="progressbar" style={{ width: `${displayPercentage}%` }}
                                 aria-valuenow={displayPercentage} aria-valuemin="0" aria-valuemax="100">
                                 <span style={{
                                     position: 'absolute',
                                     left: '50%',
                                     top: '50%',
                                     transform: 'translate(-50%, -50%)',
-                                    color: percentage > 50 ? '#fff' : 'darkgray',
+                                    color: displayPercentage > 50 ? '#fff' : 'darkgray',
                                     fontWeight: 'bold'
                                 }}>
                                     {displayPercentage}%
