@@ -78,16 +78,24 @@ const PurchaseMgmt = () => {
   }
   
   const handleSingleCheckChange = (purchaseCode, index) => {
-    if (selectedItems.includes(purchaseCode)) {
-      // 이미 선택된 항목이면 제거
-      setSelectedItems(selectedItems.filter(item => item !== purchaseCode));
-      setSelectedItemIndexes(selectedItemIndexes.filter(item => item !== index));
+    const currentIndex = selectedItemIndexes.indexOf(index); // 현재 클릭된 인덱스의 위치를 가져옴
+    const newSelectedItems = [...selectedItems]; // 기존 선택 항목 복사
+    const newItemIndexes = [...selectedItemIndexes]; // 기존 선택 항목 복사
+  
+    if (currentIndex === -1) {
+      // 선택되지 않은 경우, 선택된 것으로 추가
+      newSelectedItems.push(purchaseCode);
+      newItemIndexes.push(index);
     } else {
-      // 선택된 항목이 아니면 추가
-      setSelectedItems([...selectedItems, purchaseCode]);
-      setSelectedItemIndexes([...selectedItemIndexes, index]);
+      // 이미 선택된 경우, 선택 취소
+      newSelectedItems.splice(currentIndex, 1);
+      newItemIndexes.splice(currentIndex, 1);
     }
-  }
+  
+    setSelectedItems(newSelectedItems); // 새로운 선택 항목 설정
+    setSelectedItemIndexes(newItemIndexes); // 새로운 선택 항목 인덱스 설정
+  };
+  
 
 
   const handleAddClick = () => {
@@ -144,16 +152,21 @@ const PurchaseMgmt = () => {
 
 
     // 데이터 수정 함수
-    const handleUpdatePurchase = (updatedPurchase, index) => {
-      const updatedList = [...addPurchase];
-      updatedList[index] = updatedPurchase;
-      setAddPurchase(updatedList);
-      setIsUpdateClicked(false); // 수정 모드 종료
-      setSelectedItems([]);
-      setSelectedItemIndexes([]);
+    const handleUpdatePurchase = async (updatedPurchase) => {
+      try {
+        const response = await axios.put(`/purchase/${updatedPurchase.id}`, updatedPurchase); // 백엔드 API 엔드포인트
+        const updatedList = addPurchase.map(item => (item.id === response.data.id ? response.data : item));
+        setAddPurchase(updatedList);
+        setIsUpdateClicked(false);
+        setSelectedItems([]);
+        setSelectedItemIndexes([]);
+      } catch (error) {
+        console.error('Error updating purchase: ', error);
+      }
     };
 
     // 삭제 파트
+    /*
     const handleDeleteClick = () => {
       if (selectedItems.length === 0) {
         window.alert('삭제할 항목을 선택해 주세요.');
@@ -161,7 +174,20 @@ const PurchaseMgmt = () => {
         setShowDeleteModal(true); // 삭제 모달을 보이도록 설정
       }
     };
-  
+  */
+    const handleDeletePurchase = async () => {
+      try {
+        await axios.delete(`/purchase/${selectedItems[0]}`); // 첫 번째 선택된 항목 삭제
+        const remainingItems = addPurchase.filter(purchase => purchase.id !== selectedItems[0]);
+        setAddPurchase(remainingItems);
+        setSelectedItems([]);
+        setShowDeleteModal(false); // 모달 닫기
+      } catch (error) {
+        console.error('Error deleting purchase: ', error);
+      }
+    };
+
+
     const handleDeleteConfirmed = () => {
       // 실제 삭제 로직을 처리하는 함수
       const remainingItems = addPurchase.filter(purchase => !selectedItems.includes(purchase.purchaseCode));
@@ -274,7 +300,7 @@ const PurchaseMgmt = () => {
             )}
             {!isAddClicked && <button onClick={handleUpdateClick} >수정</button>}
             {!isAddClicked && (
-                <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={handleDeleteClick}>
+                <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={handleDeletePurchase}>
                   삭제
                 </button>
               )}
