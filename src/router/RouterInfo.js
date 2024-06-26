@@ -37,6 +37,7 @@ import LoginForm from '../Components/Login/LoginForm.js'
 import FindPw from '../Components/Login/FindPw.js';
 import FindEmail from '../Components/Login/FindEmail.js'
 import SignUp from '../Components/Login/SignUp.js';
+import ChangePw from '../Components/Login/ChangePw.js'
 
 // 게시판
 import Board from '../Components/Board/Board.js';
@@ -179,6 +180,10 @@ export const RouterInfo = createBrowserRouter([
       {
         path: "signUp",
         element: <SignUp />
+      },
+      {
+        path:"/findPw/changePw",
+        element: <ChangePw />
       }
     ]
   },
