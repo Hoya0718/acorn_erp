@@ -1,5 +1,5 @@
 :root {
- 
+  /* --background-theme: #e6e9f0; */
   --text-color: #000;
 }
 
@@ -44,19 +44,82 @@ p {
   overflow: hidden;
 }
 
+.accounts_image img{
+    object-fit: cover;
+    object-position: center;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+ .accounts_col form .form-group{
+    position: relative !important;
+}
+.accounts_col form .form-control{
+    font-size:1.6rem;
+    padding:20px 10px;
+    margin-bottom:20px;
+    background:transparent !important;
+}
+.accounts_col form label,
+.accounts_col form .form-group i{
+    position:absolute;
+    z-index: 1;
+    pointer-events: none;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size:1.2rem;
+    left:10px;
+
+}
+.accounts_col form label{
+    transition: .2s linear;
+}
+.change_label{
+    background-color:#fcfcfc;
+    transition: .2s linear;
+    transform: scale(0.8);
+    top:0 !important;
+}
+.accounts_col form .form-group i{
+    left:90% !important;
+    cursor: pointer;
+    pointer-events:visible;
+}
+.register_btn{
+    padding:10px 0!important;
+    font-size: 1.6rem !important;
+    font-weight: 600 !important;
+
+}
+
+.already_member_box p,
+.already_member_box span{
+    cursor: pointer;
+}
+.login_form,
+.signup_form{
+    display:none;
+}
+
 /* Custom column widths */
-.col-70 {
+ .col-70 {
   width: 70%;
+  height: 100%;
 }
 
 .col-30 {
   width: 30%;
+  height: 100%;
 }
 
 /* Ensure the image fills the parent container */
 .accounts_image img {
-  object-fit: cover;
-}
+  object-fit: fill;
+  width: 100%;
+  height: 100%;
+} 
 
 .main-login {
   display: flex;

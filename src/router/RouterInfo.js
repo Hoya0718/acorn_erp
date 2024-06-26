@@ -34,8 +34,8 @@ import ResTable from '../Components/Reservation/ResTable.js';
 // 로그인 & 회원가입
 import Login from '../Components/Login/Login.js';
 import LoginForm from '../Components/Login/LoginForm.js'
-import FindEmail from '../Components/Login/FindEmail.js';
 import FindPw from '../Components/Login/FindPw.js';
+import FindEmail from '../Components/Login/FindEmail.js'
 import SignUp from '../Components/Login/SignUp.js';
 
 // 게시판
@@ -159,6 +159,7 @@ export const RouterInfo = createBrowserRouter([
     path: "/mainReg",
     element: <MainReg />
   },
+
   {
     path: "/",
     element: <Login />,
@@ -168,12 +169,12 @@ export const RouterInfo = createBrowserRouter([
         element: <LoginForm />
       },
       {
-        path: "findEmail",
-        element: <FindEmail />
-      },
-      {
         path: "findPw",
         element: <FindPw />
+      },
+      {
+        path: "findEmail",
+        element: <FindEmail />
       },
       {
         path: "signUp",
