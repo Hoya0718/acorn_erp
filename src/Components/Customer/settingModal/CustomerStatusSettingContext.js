@@ -9,7 +9,7 @@ const CustomerStatusContext = createContext();
 export const CustomerStatusProvider = ({ children }) => {
   const [customerCount_lastyear, setCustomerCount_lastyear] = useState(0);
   const [customerCount, setCustomerCount] = useState(0);
-  const [customerTarget, setCustomerTarget] = useState('');
+  const [customerTarget, setCustomerTarget] = useState(0);
   const [goalOption, setGoalOption] = useState('전체고객수');
   const [selectedOption, setSelectedOption] = useState('');
 
@@ -36,12 +36,10 @@ export const CustomerStatusProvider = ({ children }) => {
       try {
         const response_all = await instance.get('/customer/getCountAll');
         setCustomerCount(response_all.data);
-        console.log("전체고객수 :", response_all.data);
         const response_lastyear = await instance.get('/customer/getCountLastyear', {
           params: { year: 2023 }
         });
         setCustomerCount_lastyear(response_lastyear.data);
-        console.log("전년도고객수 :", response_lastyear.data);
       } catch (error) {
         console.error('Error fetching customer count:', error);
       }

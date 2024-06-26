@@ -28,9 +28,8 @@ const Dist = () => {
                 const response_age = await instance.get('/customer/count_age_group');
                 const data_age = response_age.data;
                 const ageChartLabels = Object.keys(data_age);
-                console.log(ageChartLabels);
                 const ageChartValues = Object.values(data_age);
-                console.log(ageChartValues);
+                console.log("ageChartValues: ", ageChartValues);
 
                 const ageGroupData = {
                     labels: ageChartLabels,
@@ -42,28 +41,29 @@ const Dist = () => {
                     }]
                 };
 
-                // const response_gender = await instance.get('/customer/count_gender_group');
-                // const data_gender = response_gender.data;
-                // const genderChartLabels = Object.keys(data_gender);
-                // const genderChartValues = Object.values(data_gender);
+                const response_gender = await instance.get('/customer/count_gender_group');
+                const data_gender = response_gender.data;
+                const genderChartLabels = Object.keys(data_gender);
+                const genderChartValues = Object.values(data_gender);
+                console.log("genderChartValues: ", genderChartValues);
                 const genderGroupData = {
-                    labels:  ['남성', '여성'],
+                    labels: genderChartLabels,
                     datasets: [{
-                        data: [1000, 1401],
+                        data: genderChartValues,
                         backgroundColor: [
                             '#FF6384', '#36A2EB',
                         ],
                     }]
                 };
 
-                // const response_region = await instance.get('/customer/count_region_group');
-                // const data_region = response_region.data;
-                // const regionChartLabels = Object.keys(data_region);
-                // const regionChartValues = Object.values(data_region);
+                const response_region = await instance.get('/customer/count_region_group');
+                const data_region = response_region.data;
+                const regionChartLabels = Object.keys(data_region);
+                const regionChartValues = Object.values(data_region);
                 const regionGroupData = {
-                    labels: ['서울', '경기', '인천', '부산', '대구', '기타'],
+                    labels: regionChartLabels,
                     datasets: [{
-                        data: [30, 25, 15, 10, 10, 10],
+                        data: regionChartValues,
                         backgroundColor: [
                             '#FF6384', '#36A2EB', '#FF9F40', '#FFCE56', '#4BC0C0', '#9966FF',
                         ],
@@ -118,10 +118,8 @@ const Dist = () => {
                     charts.push({ data: chartData.regionGroupData, label: '지역별' });
                 }
                 setChartNames(charts);
-                console.log('setCharts:', charts);
-                console.log('setChartNames:', chartNames);
             }
-        }, [chartData]); // chartData가 변경될 때마다 실행되도록 설정
+        }, [chartData]); 
 
         //도넛차트 안쪽 텍스트 설정
         const centerTextPlugin = {
