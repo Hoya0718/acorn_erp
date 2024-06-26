@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Reservation.css';
 import { useOutletContext, useNavigate, useParams } from 'react-router-dom';
+import axios from '../../api/axios';  // axios 불러오기
 
 const MainReg = () => {
   const { reservations, addReservation, updateReservation } = useOutletContext();
@@ -23,7 +24,7 @@ const MainReg = () => {
 
   useEffect(() => {
     if (isEditMode) {
-      const existingReservation = reservations.find(res => res.id === parseInt(id));
+      const existingReservation = reservations.find(res => res.id === id);
       if (existingReservation) {
         setFormData(existingReservation);
       }
@@ -35,18 +36,28 @@ const MainReg = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.id || !formData.name || !formData.date || !formData.payment) {
+    if (!formData.name || !formData.date || !formData.payment) {
       setErrorMessage('등록이 불가합니다. 필수 입력 필드를 확인하세요.');
       return;
     }
-    if (isEditMode) {
-      updateReservation(formData);
-    } else {
-      addReservation(formData);
+    try {console.log(id)
+      if (isEditMode) {
+        await axios.put(`/reservations/${formData.id}`, formData, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        updateReservation(formData);
+      } else {
+        const response = await axios.post('/reservations', formData, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        addReservation(response.data);
+      }
+      navigate('/layout/reservationMgmt/resTable');
+    } catch (error) {
+      console.error('Error saving reservation:', error);
     }
-    navigate('/layout/reservationMgmt/resTable');
   };
 
   return (
@@ -91,7 +102,7 @@ const MainReg = () => {
                 <tr>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>예약 번호</th>
                   <td style={{ width: '30%' }}>
-                    <input type="text" name="id" placeholder="예약 번호" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.id} />
+                    <input type="text" name="id" placeholder="예약 번호" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.id} disabled={isEditMode} />
                   </td>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>인원 수</th>
                   <td style={{ width: '30%' }}>

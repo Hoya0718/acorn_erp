@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Reservation.css';
 import { useOutletContext, useNavigate } from 'react-router-dom';
+import axios from '../../api/axios'; // axios 불러오기
 
 const ResTable = () => {
   const { reservations, deleteReservations } = useOutletContext();
@@ -16,12 +17,17 @@ const ResTable = () => {
     );
   };
 
-  const handleDelete = () => {
-    deleteReservations(selectedReservations);
-    setSelectedReservations([]);
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/reservations/${selectedReservations[0]}`);
+      deleteReservations(selectedReservations);
+      setSelectedReservations([]);
+    } catch (error) {
+      console.error('Error deleting reservation:', error);
+    }
   };
 
-  const handleEdit = (id) => {
+  const handleEdit = (id) => { console.log(id)
     navigate(`/layout/reservationMgmt/editReservation/${id}`);
   };
 
