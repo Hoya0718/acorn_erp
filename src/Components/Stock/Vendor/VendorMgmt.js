@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from '../../../api/axios';
-import VendorForm from './VendorForm';
+import VendorList from './VendorList';
 import {
   fetchVendors, handleAddClick, handleUpdateClick, handleDeleteClick, handleSubmitAdd,
   handleSubmitUpdate, handleCheckboxChange, handleSelectAll, handleChangeNewVendor,
   handleChangeUpdateVendor, handleCancelAdd, handleCancelUpdate,
-} from './Functions'; // 모듈화된 함수들을 import
+} from './Functions'; // Functions.js에서 모든 필요한 함수들을 import합니다.
 
 const VendorMgmt = () => {
   const [vendors, setVendors] = useState([]);
@@ -16,7 +15,7 @@ const VendorMgmt = () => {
   const [selectedVendors, setSelectedVendors] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [isAddClicked, setIsAddClicked] = useState(false);
-  const [isUpdateClicked, setIsUpdateClicked] = useState(false);
+  const [isUpdateClicked, setIsUpdateClicked] = useState(false); // isUpdateClicked 변수 추가
 
   useEffect(() => {
     fetchVendors(setVendors);
@@ -24,6 +23,15 @@ const VendorMgmt = () => {
 
   const handleAddClickWrapper = () => {
     handleAddClick(setIsAddClicked, setIsUpdateClicked);
+  };
+
+  const handleCancelForm = () => {
+    setIsAddClicked(false);
+    setIsUpdateClicked(false);
+    setNewVendor({
+      vendorName: '', vendorContact: '', vendorAddress: '', vendorRemark: '', deliverableStatus: false,
+    });
+    setUpdateVendor(null);
   };
 
   return (
@@ -35,66 +43,59 @@ const VendorMgmt = () => {
 
       <div className='items-subTitle'>
         <span>
-          <button onClick={handleAddClickWrapper}>등록</button>
-          {selectedVendors.length > 0 && !isAddClicked && (
-            <div>
+          {!isAddClicked && !isUpdateClicked && (
+            <button onClick={handleAddClickWrapper}>등록</button>
+          )}
+          {selectedVendors.length > 0 && !isAddClicked && !isUpdateClicked && (
+            <>
               <button onClick={() => handleUpdateClick(selectedVendors, vendors, setUpdateVendor, setIsUpdateClicked, setIsAddClicked)}>수정</button>
               <button onClick={() => handleDeleteClick(selectedVendors, vendors, setVendors, setSelectedVendors)}>삭제</button>
-            </div>
-           )}
+            </>
+          )}
+          {(isAddClicked || isUpdateClicked) && (
+            <button onClick={handleCancelForm}>취소</button>
+          )}
         </span>
+      </div><br />
+
+      <div className="searcher">
+        <div className="left">
+          <label htmlFor="date">날짜를 선택하세요 :
+            <input type="date" id="date" max="2077-06-20" min="2077-06-05" value="2024-07-18" />
+          </label>
+        </div>
+
+        <div className="right">
+          <input type="text" placeholder='🔍 검색' /><button>조회 &gt;</button>
+        </div>
       </div>
+      <br />
 
-      <table className='table'>
-        <thead>
-          <tr>
-            <th>
-              <input type="checkbox" checked={selectAll}
-                onChange={() => handleSelectAll(selectAll, vendors, setSelectedVendors, setSelectAll)} />
-            </th>
-            <th>코드</th><th>거래처명</th><th>거래처 연락처</th><th>거래처 주소</th><th>비고</th><th>납품 가능</th>
-          </tr>
-        </thead>
-        <tbody>
-          {vendors.map((vendor) => (
-            <tr key={vendor.vendorCode} style={{ display: selectedVendors.includes(vendor.vendorCode) && isUpdateClicked ? 'none' : 'table-row' }}>
-              <td>
-                <input
-                  type="checkbox"
-                  checked={selectedVendors.includes(vendor.vendorCode)}
-                  onChange={() => handleCheckboxChange(vendor.vendorCode, selectedVendors, setSelectedVendors)}
-                />
-              </td>
-              <td>{vendor.vendorCode}</td>
-              <td>{vendor.vendorName}</td>
-              <td>{vendor.vendorContact}</td>
-              <td>{vendor.vendorAddress}</td>
-              <td>{vendor.vendorRemark}</td>
-              <td>{vendor.deliverableStatus ? 'O' : 'X'}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* VendorList 컴포넌트에 필요한 props 모두 전달 */}
+      <VendorList
+        vendors={vendors}
+        selectedVendors={selectedVendors}
+        selectAll={selectAll}
+        handleCheckboxChange={(vendorCode) => handleCheckboxChange(vendorCode, selectedVendors, setSelectedVendors)}
+        handleSelectAll={() => handleSelectAll(selectAll, vendors, setSelectedVendors, setSelectAll)}
+        handleUpdateClick={() => handleUpdateClick(selectedVendors, vendors, setUpdateVendor, setIsUpdateClicked, setIsAddClicked)}
+        handleDeleteClick={() => handleDeleteClick(selectedVendors, vendors, setVendors, setSelectedVendors)}
+        isAddClicked={isAddClicked}
+        setIsAddClicked={setIsAddClicked}
+        setIsUpdateClicked={setIsUpdateClicked}
+        setVendors={setVendors}
+        setNewVendor={setNewVendor}
+        setSelectedVendors={setSelectedVendors}
+        setUpdateVendor={setUpdateVendor}
+        newVendor={newVendor}
+        updateVendor={updateVendor}
+        isUpdateClicked={isUpdateClicked}
+      /> <br/>
 
-      {isAddClicked && (
-        <VendorForm
-          handleSubmit={(e) => handleSubmitAdd(e, newVendor, vendors, setVendors, setIsAddClicked, setNewVendor, setSelectedVendors)}
-          handleCancel={() => handleCancelAdd(setIsAddClicked, setNewVendor)}
-          vendorData={newVendor}
-          handleChange={(field, value) => handleChangeNewVendor(field, value, newVendor, setNewVendor)}
-          isNewVendor={true}
-        />
-      )}
-
-      {isUpdateClicked && updateVendor && (
-        <VendorForm
-          handleSubmit={(e) => handleSubmitUpdate(e, updateVendor, vendors, setVendors, setIsUpdateClicked, setUpdateVendor)}
-          handleCancel={() => handleCancelUpdate(setIsUpdateClicked, setUpdateVendor)}
-          vendorData={updateVendor}
-          handleChange={(field, value) => handleChangeUpdateVendor(field, value, updateVendor, setUpdateVendor)}
-          isNewVendor={false}
-        />
-      )}
+      <div className="excel-print">
+        <button>엑셀 다운</button>
+        <button>인쇄</button>
+      </div>
     </div>
   );
 };

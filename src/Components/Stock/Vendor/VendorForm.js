@@ -1,55 +1,77 @@
-// VendorForm.js
 import React from 'react';
+import './Vendor.css';
 
 const VendorForm = ({
   handleSubmit,
-  handleCancel,
   vendorData,
   handleChange,
   isNewVendor,
 }) => {
   return (
-    <form onSubmit={handleSubmit}>
+    <tr>
+      <td>
+        <input type="checkbox" />
+      </td>
+      <td>
       <input
-        type="text"
-        value={vendorData.vendorName}
-        onChange={(e) => handleChange('vendorName', e.target.value)}
-        placeholder="Vendor Name"
-        required
-      />
-      <input
-        type="text"
-        value={vendorData.vendorContact}
-        onChange={(e) => handleChange('vendorContact', e.target.value)}
-        placeholder="Vendor Contact"
-        required
-      />
-      <input
-        type="text"
-        value={vendorData.vendorAddress}
-        onChange={(e) => handleChange('vendorAddress', e.target.value)}
-        placeholder="Vendor Address"
-        required
-      />
-      <input
-        type="text"
-        value={vendorData.vendorRemark}
-        onChange={(e) => handleChange('vendorRemark', e.target.value)}
-        placeholder="Vendor Remark"
-      />
-      <label>
-        Deliverable Status:
+          className="form-input" type="text" placeholder="/"
+          readOnly />
+      </td>
+      <td>
         <input
-          type="checkbox"
-          checked={vendorData.deliverableStatus}
-          onChange={(e) => handleChange('deliverableStatus', e.target.checked)}
+          className="form-input"
+          type="text"
+          value={vendorData.vendorName}
+          onChange={(e) => handleChange('vendorName', e.target.value)}
+          placeholder="거래처명"
+          required
         />
-      </label>
-      <button type="submit">{isNewVendor ? '추가' : '수정'}</button>
-      <button type="button" onClick={handleCancel}>
-        취소
-      </button>
-    </form>
+      </td>
+      <td>
+        <input
+          className="form-input"
+          type="text"
+          value={vendorData.vendorContact}
+          onChange={(e) => handleChange('vendorContact', e.target.value)}
+          placeholder="거래처 연락처"
+          required
+        />
+      </td>
+      <td>
+        <input
+          className="form-input"
+          type="text"
+          value={vendorData.vendorAddress}
+          onChange={(e) => handleChange('vendorAddress', e.target.value)}
+          placeholder="거래처 주소"
+          required
+        />
+      </td>
+      <td>
+        <input
+          className="form-input"
+          type="text"
+          value={vendorData.vendorRemark}
+          onChange={(e) => handleChange('vendorRemark', e.target.value)}
+          placeholder="비고"
+        />
+      </td>
+      <td>
+        <label>
+          <input
+            type="checkbox"
+            checked={vendorData.deliverableStatus}
+            onChange={(e) => handleChange('deliverableStatus', e.target.checked)}
+          />
+          <span className="checkbox-custom"></span>
+        </label>
+      </td>
+      <td className="items-subTitle">
+        <button type="submit" className="form-button" onClick={handleSubmit}>
+          {isNewVendor ? '추가' : '확인'}
+        </button>
+      </td>
+    </tr>
   );
 };
 

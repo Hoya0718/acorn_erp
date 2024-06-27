@@ -1,26 +1,22 @@
-// VendorList.js
 import React from 'react';
+import VendorForm from './VendorForm';
+import './Vendor.css';
+import {
+  handleCheckboxChange, handleSelectAll, handleUpdateClick, handleDeleteClick,
+  handleSubmitAdd, handleSubmitUpdate, handleChangeNewVendor, handleChangeUpdateVendor,
+  handleCancelAdd, handleCancelUpdate
+} from './Functions';
 
 const VendorList = ({
-  vendors,
-  selectedVendors,
-  selectAll,
-  handleCheckboxChange,
-  handleSelectAll,
-  handleUpdateClick,
-  handleDeleteClick,
-  isAddClicked,
+  vendors, selectedVendors, selectAll, handleCheckboxChange,
+  handleSelectAll, handleUpdateClick, handleDeleteClick,
+  isAddClicked, setIsAddClicked, setIsUpdateClicked, setVendors,
+  setNewVendor, setSelectedVendors, setUpdateVendor, newVendor,
+  updateVendor, isUpdateClicked
 }) => {
   return (
-    <>
-      {selectedVendors.length > 0 && !isAddClicked && (
-        <div>
-          <button onClick={handleUpdateClick}>수정</button>
-          <button onClick={handleDeleteClick}>삭제</button>
-        </div>
-      )}
-
-      <table>
+    <div>
+      <table className='table'>
         <thead>
           <tr>
             <th>
@@ -39,6 +35,30 @@ const VendorList = ({
           </tr>
         </thead>
         <tbody>
+          {isAddClicked && (
+            
+                <VendorForm
+                  handleSubmit={(e) => handleSubmitAdd(e, newVendor, vendors, setVendors, setIsAddClicked, setNewVendor, setSelectedVendors)}
+                  handleCancel={() => handleCancelAdd(setIsAddClicked, setNewVendor)}
+                  vendorData={newVendor}
+                  handleChange={(field, value) => handleChangeNewVendor(field, value, newVendor, setNewVendor)}
+                  isNewVendor={true}
+                  showCancel={true} // 추가 상태일 때 취소 버튼 표시
+                />
+              
+          )} 
+          {isUpdateClicked && updateVendor && (
+           
+                <VendorForm
+                  handleSubmit={(e) => handleSubmitUpdate(e, updateVendor, vendors, setVendors, setIsUpdateClicked, setUpdateVendor)}
+                  handleCancel={() => handleCancelUpdate(setIsUpdateClicked, setUpdateVendor)}
+                  vendorData={updateVendor}
+                  handleChange={(field, value) => handleChangeUpdateVendor(field, value, updateVendor, setUpdateVendor)}
+                  isNewVendor={false}
+                  showCancel={true} // 수정 상태일 때 취소 버튼 표시
+                />
+            
+          )}
           {vendors.map((vendor) => (
             <tr key={vendor.vendorCode}>
               <td>
@@ -58,7 +78,7 @@ const VendorList = ({
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 };
 
