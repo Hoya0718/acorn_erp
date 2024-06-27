@@ -80,7 +80,7 @@ const SettingModal_Goal = () => {
                 <div>
                     <strong>{targetLabel}</strong>&nbsp;&nbsp;
                     <input type='text'
-                        class="btn btn-lg btn-danger" 
+                        className="btn btn-lg btn-danger" 
                         data-bs-toggle="popover" 
                         data-bs-placement="top" 
                         data-bs-content=

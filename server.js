@@ -1,121 +1,112 @@
-// require('dotenv').config(); // 환경 변수 로드
+require('dotenv').config(); // 환경 변수 로드
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 
 const app = express();
 const port = 5000;
-const baseURL = "https://apis.data.go.kr/1741000/StanReginCd/getStanReginCdList";
-const serverKey_En = process.env.Enconding_API_KEY
-const serverKey_De = process.env.Decoding_API_KEY
+// const baseURL = "https://apis.data.go.kr/1741000/StanReginCd/getStanReginCdList";
+// const serverKey_En = process.env.Enconding_API_KEY
+// const serverKey_De = process.env.Decoding_API_KEY
+const baseURL_Province = "https://api.vworld.kr/ned/data/admCodeList";
+const baseURL_City = "https://api.vworld.kr/ned/data/admSiList";
+const baseURL_Town = "https://api.vworld.kr/ned/data/admDongList";
+const serverKey_Region = "48C7F5A0-50CE-33A3-89F1-2CF64F2E39DE"; //process.API_KEY_RegionGroup;
+
 app.use(cors());
+
 let cachedData = null; // 데이터를 캐싱할 변수
 
-async function fetchPageData(pageNo, numOfRows, retries = 3) {
+async function fetchProvincesData(retries = 3) {
   try {
-    const response = await axios.get(baseURL, {
+    const response = await axios.get(baseURL_Province, {
       params: {
-        ServiceKey: serverKey_De,
-        type: 'json',
-        pageNo: pageNo,
-        numOfRows: numOfRows,
-        flag: 'Y',
+        key: serverKey_Region,
+        format: 'json',
+        domain: 'https://github.com/Hoya0718/acorn_erp',
       },
     });
-
-    return response.data;
+    return response.data.admVOList||[];
   } catch (error) {
-    if (retries > 0) {
-      console.warn(`Retrying... (${3 - retries} attempts left)`);
-      return fetchPageData(pageNo, numOfRows, retries - 1);
-    } else {
+    console.error('Error fetching provinces data:', error.message);
+    // if (retries > 0) {
+    //   console.warn(`Retrying... (${3 - retries} attempts left)`);
+    //   return fetchProvincesData(retries - 1);
+    // } else {
       throw error;
-    }
+    // }
   }
 }
-
-async function fetchAllData() {
-  let allData = [];
-  let pageNo = 1;
-  let totalCount = 0;
-  const numOfRows = 1000;
-
+async function fetchCitiesData(provinceCode) {
   try {
-    do {
-      const response = await fetchPageData(pageNo, numOfRows);
-      console.log(`API response for page ${pageNo}:`, response);
-
-      const data = response.StanReginCd;
-      if (data && data.length > 1 && data[1].row) {
-        allData = allData.concat(data[1].row);
-        totalCount = parseInt(data[0].head[0].totalCount);
-        pageNo++;
-      } else {
-        break;
-      }
-    } while ((pageNo - 1) * numOfRows < totalCount);
+    const response = await axios.get(baseURL_City, {
+      params: {
+        key: serverKey_Region,
+        // admCode: provinceCode, //시도코드
+        format: 'json',
+        domain: 'https://github.com/Hoya0718/acorn_erp',
+      },
+    });
+    return response.data.admVOList||[];
   } catch (error) {
-    console.error('Error fetching data:', error.message); // 에러 메시지 출력
+    console.error('Error fetching cities data:', error.message);
+    throw error;
   }
-  return allData;
 }
-
-async function initializeData() {
-  const allData = await fetchAllData();
-
-  const extractedData = allData.map(item => {
-    const addressParts = item.locatadd_nm.split(' ');
-    const firstWord = addressParts[0];
-    const secondWord = addressParts[1] || '';
-    const thirdWord = addressParts[2] || '';
-    return {
-      ...item,
-      firstWord: firstWord,
-      secondWord: secondWord,
-      thirdWord: thirdWord
-    };
-  });
-
-  return extractedData;
+async function fetchTownsData(cityCode) {
+  try {
+    const response = await axios.get(baseURL_Town, {
+      params: {
+        key: serverKey_Region,
+        admCode: cityCode, //시도시군구코드
+        format: 'json',
+        domain: 'https://github.com/Hoya0718/acorn_erp',
+      },
+    });
+    return response.data.admVOList||[];
+  } catch (error) {
+    console.error('Error fetching towns data:', error.message);
+    throw error;
+  }
 }
-// 서버 시작 시 데이터 초기화
-(async () => {
-  cachedData = await initializeData();
-  console.log('Data initialized');
-})();
 
 // 라우터 설정
-app.get('/api/provinces', (req, res) => {
-  if (cachedData) {
-    const provinces = [...new Set(cachedData.map(item => item.firstWord))].filter(Boolean).sort();
-    res.json(provinces); 
-  } else {
-    res.status(500).send('Data not yet available');
+app.get('/api/provinces', async(req, res) => {
+  try {
+    const provinces = await fetchProvincesData();
+    res.json(provinces||[]);
+  } catch (error) {
+    res.status(500).send('Error fetching provinces data');
   }
 });
 
-app.get('/api/cities', (req, res) => {
-  const { province } = req.query;
-  if (cachedData) {
-    const filteredCities = cachedData.filter(item => item.firstWord === province);
-    const cities = [...new Set(filteredCities.map(item => item.secondWord))].filter(Boolean).sort();
-    res.json(cities); 
-  } else {
-    res.status(500).send('Data not yet available');
+app.get('/api/cities',  async (req, res) => {
+  const { provinceCode } = req.query;
+  if (!provinceCode) {
+    return res.status(400).send('Province code is required');
+  }
+  try {
+    const cities = await fetchCitiesData(provinceCode);
+    res.json({ admVOList: cities }||[]);
+  } catch (error) {
+    res.status(500).send('Error fetching cities data');
   }
 });
 
-app.get('/api/towns', (req, res) => {
-  const { city } = req.query;
-  if (cachedData) {
-    const filteredTowns = cachedData.filter(item => item.secondWord === city);
-    const towns = [...new Set(filteredTowns.map(item => item.thirdWord))].filter(Boolean).sort();
-    res.json(towns); 
-    res.status(500).send('Data not yet available');
+app.get('/api/towns', async (req, res) => {
+  const { cityCode } = req.query;
+  if (!cityCode) {
+    return res.status(400).send('City code is required');
+  }
+  try {
+    const towns = await fetchTownsData(cityCode);
+    res.json(towns||[]);
+  } catch (error) {
+    res.status(500).send('Error fetching towns data');
   }
 });
 
 app.listen(port, () => {
-  console.log(serverKey_De);
   console.log(`Server running on port ${port}`);
+  console.log(`serverKey_Region`,serverKey_Region);
 });

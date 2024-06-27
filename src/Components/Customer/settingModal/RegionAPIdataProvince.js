@@ -5,18 +5,25 @@ import axios from 'axios';
 
 const LocationSelector_Provinces = ({ onSelectProvince }) => {
   const [provinces, setProvinces] = useState([]);
-
+  
   useEffect(() => {
     // 광역시도 데이터를 가져오는 함수
     const fetchProvinces = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/provinces');
-        setProvinces(response.data);
+        if (response.data.admVOList && Array.isArray(response.data.admVOList)) {
+          setProvinces(response.data.admVOList);
+          
+          // console.log("API province", provinces);
+        } else {
+          console.error('Expected an array but got:', response.data);
+          setProvinces([]); // 빈 배열로 설정
+        }
       } catch (error) {
-        console.error('Error fetching provinces:', error);
+        console.error('Error fetching provinces data:', error);
+        setProvinces([]); // 빈 배열로 설정
       }
     };
-
     fetchProvinces();
   }, []);
 
@@ -27,9 +34,9 @@ const LocationSelector_Provinces = ({ onSelectProvince }) => {
       onChange={(e) => onSelectProvince(e.target.value)}
     >
       <option value="">광역시도</option>
-      {provinces.map((province, index) => (
-        <option key={index} value={province}>
-          {province}
+      {provinces.map((province) => (
+        <option key={province.admCode}value={province.admCode}>
+          {province.lowestAdmCodeNm}
         </option>
       ))}
     </select>
