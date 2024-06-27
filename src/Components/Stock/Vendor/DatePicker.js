@@ -1,11 +1,29 @@
-// DatePicker.jsx
+import { forwardRef } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "..Purchase/DatePicker.css";
+import "./DatePicker.css";
 
-import React from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+const NewDatePicker = (props) => {
+  const CustomInput = forwardRef((props, ref) => (
+    <button className="datepicker-input" onClick={props.onClick} ref={ref}>
+      {props.value}
+    </button>
+  ));
 
-const NewDatePicker = ({ selectedDate, setSelectedDate }) => {
-  return <DatePicker selected={selectedDate} onChange={date => setSelectedDate(date)} dateFormat="yyyy-MM-dd" />;
+  return (
+
+    
+    <div>
+      <DatePicker
+        selected={props.selectedDate}
+        onChange={props.setSelectedDate}
+        dateFormat="yyyy/MM/dd"
+        customInput={<CustomInput />}
+        showPopperArrow={false}
+      />
+    </div>
+  );
 };
 
 export default NewDatePicker;
