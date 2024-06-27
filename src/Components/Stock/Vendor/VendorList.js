@@ -36,45 +36,44 @@ const VendorList = ({
         </thead>
         <tbody>
           {isAddClicked && (
-            
-                <VendorForm
-                  handleSubmit={(e) => handleSubmitAdd(e, newVendor, vendors, setVendors, setIsAddClicked, setNewVendor, setSelectedVendors)}
-                  handleCancel={() => handleCancelAdd(setIsAddClicked, setNewVendor)}
-                  vendorData={newVendor}
-                  handleChange={(field, value) => handleChangeNewVendor(field, value, newVendor, setNewVendor)}
-                  isNewVendor={true}
-                  showCancel={true} // 추가 상태일 때 취소 버튼 표시
-                />
-              
-          )} 
+            <VendorForm
+              handleSubmit={(e) => handleSubmitAdd(e, newVendor, vendors, setVendors, setIsAddClicked, setNewVendor, setSelectedVendors)}
+              handleCancel={() => handleCancelAdd(setIsAddClicked, setNewVendor)}
+              vendorData={newVendor}
+              handleChange={(field, value) => handleChangeNewVendor(field, value, newVendor, setNewVendor)}
+              isNewVendor={true}
+              showCancel={true} // 추가 상태일 때 취소 버튼 표시
+            />
+          )}
           {isUpdateClicked && updateVendor && (
-           
-                <VendorForm
-                  handleSubmit={(e) => handleSubmitUpdate(e, updateVendor, vendors, setVendors, setIsUpdateClicked, setUpdateVendor)}
-                  handleCancel={() => handleCancelUpdate(setIsUpdateClicked, setUpdateVendor)}
-                  vendorData={updateVendor}
-                  handleChange={(field, value) => handleChangeUpdateVendor(field, value, updateVendor, setUpdateVendor)}
-                  isNewVendor={false}
-                  showCancel={true} // 수정 상태일 때 취소 버튼 표시
-                />
-            
+            <VendorForm
+              handleSubmit={(e) => handleSubmitUpdate(e, updateVendor, vendors, setVendors, setIsUpdateClicked, setUpdateVendor)}
+              handleCancel={() => handleCancelUpdate(setIsUpdateClicked, setUpdateVendor)}
+              vendorData={updateVendor}
+              handleChange={(field, value) => handleChangeUpdateVendor(field, value, updateVendor, setUpdateVendor)}
+              isNewVendor={false}
+              showCancel={true} // 수정 상태일 때 취소 버튼 표시
+            />
           )}
           {vendors.map((vendor) => (
-            <tr key={vendor.vendorCode}>
-              <td>
-                <input
-                  type="checkbox"
-                  checked={selectedVendors.includes(vendor.vendorCode)}
-                  onChange={() => handleCheckboxChange(vendor.vendorCode)}
-                />
-              </td>
-              <td>{vendor.vendorCode}</td>
-              <td>{vendor.vendorName}</td>
-              <td>{vendor.vendorContact}</td>
-              <td>{vendor.vendorAddress}</td>
-              <td>{vendor.vendorRemark}</td>
-              <td>{vendor.deliverableStatus ? 'O' : 'X'}</td>
-            </tr>
+            // updateVendor가 존재하고 vendor.vendorCode와 updateVendor.vendorCode가 같은 경우 해당 행은 숨깁니다.
+            !(isUpdateClicked && updateVendor && vendor.vendorCode === updateVendor.vendorCode) && (
+              <tr key={vendor.vendorCode}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedVendors.includes(vendor.vendorCode)}
+                    onChange={() => handleCheckboxChange(vendor.vendorCode)}
+                  />
+                </td>
+                <td>{vendor.vendorCode}</td>
+                <td>{vendor.vendorName}</td>
+                <td>{vendor.vendorContact}</td>
+                <td>{vendor.vendorAddress}</td>
+                <td>{vendor.vendorRemark}</td>
+                <td>{vendor.deliverableStatus ? 'O' : 'X'}</td>
+              </tr>
+            )
           ))}
         </tbody>
       </table>

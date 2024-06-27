@@ -63,13 +63,11 @@ const VendorForm = ({
             checked={vendorData.deliverableStatus}
             onChange={(e) => handleChange('deliverableStatus', e.target.checked)}
           />
-          <span className="checkbox-custom"></span>
-        </label>
-      </td>
-      <td className="items-subTitle">
-        <button type="submit" className="form-button" onClick={handleSubmit}>
-          {isNewVendor ? '추가' : '확인'}
+        <button type="submit" className="items-subTitle-button" onClick={handleSubmit}>
+          {isNewVendor ? '✔' : '✔'}
         </button>
+        </label>
+       
       </td>
     </tr>
   );
