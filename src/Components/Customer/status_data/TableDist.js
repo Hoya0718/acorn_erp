@@ -3,45 +3,95 @@
 
 import * as React from 'react'
 import "../../Main/Main.css"
-import TableModule from "../modules/TableModule"
+import instance from './../../../api/axios';
 
-const CustomerStatusTable_Dist = ({ activeLabel, data, onSort }) => {
-    // 예제 데이터를 rows 배열에 추가
-    const [rows, setRows] = React.useState([
-        { region_seoul: '200', region_jeju: '1', region_kyungsang: '10', region_junla: '10', region_chungcheong: '15', region_gyunggi: '30', region_kangwon: '1', female: '1000', male: '50', age_10: '10', age_20: '20', age_30: '30', age_40: '40', age_50: '45', age_60: '60', age_70: '80' },
+const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
+    const [data_grade_soso, setData_grade_soso] = React.useState([]); //일반고객인원
+    const [data_grade_good, setData_grade_good] = React.useState([]); //우수고객인원
+    const [data_grade_bad, setData_grade_bad] = React.useState([]); //주의고객인원
+    const [rows, setRows] = React.useState([]); //첫열제목
+    const [cols, setCols] = React.useState([]); //첫행제목
 
-        // 필요한 만큼 데이터를 추가
-    ]);
-    const getColumns = (label) => {
-        switch (label) {
-            case '고객분포':
-                return [
-                    { header: '여성', key: 'female', className: 'table-centered' },
-                    { header: '남성', key: 'male', className: 'table-centered' },
-                    { header: '10대이하', key: 'age_10', format: (value) => value.toLocaleString(), className: 'table-centered' },
-                    { header: '20대', key: 'age_20', format: (value) => value.toLocaleString(), className: 'table-centered' },
-                    { header: '30대', key: 'age_30', format: (value) => value.toLocaleString(), className: 'table-centered' },
-                    { header: '40대', key: 'age_40', format: (value) => value.toLocaleString(), className: 'table-centered' },
-                    { header: '50대', key: 'age_50', format: (value) => value.toLocaleString(), className: 'table-centered' },
-                    { header: '60대', key: 'age_60', format: (value) => value.toLocaleString(), className: 'table-centered' },
-                    { header: '70대이상', key: 'age_70', format: (value) => value.toLocaleString(), className: 'table-centered' },
-                    { header: '서울', key: 'region_seoul', format: (value) => value.toLocaleString(), className: 'table-centered' },
-                    { header: '경기', key: 'region_gyunggi', format: (value) => value.toLocaleString(), className: 'table-centered' },
-                    { header: '강원', key: 'region_kangwon', format: (value) => value.toLocaleString(), className: 'table-centered' },
-                    { header: '충청', key: 'region_chungcheong', format: (value) => value.toLocaleString(), className: 'table-centered' },
-                    { header: '전라', key: 'region_junla', format: (value) => value.toLocaleString(), className: 'table-centered' },
-                    { header: '경상', key: 'region_kyungsang', format: (value) => value.toLocaleString(), className: 'table-centered' },
-                    { header: '제주', key: 'region_jeju', format: (value) => value.toLocaleString(), className: 'table-centered' },
-                ];
-            default:
-                return [];
-        };
+    React.useEffect(() => {
+        const fetchTableData = async () => {
+            try {
+                const response_tableData = await instance.post('/customer/getCountAll');
+
+                const data = response_tableData.data;
+
+                if (data && Object.keys(data).length > 0) {
+                    //첫행 제목 데이터
+                    const allCols = new Set();
+
+                    Object.values(data).forEach(section => {
+                        Object.keys(section).forEach(title => {
+                            allCols.add(title);
+                        });
+                    });
+                    setCols([...allCols]); //첫행제목
+                    //console.log("Columns: ", [...allCols]); //여성남성30대20대 등
+
+                    //각행 첫재칸 데이터
+                    const allRows = new Set();
+                    const lv1 = Object.keys(data);
+
+                    lv1.forEach(key1 => {
+                        const level2Keys = Object.keys(data[key1]);
+                        level2Keys.forEach(key2 => {
+                            const level3Keys = Object.keys(data[key1][key2]);
+                            level3Keys.forEach(grade => {
+                                allRows.add(grade);
+                            });
+                        });
+                    });
+                    setRows([...allRows]); //첫열제목
+                    //console.log("Rows: ", [...allRows]); // 우수/일반/주의
+
+                    //회원등급에 따른 데이터
+                    //일반고객등급 데이터
+                    const sosoDatas = [];
+
+                    lv1.forEach(key1 => {
+                        const level2Keys = Object.keys(data[key1]);
+                        level2Keys.forEach(key2 => {
+                            const level3Keys = Object.keys(data[key1][key2]);
+                            if (level3Keys.length > 0) {
+                                const firstKey = level3Keys[0]; // 첫 번째 키를 선택
+                                const sosoValue = data[key1][key2][firstKey];
+                                sosoDatas.push(sosoValue);
+                            }
+                        });
+                        // });
+                    });
+                    setData_grade_soso(sosoDatas);
+                    //console.log("data_grade_soso: ", data_grade_soso);
+
+                    // 디버깅
+                    const va1 = Object.keys(data);//'gender', 'region', 'age']
+                    const va2 = Object.keys(data[va1[0]]); //'여성', '남성'
+                    const va3 = Object.keys(data[va1[0]][va2[0]]); //일반 우수
+                } else {
+                    console.error('Received empty or undefined data');
+                }
+            } catch (error) {
+                console.error('Error get TableData_dist:', error);
+            }
+        }
+        fetchTableData();
+    }, [activeLabel]);
+    // 상태가 변경될 때마다 콘솔 로그 출력
+    React.useEffect(() => {
+        //console.log("data_grade_soso: ", data_grade_soso);
+    }, [data_grade_soso]);
+
+    const getColumns = () => {
+        return cols.map(col => ({
+            header: col,
+            key: col,
+            className: 'table-centered'
+        }));
     }
-
-    // React.useEffect(() => {
-    //   handleTable(activeLabel);
-    // }, [activeLabel]);
-
+    // 정렬
     // const handleTable = (label) => {
     //   let sortedRows = [...rows];
     //   if (label === '최고금액고객') {
@@ -53,7 +103,25 @@ const CustomerStatusTable_Dist = ({ activeLabel, data, onSort }) => {
     //   setRows(sortedRows);
     // }
 
-    const columns = getColumns(activeLabel);
+    const columns = getColumns();
+
+    const renderRow = (row, index) => {
+        return (
+            <tr key={index}>
+                <td>{row}</td>
+                {data_grade_soso.map((value, colIndex) => (
+                    <td key={colIndex} className='table-centered'>
+                        {value}
+                    </td>
+                ))}
+            </tr>
+        );
+    }
+
+    const renderRows = () => {
+        return rows.map((row, index) => renderRow(row, index));
+    };
+
     const calculateTotal = (key) => {
         return rows.reduce((sum, row) => sum + parseInt(row[key] || 0, 10), 0);
     };
@@ -65,7 +133,7 @@ const CustomerStatusTable_Dist = ({ activeLabel, data, onSort }) => {
         }
         return acc;
     }, {});
-    
+
     const formatNumber = (num) => {
         return num.toLocaleString();
     };
@@ -89,36 +157,28 @@ const CustomerStatusTable_Dist = ({ activeLabel, data, onSort }) => {
                         </tr>
                     </thead>
                     <tbody className="table-group-divider">
-                        {rows.map((row, rowIndex) => (
+                        {renderRows()}
+                        {/* {rows.map((row, rowIndex) => (
                             <tr key={rowIndex}>
-                                <td>우수</td>
-                                {columns.map((column) => (
+                                <td>{row}</td>
+                                {data_grade_soso.map((column) => (
                                     <td key={column.key} className={column.className || 'table-centered'}>
                                         {column.format ? column.format(row[column.key]) : row[column.key]}
                                     </td>
                                 ))}
                             </tr>
-                        ))}
-                        {rows.map((row, rowIndex) => (
-                            <tr key={rowIndex}>
-                                <td>일반</td>
-                                {columns.map((column) => (
-                                    <td key={column.key} className={column.className || 'table-centered'}>
-                                        {column.format ? column.format(row[column.key]) : row[column.key]}
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
-                        {rows.map((row, rowIndex) => (
-                            <tr key={rowIndex}>
-                                <td>total</td>
-                                {columns.map((column) => (
-                                    <td key={column.key} className={column.className || 'table-centered'}>
+                        ))} */}
+                        {/* {rows.map((row, rowIndex) => (
+                            <tr key={rowIndex}> */}
+                        <tr>
+                            <td>total</td>
+                            {columns.map((column) => (
+                                <td key={column.key} className={column.className || 'table-centered'}>
                                     {totalRow[column.key] ? <strong>{formatNumber(totalRow[column.key].total)}</strong> : ''}
                                 </td>
-                                ))}
-                            </tr>
-                        ))}
+                            ))}
+                        </tr>
+                        {/* ))} */}
                     </tbody>
                 </table>
             </div>

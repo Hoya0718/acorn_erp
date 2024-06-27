@@ -36,6 +36,7 @@ export const CustomerStatusProvider = ({ children }) => {
       try {
         const response_all = await instance.get('/customer/getCountAll');
         setCustomerCount(response_all.data);
+  //동적데이터로 변경하기!////////////////////////////////////////
         const response_lastyear = await instance.get('/customer/getCountLastyear', {
           params: { year: 2023 }
         });
