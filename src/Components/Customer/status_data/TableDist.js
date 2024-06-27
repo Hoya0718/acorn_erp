@@ -17,8 +17,7 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
             try {
                 const response_tableData = await instance.post('/customer/getCountAll');
 
-                const data = response_tableData.data; //모든 데이터를 일단 받아옴
-                console.log("data: ", data);
+                const data = response_tableData.data;
 
                 if (data && Object.keys(data).length > 0) {
                     //첫행 제목 데이터
@@ -30,7 +29,7 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
                         });
                     });
                     setCols([...allCols]); //첫행제목
-                    console.log("Columns: ", [...allCols]); //여성남성30대20대 등
+                    //console.log("Columns: ", [...allCols]); //여성남성30대20대 등
 
                     //각행 첫재칸 데이터
                     const allRows = new Set();
@@ -46,7 +45,7 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
                         });
                     });
                     setRows([...allRows]); //첫열제목
-                    console.log("Rows: ", [...allRows]); // 우수/일반/주의
+                    //console.log("Rows: ", [...allRows]); // 우수/일반/주의
 
                     //회원등급에 따른 데이터
                     //일반고객등급 데이터
@@ -65,7 +64,7 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
                         // });
                     });
                     setData_grade_soso(sosoDatas);
-                    console.log("data_grade_soso: ", data_grade_soso);
+                    //console.log("data_grade_soso: ", data_grade_soso);
 
                     // 디버깅
                     const va1 = Object.keys(data);//'gender', 'region', 'age']
@@ -82,7 +81,7 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
     }, [activeLabel]);
     // 상태가 변경될 때마다 콘솔 로그 출력
     React.useEffect(() => {
-        console.log("data_grade_soso: ", data_grade_soso);
+        //console.log("data_grade_soso: ", data_grade_soso);
     }, [data_grade_soso]);
 
     const getColumns = () => {
