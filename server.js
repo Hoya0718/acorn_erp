@@ -42,7 +42,7 @@ async function fetchCitiesData(provinceCode) {
     const response = await axios.get(baseURL_City, {
       params: {
         key: serverKey_Region,
-        // admCode: provinceCode, //시도코드
+        admCode: provinceCode, //시도코드
         format: 'json',
         domain: 'https://github.com/Hoya0718/acorn_erp',
       },

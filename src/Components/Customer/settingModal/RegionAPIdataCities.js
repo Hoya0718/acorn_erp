@@ -13,15 +13,15 @@ const LocationSelector_Cities = ({ selectedProvince }) => {
     if (selectedProvince) {
       // 선택된 광역시도의 시군구 데이터를 가져오는 함수
       const fetchCities = async () => {
-        console.log("selectedProvince", selectedProvince);
         try {
           const response = await axios.get('http://localhost:5000/api/cities', {
-            params: { admCode: selectedProvince }
+            params: { provinceCode: selectedProvince }
           });
-          console.log("API cities", response.data);
-          if (response.data.admVOList && Array.isArray(response.data.admVOList)) {
-            setCities(response.data.admVOList);
-            console.log("API cities", cities);
+          //console.log("API cities", response.data);
+
+          const { admVOList } = response.data.admVOList;
+          if (admVOList && Array.isArray(admVOList)) {
+            setCities(admVOList);
           }
           else {
             console.log('cities_null:');
@@ -32,6 +32,7 @@ const LocationSelector_Cities = ({ selectedProvince }) => {
           setCities([]); // 빈 배열로 설정
         }
       };
+     
       fetchCities();
     } else {
       setCities([]);
@@ -42,7 +43,7 @@ const LocationSelector_Cities = ({ selectedProvince }) => {
     const city = e.target.value;
     setSelectedCity(city);
   };
-
+  
   return (
     <select
       id="city"

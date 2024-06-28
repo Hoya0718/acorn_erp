@@ -32,6 +32,14 @@ export const CustomerStatusProvider = ({ children }) => {
   const [selectedCity, setSelectedCity,] = useState('');
 
   useEffect(() => {
+    const storedRegion = localStorage.getItem('selectedRegion');
+    const storedProvince = localStorage.getItem('selectedProvince');
+    const storedCity = localStorage.getItem('selectedCity');
+
+    if (storedRegion) setSelectedRegion(storedRegion);
+    if (storedProvince) setSelectedProvince(storedProvince);
+    if (storedCity) setSelectedCity(storedCity);
+
     const fetchCustomerCount = async () => {
       try {
         const response_all = await instance.get('/customer/getCountAll');
@@ -48,6 +56,12 @@ export const CustomerStatusProvider = ({ children }) => {
     fetchCustomerCount();
   }, []); // 빈 배열을 넣어 컴포넌트가 마운트될 때만 실행되도록 설정
   
+   useEffect(() => {
+    localStorage.setItem('selectedRegion', selectedRegion);
+    localStorage.setItem('selectedProvince', selectedProvince);
+    localStorage.setItem('selectedCity', selectedCity);
+  }, [selectedRegion, selectedProvince, selectedCity]);
+
   return (
     <CustomerStatusContext.Provider value={{
       customerCount_lastyear, setCustomerCount_lastyear,
