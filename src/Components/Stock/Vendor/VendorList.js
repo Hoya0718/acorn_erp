@@ -1,5 +1,6 @@
 import React from 'react';
 import VendorForm from './VendorForm';
+import UpdateModal from './DangerAlert'; 
 import './Vendor.css';
 import {
   handleCheckboxChange, handleSelectAll, handleUpdateClick, handleDeleteClick,
