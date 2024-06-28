@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const LocationSelector_Provinces = ({ onSelectProvince }) => {
+const LocationSelector_Provinces = ({ onSelectProvince, selectedProvince }) => {
   const [provinces, setProvinces] = useState([]);
   
   useEffect(() => {
@@ -31,6 +31,7 @@ const LocationSelector_Provinces = ({ onSelectProvince }) => {
   return (
     <select
       id="province"
+      value={selectedProvince}  // 여기 추가
       onChange={(e) => onSelectProvince(e.target.value)}
     >
       <option value="">광역시도</option>

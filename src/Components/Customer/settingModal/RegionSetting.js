@@ -23,8 +23,18 @@ const SettingModal_Region = () => {
     }
 
     React.useEffect(() => {
-        setSelectedRegion('전국');
-    }, [setSelectedRegion]);
+        const savedSettings = localStorage.getItem('customerStatusSettings');
+        if (savedSettings) {
+            const { selectedRegion, selectedProvince, selectedCity } = JSON.parse(savedSettings);
+            setSelectedRegion(selectedRegion || '전국');
+            setSelectedProvince(selectedProvince || '');
+            setSelectedCity(selectedCity || '');
+            console.log('selectedProvince',selectedProvince)
+            console.log('selectedCity',selectedCity)
+        } else {
+            setSelectedRegion('전국');
+        }
+    }, [setSelectedRegion, setSelectedProvince, setSelectedCity]);
 
     return (
         <div>
@@ -60,19 +70,22 @@ const SettingModal_Region = () => {
                     {selectedRegion === '시도' && (
                         <sapn>
                             <LocationSelector_Provinces
-                                onSelectProvince={setSelectedProvince} />
+                                onSelectProvince={setSelectedProvince}
+                                selectedProvince={selectedProvince}  />
                         </sapn>
                     )}
                     {selectedRegion === '시군구' && (
                         <span>
                             <span>
                                 <LocationSelector_Provinces
-                                    onSelectProvince={setSelectedProvince} />
+                                    onSelectProvince={setSelectedProvince}
+                                    selectedProvince={selectedProvince} />
                             </span>&nbsp;&nbsp;
                             <span>
                                 <LocationSelector_Cities
                                     selectedProvince={selectedProvince}
-                                    onSelectCity={setSelectedCity}  />
+                                    onSelectCity={setSelectedCity}
+                                    selectedCity={selectedCity}  />
                             </span>
                         </span>
                     )}

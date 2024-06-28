@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const LocationSelector_Cities = ({ selectedProvince }) => {
+const LocationSelector_Cities = ({ selectedProvince, onSelectCity, selectedCity }) => {
   const [cities, setCities] = useState([]);
-  const [selectedCity, setSelectedCity] = useState('');
+  // const [selectedCity, setSelectedCity] = useState('');
 
   // console.log("LocationSelector_Citie 실행", selectedProvince);
 
@@ -39,16 +39,16 @@ const LocationSelector_Cities = ({ selectedProvince }) => {
     }
   }, [selectedProvince]);
 
-  const handleCityChange = (e) => {
-    const city = e.target.value;
-    setSelectedCity(city);
-  };
+  // const handleCityChange = (e) => {
+  //   const city = e.target.value;
+  //   setSelectedCity(city);
+  // };
   
   return (
     <select
       id="city"
       value={selectedCity}
-      onChange={handleCityChange}
+      onChange={(e) => onSelectCity(e.target.value)}
       disabled={!selectedProvince}
     >
       <option value="">시군구</option>
