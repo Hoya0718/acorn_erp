@@ -44,9 +44,8 @@ const OrderMgmt = () => {
             <input type="date" id="date" max="2077-06-20" min="2077-06-05" defaultValue="2024-07-18" />
           </label>
         </div>
-
         <div className="right">
-          <input type="text" placeholder='🔍 검색' /><button>조회 &gt;</button>
+          <input type="text" placeholder='🔍 검색' /><button>조회</button>
         </div>
       </div>
       <br />
