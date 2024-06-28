@@ -14,6 +14,7 @@ const PurchaseList = ({
   setNewPurchase, setSelectedPurchases, setUpdatePurchase, newPurchase, 
   updatePurchase, isUpdateClicked 
 }) => {
+
   return (
     <div>
       <table className='table'>
