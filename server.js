@@ -44,6 +44,7 @@ async function fetchCitiesData(provinceCode) {
         key: serverKey_Region,
         admCode: provinceCode, //시도코드
         format: 'json',
+        numOfRows: 1000,
         domain: 'https://github.com/Hoya0718/acorn_erp',
       },
     });

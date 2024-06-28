@@ -7,11 +7,17 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import "../../Main/Main.css"
 import "../Customer.css"
 import instance from '../../../api/axios';
-// import { useCustomerStatus } from './CustomerStatusSettingContext';
+import { useCustomerStatus } from '../settingModal/CustomerStatusSettingContext';
 // Chart.js 요소 등록
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Dist = () => {
+    const {
+        selectedRegion, setSelectedRegion,
+        selectedProvince, setSelectedProvince,
+        selectedCity, setSelectedCity,
+    } = useCustomerStatus();
+
     const [chartNames, setChartNames] = React.useState([]);
     // const { selectedRegion, selectedProvince, selectedCity } = useCustomerStatus();
     const [chartData, setChartData] = React.useState({
@@ -19,7 +25,9 @@ const Dist = () => {
         genderGroupData: null,
         regionGroupData: null
     });
-    // const [chartLabel, setChartLabel] = React.useState('');
+
+    const [regionChartLabels, setRegionChartLabels] = React.useState([]);
+    const [regionChartData, setRegionChartData] = React.useState({});
 
     React.useEffect(() => {
         const savedSettings = localStorage.getItem('customerStatusSettings');
@@ -29,7 +37,7 @@ const Dist = () => {
                 const data_age = response_age.data;
                 const ageChartLabels = Object.keys(data_age);
                 const ageChartValues = Object.values(data_age);
-                console.log("ageChartValues: ", ageChartValues);
+                //console.log("ageChartValues: ", ageChartValues);
 
                 const ageGroupData = {
                     labels: ageChartLabels,
@@ -45,7 +53,7 @@ const Dist = () => {
                 const data_gender = response_gender.data;
                 const genderChartLabels = Object.keys(data_gender);
                 const genderChartValues = Object.values(data_gender);
-                console.log("genderChartValues: ", genderChartValues);
+                //console.log("genderChartValues: ", genderChartValues);
                 const genderGroupData = {
                     labels: genderChartLabels,
                     datasets: [{
@@ -58,19 +66,47 @@ const Dist = () => {
 
                 const response_region = await instance.get('/customer/count_region_group');
                 const data_region = response_region.data;
-                const regionChartLabels = Object.keys(data_region);
-                const regionChartValues = Object.values(data_region);
-                const regionGroupData = {
-                    labels: regionChartLabels,
+                // console.log('data_region',data_region);
+                let labels = [];
+                let values = [];
+                if(selectedRegion==="전국"){
+                    labels = Object.keys(data_region.Province);
+                    values = Object.values(data_region.Province);
+                    console.log('data_region',labels);
+                }
+                if(selectedRegion==="시도"){
+                    labels = Object.keys(data_region.City);
+                    values = Object.values(data_region.City);
+                    console.log('data_region',labels);
+                }
+                if(selectedRegion==="시군구"){
+                    labels = Object.keys(data_region.Town);
+                    values = Object.values(data_region.Town);
+                    console.log('data_region',labels);
+                }
+                setRegionChartLabels(labels);
+
+                // const regionChartValues = Object.values(data_region);
+                // console.log("regionChartValues: ", regionChartValues);
+                setRegionChartData({
+                    labels: labels,
                     datasets: [{
-                        data: regionChartValues,
+                        data: values,
                         backgroundColor: [
                             '#FF6384', '#36A2EB', '#FF9F40', '#FFCE56', '#4BC0C0', '#9966FF',
                         ],
                     }]
-                };
+                });
 
-                setChartData({ ageGroupData, genderGroupData, regionGroupData });
+                setChartData({ ageGroupData, genderGroupData, regionGroupData: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FF9F40', '#FFCE56', '#4BC0C0', '#9966FF',
+                        ],
+                    }]
+                } });
 
                 if (savedSettings) {
                     const { checkboxes_dist } = JSON.parse(savedSettings);
@@ -82,8 +118,16 @@ const Dist = () => {
                     if (checkboxes_dist.age && chartData.ageGroupData) {
                         charts.push({ data: chartData.ageGroupData, label: '연령별' });
                     }
-                    if (checkboxes_dist.region && chartData.regionGroupData) {
-                        charts.push({ data: chartData.regionGroupData, label: '지역별' });
+                    if (checkboxes_dist.region) {
+                        charts.push({ data: {
+                            labels: labels,
+                            datasets: [{
+                                data: values,
+                                backgroundColor: [
+                                    '#FF6384', '#36A2EB', '#FF9F40', '#FFCE56', '#4BC0C0', '#9966FF',
+                                ],
+                            }]
+                        }, label: '지역별' });
                     }
                     setChartNames(charts);
                 }
@@ -93,7 +137,7 @@ const Dist = () => {
         };
 
         fetchGroupData();
-        }, []);
+        }, [selectedRegion]);
 
         const findMaxLabel = (data) => {
             const maxIndex = data.datasets[0].data.indexOf(Math.max(...data.datasets[0].data));
@@ -115,9 +159,9 @@ const Dist = () => {
                     charts.push({ data: chartData.ageGroupData, label: '연령별' });
                 }
                 if (checkboxes_dist.region && chartData.regionGroupData) {
-                    charts.push({ data: chartData.regionGroupData, label: '지역별' });
-                }
-                setChartNames(charts);
+                charts.push({ data: chartData.regionGroupData, label: '지역별' });
+            }
+            setChartNames(charts);
             }
         }, [chartData]); 
 
