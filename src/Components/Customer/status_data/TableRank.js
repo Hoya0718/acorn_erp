@@ -57,7 +57,7 @@ const [rows, setRows] = React.useState([]);
       case '최고금액고객':
         return [
           { header: '번호', key: 'index', format: (_, index) => index + 1, className: 'table-centered' },
-          // { header: '고객명', key: 'customerName', className: 'table-centered' },
+          { header: '고객명', key: 'customerName', className: 'table-centered' },
           { header: '거래금액', key: 'totalAmountForCustomer', format: (value) => value.toLocaleString(), className: 'table-righted' },
           { header: '최고매출 상품명', key: 'topSellingProduct', className: 'table-centered' },
           { header: '거래횟수', key: 'totalCountForCustomer', format: (value) => value.toLocaleString(), className: 'table-righted' },
@@ -67,7 +67,7 @@ const [rows, setRows] = React.useState([]);
       case '최다거래고객':
         return [
           { header: '번호', key: 'index', format: (_, index) => index + 1, className: 'table-centered' },
-          // { header: '고객명', key: 'customerName', className: 'table-centered' },
+          { header: '고객명', key: 'customerName', className: 'table-centered' },
           { header: '거래횟수', key: 'totalCountForCustomer', format: (value) => value.toLocaleString(), className: 'table-righted' },
           { header: '최다거래 상품명', key: 'mostPurchasedProduct', className: 'table-centered' },
           { header: '거래금액', key: 'totalAmountForCustomer', format: (value) => value.toLocaleString(), className: 'table-righted' },

@@ -17,7 +17,7 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
         try {
             const response_tableData = await instance.get('/customer/getListProdTable');
             const data = response_tableData.data; 
-            //console.log("data_getListProdTable: ", data);
+            console.log("data_getListProdTable: ", data);
             setRows(data);
         }catch (error) {
           console.error('Error get TableData_prod:', error);
@@ -45,7 +45,7 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
           //{ header: '평점', key: 'salesRating', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '성별선호도', key: 'genderPreference', className: 'table-centered' },
           { header: '연령별선호도', key: 'agePreference', className: 'table-centered' },
-          //{ header: '지역별선호도', key: 'preferredregionGroup', className: 'table-centered' },
+          { header: '지역별선호도', key: 'preferredregionGroup', className: 'table-centered' },
         ];
       case '최다거래':
         return [
@@ -56,7 +56,7 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
           { header: '거래금액', key: 'totalAmountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
           { header: '성별선호도', key: 'genderPreference', className: 'table-centered' },
           { header: '연령별선호도', key: 'agePreference', className: 'table-centered' },
-          //{ header: '지역별선호도', key: 'preferredregionGroup', className: 'table-centered' },
+          { header: '지역별선호도', key: 'preferredregionGroup', className: 'table-centered' },
         ];
       case '반응좋은':
         return [
@@ -67,7 +67,7 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
           { header: '거래횟수', key: 'totalCountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
           { header: '성별선호도', key: 'genderPreference', className: 'table-centered' },
           { header: '연령별선호도', key: 'agePreference', className: 'table-centered' },
-          //{ header: '지역별선호도', key: 'preferredregionGroup', className: 'table-centered' },
+          { header: '지역별선호도', key: 'preferredregionGroup', className: 'table-centered' },
         ];
       default:
         return [
@@ -78,7 +78,7 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
           { header: '거래횟수', key: 'totalCountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
           { header: '성별선호도', key: 'genderPreference', className: 'table-centered' },
           { header: '연령별선호도', key: 'agePreference', className: 'table-centered' },
-          //{ header: '지역별선호도', key: 'preferredregionGroup', className: 'table-centered' },
+          { header: '지역별선호도', key: 'preferredregionGroup', className: 'table-centered' },
         ];
     }
   }

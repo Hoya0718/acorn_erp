@@ -83,7 +83,7 @@ const Rank = () => {
             return (
                 <tr key={index}>
                     <td className="table-centered rank ">{index + 1}</td>
-                    <td className="table-righted name"><a href="">{customer.cutomerName}</a></td>
+                    <td className="table-centered name"><a href="">{customer.customerName}</a></td>
                     <td className="table-lefted">
                         {rankChange.icon}&nbsp;
                         {rankChange.text && <span> {rankChange.text}</span>}
