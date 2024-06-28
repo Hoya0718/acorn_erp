@@ -11,6 +11,7 @@ import instance from './../../../api/axios';
 const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPerPage, currentPage, onPageChange}) => {
 
   const [rows, setRows] = React.useState([]);
+  
   React.useEffect(() => {
     const fetchTableData = async () => {
         try {

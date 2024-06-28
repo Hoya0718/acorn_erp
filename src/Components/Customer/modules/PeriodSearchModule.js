@@ -41,12 +41,14 @@ const CustomerStatusPeriodSerch = ({ setPeriod }) => {
         break;
     }
   }, [selectedOption]);
+
   React.useEffect(() => {
     setPeriod({ selectedOption, startDate, endDate });
   }, [startDate, endDate, setPeriod]);
-  React.useEffect(() => {
-    setSelectedOption('1년');
-  }, []);
+
+  // React.useEffect(() => {
+  //   setSelectedOption('1년');
+  // }, []);
 
   const handleSelectedOptionChange = (event) => {
     const value = event.target.value;

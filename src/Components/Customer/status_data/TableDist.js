@@ -18,18 +18,21 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
                 const response_tableData = await instance.post('/customer/getCountAll');
 
                 const data = response_tableData.data;
-
+                console.log("getCountAll Data: ", data);
                 if (data && Object.keys(data).length > 0) {
                     //첫행 제목 데이터
                     const allCols = new Set();
 
                     Object.values(data).forEach(section => {
-                        Object.keys(section).forEach(title => {
-                            allCols.add(title);
+                        Object.values(section).forEach(title => {
+                            Object.keys(title).forEach(item => {
+                            allCols.add(item);
                         });
-                    });
+                    }); 
+                });   
+                    
                     setCols([...allCols]); //첫행제목
-                    //console.log("Columns: ", [...allCols]); //여성남성30대20대 등
+                    // console.log("Columns: ", [...allCols]); //여성남성30대20대 등
 
                     //각행 첫재칸 데이터
                     const allRows = new Set();
@@ -39,15 +42,39 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
                         const level2Keys = Object.keys(data[key1]);
                         level2Keys.forEach(key2 => {
                             const level3Keys = Object.keys(data[key1][key2]);
-                            level3Keys.forEach(grade => {
+                            level3Keys.forEach(value => {
+                                const level3Keys = Object.keys(data[key1][key2][value]);
+                                level3Keys.forEach(grade => {
                                 allRows.add(grade);
+                            });
                             });
                         });
                     });
                     setRows([...allRows]); //첫열제목
-                    //console.log("Rows: ", [...allRows]); // 우수/일반/주의
+                    // console.log("Rows: ", [...allRows]); // 우수/일반/주의
 
                     //회원등급에 따른 데이터
+                    //우수고객등급 데이터
+                    const goodDatas = [];
+
+                    lv1.forEach(key1 => {
+                        const level2Keys = Object.keys(data[key1]);
+                        level2Keys.forEach(key2 => {
+                            const level3Keys = Object.keys(data[key1][key2]);
+                            level3Keys.forEach(key3 => {
+                                const level4Keys = Object.keys(data[key1][key2][key3]);
+                                level4Keys.forEach(key4 => {
+                                    if (key4 === 'dntn') {
+                                        const sosoValue = data[key1][key2][key3][key4];
+                                        sosoDatas.push(sosoValue);
+                                    }
+                                });
+                            });
+                        });
+                    });
+                    setData_grade_good(goodDatas);
+                    console.log("data_grade_good: ", data_grade_good);
+
                     //일반고객등급 데이터
                     const sosoDatas = [];
 
@@ -55,16 +82,25 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
                         const level2Keys = Object.keys(data[key1]);
                         level2Keys.forEach(key2 => {
                             const level3Keys = Object.keys(data[key1][key2]);
-                            if (level3Keys.length > 0) {
-                                const firstKey = level3Keys[0]; // 첫 번째 키를 선택
-                                const sosoValue = data[key1][key2][firstKey];
-                                sosoDatas.push(sosoValue);
-                            }
+                            level3Keys.forEach(key3 => {
+                                const level4Keys = Object.keys(data[key1][key2][key3]);
+                                level4Keys.forEach(key4 => {
+                                    if (key4 === '우수') {
+                                        const goodValue = data[key1][key2][key3][key4];
+                                        goodDatas.push(goodValue);
+                                    } else if (key4 === '일반') {
+                                        const sosoValue = data[key1][key2][key3][key4];
+                                        sosoDatas.push(sosoValue);
+                                    } else if (key4 === '주의') {
+                                        const sosoValue = data[key1][key2][key3][key4];
+                                        sosoDatas.push(sosoValue);
+                                    }
+                                });
+                            });
                         });
-                        // });
                     });
                     setData_grade_soso(sosoDatas);
-                    //console.log("data_grade_soso: ", data_grade_soso);
+                    // console.log("data_grade_soso: ", data_grade_soso);
 
                     // 디버깅
                     const va1 = Object.keys(data);//'gender', 'region', 'age']
@@ -106,10 +142,16 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
     const columns = getColumns();
 
     const renderRow = (row, index) => {
+        let data = [];
+        if (row === '우수') {
+            data = data_grade_good;
+        } else if (row === '일반') {
+            data = data_grade_soso;
+        }
         return (
             <tr key={index}>
                 <td>{row}</td>
-                {data_grade_soso.map((value, colIndex) => (
+                {data.map((value, colIndex) => (
                     <td key={colIndex} className='table-centered'>
                         {value}
                     </td>
@@ -117,6 +159,7 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
             </tr>
         );
     }
+
 
     const renderRows = () => {
         return rows.map((row, index) => renderRow(row, index));
@@ -157,7 +200,8 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
                         </tr>
                     </thead>
                     <tbody className="table-group-divider">
-                        {renderRows()}
+                    {renderRows()}
+                    
                         {/* {rows.map((row, rowIndex) => (
                             <tr key={rowIndex}>
                                 <td>{row}</td>

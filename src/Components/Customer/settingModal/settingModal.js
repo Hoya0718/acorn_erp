@@ -88,7 +88,9 @@ const CustomerStatusSettingModal = () => {
         // return () => {
         //     modalInstance.dispose();
         // };
-    }, [setCustomerCount, setCustomerTarget, setSelectedOption, setPeriod, setStartDate, setCheckboxes_dist, setCheckboxes_prod, setEndDate, setSelectedRegion, setRangeValue]);
+    }, [setCustomerCount, setCustomerTarget, setSelectedOption, setPeriod, setStartDate, setGoalOption, 
+        setCheckboxes_dist, setCheckboxes_prod, setEndDate, setSelectedRegion, setRangeValue,
+        setCustomerCount_lastyear, setSelectedProvince, setSelectedCity]);
 
     return (
         <div className="modal fade" id="SettingModal" tabIndex="-1" aria-labelledby="SettingModalLabel" aria-hidden="true">
