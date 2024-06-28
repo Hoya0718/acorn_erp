@@ -2,6 +2,7 @@
 // 고객현황 데이터 시각화 "상품별 고객선호도" 컴포넌트
 import * as React from 'react'
 import "../../Main/Main.css"
+import instance from './../../../api/axios';
 
 // 테스트를 위한 데이터 세팅: 동적 데이터 변경해야함
 const TopProd = () => {
@@ -13,27 +14,41 @@ const TopProd = () => {
     
     React.useEffect(() => {
         const savedSettings = localStorage.getItem('customerStatusSettings');
+        const fetchTableData = async () => {
+            try {
+                const response_Amount = await instance.get('/customer/getTop3ByTotalAmount');
+                const data_Amount = response_Amount.data;
+                console.log("getTop3ByTotalAmount Data: ", data_Amount);
+                const response_Count = await instance.get('/customer/getTop3ByTotalCount');
+                const data_Count = response_Count.data;
+                console.log("ggetTop3ByTotalCount Data: ", data_Count);
+                //const response_Rating = await instance.get('/customer/getTop3ByRating');
+                //const data_Rating = response_Rating.data;
+
         if (savedSettings) {
             const { checkboxes_prod } = JSON.parse(savedSettings);
-            const mostData = [
-                { prod: '고구마식빵', gender: '여성', ageGroup: '20대', region: '서울' },
-                { prod: '소금빵', gender: '남성', ageGroup: '30대', region: '부산' },
-                { prod: '소세지빵', gender: '여성', ageGroup: '40대', region: '대구' }
-            ];
-            const topData = [
-                { prod: 'Product D', gender: '여성', ageGroup: '20대',region: '경기' },
-                { prod: 'Product E', gender: '여성', ageGroup: '30대', region: '대전' },
-                { prod: 'Product F', gender: '여성', ageGroup: '40대', region: '포천' }
-            ];
-            const favoData = [
-                { prod: 'Product G', gender: '남성', ageGroup: '20대', region: '양주' },
-                { prod: 'Product H', gender: '남성', ageGroup: '30대', region: '일동' },
-                { prod: 'Product I', gender: '남성', ageGroup: '40대', region: '수원' }
-            ];
+            const mostData = data_Amount.map(item => ({
+                prod: item.itemName,
+                gender: item.genderPreference,
+                ageGroup: item.agePreference,
+                region: item.regionPreference,
+            }));
+            const topData = data_Count.map(item => ({
+                prod: item.itemName,
+                gender: item.genderPreference,
+                ageGroup: item.agePreference,
+                region: item.regionPreference,
+            }));
+            // const favoData = data_Rating.map(item => ({
+            //     prod: item.itemName,
+            //     gender: item.genderPreference,
+            //     ageGroup: item.agePreference,
+            //     region: item.regionPreference,
+            // }));
 
             setMost(mostData);
             setTop(topData);
-            setFavo(favoData);
+            // setFavo(favoData);
             
             const charts = [];
             if (checkboxes_prod.amount) {
@@ -42,12 +57,17 @@ const TopProd = () => {
             if (checkboxes_prod.count) {
                 charts.push('top');
             }
-            if (checkboxes_prod.reaction) {
-                charts.push('favo');
-            }
+            // if (checkboxes_prod.reaction) {
+            //     charts.push('favo');
+            // }
             setChartNames(charts);
         }
-    }, []);
+        } catch (error) {
+            console.error('Error get TableData_dist:', error);
+        }
+    }
+    fetchTableData();
+}, []);
 
     const renderProducts = (products) => {
         return products.map((product, index) => (
