@@ -43,7 +43,7 @@ const PurchaseForm = ({
       <td>
         <input
           className="form-input"
-          type="text"
+          type="date"
           value={purchaseData.orderDate} 
           onChange={(e) => handleChange('orderDate', e.target.value)}
           placeholder="발주 일자"
@@ -80,7 +80,7 @@ const PurchaseForm = ({
         />
          <button type="submit" className="items-subTitle-button" onClick={handleSubmit}>
             {isNewPurchase ? '✔' : '✔'} 
-          </button>
+         </button>
       </td>
     </tr>
   );

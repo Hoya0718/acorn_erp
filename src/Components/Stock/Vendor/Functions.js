@@ -1,5 +1,5 @@
 import axios from '../../../api/axios';
-import DatePicker from 'react-datepicker';
+import DangerAlert from './DangerAlert';
 
 export const fetchVendors = async (setVendors) => {
   try {
@@ -17,7 +17,7 @@ export const handleAddClick = (setIsAddClicked, setIsUpdateClicked) => {
 
 export const handleUpdateClick = (selectedVendors, vendors, setUpdateVendor, setIsUpdateClicked, setIsAddClicked) => {
   if (selectedVendors.length !== 1) {
-    alert('수정할 거래처를 하나만 선택해 주세요.');
+    <DangerAlert/>
     return;
   }
 
@@ -52,6 +52,23 @@ export const handleDeleteClick = async (selectedVendors, vendors, setVendors, se
     } catch (error) {
       console.error('Error deleting vendors:', error);
     }
+  }
+};
+
+export const handleConfirmDelete = async (selectedVendors, vendors, setVendors, setSelectedVendors) => {
+  try {
+    await Promise.all(
+      selectedVendors.map(async (vendorCode) => {
+        await axios.delete(`/vendor/${vendorCode}`);
+      })
+    );
+    const updatedVendors = vendors.filter(
+      (vendor) => !selectedVendors.includes(vendor.vendorCode)
+    );
+    setVendors(updatedVendors);
+    setSelectedVendors([]);
+  } catch (error) {
+    console.error('Error deleting vendors:', error);
   }
 };
 
@@ -126,9 +143,8 @@ export const handleCancelAdd = (setIsAddClicked, setNewVendor) => {
   });
 };
 
+
 export const handleCancelUpdate = (setIsUpdateClicked, setUpdateVendor) => {
   setIsUpdateClicked(false);
   setUpdateVendor(null);
 };
-
-
