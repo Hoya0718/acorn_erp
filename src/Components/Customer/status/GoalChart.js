@@ -7,11 +7,12 @@ import { useCustomerStatus } from '../settingModal/CustomerStatusSettingContext'
 
 const Goal = () => {
     const { customerCount, customerTarget, customerCount_lastyear, goalOption } = useCustomerStatus();
-
-    const goal_thisyear = customerTarget - customerCount_lastyear;
+    const parsedCustomerTarget = parseInt(customerTarget, 10);
+    
+    const goal_thisyear = parsedCustomerTarget - customerCount_lastyear;
     const curr_thisyear = customerCount - customerCount_lastyear;
 
-    const percentage = customerTarget > 0 ? Math.round((customerCount / customerTarget) * 100) : 0;
+    const percentage = parsedCustomerTarget > 0 ? Math.round((customerCount / parsedCustomerTarget) * 100) : 0;
     const percentage_thisyear = goal_thisyear > 0 ? Math.round((curr_thisyear / goal_thisyear) * 100) : 0;
 
     const FormatNumber = ({ value }) => {
@@ -21,10 +22,10 @@ const Goal = () => {
         return value.toLocaleString();
     };
 
-    const displayGoal = goalOption === '전체고객수' ? customerTarget : goal_thisyear;
+    const displayGoal = goalOption === '전체고객수' ? parsedCustomerTarget : goal_thisyear;
     const displayCurr = goalOption === '전체고객수' ? customerCount : curr_thisyear;
     const displayPercentage = goalOption === '전체고객수' ? percentage : percentage_thisyear;
-
+    
     return (
         <div className="c_goal">
             <section>

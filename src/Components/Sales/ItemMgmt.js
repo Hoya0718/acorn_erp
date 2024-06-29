@@ -1,46 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Sales.css';
-import ItemTable from './ItemTable'; // ItemTable 컴포넌트 임포트
+import axios from '../../api/axios';
+import ItemTable from './ItemTable';
 
 const ItemMgmt = () => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [formData, setFormData] = useState({
-    itemNumber: '',
+    itemCode: '',
     itemType: '',
     itemName: '',
     itemStatus: '',
-    unitPrice: '',
-    quantity: ''
+    itemPrice: '',
+    itemQuantity: ''
   });
+  
+  const [orders, setOrders] = useState([]);
+  const [selectedOrders, setSelectedOrders] = useState([]);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const [orders, setOrders] = useState([
-    {
-      itemNumber: '1001',
-      itemType: '빵',
-      itemName: '단팥빵',
-      itemStatus: '판매 중',
-      unitPrice: '1000',
-      quantity: 100
-    },
-    // 초기 주문 데이터 예시
-  ]);
+  useEffect(() => {
+    fetchOrders();
+  }, []);
 
-  const [selectedOrders, setSelectedOrders] = useState([]); // 선택된 주문 상태 추가
+  const fetchOrders = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get('/items');
+      const fetchedOrders = response.data;
+      const sortedOrders = fetchedOrders.sort((a, b) => new Date(b.itemCode) - new Date(a.itemCode));
+      setOrders(sortedOrders);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAddButtonClick = () => {
     setIsFormVisible(true);
+    setSelectedOrder(null); 
+    clearFormData();
   };
 
-  const handleCancel = () => {
-    setIsFormVisible(false); // 폼 숨기기
+  const handleUpdateButtonClick = () => {
+    if (selectedOrders.length === 1) {
+      setIsFormVisible(true);
+      setSelectedOrder(selectedOrders[0]);
+      setFormData(selectedOrders[0]);
+    } else {
+      alert("하나의 항목만 선택하세요.");
+    }
+  };
+
+  const handleSave = () => {
+    setIsFormVisible(false);
+    clearFormData();
+    setSelectedOrders([]);
+  };
+
+  const clearFormData = () => {
     setFormData({
-      itemNumber: '',
+      itemCode: '',
       itemType: '',
       itemName: '',
       itemStatus: '',
-      unitPrice: '',
-      quantity: ''
+      itemPrice: '',
+      itemQuantity: ''
     });
+    setSelectedOrder(null); 
   };
 
   const handleInputChange = (e) => {
@@ -51,34 +79,44 @@ const ItemMgmt = () => {
     });
   };
 
-  const handleFormSubmit = () => {
-    setOrders([formData, ...orders]); // 최신 항목을 배열의 맨 앞에 추가
-    setFormData({
-      itemNumber: '',
-      itemType: '',
-      itemName: '',
-      itemStatus: '',
-      unitPrice: '',
-      quantity: ''
-    });
-  };
+  const handleFormSubmit = async () => {
+    if (!validateForm()) return;
 
-  const handleDeleteClick = () => {
-    if (window.confirm('선택된 항목을 삭제하시겠습니까?')) {
-      const remainingOrders = orders.filter(order => !selectedOrders.some(selectedOrder => selectedOrder.itemNumber === order.itemNumber));
-      setOrders(remainingOrders);
-      setSelectedOrders([]); // 선택된 항목 초기화
+    try {
+      if (selectedOrder) {
+        const response = await axios.put(`/items/${selectedOrder.itemCode}`, formData);
+        const updatedOrders = orders.map(order => 
+          order.itemCode === selectedOrder.itemCode ? response.data : order
+        );
+        setOrders(updatedOrders);
+      } else {
+        const response = await axios.post('/items', formData);
+        setOrders([response.data, ...orders]);
+      }
+      handleSave();
+    } catch (error) {
+      console.error('Error submitting order:', error);
     }
   };
 
-  const toggleOrderSelection = (order) => {
-    const isSelected = selectedOrders.some(selectedOrder => selectedOrder.itemNumber === order.itemNumber);
+  const validateForm = () => {
+    return formData.itemType.trim() !== '' &&
+           formData.itemName.trim() !== '' &&
+           formData.itemStatus.trim() !== '' &&
+           formData.itemPrice !== '' &&
+           formData.itemQuantity !== '';
+  };
 
-    if (isSelected) {
-      const updatedOrders = selectedOrders.filter(selectedOrder => selectedOrder.itemNumber !== order.itemNumber);
-      setSelectedOrders(updatedOrders);
-    } else {
-      setSelectedOrders([...selectedOrders, order]);
+  const handleDeleteClick = async () => {
+    if (window.confirm('선택한 항목을 삭제하시겠습니까?')) {
+      try {
+        const itemCodes = selectedOrders.map(order => order.itemCode);
+        await Promise.all(itemCodes.map(itemCode => axios.delete(`/items/${itemCode}`)));
+        fetchOrders();
+        setSelectedOrders([]);
+      } catch (error) {
+        console.error('주문 삭제 중 오류 발생:', error);
+      }
     }
   };
 
@@ -88,49 +126,48 @@ const ItemMgmt = () => {
         <h4>상품 관리</h4>
       </div>
       <hr />
-     
       <div className="items-subTitle">
         <span>
           {isFormVisible ? (
-            <button onClick={handleCancel}>취소</button>
+            <button onClick={handleSave}>저장</button>
           ) : (
             <button onClick={handleAddButtonClick}>등록</button>
           )}
           {!isFormVisible && (
             <>
-              <button>수정</button>
+              <button onClick={handleUpdateButtonClick}>수정</button>
               <button onClick={handleDeleteClick}>삭제</button>
             </>
           )}
         </span>
       </div>
-      <br />
-
       <div className="searcher">
         <div className="left">
           <label htmlFor="date">날짜를 선택하세요 :
             <input type="date" id="date" max="2077-06-20" min="2077-06-05" value="2024-07-18" />
           </label>
         </div>
-
         <div className="right">
-          <input type="text" placeholder='🔍 검색' /><button>조회 &gt;</button>
+          <input type="text" placeholder='🔍 검색' /><button>조회</button>
         </div>
       </div>
       <br />
-
-      <ItemTable
-        isFormVisible={isFormVisible}
-        formData={formData}
-        handleInputChange={handleInputChange}
-        handleFormSubmit={handleFormSubmit}
-        orders={orders}
-        setOrders={setOrders} // 상태 업데이트 함수 전달
-        selectedOrders={selectedOrders} // 선택된 주문 상태를 전달
-        setSelectedOrders={setSelectedOrders} // 선택된 주문 상태 업데이트 함수 전달
-      />
+      <div>
+        <section>
+          <ItemTable
+            isFormVisible={isFormVisible}
+            formData={formData}
+            handleInputChange={handleInputChange}
+            handleFormSubmit={handleFormSubmit}
+            orders={orders}
+            selectedOrder={selectedOrder}
+            selectedOrders={selectedOrders}
+            setSelectedOrders={setSelectedOrders}
+          />
+        </section>
+      </div>
       <div className="excel-print">
-        <button>엑셀 다운</button>
+        <button>엑셀 다운로드</button>
         <button>인쇄</button>
       </div>
     </div>

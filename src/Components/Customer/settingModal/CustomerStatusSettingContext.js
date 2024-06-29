@@ -7,15 +7,17 @@ import instance from '../../../api/axios';
 const CustomerStatusContext = createContext();
 
 export const CustomerStatusProvider = ({ children }) => {
+  //Goal차트설정
   const [customerCount_lastyear, setCustomerCount_lastyear] = useState(0);
   const [customerCount, setCustomerCount] = useState(0);
-  const [customerTarget, setCustomerTarget] = useState('');
+  const [customerTarget, setCustomerTarget] = useState(0);
   const [goalOption, setGoalOption] = useState('전체고객수');
   const [selectedOption, setSelectedOption] = useState('');
-  
+  //Period설정
   const [period, setPeriod] = useState('1년');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  //Mene설정
   const [checkboxes_dist, setCheckboxes_dist] = useState({
     gender: true,
     age: true,
@@ -26,28 +28,31 @@ export const CustomerStatusProvider = ({ children }) => {
     count: true,
     reaction: true
   });
+  //Rank설정
   const [rangeValue, setRangeValue] = useState(5);
+  //Region설정
   const [selectedRegion, setSelectedRegion] = useState('전국');
   const [selectedProvince, setSelectedProvince,] = useState('');
   const [selectedCity, setSelectedCity,] = useState('');
 
   useEffect(() => {
+
     const fetchCustomerCount = async () => {
       try {
         const response_all = await instance.get('/customer/getCountAll');
         setCustomerCount(response_all.data);
-        console.log("전체고객수 :",response_all.data);
+//동적데이터로 변경하기!: year: 2023////////////////////////////////////////
         const response_lastyear = await instance.get('/customer/getCountLastyear', {
-          params: { year: 2023 }} );
+          params: { year: 2023 }
+        });
         setCustomerCount_lastyear(response_lastyear.data);
-        console.log("전년도고객수 :",response_lastyear.data);
       } catch (error) {
         console.error('Error fetching customer count:', error);
       }
     };
-
     fetchCustomerCount();
-  }, []); // 빈 배열을 넣어 컴포넌트가 마운트될 때만 실행되도록 설정
+  }, []); 
+
   return (
     <CustomerStatusContext.Provider value={{
       customerCount_lastyear, setCustomerCount_lastyear,

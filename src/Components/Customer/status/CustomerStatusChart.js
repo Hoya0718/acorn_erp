@@ -10,9 +10,11 @@ import TopProd from './TopProdChart.js'
 import "../Customer.css"
 
 const CustomerMain = () => {
+      
+
   return (
     <div className='CustomerMain'>
-      <div className="content" style={{ display: "flex", paddingTop: "15px" ,paddingBottom: "15px"}}>
+      <div className="content" style={{ display: "flex", paddingTop: "15px", paddingBottom: "15px" }}>
         <section id="sec">
           <div className="row first">
             {/*고객수목표 달성도*/}
@@ -29,7 +31,7 @@ const CustomerMain = () => {
             <TopProd />
           </div>
           {/*고객구매실적*/}
-          <div className="row third rank" style={{ marginTop: "20px", paddingBottom: "15px"}}>
+          <div className="row third rank" style={{ marginTop: "20px", paddingBottom: "15px" }}>
             <Rank />
           </div>
         </section>
