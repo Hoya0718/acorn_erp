@@ -70,13 +70,6 @@ const VendorMgmt = () => {
           <label htmlFor="date">
             <input type="date" id="date" max="2077-06-20" min="2077-06-05" value="2024-07-18" />
           </label>
-          <label>
-            <select onChange={(e) => handleSortChange(e.target.value)}>
-              <option value="vendorCode">거래처 코드</option>
-              <option value="vendorName">거래처명</option>
-              <option value="vendorContact">거래처 연락처</option>
-            </select>
-          </label>
         </div>
 
         <div className="right">
