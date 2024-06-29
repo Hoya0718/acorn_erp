@@ -5,7 +5,8 @@ import DangerAlert from './DangerAlert'; // DangerAlert 컴포넌트를 import �
 import {
   fetchVendors, handleAddClick, handleUpdateClick, handleDeleteClick, handleSubmitAdd,
   handleSubmitUpdate, handleCheckboxChange, handleSelectAll, handleChangeNewVendor,
-  handleChangeUpdateVendor, handleCancelAdd, handleCancelUpdate, handleConfirmDelete
+  handleChangeUpdateVendor, handleCancelAdd, handleCancelUpdate, handleConfirmDelete, handleCancelForm, handleDeleteClickWrapper, handleModalConfirmDelete,
+  handleModalClose, handleUpdateClickWrapper, handleSearch
 } from './Functions'; // Functions.js에서 모든 필요한 함수들을 import합니다.
 
 const VendorMgmt = () => {
@@ -20,55 +21,21 @@ const VendorMgmt = () => {
   const [isUpdateClicked, setIsUpdateClicked] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false); // showAlert 상태 추가
+  const [sortBy, setSortBy] = useState('vendorCode'); //정렬 기준을 상태로 추가, 기본값은 'vendorCode'
+  const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 변수
 
   useEffect(() => {
     fetchVendors(setVendors);
   }, []);
 
-  const handleCancelForm = () => {
-    setIsAddClicked(false);
-    setIsUpdateClicked(false);
-    setNewVendor({
-      vendorName: '', vendorContact: '', vendorAddress: '', vendorRemark: '', deliverableStatus: false,
-    });
-    setUpdateVendor(null);
+  const handleSortChange = (value) => {
+    setSortBy(value);
   };
 
-  const handleDeleteClickWrapper = () => {
-    if (selectedVendors.length === 0) {
-      alert('삭제할 거래처를 선택해 주세요.');
-      return;
-    }
-    setShowDeleteModal(true);
-  };
-
-  const handleModalConfirmDelete = async () => {
-    await handleConfirmDelete(selectedVendors, vendors, setVendors, setSelectedVendors);
-    setShowDeleteModal(false);
-  };
-
-  const handleModalClose = () => {
-    setShowDeleteModal(false);
-  };
-
-  const handleUpdateClickWrapper = () => {
-    if (selectedVendors.length !== 1) {
-      setShowAlert(true); // showAlert 상태 변경
-      return;
-    }
-
-    setIsUpdateClicked(true);
-    setIsAddClicked(false);
-
-    // 선택된 첫 번째 거래처의 정보를 updateVendor에 설정
-    const selectedVendor = vendors.find(
-      (vendor) => vendor.vendorCode === selectedVendors[0]
-    );
-    setUpdateVendor(selectedVendor);
-
-    // 하나만 선택한 경우 경고창 숨기기
-    setShowAlert(false);
-  };
+    // 검색어 변경 핸들러
+    const handleSearchChange = (event) => {
+      setSearchTerm(event.target.value);
+    };
 
   return (
     <div>
@@ -87,12 +54,12 @@ const VendorMgmt = () => {
           )}
           {selectedVendors.length > 0 && !isAddClicked && !isUpdateClicked && (
             <>
-              <button onClick={handleUpdateClickWrapper}>수정</button>
-              <button onClick={handleDeleteClickWrapper}>삭제</button>
+              <button onClick={() => handleUpdateClickWrapper(selectedVendors, setIsUpdateClicked, setIsAddClicked, vendors, setUpdateVendor, setShowAlert)}>수정</button>
+              <button onClick={() => handleDeleteClickWrapper(setShowDeleteModal)}>삭제</button>
             </>
           )}
           {(isAddClicked || isUpdateClicked) && (
-            <button onClick={handleCancelForm}>취소</button>
+           <button onClick={() => handleCancelForm(setIsAddClicked, setIsUpdateClicked, setNewVendor, setUpdateVendor)}>취소</button>
           )}
         </span>
       </div>
@@ -100,13 +67,21 @@ const VendorMgmt = () => {
 
       <div className="searcher">
         <div className="left">
-          <label htmlFor="date">날짜를 선택하세요 :
+          <label htmlFor="date">
             <input type="date" id="date" max="2077-06-20" min="2077-06-05" value="2024-07-18" />
+          </label>
+          <label>
+            <select onChange={(e) => handleSortChange(e.target.value)}>
+              <option value="vendorCode">거래처 코드</option>
+              <option value="vendorName">거래처명</option>
+              <option value="vendorContact">거래처 연락처</option>
+            </select>
           </label>
         </div>
 
         <div className="right">
-          <input type="text" placeholder='🔍 검색' /><button>조회 &gt;</button>
+          <input type="text" placeholder='🔍 검색' value={searchTerm} onChange={handleSearchChange} />
+          <button onClick={handleSearch}>조회 &gt;</button>
         </div>
       </div>
       <br />
@@ -116,6 +91,7 @@ const VendorMgmt = () => {
         vendors={vendors}
         selectedVendors={selectedVendors}
         selectAll={selectAll}
+        sortBy={sortBy}
         handleCheckboxChange={(vendorCode) => handleCheckboxChange(vendorCode, selectedVendors, setSelectedVendors)}
         handleSelectAll={() => handleSelectAll(selectAll, vendors, setSelectedVendors, setSelectAll)}
         handleUpdateClick={handleUpdateClickWrapper}
@@ -130,6 +106,7 @@ const VendorMgmt = () => {
         newVendor={newVendor}
         updateVendor={updateVendor}
         isUpdateClicked={isUpdateClicked}
+        searchTerm={searchTerm} // 검색어 상태 전달
       />
       <br />
 
@@ -141,8 +118,8 @@ const VendorMgmt = () => {
       {/* 삭제 모달 */}
       <DeleteModal
         isOpen={showDeleteModal}
-        onClose={handleModalClose}
-        onConfirm={handleModalConfirmDelete}
+        onClose={() => handleModalClose(setShowDeleteModal)}
+        onConfirm={() => handleModalConfirmDelete(selectedVendors, vendors, setVendors, setSelectedVendors, setShowDeleteModal)}
       />
     </div>
   );

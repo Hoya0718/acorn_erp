@@ -148,3 +148,72 @@ export const handleCancelUpdate = (setIsUpdateClicked, setUpdateVendor) => {
   setIsUpdateClicked(false);
   setUpdateVendor(null);
 };
+
+export const handleCancelForm = (setIsAddClicked, setIsUpdateClicked, setNewVendor, setUpdateVendor) => {
+  setIsAddClicked(false);
+  setIsUpdateClicked(false);
+  setNewVendor({
+    vendorName: '', vendorContact: '', vendorAddress: '', vendorRemark: '', deliverableStatus: false,
+  });
+  setUpdateVendor(null);
+};
+
+export const handleDeleteClickWrapper = (setShowDeleteModal) => {
+  setShowDeleteModal(true);
+};
+
+export const handleModalConfirmDelete = async (selectedVendors, vendors, setVendors, setSelectedVendors, setShowDeleteModal) => {
+  try {
+    await Promise.all(
+      selectedVendors.map(async (vendorCode) => {
+        await axios.delete(`/vendor/${vendorCode}`);
+      })
+    );
+    const updatedVendors = vendors.filter(
+      (vendor) => !selectedVendors.includes(vendor.vendorCode)
+    );
+    setVendors(updatedVendors);
+    setSelectedVendors([]);
+    setShowDeleteModal(false); // 삭제 작업이 완료되면 모달을 닫습니다.
+  } catch (error) {
+    console.error('Error deleting vendors:', error);
+  }
+};
+
+
+export const handleModalClose = (setShowDeleteModal) => {
+  setShowDeleteModal(false);
+};
+
+export const handleUpdateClickWrapper = (selectedVendors, setIsUpdateClicked, setIsAddClicked, vendors, setUpdateVendor, setShowAlert) => {
+  if (selectedVendors.length !== 1) {
+    setShowAlert(true); 
+    return;
+  }
+  setIsUpdateClicked(true);
+  setIsAddClicked(false);
+
+  // 선택된 첫 번째 거래처의 정보를 updateVendor에 설정
+  const selectedVendor = vendors.find(
+    (vendor) => vendor.vendorCode === selectedVendors[0]
+  );
+  setUpdateVendor(selectedVendor);
+
+  // 하나만 선택한 경우 경고창 숨기기
+  setShowAlert(false);
+};
+
+export const handleSearch = async (searchTerm) => {
+  try {
+    const response = await fetch(`/vendor/search?keyword=${searchTerm}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return data; // 검색 결과를 반환
+  } catch (error) {
+    console.error('Error fetching search results:', error);
+    throw error; // 에러를 다시 throw하여 상위 컴포넌트에서 처리할 수 있도록 함
+  }
+};
+
