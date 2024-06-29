@@ -1,11 +1,11 @@
-import {React, useState} from 'react';
+import {React, useState, useEffect} from 'react';
 import VendorForm from './VendorForm';
 import UpdateModal from './DangerAlert'; 
 import './Vendor.css';
 import {
   handleCheckboxChange, handleSelectAll, handleUpdateClick, handleDeleteClick,
   handleSubmitAdd, handleSubmitUpdate, handleChangeNewVendor, handleChangeUpdateVendor,
-  handleCancelAdd, handleCancelUpdate
+  handleCancelAdd, handleCancelUpdate, useSortableData, sortVendors
 } from './Functions';
 
 const VendorList = ({
@@ -16,19 +16,13 @@ const VendorList = ({
   updateVendor, isUpdateClicked
 }) => {
 
-// 정렬 함수
-const sortedVendors = [...vendors].sort((a, b) => {
-  let aValue = a[sortBy];
-  let bValue = b[sortBy];
+  const { items: sortedVendors, requestSort, sortConfig } = useSortableData(vendors, { key: sortBy });
 
-  // vendorCode가 문자열이 아닌 경우 toString()을 통해 문자열로 변환하여 비교
-  if (sortBy === 'vendorCode') {
-    aValue = aValue.toString();
-    bValue = bValue.toString();
-  }
+  const handleSort = (key) => {
+    const direction = sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
+    requestSort(key, direction);
+  };
 
-  return aValue.localeCompare(bValue);
-});
 
 return (
   <div>
@@ -42,12 +36,37 @@ return (
               onChange={handleSelectAll}
             />
           </th>
-          <th>코드</th>
-          <th>거래처명</th>
-          <th>거래처 연락처</th>
-          <th>거래처 주소</th>
-          <th>비고</th>
-          <th>납품 가능</th>
+          <th onClick={() => handleSort('vendorCode')}>
+              코드 {sortConfig && sortConfig.key === 'vendorCode' && (
+                sortConfig.direction === 'ascending' ? '▼' : '▲'
+              )}
+            </th>
+            <th onClick={() => handleSort('vendorName')}>
+              거래처명 {sortConfig && sortConfig.key === 'vendorName' && (
+                sortConfig.direction === 'ascending' ? '▼' : '▲'
+              )}
+            </th>
+            <th onClick={() => handleSort('vendorContact')}>
+              거래처 연락처 {sortConfig && sortConfig.key === 'vendorContact' && (
+                sortConfig.direction === 'ascending' ? '▼' : '▲'
+              )}
+            </th>
+            <th onClick={() => handleSort('vendorAddress')}>
+              거래처 주소 {sortConfig && sortConfig.key === 'vendorAddress' && (
+                sortConfig.direction === 'ascending' ? '▼' : '▲'
+              )}
+            </th>
+            <th onClick={() => handleSort('vendorRemark')}>
+              비고 {sortConfig && sortConfig.key === 'vendorRemark' && (
+                sortConfig.direction === 'ascending' ? '▼' : '▲'
+              )}
+            </th>
+            <th onClick={() => handleSort('deliverableStatus')}>
+              납품 가능 {sortConfig && sortConfig.key === 'deliverableStatus' && (
+                sortConfig.direction === 'ascending' ? '▼' : '▲'
+              )}
+            </th>
+
         </tr>
       </thead>
       <tbody>
