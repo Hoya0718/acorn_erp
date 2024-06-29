@@ -38,6 +38,7 @@ const DistributionMgmt = () => {
     const [sortOption, setSortOption] = useState("");  // 정렬 옵션
     const [startDate, setStartDate] = useState("");  // 시작 날짜
     const [endDate, setEndDate] = useState("");  // 종료 날짜
+    const [sortDirection, setSortDirection] = useState('asc'); // 정렬 방향 추가
 
     useEffect(() => {
         fetchItems();
@@ -54,6 +55,14 @@ const DistributionMgmt = () => {
         }
     };
 
+    const handleSelectAll = () => {
+        setCheckAll(!checkAll);
+        if (!checkAll) {
+            setSelectedItems(items.map(item => item.id));
+        } else {
+            setSelectedItems([]);
+        }
+    };
 
     // 체크박스 변경 처리
     const handleCheckboxChange = (itemId) => {
@@ -160,9 +169,9 @@ const DistributionMgmt = () => {
     // 검색 버튼 클릭 처리
     const handleSearchClick = async () => {
         try {
-            const response = await axios.get('/api/distribution', {
+            const response = await axios.get('http://localhost:9099/api/distribution/search', {
                 params: {
-                    searchTerm: searchTerm 
+                    searchTerm: searchTerm
                 }
             });
             setFilteredItems(response.data);
@@ -172,19 +181,23 @@ const DistributionMgmt = () => {
     };
 
     // 정렬 옵션 변경 처리
-    const handleSortChange = (event) => {
-        const selectedOption = event.target.value;
-        setSortOption(selectedOption);
+    const handleSortChange = (selectedField) => {
+        const isAsc = sortOption === selectedField && sortDirection === 'asc';
+        setSortOption(selectedField);
+        setSortDirection(isAsc ? 'desc' : 'asc');
 
-        // 선택한 옵션에 따라 정렬된 배열 생성
+        // 정렬된 항목들을 설정
         let sortedItems = [...items];
-        if (selectedOption === "품목코드") {
-            sortedItems.sort((a, b) => (a.itemCode > b.itemCode) ? 1 : -1);
-        } else if (selectedOption === "품목이름") {
-            sortedItems.sort((a, b) => (a.itemName > b.itemName) ? 1 : -1);
-        } else if (selectedOption === "입고일자") {
-            sortedItems.sort((a, b) => (a.receiptDate > b.receiptDate) ? 1 : -1);
-        }
+        sortedItems.sort((a, b) => {
+            if (selectedField === 'itemCode') {
+                return isAsc ? a.itemCode.localeCompare(b.itemCode) : b.itemCode.localeCompare(a.itemCode);
+            } else if (selectedField === 'itemName') {
+                return isAsc ? a.itemName.localeCompare(b.itemName) : b.itemName.localeCompare(a.itemName);
+            } else if (selectedField === 'receiptDate') {
+                return isAsc ? new Date(a.receiptDate) - new Date(b.receiptDate) : new Date(b.receiptDate) - new Date(a.receiptDate);
+            }
+            return 0;
+        });
 
         setItems(sortedItems);
     };
@@ -248,7 +261,6 @@ const DistributionMgmt = () => {
 
             {/* 상단 버튼 영역 */}
             <div className="top-buttons">
-                <span><button className='btn1' onClick={handleCancelClick}>취소</button></span>
                 <span><button onClick={toggleNewItemForm}>등록</button></span>
                 <span><button onClick={() => handleEditClick(selectedItems[0])} disabled={selectedItems.length === 0}>수정</button></span>
                 <span><DistributionDelete handleDeleteClick={handleDeleteClick} selectedItems={selectedItems} /></span>
@@ -288,10 +300,16 @@ const DistributionMgmt = () => {
                 <table className='distribution-table'>
                     <thead>
                         <tr>
-                            <th><input type="checkbox" onChange={() => { }} disabled /></th>
-                            <th>품목코드 ▼</th>
-                            <th>품목이름 ▼</th>
-                            <th>입고일자 ▼</th>
+                            <th><input type="checkbox" onChange={handleSelectAll} checked={checkAll} /></th>
+                            <th onClick={() => handleSortChange('itemCode')}>
+                                품목코드 {sortOption === 'itemCode' && sortDirection === 'asc' ? '▲' : '▼'}
+                            </th>
+                            <th onClick={() => handleSortChange('itemName')}>
+                                품목이름 {sortOption === 'itemName' && sortDirection === 'asc' ? '▲' : '▼'}
+                            </th>
+                            <th onClick={() => handleSortChange('receiptDate')}>
+                                입고일자 {sortOption === 'receiptDate' && sortDirection === 'asc' ? '▲' : '▼'}
+                            </th>
                             <th>입고수량</th>
                             <th>기초재고</th>
                             <th>출고수량</th>
@@ -301,7 +319,7 @@ const DistributionMgmt = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* 새 항목 등록 폼 */}
+                        
                         {showNewItemForm &&
                             <DistributionAdd
                                 onAddDistribution={handleAddDistribution}
@@ -320,6 +338,7 @@ const DistributionMgmt = () => {
                                         handleSaveClick={handleSaveClick}
                                     />
                                 ) : (
+
                                     // 일반 데이터 표시
                                     <>
                                         <td>{item.itemCode}</td>
@@ -337,7 +356,7 @@ const DistributionMgmt = () => {
                     </tbody>
                 </table>
             </section>
-
+            
             {/* 하단 버튼 영역 */}
             <div className="bottom-buttons">
                 <span><button onClick={handleExcelDownload}>엑셀다운</button></span>
@@ -347,4 +366,4 @@ const DistributionMgmt = () => {
     );
 };
 
-export default DistributionMgmt;
+export default DistributionMgmt; ////
