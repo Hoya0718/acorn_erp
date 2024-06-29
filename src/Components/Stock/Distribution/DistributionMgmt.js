@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from '../../../api/axios';
+import * as XLSX from 'xlsx'; 
+
 import DistributionDelete from './DistributionDelete';
 import DistributionAdd from './DistributionAdd';
 import DistributionUpdate from './DistributionUpdate';
@@ -9,26 +12,21 @@ import "../../Main/Main.css";
 import "./Distribution.css";
 
 const DistributionMgmt = () => {
-    // 초기 새 항목 상태
+    // 초기 상태를 정의
     const initialNewItemState = {
         id: null,
-        code: '',
-        name: '',
-        entryDate: '',
-        entryQuantity: '',
-        initialStock: '',
-        exitQuantity: '',
-        totalStock: '',
-        plannedEntryDate: ''
+        itemCode: '',
+        itemName: '',
+        receiptDate: '',
+        initialQty: '',
+        receivedQty: '',
+        releaseQty: '',
+        currentQty: '',
+        expectedReceiptDate: ''
     };
 
     // 상태 변수들
-    const [items, setItems] = useState([  // 전체 아이템 목록
-        { id: 1, code: '12345', name: '케이크', entryDate: '2024-06-06', entryQuantity: 3, initialStock: 1, exitQuantity: 0, totalStock: 4, plannedEntryDate: '2024-06-10' },
-        { id: 2, code: '12346', name: '파이', entryDate: '2024-06-08', entryQuantity: 3, initialStock: 1, exitQuantity: 0, totalStock: 4, plannedEntryDate: '2024-06-13' },
-        { id: 3, code: '12347', name: '빵', entryDate: '2024-06-13', entryQuantity: 3, initialStock: 1, exitQuantity: 0, totalStock: 4, plannedEntryDate: '2024-06-15' },
-        { id: 4, code: '12348', name: '케이크', entryDate: '2024-06-05', entryQuantity: 3, initialStock: 1, exitQuantity: 0, totalStock: 4, plannedEntryDate: '2024-0-08' },
-    ]);
+    const [items, setItems] = useState([]); //아이템 목록
     const [selectedItems, setSelectedItems] = useState([]);  // 선택된 아이템들
     const [deletedItems, setDeletedItems] = useState([]);    // 삭제된 아이템들
     const [showNewItemForm, setShowNewItemForm] = useState(false);  // 새 항목 등록 폼 보이기/감추기
@@ -40,6 +38,22 @@ const DistributionMgmt = () => {
     const [sortOption, setSortOption] = useState("");  // 정렬 옵션
     const [startDate, setStartDate] = useState("");  // 시작 날짜
     const [endDate, setEndDate] = useState("");  // 종료 날짜
+
+    useEffect(() => {
+        fetchItems();
+    }, []);
+
+    //백엔드 API에서 배포 항목을 가져와 items 상태를 업데이트, 오류가 발생하면 콘솔에 출력
+    const fetchItems = async () => {
+        try {
+            const response = await axios.get('/distribution');
+            setItems(response.data);
+            console.log(response.data);
+        } catch (error) {
+            console.error("Error fetching items:", error);
+        }
+    };
+
 
     // 체크박스 변경 처리
     const handleCheckboxChange = (itemId) => {
@@ -53,11 +67,22 @@ const DistributionMgmt = () => {
     };
 
     // 삭제 버튼 클릭 처리
-    const handleDeleteClick = () => {
+    const handleDeleteClick = async () => {
         if (selectedItems.length > 0) {
             const confirmDelete = window.confirm("선택된 항목을 삭제하시겠습니까?");
             if (confirmDelete) {
-                handleConfirmDelete();
+                try {
+                    await Promise.all(selectedItems.map(async (itemId) => {
+                        await axios.delete(`/distribution/${itemId}`);
+                    }));
+                    alert("삭제 완료했습니다.");
+                    const updatedItems = items.filter(item => !selectedItems.includes(item.id));
+                    setItems(updatedItems);
+                    setDeletedItems([...deletedItems, ...selectedItems]);
+                    setSelectedItems([]);
+                } catch (error) {
+                    console.error("Error deleting items:", error);
+                }
             }
         }
     };
@@ -67,7 +92,6 @@ const DistributionMgmt = () => {
         alert("삭제 완료했습니다.");
         const updatedItems = items.filter(item => !selectedItems.includes(item.id));
         setItems(updatedItems);
-        setDeletedItems([...deletedItems, ...selectedItems]);
         setSelectedItems([]);
     };
 
@@ -85,8 +109,7 @@ const DistributionMgmt = () => {
 
     // 등록 버튼 클릭 처리
     const handleRegisterClick = () => {
-        const newId = items.length + 1;
-        setItems([...items, { ...newItem, id: newId }]);
+        handleAddDistribution(newItem);
         setNewItem(initialNewItemState);
         setShowNewItemForm(false);
     };
@@ -103,9 +126,13 @@ const DistributionMgmt = () => {
     };
 
     // 새로운 물류 추가 처리
-    const handleAddDistribution = (newDistribution) => {
-        const newId = items.length + 1;
-        setItems([...items, { ...newDistribution, id: newId }]);
+    const handleAddDistribution = async (newDistribution) => {
+        try {
+            const response = await axios.post('/distribution', newDistribution);
+            setItems([...items, response.data]);
+        } catch (error) {
+            console.error("Error adding distribution:", error);
+        }
     };
 
     // 수정 버튼 클릭 처리
@@ -114,8 +141,15 @@ const DistributionMgmt = () => {
     };
 
     // 저장 버튼 클릭 처리
-    const handleSaveClick = (itemId) => {
-        setEditingItemId(null);
+    const handleSaveClick = async (itemId) => {
+        const itemToSave = items.find(item => item.id === itemId);
+        try {
+            await axios.put(`/distribution/${itemId}`, itemToSave);
+            setEditingItemId(null);
+            fetchItems();  // 업데이트된 항목을 다시 불러옵니다.
+        } catch (error) {
+            console.error("Error saving item:", error);
+        }
     };
 
     // 검색어 변경 처리
@@ -124,13 +158,17 @@ const DistributionMgmt = () => {
     };
 
     // 검색 버튼 클릭 처리
-    const handleSearchClick = () => {
-        // 검색어로 필터링된 결과를 업데이트
-        const filteredItems = items.filter(item =>
-            item.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        setFilteredItems(filteredItems);
+    const handleSearchClick = async () => {
+        try {
+            const response = await axios.get('/api/distribution', {
+                params: {
+                    searchTerm: searchTerm 
+                }
+            });
+            setFilteredItems(response.data);
+        } catch (error) {
+            console.error("Error searching items:", error);
+        }
     };
 
     // 정렬 옵션 변경 처리
@@ -141,11 +179,11 @@ const DistributionMgmt = () => {
         // 선택한 옵션에 따라 정렬된 배열 생성
         let sortedItems = [...items];
         if (selectedOption === "품목코드") {
-            sortedItems.sort((a, b) => (a.code > b.code) ? 1 : -1);
+            sortedItems.sort((a, b) => (a.itemCode > b.itemCode) ? 1 : -1);
         } else if (selectedOption === "품목이름") {
-            sortedItems.sort((a, b) => (a.name > b.name) ? 1 : -1);
+            sortedItems.sort((a, b) => (a.itemName > b.itemName) ? 1 : -1);
         } else if (selectedOption === "입고일자") {
-            sortedItems.sort((a, b) => (a.entryDate > b.entryDate) ? 1 : -1);
+            sortedItems.sort((a, b) => (a.receiptDate > b.receiptDate) ? 1 : -1);
         }
 
         setItems(sortedItems);
@@ -164,13 +202,38 @@ const DistributionMgmt = () => {
     // 선택한 날짜 범위에 따라 필터링된 아이템
     const filteredByDateItems = items.filter(item => {
         if (startDate && endDate) {
-            const entryDate = new Date(item.entryDate);
+            const receiptDate = new Date(item.receiptDate);
             const start = new Date(startDate);
             const end = new Date(endDate);
-            return entryDate >= start && entryDate <= end;
+            return receiptDate >= start && receiptDate <= end;
         }
         return true;
     });
+    
+    // 인쇄 버튼 클릭 처리
+    const handlePrintClick = () => {
+        window.print();
+    };
+
+    // 엑셀 다운로드 버튼 클릭 처리
+    const handleExcelDownload = () => {
+        const worksheet = XLSX.utils.json_to_sheet(items);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Distributions");
+
+        // 워크북을 바이너리 형식으로 변환
+        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+        // Blob을 생성하여 파일을 다운로드
+        const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'distributions.xlsx');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     // 렌더링할 아이템 배열 선택
     const itemsToRender = filteredItems.length > 0 ? filteredItems : filteredByDateItems.length > 0 ? filteredByDateItems : items;
@@ -226,9 +289,9 @@ const DistributionMgmt = () => {
                     <thead>
                         <tr>
                             <th><input type="checkbox" onChange={() => { }} disabled /></th>
-                            <th>품목코드</th>
-                            <th>품목이름</th>
-                            <th>입고일자</th>
+                            <th>품목코드 ▼</th>
+                            <th>품목이름 ▼</th>
+                            <th>입고일자 ▼</th>
                             <th>입고수량</th>
                             <th>기초재고</th>
                             <th>출고수량</th>
@@ -259,14 +322,14 @@ const DistributionMgmt = () => {
                                 ) : (
                                     // 일반 데이터 표시
                                     <>
-                                        <td>{item.code}</td>
-                                        <td>{item.name}</td>
-                                        <td>{item.entryDate}</td>
-                                        <td>{item.entryQuantity}</td>
-                                        <td>{item.initialStock}</td>
-                                        <td>{item.exitQuantity}</td>
-                                        <td>{item.totalStock}</td>
-                                        <td>{item.plannedEntryDate}</td>
+                                        <td>{item.itemCode}</td>
+                                        <td>{item.itemName}</td>
+                                        <td>{item.receiptDate}</td>
+                                        <td>{item.initialQty}</td>
+                                        <td>{item.receivedQty}</td>
+                                        <td>{item.releaseQty}</td>
+                                        <td>{item.currentQty}</td>
+                                        <td>{item.expectedReceiptDate}</td>
                                     </>
                                 )}
                             </tr>
@@ -277,8 +340,8 @@ const DistributionMgmt = () => {
 
             {/* 하단 버튼 영역 */}
             <div className="bottom-buttons">
-                <span><button>엑셀다운</button></span>
-                <span><button>인쇄</button></span>
+                <span><button onClick={handleExcelDownload}>엑셀다운</button></span>
+                <span><button onClick={handlePrintClick}>인쇄</button></span>
             </div>
         </div>
     );
