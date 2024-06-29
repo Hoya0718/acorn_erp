@@ -45,7 +45,9 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
           //{ header: '평점', key: 'salesRating', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '성별선호도', key: 'genderPreference', className: 'table-centered' },
           { header: '연령별선호도', key: 'agePreference', className: 'table-centered' },
-          { header: '지역별선호도', key: 'preferredregionGroup', className: 'table-centered' },
+          { header: '지역별선호도', key: 'regionPreference_province', className: 'table-centered' },
+          { header: '지역별선호도', key: 'regionPreference_city', className: 'table-centered' },
+          { header: '지역별선호도', key: 'regionPreference_town', className: 'table-centered' },
         ];
       case '최다거래':
         return [
@@ -54,9 +56,9 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
           { header: '거래횟수', key: 'totalCountForProduct', format: (value) => value.toLocaleString(), className: 'table-centered' },
           //{ header: '평점', key: 'salesRating', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '거래금액', key: 'totalAmountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
-          { header: '성별선호도', key: 'genderPreference', className: 'table-centered' },
-          { header: '연령별선호도', key: 'agePreference', className: 'table-centered' },
-          { header: '지역별선호도', key: 'preferredregionGroup', className: 'table-centered' },
+          { header: '지역별선호도', key: 'regionPreference_province', className: 'table-centered' },
+          { header: '지역별선호도', key: 'regionPreference_city', className: 'table-centered' },
+          { header: '지역별선호도', key: 'regionPreference_town', className: 'table-centered' },
         ];
       case '반응좋은':
         return [
@@ -65,9 +67,9 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
           //{ header: '평점', key: 'salesRating', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '거래금액', key: 'totalAmountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
           { header: '거래횟수', key: 'totalCountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
-          { header: '성별선호도', key: 'genderPreference', className: 'table-centered' },
-          { header: '연령별선호도', key: 'agePreference', className: 'table-centered' },
-          { header: '지역별선호도', key: 'preferredregionGroup', className: 'table-centered' },
+          { header: '지역별선호도', key: 'regionPreference_province', className: 'table-centered' },
+          { header: '지역별선호도', key: 'regionPreference_city', className: 'table-centered' },
+          { header: '지역별선호도', key: 'regionPreference_town', className: 'table-centered' },
         ];
       default:
         return [
@@ -76,9 +78,9 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
           //{ header: '평점', key: 'salesRating', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '거래금액', key: 'totalAmountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
           { header: '거래횟수', key: 'totalCountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
-          { header: '성별선호도', key: 'genderPreference', className: 'table-centered' },
-          { header: '연령별선호도', key: 'agePreference', className: 'table-centered' },
-          { header: '지역별선호도', key: 'preferredregionGroup', className: 'table-centered' },
+          { header: '지역별선호도', key: 'regionPreference_province', className: 'table-centered' },
+          { header: '지역별선호도', key: 'regionPreference_city', className: 'table-centered' },
+          { header: '지역별선호도', key: 'regionPreference_town', className: 'table-centered' },
         ];
     }
   }
