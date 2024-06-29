@@ -31,12 +31,13 @@
 }
 .main-content1 {
   /* border: 1px solid blue; */
-  width: 85%;
+  width: 100%;
   padding-top: 35px;
   padding-right: 30px;
+  padding-left: 30px;
   background-color: #ffffff;
   box-sizing: border-box;
-  margin-left: 15%; /* 사이드바 너비만큼 왼쪽으로 이동 */
+  margin-left: 12%; /* 사이드바 너비만큼 왼쪽으로 이동 */
   margin-top: 10vh; /* 헤더의 높이만큼 아래로 이동 */
 }
 
