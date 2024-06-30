@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import VendorList from './VendorList';
+import ExcelPrint from './ExcelPrint';
 import DeleteModal from './DeleteModal';
 import DangerAlert from './DangerAlert'; // DangerAlert 컴포넌트를 import 합니다.
 import {
@@ -27,10 +28,6 @@ const VendorMgmt = () => {
   useEffect(() => {
     fetchVendors(setVendors);
   }, []);
-
-  const handleSortChange = (value) => {
-    setSortBy(value);
-  };
 
     // 검색어 변경 핸들러
     const handleSearchChange = (event) => {
@@ -66,12 +63,6 @@ const VendorMgmt = () => {
       <br />
 
       <div className="searcher">
-        <div className="left">
-          <label htmlFor="date">
-            <input type="date" id="date" max="2077-06-20" min="2077-06-05" value="2024-07-18" />
-          </label>
-        </div>
-
         <div className="right">
           <input type="text" placeholder='🔍 검색' value={searchTerm} onChange={handleSearchChange} />
           <button onClick={handleSearch}>조회 &gt;</button>
@@ -103,17 +94,16 @@ const VendorMgmt = () => {
       />
       <br />
 
+      {/* 엑셀&인쇄 */}
       <div className="excel-print">
-        <button>엑셀 다운</button>
-        <button>인쇄</button>
+        <ExcelPrint vendors={vendors}/>       
       </div>
 
       {/* 삭제 모달 */}
       <DeleteModal
         isOpen={showDeleteModal}
         onClose={() => handleModalClose(setShowDeleteModal)}
-        onConfirm={() => handleModalConfirmDelete(selectedVendors, vendors, setVendors, setSelectedVendors, setShowDeleteModal)}
-      />
+        onConfirm={() => handleModalConfirmDelete(selectedVendors, vendors, setVendors, setSelectedVendors, setShowDeleteModal)} />
     </div>
   );
 };

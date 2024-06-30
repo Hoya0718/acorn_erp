@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PurchaseList from './PurchaseList'; // PurchaseList로 변경
+import ExcelPrint from './ExcelPrint';
 import {
   fetchPurchases, handleAddClick, handleUpdateClick, handleDeleteClick, handleSubmitAdd,
   handleSubmitUpdate, handleCheckboxChange, handleSelectAll, handleChangeNewPurchase, // 함수 이름 변경
@@ -92,9 +93,9 @@ const PurchaseMgmt = () => {
         isUpdateClicked={isUpdateClicked} 
       /> <br/>
 
-      <div className="excel-print">
-        <button>엑셀 다운</button>
-        <button>인쇄</button>
+       {/* 엑셀&인쇄 */}
+       <div className="excel-print">
+        <ExcelPrint purchases={purchases}/>       
       </div>
     </div>
   );
