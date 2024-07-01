@@ -13,7 +13,7 @@ const VendorForm = ({
         <input type="checkbox" />
       </td>
       <td>
-      <input
+        <input
           className="form-input" type="text" placeholder="/"
           readOnly />
       </td>

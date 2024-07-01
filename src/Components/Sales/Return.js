@@ -32,7 +32,7 @@ const Return = () => {
           <button
             className={selectedLink === '/layout/salesMgmt/return' ? 'selected' : ''}
             onClick={() => handleLinkClick('/layout/salesMgmt/return')}>
-            <Link to="/layout/salesMgmt/return">반품 및 교환 조회</Link>
+            <Link to="/layout/salesMgmt/return">취소 주문서 조회</Link>
           </button>
         </span>
       </div>

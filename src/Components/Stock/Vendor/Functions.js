@@ -1,5 +1,6 @@
 import axios from '../../../api/axios';
-import DatePicker from 'react-datepicker';
+import DangerAlert from './DangerAlert';
+import { useState, useMemo } from 'react';
 
 export const fetchVendors = async (setVendors) => {
   try {
@@ -17,7 +18,7 @@ export const handleAddClick = (setIsAddClicked, setIsUpdateClicked) => {
 
 export const handleUpdateClick = (selectedVendors, vendors, setUpdateVendor, setIsUpdateClicked, setIsAddClicked) => {
   if (selectedVendors.length !== 1) {
-    alert('수정할 거래처를 하나만 선택해 주세요.');
+    <DangerAlert/>
     return;
   }
 
@@ -52,6 +53,23 @@ export const handleDeleteClick = async (selectedVendors, vendors, setVendors, se
     } catch (error) {
       console.error('Error deleting vendors:', error);
     }
+  }
+};
+
+export const handleConfirmDelete = async (selectedVendors, vendors, setVendors, setSelectedVendors) => {
+  try {
+    await Promise.all(
+      selectedVendors.map(async (vendorCode) => {
+        await axios.delete(`/vendor/${vendorCode}`);
+      })
+    );
+    const updatedVendors = vendors.filter(
+      (vendor) => !selectedVendors.includes(vendor.vendorCode)
+    );
+    setVendors(updatedVendors);
+    setSelectedVendors([]);
+  } catch (error) {
+    console.error('Error deleting vendors:', error);
   }
 };
 
@@ -126,9 +144,129 @@ export const handleCancelAdd = (setIsAddClicked, setNewVendor) => {
   });
 };
 
+
 export const handleCancelUpdate = (setIsUpdateClicked, setUpdateVendor) => {
   setIsUpdateClicked(false);
   setUpdateVendor(null);
 };
 
+export const handleCancelForm = (setIsAddClicked, setIsUpdateClicked, setNewVendor, setUpdateVendor) => {
+  setIsAddClicked(false);
+  setIsUpdateClicked(false);
+  setNewVendor({
+    vendorName: '', vendorContact: '', vendorAddress: '', vendorRemark: '', deliverableStatus: false,
+  });
+  setUpdateVendor(null);
+};
 
+export const handleDeleteClickWrapper = (setShowDeleteModal) => {
+  setShowDeleteModal(true);
+};
+
+export const handleModalConfirmDelete = async (selectedVendors, vendors, setVendors, setSelectedVendors, setShowDeleteModal) => {
+  try {
+    await Promise.all(
+      selectedVendors.map(async (vendorCode) => {
+        await axios.delete(`/vendor/${vendorCode}`);
+      })
+    );
+    const updatedVendors = vendors.filter(
+      (vendor) => !selectedVendors.includes(vendor.vendorCode)
+    );
+    setVendors(updatedVendors);
+    setSelectedVendors([]);
+    setShowDeleteModal(false); // 삭제 작업이 완료되면 모달을 닫습니다.
+  } catch (error) {
+    console.error('Error deleting vendors:', error);
+  }
+};
+
+
+export const handleModalClose = (setShowDeleteModal) => {
+  setShowDeleteModal(false);
+};
+
+export const handleUpdateClickWrapper = (selectedVendors, setIsUpdateClicked, setIsAddClicked, vendors, setUpdateVendor, setShowAlert) => {
+  if (selectedVendors.length !== 1) {
+    setShowAlert(true); 
+    return;
+  }
+  setIsUpdateClicked(true);
+  setIsAddClicked(false);
+
+  // 선택된 첫 번째 거래처의 정보를 updateVendor에 설정
+  const selectedVendor = vendors.find(
+    (vendor) => vendor.vendorCode === selectedVendors[0]
+  );
+  setUpdateVendor(selectedVendor);
+
+  // 하나만 선택한 경우 경고창 숨기기
+  setShowAlert(false);
+};
+
+export const handleSearch = async (searchTerm) => {
+  try {
+    const response = await fetch(`/vendor/search?keyword=${searchTerm}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return data; // 검색 결과를 반환
+  } catch (error) {
+    console.error('Error fetching search results:', error);
+    throw error; // 에러를 다시 throw하여 상위 컴포넌트에서 처리할 수 있도록 함
+  }
+};
+
+export const sortVendors = (vendors, sortBy, sortOrder) => {
+  return [...vendors].sort((a, b) => {
+    if (!sortBy) {
+      return a.vendorCode.toString().localeCompare(b.vendorCode.toString());
+    }
+
+    let aValue = a[sortBy];
+    let bValue = b[sortBy];
+
+    if (typeof aValue !== 'string') {
+      aValue = aValue.toString();
+    }
+    if (typeof bValue !== 'string') {
+      bValue = bValue.toString();
+    }
+
+    return sortOrder === 'ascending' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+  });
+};
+
+export const useSortableData = (items, initialSortConfig = { key: null, direction: 'ascending' }) => {
+  const [sortConfig, setSortConfig] = useState(initialSortConfig);
+
+  const sortedItems = useMemo(() => {
+    if (!Array.isArray(items)) {
+      return []; // items가 배열이 아니면 빈 배열 반환
+    }
+    let sortableItems = [...items];
+    if (sortConfig.key !== null) {
+      sortableItems.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [items, sortConfig]);
+
+  const requestSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  return { items: sortedItems, requestSort, sortConfig };
+};

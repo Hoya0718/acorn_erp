@@ -1,7 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import './Layout.css';
 import MemoPad from '../Components/MemoPad';
+import ThemeToggle from './ThemeToggle';
+import LogoutIcon from './LogoutIcon';
 
 const Layout = () => {
   const [expandedItem, setExpandedItem] = useState(null);
@@ -21,7 +23,7 @@ const Layout = () => {
   return (
     <div className="layout1">
       <header className='header1'>
-      <Link to="/layout"><span className="erp-title">ACORN ERP</span></Link>
+      <Link to="/layout" style={{textDecoration: 'none', color: 'black' }}><span className="erp-title">ACORN ERP</span></Link>
         <MemoPad />
       </header>
       <div className="container1">
@@ -39,11 +41,12 @@ const Layout = () => {
                 />
               ))}
             </ul>
-          <div className="sidebar1-bottom">
-            <button>다크모드</button>
-            <button>로그아웃</button>
-          </div>
-          </nav>
+            </nav>
+            <div className='icon-container'>
+                <ThemeToggle></ThemeToggle>
+                <LogoutIcon></LogoutIcon>
+              </div>
+          
         </div>
         <main className="main-content1">
           <Outlet />
