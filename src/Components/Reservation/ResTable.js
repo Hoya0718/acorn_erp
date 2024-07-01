@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Reservation.css';
 import { useOutletContext, useNavigate } from 'react-router-dom';
-import axios from '../../api/axios'; // axios 불러오기
 
 const ResTable = () => {
   const { reservations, deleteReservations } = useOutletContext();
@@ -17,17 +16,12 @@ const ResTable = () => {
     );
   };
 
-  const handleDelete = async () => {
-    try {
-      await axios.delete(`/reservations/${selectedReservations[0]}`);
-      deleteReservations(selectedReservations);
-      setSelectedReservations([]);
-    } catch (error) {
-      console.error('Error deleting reservation:', error);
-    }
+  const handleDelete = () => {
+    deleteReservations(selectedReservations);
+    setSelectedReservations([]);
   };
 
-  const handleEdit = (id) => { console.log(id)
+  const handleEdit = (id) => {
     navigate(`/layout/reservationMgmt/editReservation/${id}`);
   };
 
@@ -51,7 +45,7 @@ const ResTable = () => {
             <th scope="col">예약자이름</th>
             <th scope="col">예약일시</th>
             <th scope="col">추가요청사항</th>
-            <th scope="col">결제내역</th>
+            <th scope="col">결제방식</th>
           </tr>
         </thead>
         <tbody className="table-group-divider">

@@ -1,62 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import "../Main/Main.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Reservation.css';
 import acornImage from './Acorn-illustration-png.png';  // 이미지 경로 설정
-import axios from '../../api/axios';  // axios 불러오기
 
 const ReservationMgmt = () => {
   const [date, setDate] = useState(new Date());
-  const [reservations, setReservations] = useState([]);
+  const [reservations, setReservations] = useState([
+    { id: 1, name: '홍대희', date: '2024-02-14', requests: '준비물 X', payment: '카드결제', phone: '010-1234-5678', gender: '남성', count: 2 },
+    { id: 2, name: '홍시진', date: '2024-02-14', requests: '주차 필요합니다.', payment: '네이버페이', phone: '010-8765-4321', gender: '여성', count: 3 }
+  ]);
 
-  useEffect(() => {
-    fetchReservations();
-  }, []);
-
-  const fetchReservations = async () => {
-    try {
-      const response = await axios.get('/reservations');
-      setReservations(response.data);
-    } catch (error) {
-      console.error('Error fetching reservations:', error);
-    }
+  const addReservation = (newReservation) => {
+    setReservations([...reservations, newReservation]);
   };
 
-  const addReservation = async (newReservation) => {
-    try {
-      const response = await axios.post('/reservations', newReservation, {
-        headers: { 'Content-Type': 'application/json' }
-      });
-      setReservations([...reservations, response.data]);
-      fetchReservations();
-    } catch (error) {
-      console.error('Error adding reservation:', error);
-    }
+  const deleteReservations = (idsToDelete) => {
+    setReservations(reservations.filter(reservation => !idsToDelete.includes(reservation.id)));
   };
 
-  const deleteReservations = async (idsToDelete) => {
-    try {
-      await axios.delete(`/reservations/${idsToDelete[0]}`);
-      setReservations(reservations.filter(reservation => !idsToDelete.includes(reservation.id)));
-      fetchReservations();
-    } catch (error) {
-      console.error('Error deleting reservation:', error);
-    }
-  };
-
-  const updateReservation = async (updatedReservation) => {
-    try {
-      await axios.put(`/reservations/${updatedReservation.id}`, updatedReservation, {
-        headers: { 'Content-Type': 'application/json' }
-      });
-      setReservations(reservations.map(reservation =>
-        reservation.id === updatedReservation.id ? updatedReservation : reservation
-      ));
-      fetchReservations();
-    } catch (error) {
-      console.error('Error updating reservation:', error);
-    }
+  const updateReservation = (updatedReservation) => {
+    setReservations(reservations.map(reservation => 
+      reservation.id === updatedReservation.id ? updatedReservation : reservation
+    ));
   };
 
   const renderCalendar = () => {
@@ -93,8 +60,8 @@ const ReservationMgmt = () => {
           className={`date ${condition} ${isToday ? 'today' : ''}`}
           onClick={() => handleDateClick(viewYear, viewMonth, date)}
         >
-          {isReserved && <img src={acornImage} alt="Reserved" className="acorn-image" />}
           <span>{date}</span>
+          {isReserved && <img src={acornImage} alt="Reserved" className="acorn-image" />}
         </div>
       );
     });
@@ -176,10 +143,10 @@ const ReservationMgmt = () => {
           <div className="body_flow">
             <div className="row">
               <div className="col--12"></div>
+              <span>예약 관리</span>
               <div className="col-md-7 col-xs-12">
                 <div className="left">
                   <div className="Middle classification">
-                    <span>예약 관리</span>
                   </div>
                   <div className="calendar">
                     <div className="header">
@@ -245,3 +212,6 @@ const ReservationMgmt = () => {
 };
 
 export default ReservationMgmt;
+
+
+

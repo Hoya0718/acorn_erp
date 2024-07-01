@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Reservation.css';
 import { useOutletContext, useNavigate, useParams } from 'react-router-dom';
-import axios from '../../api/axios';  // axios 불러오기
+import axios from '../../api/axios'; // 경로 수정
 
 const MainReg = () => {
   const { reservations, addReservation, updateReservation } = useOutletContext();
@@ -13,18 +13,18 @@ const MainReg = () => {
   const [formData, setFormData] = useState({
     id: '',
     name: '',
-    date: '',
+    reservationDate: '',
     requests: '',
     payment: '',
     phone: '',
     gender: '',
-    count: ''
+    rsCount: ''
   });
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (isEditMode) {
-      const existingReservation = reservations.find(res => res.id === id);
+      const existingReservation = reservations.find(res => res.id === parseInt(id));
       if (existingReservation) {
         setFormData(existingReservation);
       }
@@ -38,25 +38,27 @@ const MainReg = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.date || !formData.payment) {
+    if (!formData.id || !formData.name || !formData.reservationDate || !formData.payment) {
       setErrorMessage('등록이 불가합니다. 필수 입력 필드를 확인하세요.');
       return;
     }
-    try {console.log(id)
+
+    console.log("Submitting form data:", formData); // 추가한 부분
+
+    try {
       if (isEditMode) {
-        await axios.put(`/reservations/${formData.id}`, formData, {
-          headers: { 'Content-Type': 'application/json' }
-        });
+        // Update reservation
+        await axios.put(`/reservations/${formData.id}`, formData);
         updateReservation(formData);
       } else {
-        const response = await axios.post('/reservations', formData, {
-          headers: { 'Content-Type': 'application/json' }
-        });
-        addReservation(response.data);
+        // Add new reservation
+        await axios.post('/reservations', formData);
+        addReservation(formData);
       }
       navigate('/layout/reservationMgmt/resTable');
     } catch (error) {
-      console.error('Error saving reservation:', error);
+      console.error("Error saving reservation:", error);
+      setErrorMessage('예약 저장 중 오류가 발생했습니다. 다시 시도하세요.');
     }
   };
 
@@ -96,17 +98,17 @@ const MainReg = () => {
                   </td>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>예약 일시</th>
                   <td style={{ width: '30%' }}>
-                    <input type="date" name="date" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.date} />
+                    <input type="date" name="reservationDate" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.reservationDate} />
                   </td>
                 </tr>
                 <tr>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>예약 번호</th>
                   <td style={{ width: '30%' }}>
-                    <input type="text" name="id" placeholder="예약 번호" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.id} disabled={isEditMode} />
+                    <input type="text" name="id" placeholder="예약 번호" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.id} />
                   </td>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>인원 수</th>
                   <td style={{ width: '30%' }}>
-                    <input type="text" name="count" placeholder="인원 수" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.count} />
+                    <input type="text" name="rsCount" placeholder="인원 수" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.rsCount} />
                   </td>
                 </tr>
               </thead>
@@ -115,7 +117,7 @@ const MainReg = () => {
             <section id="calculator" align="center">
               <div id="calculator_addBtn">
                 <button type="submit" id="add_reg">{isEditMode ? '수정' : '등록'}</button>
-                <button type="button" id="add_cancel" onClick={() => navigate('/layout/reservationMgmt/resTable')}>취소</button>
+                <button type="button" id="add_cancel" onClick={() => navigate('/layout/reservationMgmt')}>취소</button>
               </div>
             </section>
           </form>
