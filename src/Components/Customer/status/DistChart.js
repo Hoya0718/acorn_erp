@@ -72,17 +72,17 @@ const Dist = () => {
                 if(selectedRegion==="전국"){
                     labels = Object.keys(data_region.Province);
                     values = Object.values(data_region.Province);
-                    console.log('data_region',labels);
+                    // console.log('data_region',labels);
                 }
                 if(selectedRegion==="시도"){
                     labels = Object.keys(data_region.City);
                     values = Object.values(data_region.City);
-                    console.log('data_region',labels);
+                    // console.log('data_region',labels);
                 }
                 if(selectedRegion==="시군구"){
                     labels = Object.keys(data_region.Town);
                     values = Object.values(data_region.Town);
-                    console.log('data_region',labels);
+                    // console.log('data_region',labels);
                 }
                 setRegionChartLabels(labels);
 
@@ -123,7 +123,6 @@ const Dist = () => {
 
                     const charts = [];
                     if (checkboxes_dist.gender && chartData.genderGroupData) {
-                        
                         charts.push({ data: chartData.genderGroupData, label: '성별' });
                     }
                     if (checkboxes_dist.age && chartData.ageGroupData) {

@@ -34,7 +34,7 @@ const Customer_status = ()=> {
             <CustomerMain />
         </div>
         {/* 설정창 모달 */}
-        <CustomerStatusSettingModal />
+          <CustomerStatusSettingModal />
         </CustomerStatusProvider>
      </div>
   );

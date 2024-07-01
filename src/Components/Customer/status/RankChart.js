@@ -33,7 +33,7 @@ const Rank = () => {
                     prevRank: item.prevRank || null
                 }));
                 setCount(data_Count);
-                console.log("data_Count: ", data_Count);
+                // console.log("data_Count: ", data_Count);
 
                 if (savedSettings) {
                     const { rangeValue } = JSON.parse(savedSettings);

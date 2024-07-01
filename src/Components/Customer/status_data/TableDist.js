@@ -4,8 +4,10 @@
 import * as React from 'react'
 import "../../Main/Main.css"
 import instance from './../../../api/axios';
+import { useCustomerStatus } from '../settingModal/CustomerStatusSettingContext';
 
 const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
+    const { selectedRegion } = useCustomerStatus();
     const [data_grade_soso, setData_grade_soso] = React.useState([]); //일반고객인원
     const [data_grade_good, setData_grade_good] = React.useState([]); //우수고객인원
     const [data_grade_bad, setData_grade_bad] = React.useState([]); //주의고객인원
@@ -18,70 +20,84 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
                 const response_tableData = await instance.post('/customer/getCountAll');
 
                 const data = response_tableData.data;
-                console.log("getCountAll Data: ", data);
+                // console.log("getCountAll Data: ", data);
+                console.log("selectedRegion: ", selectedRegion);
                 if (data && Object.keys(data).length > 0) {
                     //첫행 제목 데이터
                     const allCols = new Set();
 
-                    Object.values(data).forEach(section => {
-                        Object.values(section).forEach(title => {
-                            Object.keys(title).forEach(item => {
-                                allCols.add(item);
-                            });
-                        });
-                    });
+                    let regionData;
 
-                    setCols([...allCols]); //첫행제목
-                    // console.log("Columns: ", [...allCols]); //여성남성30대20대 등
-
-                    //각행 첫재칸 데이터
-                    const allRows = new Set();
-                    const lv1 = Object.keys(data);
-
-                    lv1.forEach(key1 => {
-                        const level2Keys = Object.keys(data[key1]);
-                        level2Keys.forEach(key2 => {
-                            const level3Keys = Object.keys(data[key1][key2]);
-                            level3Keys.forEach(value => {
-                                const level3Keys = Object.keys(data[key1][key2][value]);
-                                level3Keys.forEach(grade => {
-                                    allRows.add(grade);
+                    if (selectedRegion === '전국') {
+                        regionData = data.region.Province;
+                    } else if (selectedRegion === '시도') {
+                        regionData = data.region.City;
+                    } else if (selectedRegion === '시군구') {
+                        regionData = data.region.Town;
+                    }
+                    console.log("sregionData: ", regionData);
+                    
+                    if (regionData) {
+                        Object.values(data).forEach(section => {
+                            Object.values(section).forEach(title => {
+                                Object.keys(title).forEach(item => {
+                                    allCols.add(item);
                                 });
                             });
                         });
-                    });
-                    setRows([...allRows]); //첫열제목
-                    // console.log("Rows: ", [...allRows]); // 우수/일반/주의
 
-                    // 회원등급에 따른 데이터
-                    const goodDatas = [];
-                    const sosoDatas = [];
-                    const badDatas = [];
+                        setCols([...allCols]); //첫행제목
+                        console.log("Columns: ", [...allCols]); //여성남성30대20대 등
 
-                    lv1.forEach(key1 => {
-                        const level2Keys = Object.keys(data[key1]);
-                        level2Keys.forEach(key2 => {
-                            const level3Keys = Object.keys(data[key1][key2]);
-                            level3Keys.forEach(key3 => {
-                                const level4Keys = Object.keys(data[key1][key2][key3]);
-                                level4Keys.forEach(key4 => {
-                                    if (key4 === '우수') {
-                                        const goodValue = data[key1][key2][key3][key4];
-                                        goodDatas.push({ column: key3, value: goodValue });
-                                    } else if (key4 === '일반') {
-                                        const sosoValue = data[key1][key2][key3][key4];
-                                        sosoDatas.push({ column: key3, value: sosoValue });
-                                    } else if (key4 === '주의') {
-                                        const badValue = data[key1][key2][key3][key4];
-                                        badDatas.push({ column: key3, value: badValue });
-                                    }
+                        //각행 첫재칸 데이터
+                        const allRows = new Set();
+                        const lv1 = Object.keys(data);
+
+                        lv1.forEach(key1 => {
+                            const level2Keys = Object.keys(data[key1]);
+                            level2Keys.forEach(key2 => {
+                                const level3Keys = Object.keys(data[key1][key2]);
+                                level3Keys.forEach(value => {
+                                    const level3Keys = Object.keys(data[key1][key2][value]);
+                                    level3Keys.forEach(grade => {
+                                        allRows.add(grade);
+                                    });
                                 });
                             });
                         });
-                    });
-                    setData_grade_good(goodDatas);
-                    setData_grade_soso(sosoDatas);
-                    setData_grade_bad(badDatas);
+                        setRows([...allRows]); //첫열제목
+                        // console.log("Rows: ", [...allRows]); // 우수/일반/주의
+
+                        // 회원등급에 따른 데이터
+                        const goodDatas = [];
+                        const sosoDatas = [];
+                        const badDatas = [];
+
+                        lv1.forEach(key1 => {
+                            const level2Keys = Object.keys(data[key1]);
+                            level2Keys.forEach(key2 => {
+                                const level3Keys = Object.keys(data[key1][key2]);
+                                level3Keys.forEach(key3 => {
+                                    const level4Keys = Object.keys(data[key1][key2][key3]);
+                                    level4Keys.forEach(key4 => {
+                                        if (key4 === '우수') {
+                                            const goodValue = data[key1][key2][key3][key4];
+                                            goodDatas.push({ column: key3, value: goodValue });
+                                        } else if (key4 === '일반') {
+                                            const sosoValue = data[key1][key2][key3][key4];
+                                            sosoDatas.push({ column: key3, value: sosoValue });
+                                        } else if (key4 === '주의') {
+                                            const badValue = data[key1][key2][key3][key4];
+                                            badDatas.push({ column: key3, value: badValue });
+                                        }
+                                    });
+                                });
+                            });
+                        });
+                        setData_grade_good(goodDatas);
+                        setData_grade_soso(sosoDatas);
+                        setData_grade_bad(badDatas);
+                    }
                 } else {
                     console.error('Received empty or undefined data');
                 }
@@ -90,7 +106,7 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
             }
         }
         fetchTableData();
-    }, [activeLabel]);
+    }, [activeLabel, selectedRegion]);
 
     const getColumns = () => {
         return cols.map(col => ({
@@ -147,25 +163,25 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
 
     const calculateTotal = (column) => {
         let total = 0;
-    
+
         data_grade_good.forEach(item => {
             if (item.column === column) {
                 total += item.value;
             }
         });
-    
+
         data_grade_soso.forEach(item => {
             if (item.column === column) {
                 total += item.value;
             }
         });
-    
+
         data_grade_bad.forEach(item => {
             if (item.column === column) {
                 total += item.value;
             }
         });
-    
+
         return total;
     };
     const totalRow = cols.reduce((acc, column) => {
