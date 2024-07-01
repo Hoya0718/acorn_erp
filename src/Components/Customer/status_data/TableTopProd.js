@@ -38,8 +38,7 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
     switch (activeLabel) {
       case '최고매출':
         return [
-          { header: '번호', key: 'preferenceDataId', format: (_, index) => index + 1, className: 'table-centered' },
-          { header: '상품명', key: 'itemName', className: 'table-centered' },
+           { header: '상품명', key: 'itemName', className: 'table-centered' },
           { header: '거래금액', key: 'totalAmountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
           { header: '거래횟수', key: 'totalCountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
           //{ header: '평점', key: 'salesRating', format: (value) => value.toLocaleString(), className: 'table-centered' },
@@ -51,7 +50,6 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
         ];
       case '최다거래':
         return [
-          { header: '번호', key: 'preferenceDataId', format: (_, index) => index + 1, className: 'table-centered' },
           { header: '상품명', key: 'itemName', className: 'table-centered' },
           { header: '거래횟수', key: 'totalCountForProduct', format: (value) => value.toLocaleString(), className: 'table-centered' },
           //{ header: '평점', key: 'salesRating', format: (value) => value.toLocaleString(), className: 'table-centered' },
@@ -62,7 +60,6 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
         ];
       case '반응좋은':
         return [
-          { header: '번호', key: 'preferenceDataId', format: (_, index) => index + 1, className: 'table-centered' },
           { header: '상품명', key: 'itemName', className: 'table-centered' },
           //{ header: '평점', key: 'salesRating', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '거래금액', key: 'totalAmountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
@@ -73,7 +70,6 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
         ];
       default:
         return [
-          { header: '번호', key: 'preferenceDataId', format: (_, index) => index + 1, className: 'table-centered' },
           { header: '상품명', key: 'itemName', className: 'table-centered' },
           //{ header: '평점', key: 'salesRating', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '거래금액', key: 'totalAmountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },

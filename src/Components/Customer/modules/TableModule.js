@@ -90,7 +90,7 @@ const TableModule = ({  data = [], columns = [], onSort }) => {
             <table className="table table-hover" style={{ wordBreak: 'break-all' }}>
                 <thead>
                     <tr>
-                        <th scope="col" className="table-centered">
+                        {/* <th scope="col" className="table-centered">
                             <input
                                 className="form-check-input"
                                 type="checkbox"
@@ -98,7 +98,8 @@ const TableModule = ({  data = [], columns = [], onSort }) => {
                                 onChange={handleSelectAll}
                                 id="flexCheckDefault"
                             />
-                        </th>
+                        </th> */}
+                        <th scope="col" className="table-centered">no.</th>
                         {columns.map((column) => (
                             <th 
                             scope="col" 
@@ -118,14 +119,15 @@ const TableModule = ({  data = [], columns = [], onSort }) => {
                 <tbody className="table-group-divider">
                     {data.map((row, index) => (
                         <tr key={index}>
-                            <th scope="row" className="table-centered">
+                            {/* <th scope="row" className="table-centered">
                                 <input
                                     className="form-check-input"
                                     type="checkbox"
                                     checked={!!selectedRows[index]}
                                     onChange={() => handleRowSelect(index)}
                                 />
-                            </th>
+                            </th> */}
+                            <td className="table-centered">{index + 1}</td>
                             {columns.map((column) => (
                                 <td key={column.key} className={column.className || 'table-centered'}>
                                     {column.format ? column.format(row[column.key]) : row[column.key]}
