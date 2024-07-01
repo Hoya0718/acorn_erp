@@ -20,11 +20,8 @@ const TopProd = () => {
             try {
                 const response_Amount = await instance.get('/customer/getTop3ByTotalAmount');
                 const data_Amount = response_Amount.data;
-                // console.log("getTop3ByTotalAmount Data: ", data_Amount);
-                // console.log("selectedRegion: ", selectedRegion);
                 const response_Count = await instance.get('/customer/getTop3ByTotalCount');
                 const data_Count = response_Count.data;
-                // console.log("ggetTop3ByTotalCount Data: ", data_Count);
                 //const response_Rating = await instance.get('/customer/getTop3ByRating');
                 //const data_Rating = response_Rating.data;
 
@@ -46,9 +43,6 @@ const TopProd = () => {
                                 selectedRegion === '시도' ? item.regionPreference_city :
                                 item.regionPreference_town,
                     }));
-                    console.log("item.regionPreference_province :", data_Count.regionPreference_province);
-                    console.log("item.regionPreference_city :", data_Count.regionPreference_city);
-                    console.log("item.regionPreference_town :", data_Count.regionPreference_town);
                     
                     // const favoData = data_Rating.map(item => ({
                     //     prod: item.itemName,

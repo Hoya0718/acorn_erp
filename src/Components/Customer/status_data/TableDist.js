@@ -21,8 +21,6 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
 
                 const data = response_tableData.data;
                 const genderAge = data.genderAge;
-                console.log("getCountAll Data: ", genderAge);
-                console.log("selectedRegion: ", selectedRegion);
                 if (data && Object.keys(data).length > 0) {
                     //첫행 제목 데이터
                     const allCols = new Set();
@@ -36,7 +34,6 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
                     } else if (selectedRegion === '시군구') {
                         regionData = data.region.Town;
                     }
-                    console.log("regionData: ", regionData);
 
 
                     Object.values(genderAge).forEach(section => {
@@ -48,59 +45,59 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
                         Object.keys(regionData).forEach(section => {
                             allCols.add(section);
                         });
-
-                        setCols([...allCols]); //첫행제목
-                        console.log("Columns: ", [...allCols]); //여성남성30대20대 등
-
-                        //각행 첫재칸 데이터
-                        const allRows = new Set();
-                        const lv1 = Object.keys(data);
-
-                        lv1.forEach(key1 => {
-                            const level2Keys = Object.keys(data[key1]);
-                            level2Keys.forEach(key2 => {
-                                const level3Keys = Object.keys(data[key1][key2]);
-                                level3Keys.forEach(value => {
-                                    const level3Keys = Object.keys(data[key1][key2][value]);
-                                    level3Keys.forEach(grade => {
-                                        allRows.add(grade);
-                                    });
-                                });
-                            });
-                        });
-                        setRows([...allRows]); //첫열제목
-                        // console.log("Rows: ", [...allRows]); // 우수/일반/주의
-
-                        // 회원등급에 따른 데이터
-                        const goodDatas = [];
-                        const sosoDatas = [];
-                        const badDatas = [];
-
-                        lv1.forEach(key1 => {
-                            const level2Keys = Object.keys(data[key1]);
-                            level2Keys.forEach(key2 => {
-                                const level3Keys = Object.keys(data[key1][key2]);
-                                level3Keys.forEach(key3 => {
-                                    const level4Keys = Object.keys(data[key1][key2][key3]);
-                                    level4Keys.forEach(key4 => {
-                                        if (key4 === '우수') {
-                                            const goodValue = data[key1][key2][key3][key4];
-                                            goodDatas.push({ column: key3, value: goodValue });
-                                        } else if (key4 === '일반') {
-                                            const sosoValue = data[key1][key2][key3][key4];
-                                            sosoDatas.push({ column: key3, value: sosoValue });
-                                        } else if (key4 === '주의') {
-                                            const badValue = data[key1][key2][key3][key4];
-                                            badDatas.push({ column: key3, value: badValue });
-                                        }
-                                    });
-                                });
-                            });
-                        });
-                        setData_grade_good(goodDatas);
-                        setData_grade_soso(sosoDatas);
-                        setData_grade_bad(badDatas);
                     }
+                    setCols([...allCols]); //첫행제목
+                    // console.log("Columns: ", [...allCols]); //여성남성30대20대 등
+
+                    //각행 첫재칸 데이터
+                    const allRows = new Set();
+                    const lv1 = Object.keys(data);
+
+                    lv1.forEach(key1 => {
+                        const level2Keys = Object.keys(data[key1]);
+                        level2Keys.forEach(key2 => {
+                            const level3Keys = Object.keys(data[key1][key2]);
+                            level3Keys.forEach(value => {
+                                const level3Keys = Object.keys(data[key1][key2][value]);
+                                level3Keys.forEach(grade => {
+                                    allRows.add(grade);
+                                });
+                            });
+                        });
+                    });
+                    setRows([...allRows]); //첫열제목
+                    // console.log("Rows: ", [...allRows]); // 우수/일반/주의
+
+                    // 회원등급에 따른 데이터
+                    const goodDatas = [];
+                    const sosoDatas = [];
+                    const badDatas = [];
+
+                    lv1.forEach(key1 => {
+                        const level2Keys = Object.keys(data[key1]);
+                        level2Keys.forEach(key2 => {
+                            const level3Keys = Object.keys(data[key1][key2]);
+                            level3Keys.forEach(key3 => {
+                                const level4Keys = Object.keys(data[key1][key2][key3]);
+                                level4Keys.forEach(key4 => {
+                                    if (key4 === '우수') {
+                                        const goodValue = data[key1][key2][key3][key4];
+                                        goodDatas.push({ column: key3, value: goodValue });
+                                    } else if (key4 === '일반') {
+                                        const sosoValue = data[key1][key2][key3][key4];
+                                        sosoDatas.push({ column: key3, value: sosoValue });
+                                    } else if (key4 === '주의') {
+                                        const badValue = data[key1][key2][key3][key4];
+                                        badDatas.push({ column: key3, value: badValue });
+                                    }
+                                });
+                            });
+                        });
+                    });
+                    setData_grade_good(goodDatas);
+                    setData_grade_soso(sosoDatas);
+                    setData_grade_bad(badDatas);
+
                 } else {
                     console.error('Received empty or undefined data');
                 }

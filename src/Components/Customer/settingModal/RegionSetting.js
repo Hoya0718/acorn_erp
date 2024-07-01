@@ -30,8 +30,6 @@ const SettingModal_Region = () => {
             setSelectedRegion(selectedRegion || '전국');
             setSelectedProvince(selectedProvince || '');
             setSelectedCity(selectedCity || '');
-            console.log('selectedProvince',selectedProvince)
-            console.log('selectedCity',selectedCity)
         } else {
             setSelectedRegion('전국');
         }

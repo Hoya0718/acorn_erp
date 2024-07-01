@@ -43,7 +43,6 @@ const [rows, setRows] = React.useState([]);
         try {
             const response_tableData = await instance.get('/customer/getListRankTable');
             const data = response_tableData.data; 
-            //console.log("data_getListProdTable: ", data);
             setRows(data);
         }catch (error) {
           console.error('Error get TableData_rank:', error);

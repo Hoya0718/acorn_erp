@@ -14,7 +14,6 @@ const LocationSelector_Provinces = ({ onSelectProvince, selectedProvince }) => {
         if (response.data.admVOList && Array.isArray(response.data.admVOList)) {
           setProvinces(response.data.admVOList);
           
-          // console.log("API province", provinces);
         } else {
           console.error('Expected an array but got:', response.data);
           setProvinces([]); // 빈 배열로 설정

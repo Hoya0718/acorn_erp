@@ -11,14 +11,14 @@ import { useCustomerStatus } from '../settingModal/CustomerStatusSettingContext'
 // Chart.js 요소 등록
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const Dist = () => {
+const Dist = ({selectedCityName}) => {
     const {
         selectedRegion, setSelectedRegion,
         selectedProvince, setSelectedProvince,
         selectedCity, setSelectedCity,
     } = useCustomerStatus();
-
     const [chartNames, setChartNames] = React.useState([]);
+    console.log("selectedCityName : ", selectedCityName);
     // const { selectedRegion, selectedProvince, selectedCity } = useCustomerStatus();
     const [chartData, setChartData] = React.useState({
         ageGroupData: null,
@@ -37,7 +37,6 @@ const Dist = () => {
                 const data_age = response_age.data;
                 const ageChartLabels = Object.keys(data_age);
                 const ageChartValues = Object.values(data_age);
-                //console.log("ageChartValues: ", ageChartValues);
 
                 const ageGroupData = {
                     labels: ageChartLabels,
@@ -53,7 +52,7 @@ const Dist = () => {
                 const data_gender = response_gender.data;
                 const genderChartLabels = Object.keys(data_gender);
                 const genderChartValues = Object.values(data_gender);
-                //console.log("genderChartValues: ", genderChartValues);
+                
                 const genderGroupData = {
                     labels: genderChartLabels,
                     datasets: [{
@@ -63,26 +62,45 @@ const Dist = () => {
                         ],
                     }]
                 };
+                
 
                 const response_region = await instance.get('/customer/count_region_group');
                 const data_region = response_region.data;
-                // console.log('data_region',data_region);
+                
                 let labels = [];
                 let values = [];
                 if(selectedRegion==="전국"){
                     labels = Object.keys(data_region.Province);
                     values = Object.values(data_region.Province);
-                    // console.log('data_region',labels);
                 }
                 if(selectedRegion==="시도"){
                     labels = Object.keys(data_region.City);
                     values = Object.values(data_region.City);
-                    // console.log('data_region',labels);
                 }
                 if(selectedRegion==="시군구"){
-                    labels = Object.keys(data_region.Town);
-                    values = Object.values(data_region.Town);
-                    // console.log('data_region',labels);
+                    const selectedCityData = {};
+                    const otherTowns = {};
+                    
+                    Object.keys(data_region.Town).forEach(city => {
+                        if (city === selectedCity) {
+                            Object.keys(data_region.Town[selectedCityName]).forEach(town => {
+                                selectedCityData[town] = selectedCityName[town];
+                            });
+                            console.log("data_region.Town[selectedCityName]",data_region.Town[selectedCityName])
+                        } else {
+                            // 타 시도의 타운 데이터 합산
+                            Object.keys(data_region.Town[selectedCityName]).forEach(town => {
+                                if (!otherTowns[town]) {
+                                    otherTowns[town] = 0;
+                                }
+                                otherTowns[town] += selectedCityName[town];
+                            });
+                        }
+                    });
+
+                    labels = [...Object.keys(selectedCityData), '기타'];
+                    values = [...Object.values(selectedCityData), Object.values(otherTowns).reduce((a, b) => a + b, 0)];
+                
                 }
                 setRegionChartLabels(labels);
 
@@ -95,7 +113,6 @@ const Dist = () => {
                     return colors;
                 };
                 // const regionChartValues = Object.values(data_region);
-                // console.log("regionChartValues: ", regionChartValues);
 
                 const numDataPoints = values.length; // numDataPoints 정의
                 const regionColors = generateColors(numDataPoints);

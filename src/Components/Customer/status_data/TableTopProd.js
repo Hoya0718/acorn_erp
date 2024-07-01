@@ -18,7 +18,6 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
       try {
         const response_tableData = await instance.get('/customer/getListProdTable');
         const data = response_tableData.data;
-        console.log("data_getListProdTable: ", data);
         setRows(data);
       } catch (error) {
         console.error('Error get TableData_prod:', error);
