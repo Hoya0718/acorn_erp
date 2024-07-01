@@ -20,7 +20,8 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
                 const response_tableData = await instance.post('/customer/getCountAll');
 
                 const data = response_tableData.data;
-                // console.log("getCountAll Data: ", data);
+                const genderAge = data.genderAge;
+                console.log("getCountAll Data: ", genderAge);
                 console.log("selectedRegion: ", selectedRegion);
                 if (data && Object.keys(data).length > 0) {
                     //첫행 제목 데이터
@@ -35,15 +36,17 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
                     } else if (selectedRegion === '시군구') {
                         regionData = data.region.Town;
                     }
-                    console.log("sregionData: ", regionData);
-                    
+                    console.log("regionData: ", regionData);
+
+
+                    Object.values(genderAge).forEach(section => {
+                        Object.keys(section).forEach(item => {
+                            allCols.add(item);
+                        });
+                    });
                     if (regionData) {
-                        Object.values(data).forEach(section => {
-                            Object.values(section).forEach(title => {
-                                Object.keys(title).forEach(item => {
-                                    allCols.add(item);
-                                });
-                            });
+                        Object.keys(regionData).forEach(section => {
+                            allCols.add(section);
                         });
 
                         setCols([...allCols]); //첫행제목
