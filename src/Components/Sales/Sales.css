@@ -55,20 +55,19 @@
   background-color: #000;
   color: #fff;
   border: none;
-  padding: 5px 20px;
+  padding: 2px 5px;
   cursor: pointer;
   border-radius: 4px;
-  margin-right: 8px; /* 각 버튼 사이의 간격 설정 */
 }
 /* 추가 */
 .items-subTitle-button {
   background-color: #000;
   color: #fff;
   border: none;
-  padding: 5px 20px;
+  padding: 2px 5px;
   cursor: pointer;
   border-radius: 4px;
-  margin-right: 8px; /* 각 버튼 사이의 간격 설정 */
+  margin-left: 12px; /* 각 버튼 사이의 간격 설정 */
 }
 
 .items-subTitle button:hover {
@@ -115,4 +114,51 @@
   cursor: pointer;
   border-radius: 4px;
   margin-right: 8px; /* 각 버튼 사이의 간격 설정 */
+}
+
+
+
+
+
+/* 테이블 스타일 */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center; /* 컬럼명 가운데 정렬 */
+  color: black;
+}
+
+.table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+/* 입력 필드 스타일 */
+.table input,
+.table select {
+  width: 90%;
+  padding: 4px;
+  margin: 2px 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.table input:focus,
+.table select:focus {
+  outline: none;
+
+  background-color: #fff;
+}
+
+/* 상품수량 입력 필드 스타일 */
+.table input[type="number"] {
+  width: 100px;
 }

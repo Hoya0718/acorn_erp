@@ -31,13 +31,16 @@
 }
 .main-content1 {
   /* border: 1px solid blue; */
-  width: 85%;
-  padding-top: 40px;
+  width: 100%;
+  padding-top: 35px;
+  padding-right: 30px;
   padding-left: 30px;
   background-color: #ffffff;
   box-sizing: border-box;
-  margin-left: 15%; /* 사이드바 너비만큼 왼쪽으로 이동 */
-  margin-top: 8vh; /* 헤더의 높이만큼 아래로 이동 */
+
+  margin-left: 12%; /* 사이드바 너비만큼 왼쪽으로 이동 */
+  margin-top: 10vh; /* 헤더의 높이만큼 아래로 이동 */
+
 }
 
 
@@ -54,7 +57,7 @@ li {
   /* border: 1px solid yellow; */
   border-right: 1px solid #f0f0f0;
   height: 100%;
-  width: 15%;
+  width: 12%; /* 사이드바 너비 */
   overflow-y: auto;
   float: left;
   position: fixed;
