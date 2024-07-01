@@ -115,10 +115,10 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
         }
         fetchTableData();
     }, [activeLabel]);
-    // 상태가 변경될 때마다 콘솔 로그 출력
-    React.useEffect(() => {
-        //console.log("data_grade_soso: ", data_grade_soso);
-    }, [data_grade_soso]);
+    // // 상태가 변경될 때마다 콘솔 로그 출력
+    // React.useEffect(() => {
+    //     //console.log("data_grade_soso: ", data_grade_soso);
+    // }, [data_grade_soso]);
 
     const getColumns = () => {
         return cols.map(col => ({
