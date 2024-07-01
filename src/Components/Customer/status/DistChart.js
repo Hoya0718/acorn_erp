@@ -86,15 +86,25 @@ const Dist = () => {
                 }
                 setRegionChartLabels(labels);
 
+                const generateColors = (numColors) => {
+                    const colors = [];
+                    for (let i = 0; i < numColors; i++) {
+                        const color = `hsl(${Math.floor(Math.random() * 360)}, 100%, 75%)`;
+                        colors.push(color);
+                    }
+                    return colors;
+                };
                 // const regionChartValues = Object.values(data_region);
                 // console.log("regionChartValues: ", regionChartValues);
+
+                const numDataPoints = values.length; // numDataPoints 정의
+                const regionColors = generateColors(numDataPoints);
+
                 setRegionChartData({
                     labels: labels,
                     datasets: [{
                         data: values,
-                        backgroundColor: [
-                            '#FF6384', '#36A2EB', '#FF9F40', '#FFCE56', '#4BC0C0', '#9966FF',
-                        ],
+                        backgroundColor: regionColors,
                     }]
                 });
 
@@ -113,19 +123,19 @@ const Dist = () => {
 
                     const charts = [];
                     if (checkboxes_dist.gender && chartData.genderGroupData) {
+                        
                         charts.push({ data: chartData.genderGroupData, label: '성별' });
                     }
                     if (checkboxes_dist.age && chartData.ageGroupData) {
                         charts.push({ data: chartData.ageGroupData, label: '연령별' });
                     }
                     if (checkboxes_dist.region) {
+                        const backgroundColors = generateColors(numDataPoints);
                         charts.push({ data: {
                             labels: labels,
                             datasets: [{
                                 data: values,
-                                backgroundColor: [
-                                    '#FF6384', '#36A2EB', '#FF9F40', '#FFCE56', '#4BC0C0', '#9966FF',
-                                ],
+                                backgroundColor: backgroundColors,
                             }]
                         }, label: '지역별' });
                     }
