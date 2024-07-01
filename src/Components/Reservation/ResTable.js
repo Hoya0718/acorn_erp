@@ -62,7 +62,7 @@ const ResTable = () => {
               </th>
               <th scope="row">{reservation.id}</th>
               <td>{reservation.name}</td>
-              <td>{reservation.date}</td>
+              <td>{reservation.reservationDate}</td>
               <td>{reservation.requests}</td>
               <td>{reservation.payment}</td>
             </tr>
