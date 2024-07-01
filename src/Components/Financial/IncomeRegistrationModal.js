@@ -4,17 +4,30 @@ import ModalForm from './ModalForm';
 const IncomeRegistrationModal = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
-    "상품번호": '',
-    "상품구분": '',
-    "상품명": '',
-    "매입처": '',
-    "거래일시": '',
-    "결제상태": '완료', // 기본값 설정
-    "금액": '',
-    "단가": '',
-    "수량": '',
-    "특이사항": '',
+    proNo: '',
+    proDsc: '',
+    pronm: '',
+    cusnm: '',
+    proDtm: '',
+    paySts: '',
+    pay: '',
+    unitPay: '',
+    proNumber: '',
+    etc: '',
   });
+
+  const columns = [
+    { header: "상품번호", key: "proNo" },
+    { header: "상품구분", key: "proDsc" },
+    { header: "상품명", key: "pronm" },
+    { header: "매입처", key: "cusnm" },
+    { header: "거래일시", key: "proDtm" },
+    { header: "결제상태", key: "paySts" },
+    { header: "금액", key: "pay" },
+    { header: "단가", key: "unitPay" },
+    { header: "수량", key: "proNumber" },
+    { header: "특이사항", key: "etc" },
+  ];
 
   const handleModalShow = () => {
     const selectedData = data.find(row => row.checked);
@@ -29,16 +42,16 @@ const IncomeRegistrationModal = ({ data, setData }) => {
   const handleModalClose = () => {
     setShowModal(false);
     setFormData({
-      "상품번호": '',
-      "상품구분": '',
-      "상품명": '',
-      "매입처": '',
-      "거래일시": '',
-      "결제상태": '완료',
-      "금액": '',
-      "단가": '',
-      "수량": '',
-      "특이사항": '',
+      proNo: '',
+      proDsc: '',
+      pronm: '',
+      cusnm: '',
+      proDtm: '',
+      paySts: '',
+      pay: '',
+      unitPay: '',
+      proNumber: '',
+      etc: '',
     });
   };
 
@@ -46,16 +59,17 @@ const IncomeRegistrationModal = ({ data, setData }) => {
     const { name, value } = e.target;
     let updatedFormData = { ...formData, [name]: value };
 
-    if (name === '단가' || name === '수량') {
-      const 단가 = parseFloat(updatedFormData['단가']) || 0;
-      const 수량 = parseFloat(updatedFormData['수량']) || 0;
-      updatedFormData['금액'] = (단가 * 수량).toString();
+    if (name === 'unitPay' || name === 'proNumber') {
+      const unitPay = parseFloat(updatedFormData['unitPay']) || 0;
+      const proNumber = parseFloat(updatedFormData['proNumber']) || 0;
+      updatedFormData['pay'] = (unitPay * proNumber).toString();
     }
 
     setFormData(updatedFormData);
   };
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
     const updatedData = data.map((row) =>
       row.checked ? { ...formData, checked: row.checked } : row
     );
@@ -83,8 +97,8 @@ const IncomeRegistrationModal = ({ data, setData }) => {
         handleInputChange={handleInputChange}
         handleSubmit={handleFormSubmit}
         formData={formData}
-        columns={Object.keys(formData)}
-        modalContent="수정"
+        columns={columns}
+        modalContent="거래명세서 수정"
       />
     </>
   );
