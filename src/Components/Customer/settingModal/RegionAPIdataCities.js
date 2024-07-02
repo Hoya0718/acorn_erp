@@ -5,8 +5,6 @@ import axios from 'axios';
 
 const LocationSelector_Cities = ({ selectedProvince, onSelectCity, selectedCity, }) => {
   const [cities, setCities] = useState([]);
-  const [selectedProvinceName, setSelectedProvinceName] = useState('');
-  const [selectedCityName, setSelectedCityName] = useState('');
   useEffect(() => {
     if (selectedProvince) {
       // 선택된 광역시도의 시군구 데이터를 가져오는 함수
@@ -15,7 +13,7 @@ const LocationSelector_Cities = ({ selectedProvince, onSelectCity, selectedCity,
           const response = await axios.get('http://localhost:5000/api/cities', {
             params: { provinceCode: selectedProvince } 
           });
-          
+          console.log("response",response.data)
           const { admVOList } = response.data.admVOList;
           if (admVOList && Array.isArray(admVOList)) {
             setCities(admVOList);
@@ -24,7 +22,6 @@ const LocationSelector_Cities = ({ selectedProvince, onSelectCity, selectedCity,
             console.log('cities_null:');
             setCities([]);
           }
-          setSelectedProvinceName(response.data.province);
            } catch (error) {
           console.error('Error fetching cities:', error);
           setCities([]); // 빈 배열로 설정
@@ -37,19 +34,12 @@ const LocationSelector_Cities = ({ selectedProvince, onSelectCity, selectedCity,
     }
   }, [selectedProvince]);
 
-  const handleCityChange = (e) => {
-    const selectedAdmCode = e.target.value;
-    const selectedCityObj = cities.find(city => city.admCode === selectedAdmCode);
-    
-    setSelectedCityName(selectedCityObj ? selectedCityObj.lowestAdmCodeNm : '');
-    onSelectCity(selectedAdmCode);
-  };
   
   return (
     <select
       id="city"
       value={selectedCity}
-      onChange={(e) => { handleCityChange(e); onSelectCity(e.target.value); }}
+      onChange={(e) => { onSelectCity(e.target.value); }}
       disabled={!selectedProvince}
     >
       <option value="">시군구</option>

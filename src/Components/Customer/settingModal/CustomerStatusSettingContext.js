@@ -33,7 +33,7 @@ export const CustomerStatusProvider = ({ children }) => {
   //Region설정
   const [selectedRegion, setSelectedRegion] = useState('전국');
   const [selectedProvince, setSelectedProvince,] = useState('');
-  const [selectedCity, setSelectedCity,] = useState('');
+  const [selectedCity, setSelectedCity, ] = useState('');
 
   useEffect(() => {
 
