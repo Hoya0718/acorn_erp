@@ -31,12 +31,17 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
         
         setFilteredData(page.content);
         setTotalItems(page.totalElements);
+        handleTable(activeLabel, data);
       } catch (error) {
         console.error('Error get TableData_prod:', error);
       }
     }
     fetchTableData();
   }, [activeLabel, selectedRegion, currentPage, rowsPerPage]);
+
+  React.useEffect(() => {
+    handleTable(activeLabel, rows);
+  }, [activeLabel, currentPage, rowsPerPage, rows]);
 
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -66,6 +71,8 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
           { header: '거래횟수', key: 'totalCountForProduct', format: (value) => value.toLocaleString(), className: 'table-centered' },
           //{ header: '평점', key: 'salesRating', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '거래금액', key: 'totalAmountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
+          { header: '성별선호도', key: 'genderPreference', className: 'table-centered' },
+          { header: '연령별선호도', key: 'agePreference', className: 'table-centered' },
           {
             header: '지역별선호도',
             key: selectedRegion === '전국' ? 'regionPreference_province' :
@@ -80,6 +87,8 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
           //{ header: '평점', key: 'salesRating', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '거래금액', key: 'totalAmountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
           { header: '거래횟수', key: 'totalCountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
+          { header: '성별선호도', key: 'genderPreference', className: 'table-centered' },
+          { header: '연령별선호도', key: 'agePreference', className: 'table-centered' },
           {
             header: '지역별선호도',
             key: selectedRegion === '전국' ? 'regionPreference_province' :
@@ -94,6 +103,9 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
           //{ header: '평점', key: 'salesRating', format: (value) => value.toLocaleString(), className: 'table-centered' },
           { header: '거래금액', key: 'totalAmountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
           { header: '거래횟수', key: 'totalCountForProduct', format: (value) => value.toLocaleString(), className: 'table-righted' },
+          { header: '성별선호도', key: 'genderPreference', className: 'table-centered' },
+          { header: '연령별선호도', key: 'agePreference', className: 'table-centered' },
+         
           {
             header: '지역별선호도',
             key: selectedRegion === '전국' ? 'regionPreference_province' :
@@ -105,19 +117,21 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
     }
   }
 
-  React.useEffect(() => {
-    handleTable(activeLabel);
-  }, [activeLabel]);
+  // React.useEffect(() => {
+  // }, [activeLabel]);
 
-  const handleTable = (label) => {
+  const handleTable = (activeLabel, rows) => {
     let sortedRows = [...rows];
-    if (label === '최고매출') {
-      sortedRows.sort((a, b) => b.orderAmount - a.orderAmount);
+    if (activeLabel === '최고매출') {
+      sortedRows.sort((a, b) => b.totalAmountForProduct - a.totalAmountForProduct);
     }
-    if (label === '최다거래') {
-      sortedRows.sort((a, b) => b.orderCount - a.orderCount);
+    if (activeLabel === '최다거래') {
+      sortedRows.sort((a, b) => b.totalCountForProduct - a.totalCountForProduct);
     }
-    setRows(sortedRows);
+    if (activeLabel === '반응좋은') {
+      sortedRows.sort((a, b) => b.salesRating - a.salesRating);
+    }
+    setFilteredData(sortedRows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
   }
 
   const handleSort = (key, direction) => {

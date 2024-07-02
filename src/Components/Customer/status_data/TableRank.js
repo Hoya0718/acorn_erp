@@ -25,6 +25,7 @@ const [filteredData, setFilteredData] = React.useState([]);
             const page = response_pageData.data;
             setFilteredData(page.content);
             setTotalItems(page.totalElements);
+            handleTable(activeLabel, data);
         }catch (error) {
           console.error('Error get TableData_rank:', error);
       }
@@ -32,6 +33,10 @@ const [filteredData, setFilteredData] = React.useState([]);
       fetchTableData();
     }, [activeLabel, currentPage, rowsPerPage]);
     
+  React.useEffect(() => {
+    handleTable(activeLabel, rows);
+  }, [activeLabel, currentPage, rowsPerPage, rows]);
+
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const currentData = rows.slice(startIndex, endIndex);
@@ -68,22 +73,18 @@ const [filteredData, setFilteredData] = React.useState([]);
     }
   };
 
-  React.useEffect(() => {
-    handleTable(activeLabel);
-  }, [activeLabel]);
+  // React.useEffect(() => {
+  // }, [activeLabel]);
 
-  const handleTable = (label) => {
+  const handleTable = (activeLabel, rows) => {
     let sortedRows = [...rows];
-    if (label === '최다거래' || label === '상품별') {
-      sortedRows.sort((a, b) => b.orderAmount - a.orderAmount);
+    if (activeLabel === '최고금액고객' || sortedRows === '고객랭킹') {
+      sortedRows.sort((a, b) => b.totalAmountForCustomer - a.totalAmountForCustomer);
     }
-    if (label === '최고금액') {
-      sortedRows.sort((a, b) => b.orderCount - a.orderCount);
+    if (activeLabel === '최다거래고객') {
+      sortedRows.sort((a, b) => b.totalCountForCustomer - a.totalCountForCustomer);
     }
-    if (label === '반응좋은') {
-      sortedRows.sort((a, b) => b.orderCount - a.orderCount);
-    }
-    setRows(sortedRows);
+    setFilteredData(sortedRows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
   }
 
   const handleSort = (key, direction) => {
