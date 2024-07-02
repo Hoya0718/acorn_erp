@@ -11,6 +11,7 @@ const CustomerStatusPagination = ({ totalItems, itemsPerPage, currentPage, onPag
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
+      console.log(`Changing to page ${page}`);
       onPageChange(page);
     }
   };

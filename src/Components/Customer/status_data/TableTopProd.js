@@ -9,9 +9,13 @@ import instance from './../../../api/axios';
 import { useCustomerStatus } from '../settingModal/CustomerStatusSettingContext';
 
 
-const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPerPage, currentPage, onPageChange }) => {
+const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange }) => {
   const { selectedRegion } = useCustomerStatus();
   const [rows, setRows] = React.useState([]);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [totalItems, setTotalItems] = React.useState(0);
+  const [itemsPerPage, setItemsPerPage] = React.useState(10); 
+  const [filteredData, setFilteredData] = React.useState([]);
 
   React.useEffect(() => {
     const fetchTableData = async () => {
@@ -19,12 +23,18 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
         const response_tableData = await instance.get('/customer/getListProdTable');
         const data = response_tableData.data;
         setRows(data);
+
+        const response_pageData = await instance.post(`/customer/getListProdTable?page=${currentPage - 1}&size=${itemsPerPage}`);
+        const page = response_pageData.data;
+        
+        setFilteredData(page.content);
+        setTotalItems(page.totalElements);
       } catch (error) {
         console.error('Error get TableData_prod:', error);
       }
     }
     fetchTableData();
-  }, [activeLabel, selectedRegion]);
+  }, [activeLabel, selectedRegion, currentPage, itemsPerPage]);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -116,11 +126,14 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort, totalItems, itemsPer
     <div>
       <TableModule data={currentData} columns={getColumns(activeLabel)} onSort={onSort} />
       <CustomerStatusPagination
-        totalItems={totalItems}
-        itemsPerPage={itemsPerPage}
-        currentPage={currentPage}
-        onPageChange={onPageChange}
-      />
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
+        <br></br>
+        <br></br>
+        <br></br>
     </div>
   );
 }

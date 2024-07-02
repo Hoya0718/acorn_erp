@@ -7,12 +7,15 @@ import TableModule from "../modules/TableModule"
 import CustomerStatusPagination from '../modules/PaginationModule';
 import instance from './../../../api/axios';
 
-const CustomerStatusTable_Rank = ({ activeLabel, onSort, totalItems, itemsPerPage, currentPage, onPageChange}) => {
+const CustomerStatusTable_Rank = ({ activeLabel, onSort, onPageChange, rowsPerPage}) => {
   // 예제 데이터
 const [rows, setRows] = React.useState([]);
+const [currentPage, setCurrentPage] = React.useState( 1);
+const [totalItems, setTotalItems] = React.useState(0);
+const [filteredData, setFilteredData] = React.useState([]);
 
-  // const startIndex = (currentPage - 1) * itemsPerPage;
-  // const endIndex = startIndex + itemsPerPage;
+  // const startIndex = (currentPage - 1) * rowsPerPage;
+  // const endIndex = startIndex + rowsPerPage;
   // const currentData = rows.slice(startIndex, endIndex);
 
   // const handlePageChange = (page) => {
@@ -44,13 +47,25 @@ const [rows, setRows] = React.useState([]);
             const response_tableData = await instance.get('/customer/getListRankTable');
             const data = response_tableData.data; 
             setRows(data);
+
+            const response_pageData = await instance.post(`/customer/getListRankTable?page=${currentPage - 1}&size=${rowsPerPage}`);
+            const page = response_pageData.data;
+            setFilteredData(page.content);
+            setTotalItems(page.totalElements);
+
+            console.log(page.totalElements);
+            console.log(totalItems);
         }catch (error) {
           console.error('Error get TableData_rank:', error);
       }
       }
       fetchTableData();
-    }, [activeLabel]);
+    }, [activeLabel, currentPage, rowsPerPage]);
     
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentData = rows.slice(startIndex, endIndex);
+
   const getColumns = (label) => {
     switch (label) {
       case '최고금액고객':
@@ -103,13 +118,16 @@ const [rows, setRows] = React.useState([]);
 
   return (
     <div>
-      <TableModule data={rows} columns={getColumns(activeLabel)} onSort={onSort} />
+      <TableModule data={currentData} columns={getColumns(activeLabel)} onSort={onSort} />
       <CustomerStatusPagination
         totalItems={totalItems}
-        itemsPerPage={itemsPerPage}
+        itemsPerPage={rowsPerPage}
         currentPage={currentPage}
-        onPageChange={onPageChange}
+        onPageChange={setCurrentPage}
       /> 
+      <br></br>
+      <br></br>
+      <br></br>
     </div>
   );
 }

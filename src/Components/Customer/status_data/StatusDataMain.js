@@ -19,41 +19,11 @@ const Customer_status = () => {
   const [activeLabel, setActiveLabel] = React.useState('고객분포');  //탭버튼 상태(소분류)
   const [period, setPeriod] = React.useState({}); //기간
   const [keyword, setKeyword] = React.useState(''); //검색어
-  const [tableData, setTableData] = React.useState([]); //전체 데이터
-  const [filteredData, setFilteredData] = React.useState([]); //기간 및 검색어의해 걸러진 데이터
   const [rowsPerPage, setRowsPerPage] = React.useState(10); //블럭당 보여질 행 갯수
   const [currentPage, setCurrentPage] = React.useState(1);  //현재 페이지
 
-  React.useEffect(() => {
-    setFilteredData(tableData);
-  }, [tableData]);
 
-  const handleSearch = () => {
-    //const data = [{ header: '10대이하', key: 'age_10', format: (value) => value.toLocaleString(), className: 'table-centered' }];
-    const [data, setDatas] = [
-    //   { productName: '상품1', salesCount: 10, salesAmount: 1000, salesRating: 4.7, preferredgender: '남성', preferredageGroup: '30대', preferredregionGroup: '서울', },
-    ];
-    const filtered = tableData.filter(item => {
-      const withinPeriod = period.startDate && period.endDate ?
-        new Date(item.date) >= new Date(period.startDate) && new Date(item.date) <= new Date(period.endDate) :
-        true;
-      const matchesKeyword = item.name.includes(keyword);
-      return withinPeriod && matchesKeyword;
-    });
-    setFilteredData(filtered);
-  };
-  const handleSort = (key, direction) => {
-    if (direction) {
-      const sortedData = [...filteredData].sort((a, b) => {
-        if (a[key] < b[key]) return direction === 'ascending' ? -1 : 1;
-        if (a[key] > b[key]) return direction === 'ascending' ? 1 : -1;
-        return 0;
-      });
-      setFilteredData(sortedData);
-    } else {
-      setFilteredData(tableData);
-    }
-  };
+
   const handleRowsPerPageChange = (event) => {
     setRowsPerPage(Number(event.target.value));
   }
@@ -61,9 +31,6 @@ const Customer_status = () => {
     setCurrentPage(page);
   };
   const renderTable = () => {
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    const endIndex = startIndex + rowsPerPage;
-    const currentData = filteredData.slice(startIndex, endIndex);
 
     switch (activeTab) {
       case 'distribution':
@@ -71,8 +38,8 @@ const Customer_status = () => {
           <div>
             <Table_Dist
               activeLabel={activeLabel}
-              data={currentData}
-              onSort={handleSort}
+              rowsPerPage={rowsPerPage}
+              onPageChange={handlePageChange}
             />
           </div>
         )
@@ -81,17 +48,7 @@ const Customer_status = () => {
           <div>
             <Table_Prod
               activeLabel={activeLabel}
-              data={currentData}
-              onSort={handleSort}
-              totalItems={filteredData.length}
-              itemsPerPage={rowsPerPage}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            />
-            <CustomerStatusPagination
-              totalItems={filteredData.length}
-              itemsPerPage={rowsPerPage}
-              currentPage={currentPage}
+              rowsPerPage={rowsPerPage}
               onPageChange={handlePageChange}
             />
           </div>
@@ -101,17 +58,7 @@ const Customer_status = () => {
           <div>
             <Table_Rank
               activeLabel={activeLabel}
-              data={currentData}
-              onSort={handleSort}
-              totalItems={filteredData.length}
-              itemsPerPage={rowsPerPage}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            />
-            <CustomerStatusPagination
-              totalItems={filteredData.length}
-              itemsPerPage={rowsPerPage}
-              currentPage={currentPage}
+              rowsPerPage={rowsPerPage}
               onPageChange={handlePageChange}
             />
           </div>
@@ -159,10 +106,10 @@ const Customer_status = () => {
                 <br></br>
               </div>
               <div className='col-1 centered'>
-                <SearchButton onSearch={handleSearch} />
+                {/* <SearchButton onSearch={handleSearch} /> */}
               </div>
             </div>
-            {renderTable()}
+            {renderTable() }
           </form>
         </section>
       </div>
