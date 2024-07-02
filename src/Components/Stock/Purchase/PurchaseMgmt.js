@@ -1,38 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import PurchaseList from './PurchaseList'; // PurchaseList로 변경
+import PurchaseList from './PurchaseList';
 import ExcelPrint from './ExcelPrint';
+import DistributionMgmt from '../Distribution/DistributionMgmt';
 import {
-  fetchPurchases, handleAddClick, handleUpdateClick, handleDeleteClick, handleSubmitAdd,
-  handleSubmitUpdate, handleCheckboxChange, handleSelectAll, handleChangeNewPurchase, // 함수 이름 변경
-  handleChangeUpdatePurchase, handleCancelAdd, handleCancelUpdate,
-} from './Functions'; // Functions.js에서 모든 필요한 함수들을 import합니다.
+  fetchPurchases,
+  handleAddClick,
+  handleUpdateClick,
+  handleDeleteClick,
+  handleSubmitAdd,
+  handleSubmitUpdate,
+  handleCheckboxChange,
+  handleSelectAll,
+  handleChangeNewPurchase,
+  handleChangeUpdatePurchase,
+  handleCancelAdd,
+  handleCancelUpdate
+} from './Functions';
 
 const PurchaseMgmt = () => {
-  const [purchases, setPurchases] = useState([]); // purchases로 변수명 변경
-  const [newPurchase, setNewPurchase] = useState({ // newPurchase로 변수명 변경
-    purchaseName: '', purchaseUnit: '', orderDate: '', orderQty: 0, price: 0, remark: '', // 필드명 변경
+  const [purchases, setPurchases] = useState([]);
+  const [newPurchase, setNewPurchase] = useState({
+    purchaseCode: '',
+    purchaseName: '',
+    purchaseUnit: '',
+    orderDate: '',
+    orderQty: 0,
+    price: 0,
+    remark: ''
   });
-  const [updatePurchase, setUpdatePurchase] = useState(null); // updatePurchase로 변수명 변경
-  const [selectedPurchases, setSelectedPurchases] = useState([]); // selectedPurchases로 변수명 변경
+  const [updatePurchase, setUpdatePurchase] = useState(null);
+  const [selectedPurchases, setSelectedPurchases] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [isAddClicked, setIsAddClicked] = useState(false);
-  const [isUpdateClicked, setIsUpdateClicked] = useState(false); // isUpdateClicked 변수 추가
+  const [isUpdateClicked, setIsUpdateClicked] = useState(false);
 
   useEffect(() => {
-    fetchPurchases(setPurchases); // fetchPurchases로 변경
+    fetchPurchases(setPurchases);
   }, []);
 
   const handleAddClickWrapper = () => {
-    handleAddClick(setIsAddClicked, setIsUpdateClicked); // handleAddClick로 변경
+    handleAddClick(setIsAddClicked, setIsUpdateClicked);
   };
 
   const handleCancelForm = () => {
     setIsAddClicked(false);
     setIsUpdateClicked(false);
     setNewPurchase({
-      purchaseName: '', purchaseUnit: '', orderDate: '', orderQty: 0, price: 0, remark: '', // 필드명 변경
+      purchaseCode: '',
+      purchaseName: '',
+      purchaseUnit: '',
+      orderDate: '',
+      orderQty: 0,
+      price: 0,
+      remark: ''
     });
-    setUpdatePurchase(null); // setUpdatePurchase로 변경
+    setUpdatePurchase(null);
   };
 
   return (
@@ -69,15 +91,14 @@ const PurchaseMgmt = () => {
         <div className="right">
           <input type="text" placeholder='🔍 검색' /><button>조회 &gt;</button>
         </div>
-      </div>
-      <br />
-
+      </div> <br />
+     
       {/* PurchaseList 컴포넌트에 필요한 props 모두 전달 */}
       <PurchaseList
         purchases={purchases} 
         selectedPurchases={selectedPurchases}
         selectAll={selectAll}
-        handleCheckboxChange={(purchaseCode) => handleCheckboxChange(purchaseCode, selectedPurchases, setSelectedPurchases)} 
+        handleCheckboxChange={(purchaseId) => handleCheckboxChange(purchaseId, selectedPurchases, setSelectedPurchases)} 
         handleSelectAll={() => handleSelectAll(selectAll, purchases, setSelectedPurchases, setSelectAll)} 
         handleUpdateClick={() => handleUpdateClick(selectedPurchases, purchases, setUpdatePurchase, setIsUpdateClicked, setIsAddClicked)} 
         handleDeleteClick={() => handleDeleteClick(selectedPurchases, purchases, setPurchases, setSelectedPurchases)} 
@@ -93,8 +114,8 @@ const PurchaseMgmt = () => {
         isUpdateClicked={isUpdateClicked} 
       /> <br/>
 
-       {/* 엑셀&인쇄 */}
-       <div className="excel-print">
+      {/* 엑셀&인쇄 */}
+      <div className="excel-print">
         <ExcelPrint purchases={purchases}/>       
       </div>
     </div>

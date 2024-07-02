@@ -1,3 +1,5 @@
+// PurchaseForm.js
+
 import React from 'react';
 import './Purchase.css';
 
@@ -16,15 +18,17 @@ const PurchaseForm = ({
         <input
           className="form-input"
           type="text"
-          placeholder="/" 
-          readOnly
+          value={purchaseData.purchaseCode}
+          onChange={(e) => handleChange('purchaseCode', e.target.value)}
+          placeholder="발주 코드"
+          required
         />
       </td>
       <td>
         <input
           className="form-input"
           type="text"
-          value={purchaseData.purchaseName} 
+          value={purchaseData.purchaseName}
           onChange={(e) => handleChange('purchaseName', e.target.value)}
           placeholder="발주 품목명"
           required
@@ -34,7 +38,7 @@ const PurchaseForm = ({
         <input
           className="form-input"
           type="text"
-          value={purchaseData.purchaseUnit} 
+          value={purchaseData.purchaseUnit}
           onChange={(e) => handleChange('purchaseUnit', e.target.value)}
           placeholder="발주 단위"
           required
@@ -44,7 +48,7 @@ const PurchaseForm = ({
         <input
           className="form-input"
           type="date"
-          value={purchaseData.orderDate} 
+          value={purchaseData.orderDate}
           onChange={(e) => handleChange('orderDate', e.target.value)}
           placeholder="발주 일자"
           required
@@ -54,7 +58,7 @@ const PurchaseForm = ({
         <input
           className="form-input"
           type="number"
-          value={purchaseData.orderQty} 
+          value={purchaseData.orderQty}
           onChange={(e) => handleChange('orderQty', e.target.value)}
           placeholder="발주 수량"
           required
@@ -64,7 +68,7 @@ const PurchaseForm = ({
         <input
           className="form-input"
           type="number"
-          value={purchaseData.price} 
+          value={purchaseData.price}
           onChange={(e) => handleChange('price', e.target.value)}
           placeholder="가격"
           required
@@ -74,13 +78,17 @@ const PurchaseForm = ({
         <input
           className="form-input"
           type="text"
-          value={purchaseData.remark} 
+          value={purchaseData.remark}
           onChange={(e) => handleChange('remark', e.target.value)}
           placeholder="특이사항"
         />
-         <button type="submit" className="items-subTitle-button" onClick={handleSubmit}>
-            {isNewPurchase ? '✔' : '✔'} 
-         </button>
+        <button
+          type="submit"
+          className="items-subTitle-button"
+          onClick={handleSubmit}
+        >
+          {isNewPurchase ? '등록' : '수정'}
+        </button>
       </td>
     </tr>
   );
