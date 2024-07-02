@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import "../Main/Main.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -7,23 +7,43 @@ import acornImage from './Acorn-illustration-png.png';  // 이미지 경로 설�
 
 const ReservationMgmt = () => {
   const [date, setDate] = useState(new Date());
-  const [reservations, setReservations] = useState([
-    { id: 1, name: '홍대희', date: '2024-02-14', requests: '준비물 X', payment: '카드결제', phone: '010-1234-5678', gender: '남성', count: 2 },
-    { id: 2, name: '홍시진', date: '2024-02-14', requests: '주차 필요합니다.', payment: '네이버페이', phone: '010-8765-4321', gender: '여성', count: 3 }
-  ]);
+  const [reservations, setReservations] = useState([]);
+
+  // 로컬 스토리지에서 데이터를 불러오는 함수
+  const loadReservationsFromLocalStorage = () => {
+    const savedReservations = localStorage.getItem('reservations');
+    if (savedReservations) {
+      return JSON.parse(savedReservations);
+    }
+    return [];
+  };
+
+  // 컴포넌트가 처음 마운트될 때 로컬 스토리지에서 데이터를 불러옴
+  useEffect(() => {
+    const initialReservations = loadReservationsFromLocalStorage();
+    setReservations(initialReservations);
+  }, []);
+
+  // 상태가 변경될 때마다 로컬 스토리지에 저장
+  useEffect(() => {
+    localStorage.setItem('reservations', JSON.stringify(reservations));
+  }, [reservations]);
 
   const addReservation = (newReservation) => {
-    setReservations([...reservations, newReservation]);
+    const updatedReservations = [...reservations, newReservation];
+    setReservations(updatedReservations);
   };
 
   const deleteReservations = (idsToDelete) => {
-    setReservations(reservations.filter(reservation => !idsToDelete.includes(reservation.id)));
+    const updatedReservations = reservations.filter(reservation => !idsToDelete.includes(reservation.id));
+    setReservations(updatedReservations);
   };
 
   const updateReservation = (updatedReservation) => {
-    setReservations(reservations.map(reservation => 
+    const updatedReservations = reservations.map(reservation =>
       reservation.id === updatedReservation.id ? updatedReservation : reservation
-    ));
+    );
+    setReservations(updatedReservations);
   };
 
   const renderCalendar = () => {
@@ -53,7 +73,7 @@ const ReservationMgmt = () => {
     return dates.map((date, i) => {
       const condition = i >= firstDateIndex && i < lastDateIndex + 1 ? 'this' : 'other';
       const isToday = new Date().toDateString() === new Date(viewYear, viewMonth, date).toDateString();
-      const isReserved = reservations.some(reservation => new Date(reservation.date).toDateString() === new Date(viewYear, viewMonth, date).toDateString());
+      const isReserved = reservations.some(reservation => new Date(reservation.reservationDate).toDateString() === new Date(viewYear, viewMonth, date).toDateString());
       return (
         <div
           key={i}
@@ -76,7 +96,7 @@ const ReservationMgmt = () => {
       weekday: 'long'
     });
     
-    const reservationsForTheDay = reservations.filter(reservation => new Date(reservation.date).toDateString() === selectedDate.toDateString());
+    const reservationsForTheDay = reservations.filter(reservation => new Date(reservation.reservationDate).toDateString() === selectedDate.toDateString());
     
     const newWindow = window.open('', '_blank', 'width=600,height=400');
     newWindow.document.write(`
@@ -112,7 +132,7 @@ const ReservationMgmt = () => {
                     <td>${reservation.payment}</td>
                     <td>${reservation.requests}</td>
                     <td>${reservation.gender}</td>
-                    <td>${reservation.count}</td>
+                    <td>${reservation.rsCount}</td>
                   </tr>
                 `).join('')}
               </tbody>
@@ -212,6 +232,3 @@ const ReservationMgmt = () => {
 };
 
 export default ReservationMgmt;
-
-
-
