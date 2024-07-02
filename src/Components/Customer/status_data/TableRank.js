@@ -69,25 +69,27 @@ const [filteredData, setFilteredData] = React.useState([]);
   };
 
   React.useEffect(() => {
-    // handleTable(activeLabel);
+    handleTable(activeLabel);
   }, [activeLabel]);
 
-  // const handleTable = (label) => {
-  //   let sortedRows = [...rows];
-  //   if (label === '최다거래' || label === '상품별') {
-  //     sortedRows.sort((a, b) => b.orderAmount - a.orderAmount);
-  //   }
-  //   if (label === '최고금액') {
-  //     sortedRows.sort((a, b) => b.orderCount - a.orderCount);
-  //   }
-  //   if (label === '반응좋은') {
-  //     sortedRows.sort((a, b) => b.orderCount - a.orderCount);
-  //   }
-  //   setRows(sortedRows);
-  // }
+  const handleTable = (label) => {
+    let sortedRows = [...rows];
+    if (label === '최다거래' || label === '상품별') {
+      sortedRows.sort((a, b) => b.orderAmount - a.orderAmount);
+    }
+    if (label === '최고금액') {
+      sortedRows.sort((a, b) => b.orderCount - a.orderCount);
+    }
+    if (label === '반응좋은') {
+      sortedRows.sort((a, b) => b.orderCount - a.orderCount);
+    }
+    setRows(sortedRows);
+  }
+
   const handleSort = (key, direction) => {
     let sortedData = [...rows];
     if (direction === 'ascending') {
+      setCurrentPage(1);
       sortedData.sort((a, b) => (a[key] > b[key] ? 1 : -1));
     } else if (direction === 'descending') {
       sortedData.sort((a, b) => (a[key] < b[key] ? 1 : -1));
@@ -101,7 +103,7 @@ const [filteredData, setFilteredData] = React.useState([]);
     <div>
       <TableModule 
         data={filteredData} 
-        sortedData={filteredData} 
+        // sortedData={filteredData} 
         columns={getColumns(activeLabel)} 
         onSort={handleSort}  
         currentPage={currentPage}

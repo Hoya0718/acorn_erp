@@ -21,13 +21,21 @@ const CusMgmt = () => {
   const [editIndex, setEditIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState(data);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [currentPage, setCurrentPage] = React.useState(1);
 
   useEffect(() => {
+    const savedRowsPerPage = localStorage.getItem('CusMgmtRowsPerPage');
+    if (savedRowsPerPage) {
+      setRowsPerPage(Number(savedRowsPerPage));
+    }
+
     fetch('/api/customers')
       .then(response => response.json())
       .then(data => setData(data))
       .catch(error => console.error('Error fetching data:', error));
-  }, []);
+ 
+    }, []);
 
   useEffect(() => {
     setFilteredData(data);
@@ -41,6 +49,16 @@ const CusMgmt = () => {
       return updatedData;
     });
   }, []);
+
+  const handleRowsPerPageChange = (event) => {
+    const newRowsPerPage = Number(event.target.value);
+    setRowsPerPage(newRowsPerPage);
+    localStorage.setItem('CusMgmtRowsPerPage', newRowsPerPage);  // 행수 저장
+  }
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   const handleDeleteRows = () => {
     const idsToDelete = data.filter(item => item.checked).map(item => item.id);
@@ -158,7 +176,13 @@ const CusMgmt = () => {
       </div>
 
       <br />
-
+      <select value={rowsPerPage} onChange={handleRowsPerPageChange}>
+                    <option value={10}>10줄 보기</option>
+                    <option value={20}>20줄 보기</option>
+                    <option value={30}>30줄 보기</option>
+                    <option value={40}>40줄 보기</option>
+                    <option value={50}>50줄 보기</option>
+                  </select>
       <div className="searcher">
         <div className="left">
           <label htmlFor="date">
@@ -179,7 +203,11 @@ const CusMgmt = () => {
           <button className="search-button" onClick={handleSearch}>조회</button>
         </div>
       </div>
-      <MgmtTable />
+      <MgmtTable 
+        data={filteredData} 
+        currentPage={currentPage}
+        rowsPerPage={rowsPerPage}
+        />
       {showModal && (
         <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div className="modal-dialog">

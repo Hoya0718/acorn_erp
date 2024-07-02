@@ -10,11 +10,13 @@ import { useCustomerStatus } from '../settingModal/CustomerStatusSettingContext'
 
 
 const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsPerPage}) => {
+  
   const { selectedRegion } = useCustomerStatus();
+  
   const [rows, setRows] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalItems, setTotalItems] = React.useState(0);
-  const [itemsPerPage, setItemsPerPage] = React.useState(10); 
+  // const [itemsPerPage, setItemsPerPage] = React.useState(10); 
   const [filteredData, setFilteredData] = React.useState([]);
 
   React.useEffect(() => {
@@ -24,7 +26,7 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
         const data = response_tableData.data;
         setRows(data);
 
-        const response_pageData = await instance.post(`/customer/getListProdTable?page=${currentPage - 1}&size=${itemsPerPage}`);
+        const response_pageData = await instance.post(`/customer/getListProdTable?page=${currentPage - 1}&size=${rowsPerPage}`);
         const page = response_pageData.data;
         
         setFilteredData(page.content);
@@ -34,15 +36,11 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
       }
     }
     fetchTableData();
-  }, [activeLabel, selectedRegion, currentPage, itemsPerPage]);
+  }, [activeLabel, selectedRegion, currentPage, rowsPerPage]);
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
   const currentData = rows.slice(startIndex, endIndex);
-
-  // const handlePageChange = (page) => {
-  //   setCurrentPage(page);
-  // };
 
   const getColumns = (activeLabel) => {
     switch (activeLabel) {
@@ -122,18 +120,32 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
     setRows(sortedRows);
   }
 
+  const handleSort = (key, direction) => {
+    let sortedData = [...rows];
+    if (direction === 'ascending') {
+      setCurrentPage(1);
+      sortedData.sort((a, b) => (a[key] > b[key] ? 1 : -1));
+    } else if (direction === 'descending') {
+      sortedData.sort((a, b) => (a[key] < b[key] ? 1 : -1));
+    } else {
+      sortedData = rows; // Reset to original order
+    }
+    setRows(sortedData);
+    setFilteredData(sortedData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+  };
+
   return (
     <div>
       <TableModule 
-          data={currentData} 
+          data={filteredData} 
           columns={getColumns(activeLabel)} 
-          onSort={onSort} 
+          onSort={handleSort} 
           currentPage={currentPage}
           rowsPerPage={rowsPerPage}
           totalData={rows}/>
       <CustomerStatusPagination
           totalItems={totalItems}
-          itemsPerPage={itemsPerPage}
+          itemsPerPage={rowsPerPage}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
         />

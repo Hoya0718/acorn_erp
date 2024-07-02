@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useEffect } from 'react'; // useEffect 추가
 import "../../Main/Main.css"
 import "../Customer.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,7 +13,6 @@ import Table_Rank from './TableRank';
 import CustomerStatusSettingModal from '../settingModal/settingModal.js';
 import SearchButton from '../modules/SearchButtonModule.js'
 import KeywordSearch from '../modules/KeywordSearchModule.js'
-import CustomerStatusPagination from '../modules/PaginationModule.js';
 
 const Customer_status = () => {
   const [activeTab, setActiveTab] = React.useState('distribution'); //탭버튼 상태(대분류)
@@ -21,11 +21,19 @@ const Customer_status = () => {
   const [keyword, setKeyword] = React.useState(''); //검색어
   const [rowsPerPage, setRowsPerPage] = React.useState(10); //블럭당 보여질 행 갯수
   const [currentPage, setCurrentPage] = React.useState(1);  //현재 페이지
-
-
+  
+  useEffect(() => {
+    const savedRowsPerPage = localStorage.getItem('StatusDataRowsPerPage');
+    if (savedRowsPerPage) {
+      setRowsPerPage(Number(savedRowsPerPage));
+    }
+  }, []);
 
   const handleRowsPerPageChange = (event) => {
-    setRowsPerPage(Number(event.target.value));
+    const newRowsPerPage = Number(event.target.value);
+    setRowsPerPage(newRowsPerPage);
+    localStorage.setItem('StatusDataRowsPerPage', newRowsPerPage);  // 행수 저장
+ 
   }
   const handlePageChange = (page) => {
     setCurrentPage(page);

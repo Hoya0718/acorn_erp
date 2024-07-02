@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import CustomerStatusPagination from '../modules/PaginationModule';
 
-const MgmtTable = () => {
+const MgmtTable = ({rowsPerPage}) => {
   const [data, setData] = useState([]);
   const [pageData, setPageData] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
@@ -14,7 +14,7 @@ const MgmtTable = () => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(10); // 페이지당 아이템 수
+  // const [rowsPerPage, setrowsPerPage] = useState(10); // 페이지당 아이템 수
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -45,7 +45,7 @@ const MgmtTable = () => {
 
         setRows(data);
 
-        const response_pageData = await instance.post(`/customer/getAllList?page=${currentPage - 1}&size=${itemsPerPage}`);
+        const response_pageData = await instance.post(`/customer/getAllList?page=${currentPage - 1}&size=${rowsPerPage}`);
         const page = response_pageData.data;
         const formattedPageData = page.content.map(item => ({
           ...item,
@@ -61,7 +61,7 @@ const MgmtTable = () => {
       }
     }
     fetchTableData();
-  }, [currentPage, itemsPerPage]);
+  }, [currentPage, rowsPerPage]);
 
   useEffect(() => {
     setSelectedRows({});
@@ -83,6 +83,7 @@ const MgmtTable = () => {
 
   const handleSort = (key) => {
     let direction = 'ascending';
+    setCurrentPage(1);
     if (sortConfig.key === key) {
         if (sortConfig.direction === 'ascending') {
             direction = 'descending';
@@ -102,12 +103,12 @@ const MgmtTable = () => {
     }
     
     setRows(sortedRows);
-    setFilteredData(sortedRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
+    setFilteredData(sortedRows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
   
 };
 useEffect(() => {
-  setFilteredData(rows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
-}, [rows, currentPage, itemsPerPage]);
+  setFilteredData(rows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+}, [rows, currentPage, rowsPerPage]);
 
     const handleRowSelect = (index) => {
       const newSelectedRows = { ...selectedRows };
@@ -176,7 +177,7 @@ useEffect(() => {
         </table>
         <CustomerStatusPagination
           totalItems={totalItems}
-          itemsPerPage={itemsPerPage}
+          itemsPerPage={rowsPerPage}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
         />
