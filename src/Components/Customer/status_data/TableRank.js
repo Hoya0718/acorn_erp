@@ -121,6 +121,7 @@ const [filteredData, setFilteredData] = React.useState([]);
         onSort={onSort}  
         currentPage={currentPage}
         rowsPerPage={rowsPerPage}
+        totalData={rows}
       />
       <CustomerStatusPagination
         totalItems={totalItems}

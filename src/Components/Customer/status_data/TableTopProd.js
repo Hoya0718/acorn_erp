@@ -124,7 +124,11 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange }) => 
 
   return (
     <div>
-      <TableModule data={currentData} columns={getColumns(activeLabel)} onSort={onSort} />
+      <TableModule 
+          data={currentData} 
+          columns={getColumns(activeLabel)} 
+          onSort={onSort} 
+          totalData={rows}/>
       <CustomerStatusPagination
           totalItems={totalItems}
           itemsPerPage={itemsPerPage}

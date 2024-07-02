@@ -6,7 +6,7 @@ import "../../Main/Main.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
-const TableModule = ({  data = [], columns = [], onSort, rowsPerPage, currentPage }) => {
+const TableModule = ({  data = [], columns = [], onSort, rowsPerPage, currentPage, totalData = []  }) => {
 //     const [tableDta, setTableData] = useState(data);
     const [selectAll, setSelectAll] = useState(false);
     const [selectedRows, setSelectedRows] = useState({});
@@ -66,19 +66,19 @@ const TableModule = ({  data = [], columns = [], onSort, rowsPerPage, currentPag
         return num.toLocaleString();
     };
 
-    const calculateTotal = (key) => {
-        return data.reduce((sum, row) => sum + row[key], 0);
+    const calculateTotal = (key, dataSet = []) => {
+        return dataSet.reduce((sum, row) => sum + row[key], 0);
     };
-    const calculateAverage = (key) => {
-        if (data.length === 0) return 0;
-        const total = calculateTotal(key);
-        return total / data.length;
+    const calculateAverage = (key, dataSet = []) => {
+        if (dataSet.length === 0) return 0;
+        const total = calculateTotal(key, dataSet);
+        return total / dataSet.length;
     };
     const totalRow = columns.reduce((acc, column) => {
-        if (column.key  && data.length > 0 && typeof data[0][column.key] === 'number') {
+        if (column.key  && totalData.length > 0 && typeof totalData[0][column.key] === 'number') {
             acc[column.key] = {
-                total: calculateTotal(column.key),
-                average: calculateAverage(column.key),
+                total: calculateTotal(column.key, totalData),
+                average: calculateAverage(column.key, totalData),
             }
         }
         return acc;

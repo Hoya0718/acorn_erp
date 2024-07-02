@@ -74,7 +74,7 @@ const MgmtTable = () => {
 
     const newSelectedRows = {};
     if (newSelectAll) {
-      data.forEach((row, index) => {
+      filteredData.forEach((_, index) => {
         newSelectedRows[index] = true;
       });
     }
