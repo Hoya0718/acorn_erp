@@ -43,8 +43,6 @@ const MainReg = () => {
       return;
     }
 
-    console.log("Submitting form data:", formData); // 추가한 부분
-
     try {
       if (isEditMode) {
         // Update reservation
@@ -55,7 +53,7 @@ const MainReg = () => {
         await axios.post('/reservations', formData);
         addReservation(formData);
       }
-      navigate('/layout/reservationMgmt/resTable');
+      navigate('/layout/reservationMgmt/resTable', { state: { reservations: [...reservations, formData] } });
     } catch (error) {
       console.error("Error saving reservation:", error);
       setErrorMessage('예약 저장 중 오류가 발생했습니다. 다시 시도하세요.');
