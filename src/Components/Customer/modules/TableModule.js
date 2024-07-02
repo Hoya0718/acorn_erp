@@ -6,11 +6,11 @@ import "../../Main/Main.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
-const TableModule = ({  data = [], columns = [], onSort, rowsPerPage, currentPage, totalData = []  }) => {
+const TableModule = ({  data = [], columns = [], onSort = () => {}, rowsPerPage, currentPage, totalData = []  }) => {
 //     const [tableDta, setTableData] = useState(data);
     const [selectAll, setSelectAll] = useState(false);
     const [selectedRows, setSelectedRows] = useState({});
-    const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'none' });
 
     useEffect(() => {
         setSelectedRows({});
@@ -31,36 +31,27 @@ const TableModule = ({  data = [], columns = [], onSort, rowsPerPage, currentPag
     };
     const handleSort = (key) => {
         let direction = 'ascending';
-        if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-            direction = 'descending';
-        } else if (sortConfig.key === key && sortConfig.direction === 'descending') {
-            direction = null;
+        if (sortConfig.key === key) {
+            if (sortConfig.direction === 'ascending') {
+                direction = 'descending';
+            } else if (sortConfig.direction === 'descending') {
+                direction = 'none';
+            }
         }
-
+        
         setSortConfig({ key, direction });
         onSort(key, direction);
-
-        // if (direction) {
-        //     const sortedData = [...tableData].sort((a, b) => {
-        //         if (a[key] < b[key]) return direction === 'ascending' ? -1 : 1;
-        //         if (a[key] > b[key]) return direction === 'ascending' ? 1 : -1;
-        //         return 0;
-        //     });
-        //     setTableData(sortedData);
-        // } else {
-        //     setTableData(data);
-        // }
     };
 
-    const handleRowSelect = (index) => {
-        const newSelectedRows = { ...selectedRows };
-        if (newSelectedRows[index]) {
-            delete newSelectedRows[index];
-        } else {
-            newSelectedRows[index] = true;
-        }
-        setSelectedRows(newSelectedRows);
-    };
+    // const handleRowSelect = (index) => {
+    //     const newSelectedRows = { ...selectedRows };
+    //     if (newSelectedRows[index]) {
+    //         delete newSelectedRows[index];
+    //     } else {
+    //         newSelectedRows[index] = true;
+    //     }
+    //     setSelectedRows(newSelectedRows);
+    // };
 
     const formatNumber = (num) => {
         return num.toLocaleString();
@@ -69,11 +60,13 @@ const TableModule = ({  data = [], columns = [], onSort, rowsPerPage, currentPag
     const calculateTotal = (key, dataSet = []) => {
         return dataSet.reduce((sum, row) => sum + row[key], 0);
     };
+
     const calculateAverage = (key, dataSet = []) => {
         if (dataSet.length === 0) return 0;
         const total = calculateTotal(key, dataSet);
         return total / dataSet.length;
     };
+
     const totalRow = columns.reduce((acc, column) => {
         if (column.key  && totalData.length > 0 && typeof totalData[0][column.key] === 'number') {
             acc[column.key] = {
