@@ -2,120 +2,115 @@
 // 고객관리 세부사항보기 모달 페이지
 import * as React from 'react';
 import "../../Main/Main.css";
-import Goal from './GoalSetting';
-import Menu from './MenuSetting';
-import Period from './PeriodSetting';
-import Region from './RegionSetting';
-import { useCustomerStatus } from './CustomerStatusSettingContext';
+import { Modal, Button } from 'react-bootstrap';
 
-const CustomerStatusSettingModal = () => {
-    const {
-        customerCount_lastyear, setCustomerCount_lastyear,
-        goalOption, setGoalOption,
-        customerCount, setCustomerCount,
-        customerTarget, setCustomerTarget,
-        selectedOption, setSelectedOption,
-        checkboxes_dist, setCheckboxes_dist,
-        checkboxes_prod, setCheckboxes_prod,
-        period, setPeriod,
-        startDate, setStartDate,
-        endDate, setEndDate,
-        selectedRegion, setSelectedRegion,
-        rangeValue, setRangeValue,
-        selectedProvince, setSelectedProvince,
-        selectedCity, setSelectedCity,
-    } = useCustomerStatus();
+const ViewDetailsModal = (show, onHide, data) => {
 
     const handleSettingClick = () => {
-        const settings = {
-            customerCount_lastyear,
-            customerCount,
-            customerTarget,
-            selectedOption,
-            goalOption,
-            period,
-            startDate,
-            checkboxes_dist,
-            checkboxes_prod,
-            endDate,
-            selectedRegion,
-            rangeValue,
-            selectedProvince,
-            selectedCity,
-        };
-        localStorage.setItem('customerStatusSettings', JSON.stringify(settings));
-        window.location.reload();
-    }
-    React.useEffect(() => {
-        const savedSettings = localStorage.getItem('customerStatusSettings');
-        if (savedSettings) {
-            const {
-                customerCount,
-                customerCount_lastyear,
-                customerTarget,
-                selectedOption,
-                goalOption,
-                period,
-                startDate,
-                checkboxes_dist,
-                checkboxes_prod,
-                endDate,
-                selectedRegion,
-                rangeValue,
-                selectedProvince,
-                selectedCity,
-            } = JSON.parse(savedSettings);
-
-            setCustomerCount(customerCount);
-            setCustomerTarget(customerTarget);
-            setSelectedOption(selectedOption);
-            setPeriod(period);
-            setGoalOption(goalOption);
-            setStartDate(startDate);
-            setCheckboxes_dist(checkboxes_dist);
-            setCheckboxes_prod(checkboxes_prod);
-            setEndDate(endDate);
-            setSelectedRegion(selectedRegion);
-            setRangeValue(rangeValue);
-            setCustomerCount_lastyear(customerCount_lastyear);
-            setSelectedProvince(selectedProvince);
-            setSelectedCity(selectedCity);
-
-        }
-        // const modalElement = modalRef.current;
-        // const modalInstance = new window.bootstrap.Modal(modalElement);
-
-        // return () => {
-        //     modalInstance.dispose();
-        // };
-    }, [setCustomerCount, setCustomerTarget, setSelectedOption, setPeriod, setStartDate, setGoalOption, 
-        setCheckboxes_dist, setCheckboxes_prod, setEndDate, setSelectedRegion, setRangeValue,
-        setCustomerCount_lastyear, setSelectedProvince, setSelectedCity]);
-
+    };
     return (
-        <div className="modal fade" id="SettingModal" tabIndex="-1" aria-labelledby="SettingModalLabel" aria-hidden="true">
-            <div className="modal-dialog  modal-dialog-centered modal-dialog-scrollable">
-                <form>
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h1 className="modal-title fs-5" id="SettingModalLabel">설정</h1>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <Modal show={show} onHide={onHide}>
+            <form>
+                <div className="modal-content">
+                    <Modal.Header closeButton>
+                        <Modal.Title>고객 세부현황 보기</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div>
+                            <div className="container">
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <label>이름</label>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input type="text" className="form-control" />
+                                    </div>
+                                </div>
+
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <label>생년월일</label>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input type="date" className="form-control" />
+                                    </div>
+                                </div>
+
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <label>성별</label>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input type="text" className="form-control" />
+                                    </div>
+                                </div>
+
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <label>연락처</label>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input type="text" className="form-control" />
+                                    </div>
+                                </div>
+
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <label>연령그룹</label>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input type="text" className="form-control" />
+                                    </div>
+                                </div>
+
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <label>지역그룹</label>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input type="text" className="form-control" />
+                                    </div>
+
+                                </div>
+
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <label>가입일</label>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <input type="text" className="form-control" />
+                                    </div>
+                                </div>
+
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <label>회원등급</label>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <select>
+                                            <option>우수</option>
+                                            <option>일반</option>
+                                            <option>주의</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div className="form-group">
+                                <label>특이사항</label>
+                                <input type="text" className="form-control" />
+                                <input type="text" className="form-control" />
+                            </div>
+
                         </div>
-                        <div className="modal-body">
-                            <Goal />
-                            <Period />
-                            <Menu />
-                            <Region />
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
-                            <button type="button" className="btn btn-dark" onClick={handleSettingClick}>저장</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={onHide}>확인</Button>
+                    </Modal.Footer>
+                </div>
+            </form>
+        </Modal>
     );
 }
 
-export default CustomerStatusSettingModal;
+export default ViewDetailsModal;
