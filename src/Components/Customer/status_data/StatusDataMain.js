@@ -92,13 +92,15 @@ const Customer_status = () => {
             <div className='row'>
               <div className='col'>
                 <TabButton activeTab={activeTab} setActiveTab={setActiveTab} setActiveLabel={setActiveLabel} />
-                <select value={rowsPerPage} onChange={handleRowsPerPageChange}>
-                  <option value={10}>10줄 보기</option>
-                  <option value={20}>20줄 보기</option>
-                  <option value={30}>30줄 보기</option>
-                  <option value={40}>40줄 보기</option>
-                  <option value={50}>50줄 보기</option>
-                </select>
+                {activeTab !== 'distribution' && (
+                  <select value={rowsPerPage} onChange={handleRowsPerPageChange}>
+                    <option value={10}>10줄 보기</option>
+                    <option value={20}>20줄 보기</option>
+                    <option value={30}>30줄 보기</option>
+                    <option value={40}>40줄 보기</option>
+                    <option value={50}>50줄 보기</option>
+                  </select>
+                )}
               </div>
               <div className='col-4'>
                 <PeriodSearch setPeriod={setPeriod} />

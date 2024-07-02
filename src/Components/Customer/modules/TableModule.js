@@ -17,18 +17,6 @@ const TableModule = ({  data = [], columns = [], onSort = () => {}, rowsPerPage,
         setSelectAll(false);
     }, [data]);
 
-    const handleSelectAll = () => {
-        const newSelectAll = !selectAll;
-        setSelectAll(newSelectAll);
-
-        const newSelectedRows = {};
-        if (newSelectAll) {
-            data.forEach((row, index) => {
-                newSelectedRows[index] = true;
-            });
-        }
-        setSelectedRows(newSelectedRows);
-    };
     const handleSort = (key) => {
         let direction = 'ascending';
         if (sortConfig.key === key) {
@@ -93,7 +81,7 @@ const TableModule = ({  data = [], columns = [], onSort = () => {}, rowsPerPage,
                                 {column.header}
                                 {sortConfig.key === column.key && (
                                     sortConfig.direction === 'ascending' ? <FontAwesomeIcon icon={faCaretDown}/> :
-                                    sortConfig.direction === 'descending' ? <FontAwesomeIcon icon={faCaretUp}/> : ''
+                                        sortConfig.direction === 'descending' ? <FontAwesomeIcon icon={faCaretUp}/> : ''
                                 )}
                             </th>
                         ))}

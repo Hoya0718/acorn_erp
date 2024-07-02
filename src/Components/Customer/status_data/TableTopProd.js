@@ -9,7 +9,7 @@ import instance from './../../../api/axios';
 import { useCustomerStatus } from '../settingModal/CustomerStatusSettingContext';
 
 
-const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange }) => {
+const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsPerPage}) => {
   const { selectedRegion } = useCustomerStatus();
   const [rows, setRows] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -128,6 +128,8 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange }) => 
           data={currentData} 
           columns={getColumns(activeLabel)} 
           onSort={onSort} 
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
           totalData={rows}/>
       <CustomerStatusPagination
           totalItems={totalItems}

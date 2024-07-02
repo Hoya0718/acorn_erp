@@ -80,27 +80,34 @@ const MgmtTable = () => {
     }
     setSelectedRows(newSelectedRows);
   };
+
   const handleSort = (key) => {
     let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    } else if (sortConfig.key === key && sortConfig.direction === 'descending') {
-      direction = null;
+    if (sortConfig.key === key) {
+        if (sortConfig.direction === 'ascending') {
+            direction = 'descending';
+        } else if (sortConfig.direction === 'descending') {
+            direction = 'none';
+        }
     }
-
-      setSortConfig({ key, direction });
-
-      if (direction) {
-        const sortedData = [...filteredData].sort((a, b) => {
-          if (a[key] < b[key]) return direction === 'ascending' ? -1 : 1;
-          if (a[key] > b[key]) return direction === 'ascending' ? 1 : -1;
-          return 0;
-        });
-        setFilteredData(sortedData);
-      } else {
-        setFilteredData(data);
-      }
-    };
+    
+    setSortConfig({ key, direction });
+    let sortedRows = [...rows];
+    if (direction !== 'none') {
+      sortedRows.sort((a, b) => {
+        if (a[key] < b[key]) return direction === 'ascending' ? -1 : 1;
+        if (a[key] > b[key]) return direction === 'ascending' ? 1 : -1;
+        return 0;
+      });
+    }
+    
+    setRows(sortedRows);
+    setFilteredData(sortedRows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
+  
+};
+useEffect(() => {
+  setFilteredData(rows.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage));
+}, [rows, currentPage, itemsPerPage]);
 
     const handleRowSelect = (index) => {
       const newSelectedRows = { ...selectedRows };
@@ -140,8 +147,8 @@ const MgmtTable = () => {
                   onClick={() => handleSort(column.accessor)}
                 >
                   {column.header}
-                  {sortConfig.key === column.key && (
-                    sortConfig.direction === 'ascending' ? <FontAwesomeIcon icon={faCaretDown} /> :
+                  {sortConfig.key === column.accessor && (
+                    sortConfig.direction === 'ascending' ? <FontAwesomeIcon icon={faCaretDown} /> : 
                       sortConfig.direction === 'descending' ? <FontAwesomeIcon icon={faCaretUp} /> : ''
                   )}
                 </th>
