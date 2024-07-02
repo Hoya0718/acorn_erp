@@ -6,7 +6,7 @@ import "../../Main/Main.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
-const TableModule = ({  data = [], columns = [], onSort }) => {
+const TableModule = ({  data = [], columns = [], onSort, rowsPerPage, currentPage }) => {
 //     const [tableDta, setTableData] = useState(data);
     const [selectAll, setSelectAll] = useState(false);
     const [selectedRows, setSelectedRows] = useState({});
@@ -89,15 +89,6 @@ const TableModule = ({  data = [], columns = [], onSort }) => {
             <table className="table table-hover" style={{ wordBreak: 'break-all' }}>
                 <thead>
                     <tr>
-                        {/* <th scope="col" className="table-centered">
-                            <input
-                                className="form-check-input"
-                                type="checkbox"
-                                checked={selectAll}
-                                onChange={handleSelectAll}
-                                id="flexCheckDefault"
-                            />
-                        </th> */}
                         <th scope="col" className="table-centered">no.</th>
                         {columns.map((column) => (
                             <th 
@@ -118,15 +109,7 @@ const TableModule = ({  data = [], columns = [], onSort }) => {
                 <tbody className="table-group-divider">
                     {data.map((row, index) => (
                         <tr key={index}>
-                            {/* <th scope="row" className="table-centered">
-                                <input
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    checked={!!selectedRows[index]}
-                                    onChange={() => handleRowSelect(index)}
-                                />
-                            </th> */}
-                            <td className="table-centered">{index + 1}</td>
+                            <td className="table-centered">{(currentPage - 1) * rowsPerPage + index + 1}</td>
                             {columns.map((column) => (
                                 <td key={column.key} className={column.className || 'table-centered'}>
                                     {column.format ? column.format(row[column.key]) : row[column.key]}

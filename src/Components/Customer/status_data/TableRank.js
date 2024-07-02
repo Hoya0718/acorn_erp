@@ -52,9 +52,6 @@ const [filteredData, setFilteredData] = React.useState([]);
             const page = response_pageData.data;
             setFilteredData(page.content);
             setTotalItems(page.totalElements);
-
-            console.log(page.totalElements);
-            console.log(totalItems);
         }catch (error) {
           console.error('Error get TableData_rank:', error);
       }
@@ -118,7 +115,13 @@ const [filteredData, setFilteredData] = React.useState([]);
 
   return (
     <div>
-      <TableModule data={currentData} columns={getColumns(activeLabel)} onSort={onSort} />
+      <TableModule 
+        data={currentData} 
+        columns={getColumns(activeLabel)} 
+        onSort={onSort}  
+        currentPage={currentPage}
+        rowsPerPage={rowsPerPage}
+      />
       <CustomerStatusPagination
         totalItems={totalItems}
         itemsPerPage={rowsPerPage}
