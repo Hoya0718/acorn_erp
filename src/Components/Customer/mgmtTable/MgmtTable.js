@@ -16,6 +16,11 @@ const MgmtTable = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(10); // 페이지당 아이템 수
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   const columns = useMemo(() => [
     { header: 'ID', accessor: 'customerId' },
     { header: '이름', accessor: 'customerName' },
@@ -32,14 +37,23 @@ const MgmtTable = () => {
     const fetchTableData = async () => {
       try {
         const response_tableData = await instance.get('/customer/getAllList');
-        const data = response_tableData.data;
-        // console.log("data", data);
+        const data = response_tableData.data.map(item => ({
+          ...item,
+          registerDate: formatDate(item.registerDate),
+          customerBirthDate: formatDate(item.customerBirthDate)
+        }));
+
         setRows(data);
 
         const response_pageData = await instance.post(`/customer/getAllList?page=${currentPage - 1}&size=${itemsPerPage}`);
         const page = response_pageData.data;
-        setPageData(page.content)
-        setFilteredData(page.content);
+        const formattedPageData = page.content.map(item => ({
+          ...item,
+          registerDate: formatDate(item.registerDate),
+          customerBirthDate: formatDate(item.customerBirthDate)
+        }));
+        setPageData(formattedPageData);
+        setFilteredData(formattedPageData);
         setTotalItems(page.totalElements);
 
       } catch (error) {
