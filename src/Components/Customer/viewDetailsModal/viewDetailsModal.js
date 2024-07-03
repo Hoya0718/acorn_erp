@@ -51,19 +51,20 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
                                         <label>이름</label>
                                     </div>
                                     <div className="col-md-3">
-                                        <input type="text" className="form-control" value={formData.customerName || ''} style={{
-                        border: 'none',
-                        textAlign: 'center',
-                    }}/>
+                                        <input type="text" className="form-control" value={formData.customerName || ''} 
+                                        style={{
+                                            border: 'none',
+                                            textAlign: 'center',
+                                        }} />
                                     </div>
                                     <div className="col-md-3 centered">
                                         <label>성별</label>
                                     </div>
                                     <div className="col-md-3">
                                         <input type="text" className="form-control" value={formData.customerGender || ''} style={{
-                        border: 'none',
-                        textAlign: 'center',
-                    }}/>
+                                            border: 'none',
+                                            textAlign: 'center',
+                                        }} />
                                     </div>
                                 </div>
                                 <div className="row">
@@ -71,20 +72,20 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
                                         <label>생년월일</label>
                                     </div>
                                     <div className="col-md-3">
-                                        <input type="date" className="form-control" value={formatDateForInput(formData.customerBirthDate) || ''} 
-                                                    style={{
-                                                        border: 'none',
-                                                        textAlign: 'lefted',
-                                                    }}/>
+                                        <input type="date" className="form-control" value={formatDateForInput(formData.customerBirthDate) || ''}
+                                            style={{
+                                                border: 'none',
+                                                textAlign: 'lefted',
+                                            }} />
                                     </div>
                                     <div className="col-md-3 centered">
                                         <label>연락처</label>
                                     </div>
                                     <div className="col-md-3">
                                         <input type="text" className="form-control" value={formData.customerTel || ''} style={{
-                        border: 'none',
-                        textAlign: 'center',
-                    }}/>
+                                            border: 'none',
+                                            textAlign: 'center',
+                                        }} />
                                     </div>
                                 </div>
                                 <div className="row">
@@ -93,23 +94,23 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
                                     </div>
                                     <div className="col-md-9">
                                         <input type="text" className="form-control" value={formData.customerAddr || ''} style={{
-                        border: 'none',
-                        textAlign: 'center',
-                    }}/>
+                                            border: 'none',
+                                            textAlign: 'center',
+                                        }} />
                                     </div>
                                 </div>
-                      
+
 
                                 <div className="row">
                                     <div className="col-md-3 centered">
                                         <label>가입일</label>
                                     </div>
                                     <div className="col-md-3">
-                                        <input type="date" className="form-control" value={formatDateForInput(formData.registerDate) || ''} 
-                                                    style={{
-                                                        border: 'none',
-                                                        textAlign: 'lefted',
-                                                    }}/>
+                                        <input type="date" className="form-control" value={formatDateForInput(formData.registerDate) || ''}
+                                            style={{
+                                                border: 'none',
+                                                textAlign: 'lefted',
+                                            }} />
                                     </div>
                                     <div className="col-md-3 centered">
                                         <label>회원등급</label>
@@ -137,23 +138,23 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
                                             value={customerNotes}
                                             onChange={(e) => setCustomerNotes(e.target.value)}
                                         />
-                                         {Array.isArray(formData.customerNotes) && formData.customerNotes.map((note, idx) => (
+                                        {Array.isArray(formData.customerNotes) && formData.customerNotes.map((note, idx) => (
                                             <React.Fragment key={idx}>
-                                            <div className="row">
-                                                <div className="col-md-3  centered">
-                                                    {formatDateForInput(note.notesDate)}
+                                                <div className="row">
+                                                    <div className="col-md-3  centered">
+                                                        {formatDateForInput(note.notesDate)}
                                                     </div>
                                                     <div className="col-md-9  centered">
-                                                <input 
-                                                    type="text" 
-                                                    className="form-control" 
-                                                    value={note.notes} 
-                                                    style={{
-                                                        border: 'none',
-                                                        textAlign: 'lefted',
-                                                    }}
-                                                />
-                                                </div>
+                                                        <input
+                                                            type="text"
+                                                            className="form-control"
+                                                            value={note.notes}
+                                                            style={{
+                                                                border: 'none',
+                                                                textAlign: 'lefted',
+                                                            }}
+                                                        />
+                                                    </div>
                                                 </div>
                                             </React.Fragment>
                                         ))}

@@ -196,12 +196,6 @@ const MgmtTable = ({ rowsPerPage }) => {
                   key={column.accessor} className={column.className || 'table-centered'}
                   onClick={column.isName ? () => handleNameClick(row) : undefined}
                   style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}>
-                  {/* {row[column.accessor]} */}
-                  {/* {column.accessor === 'customerNotes' ? (
-                    row[column.accessor].map((note, idx) => <div key={idx}>{note.notes}</div>)
-                  ) : (
-                    row[column.accessor]
-                  )} */}
                  {column.accessor === 'customerNotes' ? (
                    Array.isArray(row[column.accessor]) && row[column.accessor].length > 0
                    ? row[column.accessor][0].notes || '-'
