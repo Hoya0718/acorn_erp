@@ -78,7 +78,13 @@ const ReservationMgmt = () => {
         <div
           key={i}
           className={`date ${condition} ${isToday ? 'today' : ''}`}
-          onClick={() => handleDateClick(viewYear, viewMonth, date)}
+          onClick={() => {
+            let clickedMonth = viewMonth;
+            if (condition === 'other') {
+              clickedMonth = i < firstDateIndex ? viewMonth - 1 : viewMonth + 1;
+            }
+            handleDateClick(viewYear, clickedMonth, date);
+          }}
         >
           <span>{date}</span>
           {isReserved && <img src={acornImage} alt="Reserved" className="acorn-image" />}
@@ -88,7 +94,18 @@ const ReservationMgmt = () => {
   };
 
   const handleDateClick = (year, month, day) => {
-    const selectedDate = new Date(year, month, day);
+    let selectedDate;
+    if (day < 1) {
+      // 이전 달의 날짜
+      selectedDate = new Date(year, month - 1, day);
+    } else if (day > new Date(year, month + 1, 0).getDate()) {
+      // 다음 달의 날짜
+      selectedDate = new Date(year, month + 1, day - new Date(year, month + 1, 0).getDate());
+    } else {
+      // 현재 달의 날짜
+      selectedDate = new Date(year, month, day);
+    }
+  
     const formattedDate = selectedDate.toLocaleDateString('ko-KR', {
       year: 'numeric',
       month: 'long',
@@ -96,7 +113,9 @@ const ReservationMgmt = () => {
       weekday: 'long'
     });
     
-    const reservationsForTheDay = reservations.filter(reservation => new Date(reservation.reservationDate).toDateString() === selectedDate.toDateString());
+    const reservationsForTheDay = reservations.filter(reservation => 
+      new Date(reservation.reservationDate).toDateString() === selectedDate.toDateString()
+    );
     
     const newWindow = window.open('', '_blank', 'width=600,height=400');
     newWindow.document.write(`
