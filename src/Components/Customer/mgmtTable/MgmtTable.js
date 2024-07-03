@@ -33,13 +33,14 @@ const MgmtTable = ({ rowsPerPage }) => {
     { header: '생년월일', accessor: 'customerBirthDate' },
     { header: '주소', accessor: 'customerAddr' },
     { header: '가입일', accessor: 'registerDate' },
-    { header: '회원등급', accessor: 'membership' },
-    { header: '특이사항', accessor: 'notes' },
+    { header: '회원등급', accessor: 'customerGrade' },
+    { header: '특이사항', accessor: 'customerNotes' },
   ], []);
 
   useEffect(() => {
     const fetchTableData = async () => {
       try {
+        //테이블 데이터 호출
         const response_tableData = await instance.get('/customer/getAllList');
         const data = response_tableData.data.map(item => ({
           ...item,
@@ -47,8 +48,27 @@ const MgmtTable = ({ rowsPerPage }) => {
           customerBirthDate: formatDate(item.customerBirthDate)
         }));
 
-        setRows(data);
+        //고객등급 데이터 호출
+        const response_gradeData = await instance.get('/customer/getGrade');
+        const data_grade = response_gradeData.data
+        //특이사항 데이터 호출
+        const response_notes = await instance.get('/customer/getNotes');
+        const data_notes = response_notes.data
 
+        //테이블데이터+고객등급데이터+특이사항데이터 병합
+        const mergedData = data.map(customer => {
+          const gradeInfo = data_grade.find(grade => grade.customerId === customer.customerId);
+          const notesInfo = data_notes.find(notes => notes.customerId === customer.customerId);
+          return {
+            ...customer,
+            customerGrade: gradeInfo ? gradeInfo.customerGrade : '-',
+            customerNotes: notesInfo ? notesInfo.customerNotes : '-',
+          };
+        });
+
+        setRows(mergedData);
+        
+        //페이지네이션 데이터
         const response_pageData = await instance.post(`/customer/getAllList?page=${currentPage - 1}&size=${rowsPerPage}`);
         const page = response_pageData.data;
         const formattedPageData = page.content.map(item => ({

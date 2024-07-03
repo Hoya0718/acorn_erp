@@ -1,6 +1,4 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
-
-import { useTable } from 'react-table';
 import MgmtTable from './mgmtTable/MgmtTable'
 
 
@@ -104,45 +102,6 @@ const CusMgmt = () => {
     }
   };
 
-  const handleModalClose = () => {
-    setShowModal(false);
-  };
-
-  const handleSaveChanges = () => {
-    if (editIndex !== null) {
-      fetch(`/api/customers/${formData.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
-        .then(response => response.json())
-        .then(updatedItem => {
-          setData(prevData => {
-            const updatedData = [...prevData];
-            updatedData[editIndex] = { ...updatedItem, checked: false };
-            return updatedData;
-          });
-        })
-        .catch(error => console.error('Error updating row:', error));
-    } else {
-      fetch('/api/customers', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
-        .then(response => response.json())
-        .then(newItem => {
-          setData(prevData => [...prevData, { ...newItem, checked: false }]);
-        })
-        .catch(error => console.error('Error adding row:', error));
-    }
-    setShowModal(false);
-  };
-
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -208,63 +167,6 @@ const CusMgmt = () => {
         currentPage={currentPage}
         rowsPerPage={rowsPerPage}
         />
-      {showModal && (
-        <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h1 className="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                <button type="button" className="btn-close" onClick={handleModalClose} aria-label="Close"></button>
-              </div>
-              <div className="modal-body">
-                <div className="form-group">
-                  <label>ID:</label>
-                  <input type="text" className="form-control" value={formData.id} onChange={(e) => setFormData({ ...formData, id: e.target.value })} />
-                </div>
-
-                <div className="form-group">
-                  <label>이름:</label>
-                  <input type="text" className="form-control" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-                </div>
-
-                <div className="form-group">
-                  <label>성별:</label>
-                  <input type="text" className="form-control" value={formData.gender} onChange={(e) => setFormData({ ...formData, gender: e.target.value })} />
-                </div>
-
-                <div className="form-group">
-                  <label>연락처:</label>
-                  <input type="text" className="form-control" value={formData.contact} onChange={(e) => setFormData({ ...formData, contact: e.target.value })} />
-                </div>
-
-                <div className="form-group">
-                  <label>생년월일:</label>
-                  <input type="text" className="form-control" value={formData.dob} onChange={(e) => setFormData({ ...formData, dob: e.target.value })} />
-                </div>
-
-                <div className="form-group">
-                  <label>가입일:</label>
-                  <input type="text" className="form-control" value={formData.joinDate} onChange={(e) => setFormData({ ...formData, joinDate: e.target.value })} />
-                </div>
-
-                <div className="form-group">
-                  <label>회원등급:</label>
-                  <input type="text" className="form-control" value={formData.membership} onChange={(e) => setFormData({ ...formData, membership: e.target.value })} />
-                </div>
-
-                <div className="form-group">
-                  <label>특이사항:</label>
-                  <input type="text" className="form-control" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} />
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={handleModalClose}>Close</button>
-                <button type="button" className="btn btn-primary" onClick={handleSaveChanges}>Save changes</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
