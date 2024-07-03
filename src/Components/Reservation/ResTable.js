@@ -51,7 +51,7 @@ const ResTable = () => {
         <tbody className="table-group-divider">
           {reservations.map((reservation) => (
             <tr key={reservation.id}>
-              <th scope="row">
+              <th scope="row" key={reservation.id}>
                 <input
                   className="form-check-input"
                   type="checkbox"
