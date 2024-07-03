@@ -10,6 +10,7 @@ const MainReg = () => {
   const { id } = useParams();
   const isEditMode = id !== undefined;
 
+
   const [formData, setFormData] = useState({
     id: '',
     name: '',
@@ -20,6 +21,7 @@ const MainReg = () => {
     gender: '',
     rsCount: ''
   });
+  
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
@@ -59,6 +61,28 @@ const MainReg = () => {
       setErrorMessage('예약 저장 중 오류가 발생했습니다. 다시 시도하세요.');
     }
   };
+
+
+  /*
+    try {
+      if (isEditMode) {
+        // Update reservation
+        await axios.put(`/reservations/${formData.id}`, formData);
+        updateReservation(formData);
+      } else {
+        // Add new reservation
+        const response = await axios.post('/reservations', formData);
+        addReservation(response.data);
+      }
+      navigate('/layout/reservationMgmt/resTable');
+    } catch (error) {
+      console.error("Error saving reservation:", error);
+      setErrorMessage('예약 저장 중 오류가 발생했습니다. 다시 시도하세요.');
+    }
+  };
+
+
+  */
 
   return (
     <div>
