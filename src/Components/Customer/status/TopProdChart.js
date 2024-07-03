@@ -3,71 +3,78 @@
 import * as React from 'react'
 import "../../Main/Main.css"
 import instance from './../../../api/axios';
+import { useCustomerStatus } from '../settingModal/CustomerStatusSettingContext';
 
 // 테스트를 위한 데이터 세팅: 동적 데이터 변경해야함
 const TopProd = () => {
+    const { selectedRegion } = useCustomerStatus();
     const [chartNames, setChartNames] = React.useState([]);
     const [prod, setProd] = React.useState('most'); // 기본값을 'most'로 설정
     const [most, setMost] = React.useState([]);
     const [top, setTop] = React.useState([]);
     const [favo, setFavo] = React.useState([]);
-    
+
     React.useEffect(() => {
         const savedSettings = localStorage.getItem('customerStatusSettings');
         const fetchTableData = async () => {
             try {
                 const response_Amount = await instance.get('/customer/getTop3ByTotalAmount');
                 const data_Amount = response_Amount.data;
-                // console.log("getTop3ByTotalAmount Data: ", data_Amount);
                 const response_Count = await instance.get('/customer/getTop3ByTotalCount');
                 const data_Count = response_Count.data;
-                // console.log("ggetTop3ByTotalCount Data: ", data_Count);
                 //const response_Rating = await instance.get('/customer/getTop3ByRating');
                 //const data_Rating = response_Rating.data;
 
-        if (savedSettings) {
-            const { checkboxes_prod } = JSON.parse(savedSettings);
-            const mostData = data_Amount.map(item => ({
-                prod: item.itemName,
-                gender: item.genderPreference,
-                ageGroup: item.agePreference,
-                region: item.regionPreference,
-            }));
-            const topData = data_Count.map(item => ({
-                prod: item.itemName,
-                gender: item.genderPreference,
-                ageGroup: item.agePreference,
-                region: item.regionPreference,
-            }));
-            // const favoData = data_Rating.map(item => ({
-            //     prod: item.itemName,
-            //     gender: item.genderPreference,
-            //     ageGroup: item.agePreference,
-            //     region: item.regionPreference,
-            // }));
+                if (savedSettings) {
+                    const { checkboxes_prod } = JSON.parse(savedSettings);
+                    const mostData = data_Amount.map(item => ({
+                        prod: item.itemName,
+                        gender: item.genderPreference,
+                        ageGroup: item.agePreference,
+                        region: selectedRegion === '전국' ? item.regionPreference_province :
+                                selectedRegion === '시도' ? item.regionPreference_city :
+                                item.regionPreference_town,
+                    }));
+                    const topData = data_Count.map(item => ({
+                        prod: item.itemName,
+                        gender: item.genderPreference,
+                        ageGroup: item.agePreference,
+                        region: selectedRegion === '전국' ? item.regionPreference_province :
+                                selectedRegion === '시도' ? item.regionPreference_city :
+                                item.regionPreference_town,
+                    }));
+                    
+                    // const favoData = data_Rating.map(item => ({
+                    //     prod: item.itemName,
+                    //     gender: item.genderPreference,
+                    //     ageGroup: item.agePreference,
+                    // region: selectedRegion === '전국' ? item.regionPreference_province :
+                    // selectedRegion === '시도' ? item.regionPreference_city :
+                    // item.regionPreference_town,
+                    // }));
 
-            setMost(mostData);
-            setTop(topData);
-            // setFavo(favoData);
-            
-            const charts = [];
-            if (checkboxes_prod.amount) {
-                charts.push('most');
+                    setMost(mostData);
+                    setTop(topData);
+                    // setFavo(favoData);
+
+                    const charts = [];
+                    if (checkboxes_prod.amount) {
+                        charts.push('most');
+                    }
+                    if (checkboxes_prod.count) {
+                        charts.push('top');
+                    }
+                    // if (checkboxes_prod.reaction) {
+                    //     charts.push('favo');
+                    // }
+                    setChartNames(charts);
+                }
+            } catch (error) {
+                console.error('Error get TableData_dist:', error);
             }
-            if (checkboxes_prod.count) {
-                charts.push('top');
-            }
-            // if (checkboxes_prod.reaction) {
-            //     charts.push('favo');
-            // }
-            setChartNames(charts);
         }
-        } catch (error) {
-            console.error('Error get TableData_dist:', error);
-        }
-    }
-    fetchTableData();
-}, []);
+        fetchTableData();
+    }, [selectedRegion]);
 
     const renderProducts = (products) => {
         return products.map((product, index) => (
@@ -114,25 +121,25 @@ const TopProd = () => {
                 <div style={{ marginTop: '10px' }}>
                     <h3>상품별 고객 선호도</h3>
                     <div style={{ marginTop: '20px' }}>
-                        <ul className="nav nav-tabs "  style={{border: "none"}}>
-                        {chartNames.includes('most') && (
+                        <ul className="nav nav-tabs " style={{ border: "none" }}>
+                            {chartNames.includes('most') && (
                                 <li className="nav-item">
-                                    <button className={`nav-link ${prod === 'most' ? 'active' : ''}`} 
-                                    onClick={() => handleTabClick('most')}>
+                                    <button className={`nav-link ${prod === 'most' ? 'active' : ''}`}
+                                        onClick={() => handleTabClick('most')}>
                                         최다거래상품 TOP3</button>
                                 </li>
                             )}
                             {chartNames.includes('top') && (
                                 <li className="nav-item">
-                                    <button className={`nav-link ${prod === 'top' ? 'active' : ''}`} 
-                                    onClick={() => handleTabClick('top')}>
+                                    <button className={`nav-link ${prod === 'top' ? 'active' : ''}`}
+                                        onClick={() => handleTabClick('top')}>
                                         최고매출상품 TOP3</button>
                                 </li>
                             )}
                             {chartNames.includes('favo') && (
                                 <li className="nav-item">
-                                    <button className={`nav-link ${prod === 'favo' ? 'active' : ''}`} 
-                                    onClick={() => handleTabClick('favo')}>
+                                    <button className={`nav-link ${prod === 'favo' ? 'active' : ''}`}
+                                        onClick={() => handleTabClick('favo')}>
                                         인기상품 TOP3</button>
                                 </li>
                             )}

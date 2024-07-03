@@ -10,7 +10,27 @@ import TopProd from './TopProdChart.js'
 import "../Customer.css"
 
 const CustomerMain = () => {
-      
+//맨위로 버튼 만들다: 실패
+  const [showButton, setShowButton] = React.useState(false);
+
+  React.useEffect(() => {
+  const handleScroll = () => {
+    if (window.scrollY > 300) {
+      setShowButton(true);
+    } else {
+      setShowButton(false);
+    }
+  };
+
+  window.addEventListener('scroll', handleScroll);
+  return () => {
+    window.removeEventListener('scroll', handleScroll);
+  };
+}, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className='CustomerMain'>
@@ -36,6 +56,11 @@ const CustomerMain = () => {
           </div>
         </section>
       </div>
+      {showButton && (
+        <button onClick={scrollToTop} className="scroll-to-top">
+          맨 위로
+        </button>
+      )}
     </div>
   );
 }

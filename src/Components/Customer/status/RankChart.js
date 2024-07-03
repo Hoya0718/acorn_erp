@@ -25,7 +25,6 @@ const Rank = () => {
                     prevRank: item.prevRank || null
                 }));
                 setAmount(data_Amount);
-                // console.log("data_Amount : ", data_Amount);
                 const response_Count = await instance.get('/customer/getTop10ByTotalCount');
                 const data_Count = response_Count.data.map((item, index) => ({
                     ...item,
@@ -33,7 +32,6 @@ const Rank = () => {
                     prevRank: item.prevRank || null
                 }));
                 setCount(data_Count);
-                console.log("data_Count: ", data_Count);
 
                 if (savedSettings) {
                     const { rangeValue } = JSON.parse(savedSettings);
