@@ -55,18 +55,17 @@ return (
               거래처 주소 {sortConfig && sortConfig.key === 'vendorAddress' && (
                 sortConfig.direction === 'ascending' ? '▼' : '▲'
               )}
-            </th>  
+            </th>
+            <th onClick={() => handleSort('vendorRemark')}>
+              비고 {sortConfig && sortConfig.key === 'vendorRemark' && (
+                sortConfig.direction === 'ascending' ? '▼' : '▲'
+              )}
+            </th>
             <th onClick={() => handleSort('deliverableStatus')}>
               납품 가능 {sortConfig && sortConfig.key === 'deliverableStatus' && (
                 sortConfig.direction === 'ascending' ? '▼' : '▲'
               )}
             </th>
-            <th onClick={() => handleSort('vendorRemark')}>
-              특이사항 {sortConfig && sortConfig.key === 'vendorRemark' && (
-                sortConfig.direction === 'ascending' ? '▼' : '▲'
-              )}
-            </th>
-         
 
         </tr>
       </thead>
@@ -108,8 +107,8 @@ return (
                 <td>{vendor.vendorName}</td>
                 <td>{vendor.vendorContact}</td>
                 <td>{vendor.vendorAddress}</td>
-                <td>{vendor.deliverableStatus ? 'O' : 'X'}</td>
                 <td>{vendor.vendorRemark}</td>
+                <td>{vendor.deliverableStatus ? 'O' : 'X'}</td>
               </tr>
             )
           ))}

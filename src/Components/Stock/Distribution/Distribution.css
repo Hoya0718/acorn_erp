@@ -2,7 +2,6 @@
     border-collapse: collapse;
     width: 100%;
 }
-
 .distribution-table th, .distribution-table td {
     border: 1px solid #ddd;
     padding: 8px;
