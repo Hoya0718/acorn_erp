@@ -3,31 +3,25 @@ import { Outlet, Link } from 'react-router-dom';
 import "../Main/Main.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Reservation.css';
+import axios from '../../api/axios';
 import acornImage from './Acorn-illustration-png.png';  // 이미지 경로 설정
 
 const ReservationMgmt = () => {
   const [date, setDate] = useState(new Date());
   const [reservations, setReservations] = useState([]);
 
-  // 로컬 스토리지에서 데이터를 불러오는 함수
-  const loadReservationsFromLocalStorage = () => {
-    const savedReservations = localStorage.getItem('reservations');
-    if (savedReservations) {
-      return JSON.parse(savedReservations);
-    }
-    return [];
-  };
-
-  // 컴포넌트가 처음 마운트될 때 로컬 스토리지에서 데이터를 불러옴
   useEffect(() => {
-    const initialReservations = loadReservationsFromLocalStorage();
-    setReservations(initialReservations);
+    // 서버에서 데이터를 가져오는 함수
+    const fetchReservations = async () => {
+      try {
+        const response = await axios.get('/reservations');
+        setReservations(response.data);
+      } catch (error) {
+        console.error('Error fetching reservations:', error);
+      }
+    };
+    fetchReservations();
   }, []);
-
-  // 상태가 변경될 때마다 로컬 스토리지에 저장
-  useEffect(() => {
-    localStorage.setItem('reservations', JSON.stringify(reservations));
-  }, [reservations]);
 
   const addReservation = (newReservation) => {
     const updatedReservations = [...reservations, newReservation];
