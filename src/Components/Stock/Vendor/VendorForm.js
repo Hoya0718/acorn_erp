@@ -2,10 +2,7 @@ import React from 'react';
 import './Vendor.css';
 
 const VendorForm = ({
-  handleSubmit,
-  vendorData,
-  handleChange,
-  isNewVendor,
+  handleSubmit, vendorData, handleChange, isNewVendor,
 }) => {
   return (
     <tr>
@@ -14,8 +11,7 @@ const VendorForm = ({
       </td>
       <td>
         <input
-          className="form-input" type="text" placeholder="/"
-          readOnly />
+          className="form-input" type="text" placeholder="/" readOnly />
       </td>
       <td>
         <input

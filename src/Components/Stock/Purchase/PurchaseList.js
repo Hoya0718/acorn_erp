@@ -4,7 +4,7 @@ import './Purchase.css';
 import {
   handleCheckboxChange, handleSelectAll, handleUpdateClick, handleDeleteClick,
   handleSubmitAdd, handleSubmitUpdate, handleChangeNewPurchase, handleChangeUpdatePurchase,
-  handleCancelAdd, handleCancelUpdate
+  handleCancelAdd, handleCancelUpdate, handleUpdateClickWrapper
 } from './Functions';
 
 const PurchaseList = ({
@@ -27,13 +27,7 @@ const PurchaseList = ({
                 onChange={handleSelectAll}
               />
             </th>
-            <th>코드</th>
-            <th>발주 품목명</th>  
-            <th>발주 단위</th> 
-            <th>발주 일자</th> 
-            <th>발주 수량</th> 
-            <th>가격</th> 
-            <th>특이사항</th> 
+            <th>코드</th><th>발주 품목명</th><th>발주 단위</th><th>발주 일자</th><th>발주 수량</th><th>가격</th><th>특이사항</th> 
           </tr>
         </thead>
         <tbody>

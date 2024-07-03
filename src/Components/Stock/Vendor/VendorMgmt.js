@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import VendorList from './VendorList';
+import ExcelPrint from './ExcelPrint';
 import DeleteModal from './DeleteModal';
-import DangerAlert from './DangerAlert'; // DangerAlert 컴포넌트를 import 합니다.
+import DangerAlert from './DangerAlert';
 import {
   fetchVendors, handleAddClick, handleUpdateClick, handleDeleteClick, handleSubmitAdd,
   handleSubmitUpdate, handleCheckboxChange, handleSelectAll, handleChangeNewVendor,
@@ -62,23 +63,15 @@ const VendorMgmt = () => {
            <button onClick={() => handleCancelForm(setIsAddClicked, setIsUpdateClicked, setNewVendor, setUpdateVendor)}>취소</button>
           )}
         </span>
-      </div>
-      <br />
-
+      </div> <br />
+     
       <div className="searcher">
-        <div className="left">
-          <label htmlFor="date">
-            <input type="date" id="date" max="2077-06-20" min="2077-06-05" value="2024-07-18" />
-          </label>
-        </div>
-
         <div className="right">
           <input type="text" placeholder='🔍 검색' value={searchTerm} onChange={handleSearchChange} />
           <button onClick={handleSearch}>조회 &gt;</button>
         </div>
-      </div>
-      <br />
-
+      </div><br />
+      
       {/* VendorList 컴포넌트에 필요한 props 모두 전달 */}
       <VendorList
         vendors={vendors}
@@ -103,9 +96,9 @@ const VendorMgmt = () => {
       />
       <br />
 
+      {/* 엑셀&인쇄 */}
       <div className="excel-print">
-        <button>엑셀 다운</button>
-        <button>인쇄</button>
+        <ExcelPrint vendors={vendors}/>       
       </div>
 
       {/* 삭제 모달 */}
