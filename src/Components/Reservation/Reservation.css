@@ -84,37 +84,22 @@ color: #396EE2;
 }
 
 .other {
-opacity: .3;
+  opacity: 0.3;
 }
 
 .date:hover {
   background-color: #f0f0f0;
 }
 
-.today {
-position: relative;
-color: black;
-background-color: antiquewhite;
-}
-
-.today::before {
-position: absolute;
-top: 50%;
-left: 50%;
-z-index: -1;
-display: block;
-width: 30px;
-height: 30px;
-background-color: #FF0000;
-border-radius: 50%;
-transform: translate(-50%, -50%);
-content: '';
+.today:not(.other) {
+  position: relative;
+  color: black;
+  background-color: antiquewhite;
 }
 
 .custom-right-column {
 margin-top: 7rem
 }
-
 
 
 /* ResTable.css */
@@ -243,5 +228,3 @@ height: 15px; /* 원하는 크기로 조정 */
 display: block;
 margin: 0 auto;  /* 이미지를 중앙에 배치 */
 }
-
-
