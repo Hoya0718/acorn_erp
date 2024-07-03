@@ -18,7 +18,6 @@ const MgmtTable = ({ rowsPerPage }) => {
 
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({});
-  // const [rowsPerPage, setrowsPerPage] = useState(10); // 페이지당 아이템 수
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -58,15 +57,18 @@ const MgmtTable = ({ rowsPerPage }) => {
         //테이블데이터+고객등급데이터+특이사항데이터 병합
         const mergedData = data.map(customer => {
           const gradeInfo = data_grade.find(grade => grade.customerId === customer.customerId);
-          const notesInfo = data_notes.find(notes => notes.customerId === customer.customerId);
+          // const notesInfo = data_notes.find(CustomerNotes => CustomerNotes.customerId === customer.customerId);
+          const notes = data_notes.filter(note => note.customerId === customer.customerId);
           return {
             ...customer,
             customerGrade: gradeInfo ? gradeInfo.customerGrade : '-',
-            customerNotes: notesInfo ? notesInfo.customerNotes : '-',
+            // customerNotes: notesInfo ? notesInfo.notes : '-',
+            // customerNotes: notes,
+            customerNotes: notes.length ? notes : [{ notes: '-' }],
           };
         });
-
         setRows(mergedData);
+        console.log(rows[columns.accessor==='customerNotes'])
         
         //페이지네이션 데이터
         const response_pageData = await instance.post(`/customer/getAllList?page=${currentPage - 1}&size=${rowsPerPage}`);
@@ -194,7 +196,19 @@ const MgmtTable = ({ rowsPerPage }) => {
                   key={column.accessor} className={column.className || 'table-centered'}
                   onClick={column.isName ? () => handleNameClick(row) : undefined}
                   style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}>
-                  {row[column.accessor]}
+                  {/* {row[column.accessor]} */}
+                  {/* {column.accessor === 'customerNotes' ? (
+                    row[column.accessor].map((note, idx) => <div key={idx}>{note.notes}</div>)
+                  ) : (
+                    row[column.accessor]
+                  )} */}
+                 {column.accessor === 'customerNotes' ? (
+                   Array.isArray(row[column.accessor]) && row[column.accessor].length > 0
+                   ? row[column.accessor][0].notes || '-'
+                   : '-'
+                  ) : (
+                    row[column.accessor]
+                  )}
                 </td>
               ))}
             </tr>

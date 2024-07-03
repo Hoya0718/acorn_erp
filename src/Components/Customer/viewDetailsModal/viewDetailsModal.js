@@ -7,34 +7,8 @@ import instance from './../../../api/axios';
 
 const ViewDetailsModal = ({ show, onHide, data }) => {
     const [formData, setFormData] = React.useState(data);
-    const [ageGroup, setAgeGroup] = React.useState('');
-    const [regionGroupProvince, setRegionGroupProvince] = React.useState('');
-    const [regionGroupCity, setRegionGroupCity] = React.useState('');
-    const [regionGroupTown, setRegionGroupTown] = React.useState('');
     const [customerNotes, setCustomerNotes] = React.useState('');
-
-    React.useEffect(() => {
-        const fetchTableData = async () => {
-            try {
-                //연령그룹 데이터 호출
-                const response_ageGroup = await instance.get('/customer/get_age_group');
-                const data_ageGroup = response_ageGroup.data
-                const ageGroupInfo = data_ageGroup.find(info => info.customerId === data.customerId);
-                setAgeGroup(ageGroupInfo ? ageGroupInfo.ageGroup : '');
-
-                const response_regionGroup = await instance.get('/customer/get_region_group');
-                const data_regionGroup = response_regionGroup.data;
-                const regionGroupInfo = data_regionGroup.find(info => info.customerId === data.customerId);
-                setRegionGroupProvince(regionGroupInfo ? regionGroupInfo.regiongroupProvince : '');
-                setRegionGroupCity(regionGroupInfo ? regionGroupInfo.regiongroupCity : '');
-                setRegionGroupTown(regionGroupInfo ? regionGroupInfo.regiongroupTown : '');
-
-            } catch (error) {
-                console.error('Error get MgmtTable:', error);
-            }
-        }
-        fetchTableData();
-    }, []);
+    const [isEditMode, setIsEditMode] = React.useState(false);
 
     React.useEffect(() => {
         setFormData(data);
@@ -50,10 +24,12 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
 
     const handleSaveChanges = async () => {
         try {
-            await instance.post('/customer/saveNotes', {
-                customerId: formData.customerId,
-                notes: customerNotes
-            });
+            if (customerNotes) {
+                await instance.post('/customer/saveNotes', {
+                    customerId: formData.customerId,
+                    notes: customerNotes
+                });
+            }
             onHide(); // 모달 닫기
         } catch (error) {
             console.error('Error saving changes:', error);
@@ -75,13 +51,19 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
                                         <label>이름</label>
                                     </div>
                                     <div className="col-md-3">
-                                        <input type="text" className="form-control" value={formData.customerName || ''} />
+                                        <input type="text" className="form-control" value={formData.customerName || ''} style={{
+                        border: 'none',
+                        textAlign: 'center',
+                    }}/>
                                     </div>
                                     <div className="col-md-3 centered">
                                         <label>성별</label>
                                     </div>
                                     <div className="col-md-3">
-                                        <input type="text" className="form-control" value={formData.customerGender || ''} />
+                                        <input type="text" className="form-control" value={formData.customerGender || ''} style={{
+                        border: 'none',
+                        textAlign: 'center',
+                    }}/>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -89,13 +71,20 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
                                         <label>생년월일</label>
                                     </div>
                                     <div className="col-md-3">
-                                        <input type="date" className="form-control" value={formatDateForInput(formData.customerBirthDate) || ''} />
+                                        <input type="date" className="form-control" value={formatDateForInput(formData.customerBirthDate) || ''} 
+                                                    style={{
+                                                        border: 'none',
+                                                        textAlign: 'lefted',
+                                                    }}/>
                                     </div>
                                     <div className="col-md-3 centered">
                                         <label>연락처</label>
                                     </div>
                                     <div className="col-md-3">
-                                        <input type="text" className="form-control" value={formData.customerTel || ''} />
+                                        <input type="text" className="form-control" value={formData.customerTel || ''} style={{
+                        border: 'none',
+                        textAlign: 'center',
+                    }}/>
                                     </div>
                                 </div>
                                 <div className="row">
@@ -103,34 +92,24 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
                                         <label>주소</label>
                                     </div>
                                     <div className="col-md-9">
-                                        <input type="text" className="form-control" value={formData.customerAddr || ''} />
+                                        <input type="text" className="form-control" value={formData.customerAddr || ''} style={{
+                        border: 'none',
+                        textAlign: 'center',
+                    }}/>
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-md-3 centered">
-                                        <label>연령그룹</label>
-                                    </div>
-                                    <div className="col-md-3">
-                                        <input type="text" className="form-control" value={ageGroup || ''} />
-                                    </div>
-                                    <div className="col-md-3 centered">
-                                        <label>지역그룹</label>
-                                    </div>
-                                    <div className="col-md-3">
-                                        <input type="text" className="form-control" value={regionGroupProvince || ''} />
-                                        <input type="text" className="form-control" value={regionGroupCity || ''} />
-                                        <input type="text" className="form-control" value={regionGroupTown || ''} />
-                                        
-                                    </div>
-
-                                </div>
+                      
 
                                 <div className="row">
                                     <div className="col-md-3 centered">
                                         <label>가입일</label>
                                     </div>
                                     <div className="col-md-3">
-                                        <input type="date" className="form-control" value={formatDateForInput(formData.registerDate) || ''} />
+                                        <input type="date" className="form-control" value={formatDateForInput(formData.registerDate) || ''} 
+                                                    style={{
+                                                        border: 'none',
+                                                        textAlign: 'lefted',
+                                                    }}/>
                                     </div>
                                     <div className="col-md-3 centered">
                                         <label>회원등급</label>
@@ -151,14 +130,33 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
                                         <label> 특이사항</label>
                                     </div>
                                     <div className="col-md-9">
-                                        <input 
-                                            type="text" 
-                                            className="form-control" 
-                                            placeholder='특이사항을 입력하세요!'  
-                                            value={customerNotes} 
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder='특이사항을 입력하세요!'
+                                            value={customerNotes}
                                             onChange={(e) => setCustomerNotes(e.target.value)}
                                         />
-                                        <input type="text" className="form-control" value={formData.customerNotes || ''} />
+                                         {Array.isArray(formData.customerNotes) && formData.customerNotes.map((note, idx) => (
+                                            <React.Fragment key={idx}>
+                                            <div className="row">
+                                                <div className="col-md-3  centered">
+                                                    {formatDateForInput(note.notesDate)}
+                                                    </div>
+                                                    <div className="col-md-9  centered">
+                                                <input 
+                                                    type="text" 
+                                                    className="form-control" 
+                                                    value={note.notes} 
+                                                    style={{
+                                                        border: 'none',
+                                                        textAlign: 'lefted',
+                                                    }}
+                                                />
+                                                </div>
+                                                </div>
+                                            </React.Fragment>
+                                        ))}
                                     </div>
                                 </div>
                             </div>

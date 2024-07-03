@@ -13,6 +13,8 @@ const Rank = () => {
     const [rangeValue, setRangeValue] = React.useState(10);
     const [amount, setAmount] = React.useState([]);
     const [count, setCount] = React.useState([]);
+    const [customerNotes, setCustomerNotes] = React.useState('');
+
 
     React.useEffect(() => {
         const savedSettings = localStorage.getItem('customerStatusSettings');
@@ -37,7 +39,7 @@ const Rank = () => {
                     const { rangeValue } = JSON.parse(savedSettings);
                     setRangeValue(Number(rangeValue));
                 }
-                
+
             } catch (error) {
                 console.error('Error get TableData_dist:', error);
             }
@@ -45,7 +47,7 @@ const Rank = () => {
         fetchTableData();
     }, []);
 
-    
+
     const getRankChange = (rank, prevRank) => {
         if (prevRank === null || prevRank === undefined || prevRank > 10) {
             return { icon: <span className="badge text-bg-success">New</span>, text: '' }; // new
@@ -63,14 +65,24 @@ const Rank = () => {
         return num.toLocaleString();
     };
     //전월 대비 랭킹 변동사항 확인: 변동사항 특이사항으로 저장하기
-    const createRemarkCustomerRanking = (rank, prevRank, chartName) => {
-        if (prevRank === null || prevRank === undefined || prevRank > rangeValue) {
-            const newMsg = `${chartName} 랭킹에 진입`;
-            console.log(newMsg);
-        } else {
-            const rankMsg = `{}월 ${chartName} 랭킹에서  ${rank}위 고객`;
-            console.log(rankMsg);
-            return;
+    const createRemarkCustomerRanking = async (rank, prevRank, chartName) => {
+        try {
+            if (prevRank === null || prevRank === undefined || prevRank > rangeValue) {
+                setCustomerNotes(`${chartName} 랭킹에 진입`)
+                await instance.post('/customer/saveNotes', {
+                    customerId: amount.customerId,
+                    notes: customerNotes
+                });
+            } else {
+                setCustomerNotes(`{}월 ${chartName} 랭킹에서  ${rank}위 고객`)
+                await instance.post('/customer/saveNotes', {
+                    customerId: amount.customerId,
+                    notes: customerNotes
+                });
+                return;
+            }
+        } catch (error) {
+            console.error('Error saving changes:', error);
         }
     }
 
