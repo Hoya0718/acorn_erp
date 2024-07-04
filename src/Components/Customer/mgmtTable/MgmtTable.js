@@ -220,34 +220,110 @@ const handleInputChange = (e, accessor) => {
           {/* 등록모드 */}
           {onAddMode && (
             <tr>
-              <td className="table-centered"></td>
-              {columns.map((column) => (
-                <td key={column.accessor} className={column.className || 'table-centered'}>
-                  <input 
-                  type="text" 
-                  name={column.accessor} 
-                  placeholder={column.header} 
-                  value={editingRowData[column.accessor] || ''}
-                  onChange={(e) => handleInputChange(e, column.accessor)}
-                  className="form-control" />
+               <td className="table-centered"></td>
+               {columns.map((column) => (
+             <td key={column.accessor} className={column.className || 'table-centered'}>
+                  {column.accessor === 'customerId' ? (
+                    <input type="text" value="자동 생성" className="form-control" readOnly />
+                  ) : column.accessor === 'customerBirthDate' ? (
+                    <input
+                      type="date"
+                      className="form-control"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] || ''}
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    />
+                  ) : column.accessor === 'registerDate' ? (
+                    <input
+                      type="date"
+                      className="form-control"
+                      name={column.accessor}
+                      value={new Date().toISOString().split('T')[0]}
+                    />
+                   ) : column.accessor === 'customerGrade' ? (
+                      <select
+                        className="form-control"
+                        name={column.accessor}
+                        value={editingRowData[column.accessor] !== undefined ? editingRowData[column.accessor] : '일반'}
+                        onChange={(e) => handleInputChange(e, column.accessor)}
+                      >
+                        <option value="">등급 선택</option>
+                        <option value="우수">우수</option>
+                        <option value="주의">주의</option>
+                        <option value="일반">일반</option>
+                      </select>
+                  ) : (
+                    <input
+                      type="text"
+                      placeholder={column.header}
+                      className="form-control"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] || ''}
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    />
+
+                  )}
                 </td>
               ))}
             </tr>
           )}
           {onUpdateMode && (
             <tr>
-              <td className="table-centered"></td>
+             <td className="table-centered"></td>
               {columns.map((column) => (
                 <td 
                   key={column.accessor} 
                   className={column.className || 'table-centered'}>
-                  <input 
-                    type="text" 
-                    name={column.accessor} 
-                    value={editingRowData[column.accessor] || ''}
-                    className="form-control"
-                    onChange={(e) => handleInputChange(e, column.accessor)}
-                   />
+                  {column.accessor === 'customerId' ? (
+                    <input type="text" value={editingRowData[column.accessor] || '자동 생성'} className="form-control" readOnly />
+                  ) : column.accessor === 'customerBirthDate' ? (
+                    <input
+                      type="date"
+                      className="form-control"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] || ''}
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    />
+                  ) : column.accessor === 'registerDate' ? (
+                    <input
+                      type="text"
+                      className="form-control"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] || new Date().toISOString().split('T')[0]}
+                      readOnly
+                    />
+                  ) : column.accessor === 'customerGender' ? (
+                    <select
+                      className="form-control"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] || ''}
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    >
+                      <option value="">성별 선택</option>
+                      <option value="남성">남성</option>
+                      <option value="여성">여성</option>
+                    </select>
+                  ) : column.accessor === 'customerGrade' ? (
+                    <select
+                      className="form-control"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] || ''}
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    >
+                      <option value="">등급 선택</option>
+                      <option value="우수">우수</option>
+                      <option value="주의">주의</option>
+                      <option value="일반" selected >일반</option>
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] || ''}
+                      className="form-control"
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    />
+                  )}
                 </td>
               ))}
             </tr>
