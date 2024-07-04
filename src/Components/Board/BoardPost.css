@@ -1,0 +1,98 @@
+.board-container {
+    width: 100%;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .board-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .board-header h2 {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .board-divider {
+    margin-bottom: 20px;
+  }
+  
+  .board-write-form {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .board-write-form form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .board-write-form label {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .board-write-form .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .board-write-form .form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .board-write-form textarea {
+    resize: vertical;
+    min-height: 200px; /* 최소 높이 설정 */
+  }
+  
+  .board-write-form .form-control-file {
+    padding: 8px;
+  }
+  
+  .board-write-form .button-group {
+    display: flex;
+    justify-content: flex-end; /* 우측 정렬 */
+    gap: 10px; /* 버튼 간격 설정 */
+  }
+  
+  .board-write-form button {
+    width: 120px; /* 버튼 너비 설정 */
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .board-write-form button.btn-primary {
+    background-color: #85a9c7; /* 색상 변경 */
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .board-write-form button.btn-primary:hover {
+    background-color: #6b8fab; /* hover 색상 변경 */
+  }
+  
+  .board-write-form button.btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .board-write-form button.btn-secondary:hover {
+    background-color: #5a6268;
+  }
+  

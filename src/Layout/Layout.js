@@ -123,8 +123,13 @@ const menuItems = [
   },
   {
     title: "📆 예약 관리",
-    path: "/layout/reservationMgmt"
-  }
+    path: "/layout/reservationMgmt", 
+  },
+  {
+    title: "커뮤니티",
+    path: "/layout/board",
+  },
+
 ];
 
 export default Layout;
