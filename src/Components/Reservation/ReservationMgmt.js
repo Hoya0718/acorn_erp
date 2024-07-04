@@ -9,6 +9,8 @@ import acornImage from './Acorn-illustration-png.png';  // 이미지 경로 설�
 const ReservationMgmt = () => {
   const [date, setDate] = useState(new Date());
   const [reservations, setReservations] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     // 서버에서 데이터를 가져오는 함수
@@ -67,7 +69,7 @@ const ReservationMgmt = () => {
     return dates.map((date, i) => {
       const condition = i >= firstDateIndex && i < lastDateIndex + 1 ? 'this' : 'other';
       const isToday = new Date().toDateString() === new Date(viewYear, viewMonth, date).toDateString();
-      const isReserved = reservations.some(reservation => 
+      const isReserved = reservations.some(reservation =>
         new Date(reservation.reservationDate).toDateString() === new Date(viewYear, viewMonth, date).toDateString()
       );
       const isCurrentMonth = condition === 'this';
@@ -102,18 +104,18 @@ const ReservationMgmt = () => {
       // 현재 달의 날짜
       selectedDate = new Date(year, month, day);
     }
-  
+
     const formattedDate = selectedDate.toLocaleDateString('ko-KR', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
       weekday: 'long'
     });
-    
-    const reservationsForTheDay = reservations.filter(reservation => 
+
+    const reservationsForTheDay = reservations.filter(reservation =>
       new Date(reservation.reservationDate).toDateString() === selectedDate.toDateString()
     );
-    
+
     const newWindow = window.open('', '_blank', 'width=600,height=400');
     newWindow.document.write(`
       <html>
@@ -172,6 +174,43 @@ const ReservationMgmt = () => {
     setDate(new Date());
   };
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = reservations.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const renderPagination = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(reservations.length / itemsPerPage); i++) {
+      pageNumbers.push(i);
+    }
+
+    return (
+      <nav aria-label="Page navigation example" style={{ marginTop: '50px' }}>
+        <ul className="pagination justify-content-center">
+          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+            <a className="page-link" href="#" onClick={() => paginate(currentPage - 1)} aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          {pageNumbers.map(number => (
+            <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
+              <a onClick={() => paginate(number)} href="#" className="page-link">
+                {number}
+              </a>
+            </li>
+          ))}
+          <li className={`page-item ${currentPage === Math.ceil(reservations.length / itemsPerPage) ? 'disabled' : ''}`}>
+            <a className="page-link" href="#" onClick={() => paginate(currentPage + 1)} aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    );
+  };
+
   return (
     <div>
       <div id="Frame">
@@ -222,28 +261,26 @@ const ReservationMgmt = () => {
                   </div>
                   <div className="right-mid">
                     <section id="sec">
-                      <Outlet context={{ reservations, addReservation, deleteReservations, updateReservation }} />
+                      <Outlet context={{
+                        reservations: currentItems,  // 현재 페이지의 항목만 전달
+                        addReservation,
+                        deleteReservations,
+                        updateReservation
+                      }} />
                     </section>
-                    <nav aria-label="Page navigation example" style={{ marginTop: '50px' }}>
-                      <ul className="pagination justify-content-center">
-                        <li className="page-item"><a className="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-                        <li className="page-item"><a className="page-link" href="#">1</a></li>
-                        <li className="page-item"><a className="page-link" href="#">2</a></li>
-                        <li className="page-item"><a className="page-link" href="#">3</a></li>
-                        <li className="page-item"><a className="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
-                      </ul>
-                    </nav>
+                    {renderPagination()}
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div id="footer_Frame">
-          <footer></footer>
-        </div>
+      </div>
+      <div id="footer_Frame">
+        <footer></footer>
       </div>
     </div>
+
   );
 };
 
