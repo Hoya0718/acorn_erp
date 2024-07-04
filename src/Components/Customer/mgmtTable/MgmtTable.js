@@ -3,9 +3,9 @@ import instance from './../../../api/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import CustomerStatusPagination from '../modules/PaginationModule';
-import ViewDetailsModal from '../viewDetailsModal/viewDetailsModal';
+import ViewDetailsModal from './viewDetailsModal/viewDetailsModal';
 
-const MgmtTable = ({ rowsPerPage }) => {
+const MgmtTable = ({ rowsPerPage, onAddMode, onCheckboxChange}) => {
   const [data, setData] = useState([]);
   const [pageData, setPageData] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
@@ -13,6 +13,8 @@ const MgmtTable = ({ rowsPerPage }) => {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState({});
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
+
+  //페이지 네이션 데이터
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
@@ -36,58 +38,61 @@ const MgmtTable = ({ rowsPerPage }) => {
     { header: '특이사항', accessor: 'customerNotes' },
   ], []);
 
-  useEffect(() => {
-    const fetchTableData = async () => {
-      try {
-        //테이블 데이터 호출
-        const response_tableData = await instance.get('/customer/getAllList');
-        const data = response_tableData.data.map(item => ({
-          ...item,
-          registerDate: formatDate(item.registerDate),
-          customerBirthDate: formatDate(item.customerBirthDate)
-        }));
+  const fetchTableData = async () => {
+    try {
+      //테이블 데이터 호출
+      const response_tableData = await instance.get('/customer/getAllList');
+      const data = response_tableData.data.map(item => ({
+        ...item,
+        registerDate: formatDate(item.registerDate),
+        customerBirthDate: formatDate(item.customerBirthDate)
+      }));
 
-        //고객등급 데이터 호출
-        const response_gradeData = await instance.get('/customer/getGrade');
-        const data_grade = response_gradeData.data
-        //특이사항 데이터 호출
-        const response_notes = await instance.get('/customer/getNotes');
-        const data_notes = response_notes.data
+      //고객등급 데이터 호출
+      const response_gradeData = await instance.get('/customer/getGrade');
+      const data_grade = response_gradeData.data
+      //특이사항 데이터 호출
+      const response_notes = await instance.get('/customer/getNotes');
+      const data_notes = response_notes.data
 
-        //테이블데이터+고객등급데이터+특이사항데이터 병합
-        const mergedData = data.map(customer => {
-          const gradeInfo = data_grade.find(grade => grade.customerId === customer.customerId);
-          // const notesInfo = data_notes.find(CustomerNotes => CustomerNotes.customerId === customer.customerId);
-          const notes = data_notes.filter(note => note.customerId === customer.customerId);
-          return {
-            ...customer,
-            customerGrade: gradeInfo ? gradeInfo.customerGrade : '-',
-            // customerNotes: notesInfo ? notesInfo.notes : '-',
-            // customerNotes: notes,
-            customerNotes: notes.length ? notes : [{ notes: '-' }],
-          };
-        });
-        setRows(mergedData);
-        console.log(rows[columns.accessor==='customerNotes'])
-        
-        //페이지네이션 데이터
-        const response_pageData = await instance.post(`/customer/getAllList?page=${currentPage - 1}&size=${rowsPerPage}`);
-        const page = response_pageData.data;
-        const formattedPageData = page.content.map(item => ({
-          ...item,
-          registerDate: formatDate(item.registerDate),
-          customerBirthDate: formatDate(item.customerBirthDate)
-        }));
-        setPageData(formattedPageData);
-        setFilteredData(formattedPageData);
-        setTotalItems(page.totalElements);
+      //테이블데이터+고객등급데이터+특이사항데이터 병합
+      const mergedData = data.map(customer => {
+        const gradeInfo = data_grade.find(grade => grade.customerId === customer.customerId);
+        const notes = data_notes.filter(note => note.customerId === customer.customerId);
+        return {
+          ...customer,
+          customerGrade: gradeInfo ? gradeInfo.customerGrade : '-',
+          customerNotes: notes.length ? notes : [{ notes: '-' }],
+        };
+      });
+      setRows(mergedData);
+      console.log(rows)
 
-      } catch (error) {
-        console.error('Error get MgmtTable:', error);
-      }
+      //페이지네이션 데이터
+      const response_pageData = await instance.post(`/customer/getAllList?page=${currentPage - 1}&size=${rowsPerPage}`);
+      const page = response_pageData.data;
+      const formattedPageData = page.content.map(item => ({
+        ...item,
+        registerDate: formatDate(item.registerDate),
+        customerBirthDate: formatDate(item.customerBirthDate)
+      }));
+      setPageData(formattedPageData);
+      setFilteredData(formattedPageData);
+      setTotalItems(page.totalElements);
+
+    } catch (error) {
+      console.error('Error get MgmtTable:', error);
     }
+  }
+
+  useEffect(() => {
     fetchTableData();
   }, [currentPage, rowsPerPage]);
+
+
+  useEffect(() => {
+    setFilteredData(rows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+  }, [rows, currentPage, rowsPerPage]);
 
   useEffect(() => {
     setSelectedRows({});
@@ -132,9 +137,7 @@ const MgmtTable = ({ rowsPerPage }) => {
     setFilteredData(sortedRows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
 
   };
-  useEffect(() => {
-    setFilteredData(rows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
-  }, [rows, currentPage, rowsPerPage]);
+
 
   const handleRowSelect = (index) => {
     const newSelectedRows = { ...selectedRows };
@@ -149,6 +152,17 @@ const MgmtTable = ({ rowsPerPage }) => {
   const handleNameClick = (rowData) => {
     setModalData(rowData);
     setShowModal(true);
+  };
+
+  const handleModalSave = async (updatedData) => {
+    try {
+      await instance.put(`/customer/info/${updatedData.customerId}`, updatedData);
+      await instance.put(`/customer/grade/${updatedData.customerId}`, updatedData);
+      await fetchTableData();
+      setShowModal(false);
+    } catch (error) {
+      console.error('Error updating customer:', error);
+    }
   };
 
   return (
@@ -182,13 +196,23 @@ const MgmtTable = ({ rowsPerPage }) => {
           </tr>
         </thead>
         <tbody className="table-group-divider">
+        {onAddMode && (
+            <tr>
+              <td className="table-centered"></td>
+              {columns.map((column) => (
+                <td key={column.accessor} className={column.className || 'table-centered'}>
+                  <input type="text" placeholder={column.header} className="form-control" />
+                </td>
+              ))}
+            </tr>
+          )}
           {filteredData.map((row, index) => (
             <tr key={index}>
               <td className="table-centered">
                 <input
                   type="checkbox"
                   checked={selectedRows[index] || false}
-                  onChange={() => handleRowSelect(index)}
+                  onChange={() => onCheckboxChange(row.customerId, !row.checked)}
                 />
               </td>
               {columns.map((column) => (
@@ -196,10 +220,10 @@ const MgmtTable = ({ rowsPerPage }) => {
                   key={column.accessor} className={column.className || 'table-centered'}
                   onClick={column.isName ? () => handleNameClick(row) : undefined}
                   style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}>
-                 {column.accessor === 'customerNotes' ? (
-                   Array.isArray(row[column.accessor]) && row[column.accessor].length > 0
-                   ? row[column.accessor][0].notes || '-'
-                   : '-'
+                  {column.accessor === 'customerNotes' ? (
+                    Array.isArray(row[column.accessor]) && row[column.accessor].length > 0
+                      ? row[column.accessor][0].notes || '-'
+                      : '-'
                   ) : (
                     row[column.accessor]
                   )}
@@ -223,6 +247,7 @@ const MgmtTable = ({ rowsPerPage }) => {
           show={showModal}
           onHide={() => setShowModal(false)}
           data={modalData}
+          onSave={handleModalSave}
         />)}
     </div>
   );

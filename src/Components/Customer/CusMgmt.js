@@ -1,22 +1,14 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import MgmtTable from './mgmtTable/MgmtTable'
+import ExcelPrint from '../Stock/Vendor/ExcelPrint';
+import instance from './../../api/axios';
 
 
 const CusMgmt = () => {
   const [data, setData] = useState([]);
-  const [formData, setFormData] = useState({
-    id: '',
-    name: '',
-    gender: '',
-    contact: '',
-    dob: '',
-    joinDate: '',
-    membership: '',
-    notes: '',
-  });
+  const [formData, setFormData] = useState({});
+  const [onAddMode, setOnAddMode, onUpdateMode, setOnUpdateMode] = useState(false);
 
-  const [showModal, setShowModal] = useState(false);
-  const [editIndex, setEditIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState(data);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -32,8 +24,8 @@ const CusMgmt = () => {
       .then(response => response.json())
       .then(data => setData(data))
       .catch(error => console.error('Error fetching data:', error));
- 
-    }, []);
+
+  }, []);
 
   useEffect(() => {
     setFilteredData(data);
@@ -58,62 +50,26 @@ const CusMgmt = () => {
     setCurrentPage(page);
   };
 
-  const handleDeleteRows = () => {
-    const idsToDelete = data.filter(item => item.checked).map(item => item.id);
-
-    fetch('/api/customers', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(idsToDelete),
-    })
-      .then(response => {
-        if (response.ok) {
-          setData(prevData => prevData.filter(item => !item.checked));
-        } else {
-          console.error('Failed to delete rows');
-        }
-      })
-      .catch(error => console.error('Error deleting rows:', error));
+  const handleAddClick = () => {
+    setOnAddMode(true); // 추가 모드 활성화
   };
-
-  const handleAddRow = () => {
-    setEditIndex(null);
-    setFormData({
-      id: '',
-      name: '',
-      gender: '',
-      contact: '',
-      dob: '',
-      joinDate: '',
-      membership: '',
-      notes: '',
-    });
-    setShowModal(true);
+  const handleUpdateClick = () => {
+    setOnUpdateMode(true); // 추가 모드 활성화
   };
-
-  const handleEditRows = () => {
-    const selectedRow = data.findIndex(item => item.checked);
-    if (selectedRow !== -1) {
-      setEditIndex(selectedRow);
-      setFormData(data[selectedRow]);
-      setShowModal(true);
-    }
+  const handleEditClick = () => {
+    setOnAddMode(false); // 추가 모드 비활성화
+    setOnUpdateMode(false); // 추가 모드 비활성화
   };
+  
+  const handleDeleteClick = async () => {
+    try {
+      console.log("v", filteredData)
+      const responseDelete = await instance.delete(`/customer/delete/${formData.customerId}`);
+    } catch (error) {
+      console.error('Error saving changes:', error);
+  }
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
   };
-
-  const handleSearch = () => {
-    const filtered = data.filter(item =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredData(filtered);
-  };
-
-
   return (
     <div>
       <div className="Middle classification">
@@ -121,27 +77,27 @@ const CusMgmt = () => {
       </div>
 
       <hr />
-
-      <div className="subTitle">
-        <button className="edit-button btn " onClick={handleEditRows}>
-          수정
-        </button>
-        <button className="add-button btn " onClick={handleAddRow}>
-          추가
-        </button>
-        <button className="delete-button btn " onClick={handleDeleteRows}>
-          삭제
-        </button>
+      <div className='items-subTitle'>
+        <div className='items-subTitle'>
+          <span>
+            <button onClick={handleAddClick}>등록</button>
+            <>
+              <button onClick={handleUpdateClick}>수정</button>
+              <button onClick={handleDeleteClick}>삭제</button>
+            </>
+            <button onClick={handleEditClick}>취소</button>
+          </span>
+        </div>
       </div>
 
       <br />
       <select value={rowsPerPage} onChange={handleRowsPerPageChange}>
-                    <option value={10}>10줄 보기</option>
-                    <option value={20}>20줄 보기</option>
-                    <option value={30}>30줄 보기</option>
-                    <option value={40}>40줄 보기</option>
-                    <option value={50}>50줄 보기</option>
-                  </select>
+        <option value={10}>10줄 보기</option>
+        <option value={20}>20줄 보기</option>
+        <option value={30}>30줄 보기</option>
+        <option value={40}>40줄 보기</option>
+        <option value={50}>50줄 보기</option>
+      </select>
       <div className="searcher">
         <div className="left">
           <label htmlFor="date">
@@ -157,16 +113,22 @@ const CusMgmt = () => {
             className="search-input"
             placeholder="검색"
             value={searchTerm}
-            onChange={handleSearchChange}
+            onChange={() => { }}
           />
-          <button className="search-button" onClick={handleSearch}>조회</button>
+          <button className="search-button" onClick={() => { }}>조회</button>
         </div>
       </div>
-      <MgmtTable 
-        data={filteredData} 
+      <MgmtTable
+        data={filteredData}
         currentPage={currentPage}
         rowsPerPage={rowsPerPage}
-        />
+        onAddMode={onAddMode}
+        onUpdateMode={onUpdateMode}
+      />
+      {/* 엑셀&인쇄 */}
+      <div className="excel-print">
+        <ExcelPrint vendors={filteredData} />
+      </div>
     </div>
   );
 };
