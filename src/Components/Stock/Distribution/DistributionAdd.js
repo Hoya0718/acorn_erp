@@ -97,54 +97,34 @@ const DistributionAdd = ({
                             checked={checkAll}
                         />
                     </th>
-                    <th>품목코드</th>
-                    <th>품목이름</th>
-                    <th>입고일자</th>
-                    <th>발주수량</th>
-                    <th>입고수량</th>
-                    <th>기초재고</th>
-                    <th>출고수량</th>
-                    <th>집계재고</th>
-                    <th>입고예정일</th>
+                    <th>품목코드</th><th>품목이름</th><th>입고일자</th><th>발주수량</th><th>입고수량</th><th>기초재고</th><th>출고수량</th><th>집계재고</th><th>입고예정일</th> 
                 </tr>
             </thead>
             <tbody>
                 {purchaseData.map((purchase, index) => (
                     <tr key={index}>
                         <td>
-                            <input 
-                                type='checkbox'
-                                checked={isChecked}
-                                onChange={() => setIsChecked(!isChecked)}
+                            <input type='checkbox' checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
+                        </td>        
+                        <td>
+                            <input style={{border:'none', textAlign:'center'}}
+                                    type='text' placeholder={purchase.purchaseCode} name='distributionCode'
+                                    value={distributionDataList[index]?.distributionCode || ''} 
+                                    onChange={(e) =>
+                                        handleInputChange(
+                                            index, e.target.name, e.target.value
+                                        )}
+                                    readOnly
                             />
                         </td>
                         <td>
                             <input style={{border:'none', textAlign:'center'}}
                                 type='text'
-                                placeholder={purchase.purchaseCode}
-                                name='distributionCode'
-                                value={distributionDataList[index]?.distributionCode || ''}
-                                onChange={(e) =>
-                                    handleInputChange(
-                                        index,
-                                        e.target.name,
-                                        e.target.value
-                                    )
-                                }
-                                readOnly
-                            />
-                        </td>
-                        <td>
-                            <input style={{border:'none', textAlign:'center'}}
-                                type='text'
-                                placeholder={purchase.purchaseName}
-                                name='distributionName'
+                                placeholder={purchase.purchaseName} name='distributionName'
                                 value={distributionDataList[index]?.distributionName || ''}
                                 onChange={(e) =>
                                     handleInputChange(
-                                        index,
-                                        e.target.name,
-                                        e.target.value
+                                        index, e.target.name, e.target.value
                                     )
                                 }
                             />

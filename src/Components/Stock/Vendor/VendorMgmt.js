@@ -29,10 +29,6 @@ const VendorMgmt = () => {
     fetchVendors(setVendors);
   }, []);
 
-  const handleSortChange = (value) => {
-    setSortBy(value);
-  };
-
     // 검색어 변경 핸들러
     const handleSearchChange = (event) => {
       setSearchTerm(event.target.value);
@@ -67,7 +63,7 @@ const VendorMgmt = () => {
      
       <div className="searcher">
         <div className="right">
-          <input type="text" placeholder='🔍 검색' value={searchTerm} onChange={handleSearchChange} />
+          <input type="text" placeholder='🔍 거래처명으로 조회' value={searchTerm} onChange={handleSearchChange} />
           <button onClick={handleSearch}>조회 &gt;</button>
         </div>
       </div><br />
