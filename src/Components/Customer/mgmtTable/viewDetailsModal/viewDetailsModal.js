@@ -1,9 +1,9 @@
 // 작성자: 박승희
 // 고객관리 세부사항보기 모달 페이지
 import * as React from 'react';
-import "../../Main/Main.css";
+import "../../../Main/Main.css";
 import { Modal, Button } from 'react-bootstrap';
-import instance from './../../../api/axios';
+import instance from '../../../../api/axios';
 
 const ViewDetailsModal = ({ show, onHide, data }) => {
     const [formData, setFormData] = React.useState(data);
@@ -29,19 +29,15 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
             registerDate: new Date(formData.registerDate)
         };
     
-        console.log(formData.customerId)
-        console.log(formattedData)
         try {
             const responsePut = await instance.put(`/customer/info/${formData.customerId}`, formattedData);
             const responseGrade = await instance.put(`/customer/grade/${formData.customerId}`, formattedData);
             
-            console.log( formattedData)
             if (customerNotes) {
                 const responsePost = await instance.post('/customer/saveNotes', {
                     customerId: formData.customerId,
                     notes: customerNotes
                 });
-                console.log('POST response:', responsePost);
             }
 
             onHide(); // 모달 닫기
