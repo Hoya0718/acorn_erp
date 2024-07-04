@@ -5,7 +5,11 @@ import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import CustomerStatusPagination from '../modules/PaginationModule';
 import ViewDetailsModal from '../viewDetailsModal/viewDetailsModal';
 
-const MgmtTable = ({ rowsPerPage }) => {
+const MgmtTable = ({
+  rowsPerPage, onAddMode, onUpdateMode, onCheckboxChange, selectedRows, setSelectedRows,
+  editingRowId, setEditingRowId, editingRowData, setEditingRowData,
+}) => {
+  //테이블 데이터 
   const [data, setData] = useState([]);
   const [pageData, setPageData] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
@@ -105,6 +109,9 @@ const MgmtTable = ({ rowsPerPage }) => {
       });
     }
     setSelectedRows(newSelectedRows);
+    // data.forEach(item => {
+    //   onCheckboxChange(item.customerId, newSelectAll);
+    // });
   };
 
   const handleSort = (key) => {
@@ -144,7 +151,16 @@ const MgmtTable = ({ rowsPerPage }) => {
       newSelectedRows[index] = true;
     }
     setSelectedRows(newSelectedRows);
+    onCheckboxChange(customerId, isSelected);
   };
+
+  const handleInputChange = (e, accessor) => {
+    setEditingRowData({
+      ...editingRowData,
+      [accessor]: e.target.value,
+    });
+  };
+
 
   const handleNameClick = (rowData) => {
     setModalData(rowData);
@@ -182,7 +198,17 @@ const MgmtTable = ({ rowsPerPage }) => {
           </tr>
         </thead>
         <tbody className="table-group-divider">
-          {filteredData.map((row, index) => (
+          {onAddMode && (
+            <tr>
+              <td className="table-centered"></td>
+              {columns.map((column) => (
+                <td key={column.accessor} className={column.className || 'table-centered'}>
+                  <input type="text" placeholder={column.header} className="form-control" />
+                </td>
+              ))}
+            </tr>
+          )}
+           {filteredData.map((row, index) => (
             <tr key={index}>
               <td className="table-centered">
                 <input
@@ -191,20 +217,44 @@ const MgmtTable = ({ rowsPerPage }) => {
                   onChange={() => handleRowSelect(index)}
                 />
               </td>
-              {columns.map((column) => (
-                <td
-                  key={column.accessor} className={column.className || 'table-centered'}
-                  onClick={column.isName ? () => handleNameClick(row) : undefined}
-                  style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}>
-                 {column.accessor === 'customerNotes' ? (
-                   Array.isArray(row[column.accessor]) && row[column.accessor].length > 0
-                   ? row[column.accessor][0].notes || '-'
-                   : '-'
-                  ) : (
-                    row[column.accessor]
-                  )}
-                </td>
-              ))}
+              
+
+              {onUpdateMode && editingRowId === row.customerId ? (
+                columns.map((column) => (
+                  
+                  <td
+                    key={column.accessor}
+                    className={column.className || 'table-centered'}
+                    onClick={column.isName ? () => handleNameClick(row) : undefined}
+                    style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}
+                  >
+                    {console.log('onUpdateMode && editingRowId === row.customerId  조건충족', editingRowData)}
+                    <input
+                      type="text"
+                      value={editingRowData[column.accessor] || ''}
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    />
+                  </td>
+                ))
+              ) : (
+                columns.map((column) => (
+                  <td
+                    key={column.accessor}
+                    className={column.className || 'table-centered'}
+                    onClick={column.isName ? () => handleNameClick(row) : undefined}
+                    style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}
+                  >
+                    {console.log(onUpdateMode ,editingRowId ,row.customerId , "조건불충족")}
+                    {column.accessor === 'customerNotes' ? (
+                      Array.isArray(row[column.accessor]) && row[column.accessor].length > 0
+                        ? row[column.accessor][0].notes || '-'
+                        : '-'
+                    ) : (
+                      row[column.accessor]
+                    )}
+                  </td>
+                ))
+              )}
             </tr>
           ))}
         </tbody>
