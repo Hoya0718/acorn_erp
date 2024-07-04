@@ -4,7 +4,7 @@ import "../Main/Main.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Reservation.css';
 import axios from '../../api/axios';
-import acornImage from './Acorn-illustration-png.png';  // 이미지 경로 설정
+import { PiAcornDuotone } from "react-icons/pi";  // react-icons 임포트
 
 const ReservationMgmt = () => {
   const [date, setDate] = useState(new Date());
@@ -30,16 +30,9 @@ const ReservationMgmt = () => {
     setReservations(updatedReservations);
   };
 
-  const deleteReservations = async (idsToDelete) => {
-    try {
-      await Promise.all(idsToDelete.map(async id => {
-        await axios.delete(`/reservations/${id}`);
-      }));
-      const updatedReservations = reservations.filter(reservation => !idsToDelete.includes(reservation.id));
-      setReservations(updatedReservations);
-    } catch (error) {
-      console.error('Error deleting reservations:', error);
-    }
+  const deleteReservations = (idsToDelete) => {
+    const updatedReservations = reservations.filter(reservation => !idsToDelete.includes(reservation.id));
+    setReservations(updatedReservations);
   };
 
   const updateReservation = (updatedReservation) => {
@@ -92,8 +85,10 @@ const ReservationMgmt = () => {
             handleDateClick(viewYear, clickedMonth, date);
           }}
         >
-          <span>{date}</span>
-          {isReserved && isCurrentMonth && <img src={acornImage} alt="Reserved" className="acorn-image" />}
+          <div className="date-content">
+            <span className="date-number">{date}</span>
+            {isReserved && isCurrentMonth && <PiAcornDuotone className="acorn-icon" />}
+          </div>
         </div>
       );
     });
