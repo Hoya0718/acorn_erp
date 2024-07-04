@@ -203,9 +203,9 @@ const ReservationMgmt = () => {
             </div>
           </div>
         </div>
-        <div id="footer_Frame">
+        {/* <div id="footer_Frame">
           <footer></footer>
-        </div>
+        </div> */}
       </div>
     </div>
   );

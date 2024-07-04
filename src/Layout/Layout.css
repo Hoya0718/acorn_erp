@@ -1,24 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+
+
+:root {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --link-color: #1a0dab;
+}
+
+[data-theme='dark'] {
+  --background-color: #1e1e1e;
+  --text-color: #f5f5f5;
+  --link-color: #8ab4f8;
+}
+
+/* a {
+  color: var(--link-color);
+} */
+
 /* 로고 폰트 */
 .header1 .erp-title {
+  text-decoration: none;
+  color: black  !important; 
   font-family: 'Lilita One', cursive;
   font-size: 30px;
   padding-left: 17px;
 }
+
 .layout1 {
   display: flex;
   flex-direction: column;
   height: 100%;
+
 }
 .header1 {
   width: 100%;
-  height: 10vh;
-  background-color: #f0f0f0;
+  height: 8vh;
+  background-color: #9FBED2;
   display: flex;
   align-items: center;
   padding: 0 20px;
   top: 0;
   left: 0;
-  z-index: 2;
+  /* z-index: 0; */
   position: fixed;
 }
 
@@ -31,15 +54,22 @@
 }
 .main-content1 {
   /* border: 1px solid blue; */
-  width: 100%;
-  padding-top: 35px;
-  padding-right: 30px;
-  padding-left: 30px;
-  background-color: #ffffff;
+  width: 85%;
+  padding: 40px 30px 40px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
   box-sizing: border-box;
-  margin-left: 12%; /* 사이드바 너비만큼 왼쪽으로 이동 */
-  margin-top: 10vh; /* 헤더의 높이만큼 아래로 이동 */
+  margin-left: 15%; /* 사이드바 너비만큼 왼쪽으로 이동 */
+  margin-top: 8vh; /* 헤더의 높이만큼 아래로 이동 */
 }
+
+
+hr {
+  opacity: 1 !important;
+  color: #f0f0f0 !important; /* opacity 속성을 기본값으로 설정 */
+}
+
 
 
 /* 사이드 바 */
@@ -47,56 +77,50 @@ ul {
   list-style-type: none;
   padding: 0;
 }
-li {
-  margin: 10px 0;
-}
+
 .sidebar1 {
-  background-color: white;
-  /* border: 1px solid yellow; */
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
   border-right: 1px solid #f0f0f0;
   height: 100%;
-  width: 12%; /* 사이드바 너비 */
+  width: 15%;
   overflow-y: auto;
   float: left;
   position: fixed;
-  padding-top: 10vh;
+  margin-top: 8vh;
+  padding-top: 20px;
 }
-.sidebar1 nav ul li ul {
-  padding-left: 20px;
-}
+
 .sidebar1 nav a {
+  font-family: "Noto Sans KR", sans-serif;
   text-decoration: none;
-  color: black;
+  color: #CBDDE6;
+  font-size: large;
+  font-weight: bold;
   display: block;
-  padding: 5px 10px;
+  padding: 12px 37px;
 }
+
 .sidebar1 nav a:hover {
-  background-color: #f0f0f0;
-}
-.sidebar1 nav div button {
-  background-color: transparent; /* 배경색을 투명하게 설정 */
-  color: #333; /* 버튼 텍스트 색상 설정 */
-  border: none; /* 테두리 제거 */
-  padding: 8px 16px; /* 내부 여백 설정 */
+  background-color: #E8EDEE; 
+  color: #45718d; 
 }
 
-
-
-
-/* New CSS for smooth expand/collapse */
-.submenu1 {
-  max-height: 0;
+li.submenu1 {
+  height: 0;
+  opacity: 0;
   overflow: hidden;
-  transition: max-height 0.2s ease-out;
+  transition: height 0.3s ease-out, opacity 0.3s ease-out;
 }
 
-.submenu1.active {
-  max-height: 1000px; /* Adjust this value as needed */
+li.submenu1.active {
+  height: 5em;
+  opacity: 1;
 }
 
-.header {
-  height: 50px;
-}
+/* 문호야 lastClick.. 같은 변수 만들어서 css 적용하는거 해볼끼? */
+
 
 
 footer{
@@ -109,4 +133,13 @@ footer{
   bottom: 0;
   left: 0;
   z-index: 2;
+}
+
+.icon-container {
+  position: fixed;
+  top: 95%;
+  padding-left: 37px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
 }

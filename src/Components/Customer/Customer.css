@@ -97,3 +97,26 @@ table {
 }
 
 /* 팝업창 스타일 */
+
+/* 최상단 이동 버튼 */
+.scroll-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0; /* Initially hidden */
+  visibility: hidden; /* Initially hidden */
+}
+
+.scroll-to-top.show {
+  opacity: 1;
+  visibility: visible;
+}
