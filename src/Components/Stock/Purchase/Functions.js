@@ -205,3 +205,71 @@ export const handleModalClose = (setShowDeleteModal) => {
   setShowDeleteModal(false);
 };
 
+
+export const handleSearch = async (searchTerm) => {
+  try {
+    const response = await fetch(`/purchase/search?keyword=${searchTerm}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return data; // Return search results
+  } catch (error) {
+    console.error('Error fetching search results:', error);
+    throw error; // Throw the error again to be handled by the calling component
+  }
+};
+
+export const sortPurchases = (purchases, sortBy, sortOrder) => {
+  return [...purchases].sort((a, b) => {
+    if (!sortBy) {
+      return a.purchaseCode.toString().localeCompare(b.purchaseCode.toString());
+    }
+
+    let aValue = a[sortBy];
+    let bValue = b[sortBy];
+
+    if (typeof aValue !== 'string') {
+      aValue = aValue.toString();
+    }
+    if (typeof bValue !== 'string') {
+      bValue = bValue.toString();
+    }
+
+    return sortOrder === 'ascending' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+  });
+};
+
+export const useSortableData = (items, initialSortConfig = { key: null, direction: 'ascending' }) => {
+  const [sortConfig, setSortConfig] = useState(initialSortConfig);
+
+  const sortedItems = useMemo(() => {
+    if (!Array.isArray(items)) {
+      return []; // Return empty array if items is not an array
+    }
+    let sortableItems = [...items];
+    if (sortConfig.key !== null) {
+      sortableItems.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [items, sortConfig]);
+
+  const requestSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  return { items: sortedItems, requestSort, sortConfig };
+};
+
