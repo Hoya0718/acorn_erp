@@ -18,15 +18,19 @@ const ResTable = () => {
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      setSelectedReservations(reservations.map(res => res.id));
+      setSelectedReservations(reservations.map((res) => res.id));
     } else {
       setSelectedReservations([]);
     }
   };
 
   const handleDelete = () => {
-    deleteReservations(selectedReservations);
-    setSelectedReservations([]);
+    if (selectedReservations.length === 0) {
+      alert('삭제할 항목을 선택해주세요.');
+    } else {
+      deleteReservations(selectedReservations);
+      setSelectedReservations([]);
+    }
   };
 
   const handleEdit = (id) => {
@@ -37,13 +41,17 @@ const ResTable = () => {
     <div>
       <div className="items-subTitle">
         <button onClick={handleDelete}>삭제</button>
-        <button onClick={() => {
-          if (selectedReservations.length === 1) {
-            handleEdit(selectedReservations[0]);
-          } else {
-            alert('수정할 항목을 하나만 선택해주세요.');
-          }
-        }}>수정</button>
+        <button
+          onClick={() => {
+            if (selectedReservations.length === 1) {
+              handleEdit(selectedReservations[0]);
+            } else {
+              alert('수정할 항목을 하나만 선택해주세요.');
+            }
+          }}
+        >
+          수정
+        </button>
       </div>
       <table className="table table-hover" style={{ wordBreak: 'break-all' }}>
         <thead>
