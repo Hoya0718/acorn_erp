@@ -30,9 +30,16 @@ const ReservationMgmt = () => {
     setReservations(updatedReservations);
   };
 
-  const deleteReservations = (idsToDelete) => {
-    const updatedReservations = reservations.filter(reservation => !idsToDelete.includes(reservation.id));
-    setReservations(updatedReservations);
+  const deleteReservations = async (idsToDelete) => {
+    try {
+      await Promise.all(idsToDelete.map(async id => {
+        await axios.delete(`/reservations/${id}`);
+      }));
+      const updatedReservations = reservations.filter(reservation => !idsToDelete.includes(reservation.id));
+      setReservations(updatedReservations);
+    } catch (error) {
+      console.error('Error deleting reservations:', error);
+    }
   };
 
   const updateReservation = (updatedReservation) => {
