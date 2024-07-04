@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStickyNote } from "@fortawesome/free-solid-svg-icons";
 
@@ -7,12 +6,23 @@ const MemoPad = () => {
   const [showMemoPad, setShowMemoPad] = useState(false);
   const [notes, setNotes] = useState("");
 
-  const toggleMemoPad = () => {
-    setShowMemoPad(!showMemoPad);
+  // 로컬 스토리지에서 메모를 불러오는 useEffect 훅
+  useEffect(() => {
+    const savedNotes = localStorage.getItem("notes");
+    if (savedNotes) {
+      setNotes(savedNotes);
+    }
+  }, []);
+
+  // 메모 내용이 변경될 때마다 로컬 스토리지에 저장하는 함수
+  const handleNoteChange = (event) => {
+    const newNotes = event.target.value;
+    setNotes(newNotes);
+    localStorage.setItem("notes", newNotes);
   };
 
-  const handleNoteChange = (event) => {
-    setNotes(event.target.value);
+  const toggleMemoPad = () => {
+    setShowMemoPad(!showMemoPad);
   };
 
   return (
@@ -38,6 +48,7 @@ const MemoPad = () => {
 
 const styles = {
   memoPad: {
+    opacity: "1",
     position: "absolute",
     top: "30px",
     right: "0",
@@ -48,9 +59,10 @@ const styles = {
     backgroundColor: "white",
     padding: "10px",
     boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-    zIndex: 1000,
+    // zIndex: 1000
   },
   textArea: {
+    fontSize: "13px",
     width: "100%",
     height: "100%",
     border: "none",
