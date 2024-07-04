@@ -16,9 +16,21 @@ const ResTable = () => {
     );
   };
 
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedReservations(reservations.map((res) => res.id));
+    } else {
+      setSelectedReservations([]);
+    }
+  };
+
   const handleDelete = () => {
-    deleteReservations(selectedReservations);
-    setSelectedReservations([]);
+    if (selectedReservations.length === 0) {
+      alert('삭제할 항목을 선택해주세요.');
+    } else {
+      deleteReservations(selectedReservations);
+      setSelectedReservations([]);
+    }
   };
 
   const handleEdit = (id) => {
@@ -29,18 +41,30 @@ const ResTable = () => {
     <div>
       <div className="items-subTitle">
         <button onClick={handleDelete}>삭제</button>
-        <button onClick={() => {
-          if (selectedReservations.length === 1) {
-            handleEdit(selectedReservations[0]);
-          } else {
-            alert('수정할 항목을 하나만 선택해주세요.');
-          }
-        }}>수정</button>
+        <button
+          onClick={() => {
+            if (selectedReservations.length === 1) {
+              handleEdit(selectedReservations[0]);
+            } else {
+              alert('수정할 항목을 하나만 선택해주세요.');
+            }
+          }}
+        >
+          수정
+        </button>
       </div>
       <table className="table table-hover" style={{ wordBreak: 'break-all' }}>
         <thead>
           <tr>
-            <th scope="col"></th>
+            <th scope="col">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="selectAll"
+                onChange={handleSelectAll}
+                checked={selectedReservations.length === reservations.length && reservations.length > 0}
+              />
+            </th>
             <th scope="col">예약번호</th>
             <th scope="col">예약자이름</th>
             <th scope="col">예약일시</th>
@@ -62,7 +86,7 @@ const ResTable = () => {
               </th>
               <th scope="row">{reservation.id}</th>
               <td>{reservation.name}</td>
-              <td>{reservation.date}</td>
+              <td>{reservation.reservationDate}</td>
               <td>{reservation.requests}</td>
               <td>{reservation.payment}</td>
             </tr>

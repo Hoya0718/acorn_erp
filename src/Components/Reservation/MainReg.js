@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Reservation.css';
 import { useOutletContext, useNavigate, useParams } from 'react-router-dom';
+import axios from '../../api/axios';
 
 const MainReg = () => {
   const { reservations, addReservation, updateReservation } = useOutletContext();
@@ -12,13 +13,14 @@ const MainReg = () => {
   const [formData, setFormData] = useState({
     id: '',
     name: '',
-    date: '',
+    reservationDate: '',
     requests: '',
     payment: '',
     phone: '',
     gender: '',
-    count: ''
+    rsCount: ''
   });
+  
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
@@ -27,6 +29,10 @@ const MainReg = () => {
       if (existingReservation) {
         setFormData(existingReservation);
       }
+    } else {
+      // 새 예약 등록 시 자동으로 가장 높은 예약번호 + 1을 할당
+      const highestId = Math.max(...reservations.map(res => res.id), 0);
+      setFormData(prev => ({ ...prev, id: (highestId + 1).toString() }));
     }
   }, [id, isEditMode, reservations]);
 
@@ -35,18 +41,30 @@ const MainReg = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.id || !formData.name || !formData.date || !formData.payment) {
+    if (!formData.id || !formData.name || !formData.reservationDate || !formData.payment) {
       setErrorMessage('등록이 불가합니다. 필수 입력 필드를 확인하세요.');
       return;
     }
-    if (isEditMode) {
-      updateReservation(formData);
-    } else {
-      addReservation(formData);
+
+    try {
+      if (isEditMode) {
+        await axios.put(`/reservations/${formData.id}`, formData);
+        updateReservation(formData);
+      } else {
+        await axios.post('/reservations', formData);
+        addReservation(formData);
+      }
+      
+      // 예약번호 순으로 정렬된 새로운 예약 목록 생성
+      const updatedReservations = [...reservations, formData].sort((a, b) => a.id - b.id);
+      
+      navigate('/layout/reservationMgmt/resTable', { state: { reservations: updatedReservations } });
+    } catch (error) {
+      console.error("Error saving reservation:", error);
+      setErrorMessage('예약 저장 중 오류가 발생했습니다. 다시 시도하세요.');
     }
-    navigate('/layout/reservationMgmt/resTable');
   };
 
   return (
@@ -85,17 +103,17 @@ const MainReg = () => {
                   </td>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>예약 일시</th>
                   <td style={{ width: '30%' }}>
-                    <input type="date" name="date" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.date} />
+                    <input type="date" name="reservationDate" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.reservationDate} />
                   </td>
                 </tr>
                 <tr>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>예약 번호</th>
                   <td style={{ width: '30%' }}>
-                    <input type="text" name="id" placeholder="예약 번호" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.id} />
+                    <input type="text" name="id" placeholder="예약 번호" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.id} readOnly={!isEditMode} />
                   </td>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>인원 수</th>
                   <td style={{ width: '30%' }}>
-                    <input type="text" name="count" placeholder="인원 수" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.count} />
+                    <input type="text" name="rsCount" placeholder="인원 수" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.rsCount} />
                   </td>
                 </tr>
               </thead>
