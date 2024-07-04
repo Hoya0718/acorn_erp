@@ -50,7 +50,7 @@ const ChangePw = () => {
                 </div>
                 <div className="form-signin-heading2">비밀번호 재설정</div>
                 <div className="form-signin-heading3">새로운 비밀번호를 입력해주세요</div>
-                <input type="password" className="form-control" name="newpw1" placeholder="새 비밀번호" required="" autoFocus="" style={{ marginBottom: "1px" }} value={newPw1}
+                <input type="password" className="form-control" name="newpw1" placeholder="새 비밀번호" required="" autoFocus="" style={{ marginBottom: "1px", marginTop: '65px' }} value={newPw1}
                     onChange={(e) => {
                         setNewPw1(e.target.value);
                         setIsMismatch(false); // 입력 시 불일치 메시지 초기화
@@ -61,7 +61,7 @@ const ChangePw = () => {
                         setIsMismatch(false); // 입력 시 불일치 메시지 초기화
                     }} />
                 {isMismatch && <div className='pwError-text'>⚠️ 입력하신 비밀번호가 일치하지 않습니다</div>}
-                <button className="btn btn-lg btn-primary btn-block" type="submit">변경하기</button>
+                <button className="btn btn-lg btn-primary btn-block" type="submit" style={{ marginTop: '55px' }}>변경하기</button>
             </form>
         </div>
     );
