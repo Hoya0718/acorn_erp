@@ -1,26 +1,22 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import MgmtTable from './mgmtTable/MgmtTable'
+// import ExcelPrint from '../Stock/Vendor/';
+import instance from './../../api/axios';
 
 
 const CusMgmt = () => {
   const [data, setData] = useState([]);
-  const [formData, setFormData] = useState({
-    id: '',
-    name: '',
-    gender: '',
-    contact: '',
-    dob: '',
-    joinDate: '',
-    membership: '',
-    notes: '',
-  });
+  const [formData, setFormData] = useState({});
+  const [onAddMode, setOnAddMode] = useState(false);
+  const [onUpdateMode, setOnUpdateMode] = useState(false);
+  const [editingRowId, setEditingRowId] = useState([]);
+  const [editingRowData, setEditingRowData] = useState({});
 
-  const [showModal, setShowModal] = useState(false);
-  const [editIndex, setEditIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState(data);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [selectedRows, setSelectedRows] = useState({});
 
   useEffect(() => {
     const savedRowsPerPage = localStorage.getItem('CusMgmtRowsPerPage');
@@ -28,23 +24,29 @@ const CusMgmt = () => {
       setRowsPerPage(Number(savedRowsPerPage));
     }
 
-    fetch('/api/customers')
-      .then(response => response.json())
-      .then(data => setData(data))
-      .catch(error => console.error('Error fetching data:', error));
- 
-    }, []);
+    const fetchData = async () => {
+      try {
+        const response = await instance.get('/customer/getAllList');
+        setData(response.data);
+        setFilteredData(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+
+  }, []);
 
   useEffect(() => {
     setFilteredData(data);
   }, [data]);
 
-  const handleCheckboxChange = useCallback((index) => {
+  const handleCheckboxChange = useCallback((customerId, checked) => {
     setData(prevData => {
-      const updatedData = prevData.map((item, pos) =>
-        pos === index ? { ...item, checked: !item.checked } : item
+      return prevData.map(item =>
+        item.customerId === customerId ? { ...item, checked } : item
       );
-      return updatedData;
     });
   }, []);
 
@@ -57,55 +59,13 @@ const CusMgmt = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-
-  const handleDeleteRows = () => {
-    const idsToDelete = data.filter(item => item.checked).map(item => item.id);
-
-    fetch('/api/customers', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(idsToDelete),
-    })
-      .then(response => {
-        if (response.ok) {
-          setData(prevData => prevData.filter(item => !item.checked));
-        } else {
-          console.error('Failed to delete rows');
-        }
-      })
-      .catch(error => console.error('Error deleting rows:', error));
+  const handleAddModeClick = () => {
+    setOnAddMode(true); // 추가 모드 활성화
   };
-
-  const handleAddRow = () => {
-    setEditIndex(null);
-    setFormData({
-      id: '',
-      name: '',
-      gender: '',
-      contact: '',
-      dob: '',
-      joinDate: '',
-      membership: '',
-      notes: '',
-    });
-    setShowModal(true);
-  };
-
-  const handleEditRows = () => {
-    const selectedRow = data.findIndex(item => item.checked);
-    if (selectedRow !== -1) {
-      setEditIndex(selectedRow);
-      setFormData(data[selectedRow]);
-      setShowModal(true);
-    }
-  }
   const handleCloseClick = () => {
     setOnAddMode(false); // 추가 모드 비활성화
     setOnUpdateMode(false);
   };
-
   const handleEditModeClick = () => {
     const selectedCustomerIds = Object.keys(selectedRows).filter(customerId => selectedRows[customerId]);
 
@@ -132,12 +92,24 @@ const CusMgmt = () => {
       setSelectedRows({});
     } catch (error) {
       console.error('Error saving changes:', error);
-
     }
   };
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+  const handleSaveClick = async () => {
+    try {
+      for (const customerId of editingRowId) {
+        await instance.put(`/customer/info/${customerId}`, editingRowData);
+      }
+      setData(prevRows =>
+        prevRows.map(row =>
+          row.customerId === editingRowId ? editingRowData : row
+        )
+      );
+      setEditingRowId(null);
+      setEditingRowData({});
+      setOnUpdateMode(false);
+    } catch (error) {
+      console.error('Error updating customer:', error);
+    }
   };
   const handleAddClick = async () => {
     try {
@@ -221,6 +193,7 @@ const CusMgmt = () => {
           <div className="left">
             <label htmlFor="date">
               날짜를 선택하세요:
+
               <input type="date" id="date" max="2077-06-20" min="2077-06-05" value="2024-06-18" />
             </label>
           </div>
@@ -236,7 +209,6 @@ const CusMgmt = () => {
             <button className="search-button" onClick={() => { }}>조회</button>
           </div>
         </div>
-
         <MgmtTable
           data={filteredData}
           currentPage={currentPage}
@@ -252,12 +224,11 @@ const CusMgmt = () => {
           setEditingRowData={setEditingRowData}  // 추가된 부분
         />
         {/* 엑셀&인쇄 */}
-        <div className="excel-print">
+        {/* <div className="excel-print">
           <ExcelPrint vendors={filteredData} />
-        </div>
+        </div> */}
       </div>
     );
   };
-
 
   export default CusMgmt;

@@ -6,20 +6,22 @@ import CustomerStatusPagination from '../modules/PaginationModule';
 import ViewDetailsModal from '../viewDetailsModal/viewDetailsModal';
 
 const MgmtTable = ({
-  rowsPerPage, onAddMode, onUpdateMode, onCheckboxChange, selectedRows, setSelectedRows,
+  rowsPerPage, onAddMode, onUpdateMode, setOnUpdateMode, onCheckboxChange, selectedRows, setSelectedRows,
   editingRowId, setEditingRowId, editingRowData, setEditingRowData,
 }) => {
   //테이블 데이터 
   const [data, setData] = useState([]);
-  const [pageData, setPageData] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
-  const [rows, setRows] = React.useState([]);
+  const [rows, setRows] = React.useState([]); //data랑 row둘다 필요한지 확인
+  //데이터 선택
   const [selectAll, setSelectAll] = useState(false);
-  const [selectedRows, setSelectedRows] = useState({});
+  //데이터 정렬
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
+  //페이지 네이션 데이터
+  const [pageData, setPageData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-
+  //모달 데이터
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({});
 
@@ -40,58 +42,58 @@ const MgmtTable = ({
     { header: '특이사항', accessor: 'customerNotes' },
   ], []);
 
-  useEffect(() => {
-    const fetchTableData = async () => {
-      try {
-        //테이블 데이터 호출
-        const response_tableData = await instance.get('/customer/getAllList');
-        const data = response_tableData.data.map(item => ({
-          ...item,
-          registerDate: formatDate(item.registerDate),
-          customerBirthDate: formatDate(item.customerBirthDate)
-        }));
+  const fetchTableData = async () => {
+    try {
+      //테이블 데이터 호출
+      const response_tableData = await instance.get('/customer/getAllList');
+      const data = response_tableData.data.map(item => ({
+        ...item,
+        registerDate: formatDate(item.registerDate),
+        customerBirthDate: formatDate(item.customerBirthDate)
+      }));
+      //고객등급 데이터 호출
+      const response_gradeData = await instance.get('/customer/getGrade');
+      const data_grade = response_gradeData.data
+      //특이사항 데이터 호출
+      const response_notes = await instance.get('/customer/getNotes');
+      const data_notes = response_notes.data
+      //테이블데이터+고객등급데이터+특이사항데이터 병합
+      const mergedData = data.map(customer => {
+        const gradeInfo = data_grade.find(grade => grade.customerId === customer.customerId);
+        const notes = data_notes.filter(note => note.customerId === customer.customerId);
+        return {
+          ...customer,
+          customerGrade: gradeInfo ? gradeInfo.customerGrade : '-',
+          customerNotes: notes.length ? notes : [{ notes: '-' }],
+        };
+      });
+      setRows(mergedData);
 
-        //고객등급 데이터 호출
-        const response_gradeData = await instance.get('/customer/getGrade');
-        const data_grade = response_gradeData.data
-        //특이사항 데이터 호출
-        const response_notes = await instance.get('/customer/getNotes');
-        const data_notes = response_notes.data
+      //페이지네이션 데이터
+      const response_pageData = await instance.post(`/customer/getAllList?page=${currentPage - 1}&size=${rowsPerPage}`);
+      const page = response_pageData.data;
+      const formattedPageData = page.content.map(item => ({
+        ...item,
+        registerDate: formatDate(item.registerDate),
+        customerBirthDate: formatDate(item.customerBirthDate)
+      }));
+      setPageData(formattedPageData);
+      setFilteredData(formattedPageData);
+      setTotalItems(page.totalElements);
 
-        //테이블데이터+고객등급데이터+특이사항데이터 병합
-        const mergedData = data.map(customer => {
-          const gradeInfo = data_grade.find(grade => grade.customerId === customer.customerId);
-          // const notesInfo = data_notes.find(CustomerNotes => CustomerNotes.customerId === customer.customerId);
-          const notes = data_notes.filter(note => note.customerId === customer.customerId);
-          return {
-            ...customer,
-            customerGrade: gradeInfo ? gradeInfo.customerGrade : '-',
-            // customerNotes: notesInfo ? notesInfo.notes : '-',
-            // customerNotes: notes,
-            customerNotes: notes.length ? notes : [{ notes: '-' }],
-          };
-        });
-        setRows(mergedData);
-        console.log(rows[columns.accessor==='customerNotes'])
-        
-        //페이지네이션 데이터
-        const response_pageData = await instance.post(`/customer/getAllList?page=${currentPage - 1}&size=${rowsPerPage}`);
-        const page = response_pageData.data;
-        const formattedPageData = page.content.map(item => ({
-          ...item,
-          registerDate: formatDate(item.registerDate),
-          customerBirthDate: formatDate(item.customerBirthDate)
-        }));
-        setPageData(formattedPageData);
-        setFilteredData(formattedPageData);
-        setTotalItems(page.totalElements);
-
-      } catch (error) {
-        console.error('Error get MgmtTable:', error);
-      }
+    } catch (error) {
+      console.error('Error get MgmtTable:', error);
     }
+  }
+
+  useEffect(() => {
     fetchTableData();
   }, [currentPage, rowsPerPage]);
+
+
+  useEffect(() => {
+    setFilteredData(rows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+  }, [rows, currentPage, rowsPerPage]);
 
   useEffect(() => {
     setSelectedRows({});
@@ -104,14 +106,14 @@ const MgmtTable = ({
 
     const newSelectedRows = {};
     if (newSelectAll) {
-      filteredData.forEach((_, index) => {
-        newSelectedRows[index] = true;
+      data.forEach(item => {
+        newSelectedRows[item.customerId] = true;
       });
     }
     setSelectedRows(newSelectedRows);
-    // data.forEach(item => {
-    //   onCheckboxChange(item.customerId, newSelectAll);
-    // });
+    data.forEach(item => {
+      onCheckboxChange(item.customerId, newSelectAll);
+    });
   };
 
   const handleSort = (key) => {
@@ -139,32 +141,49 @@ const MgmtTable = ({
     setFilteredData(sortedRows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
 
   };
-  useEffect(() => {
-    setFilteredData(rows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
-  }, [rows, currentPage, rowsPerPage]);
 
-  const handleRowSelect = (index) => {
+  const handleRowSelect = (customerId, isSelected) => {
     const newSelectedRows = { ...selectedRows };
-    if (newSelectedRows[index]) {
-      delete newSelectedRows[index];
+    if (isSelected) {
+      newSelectedRows[customerId] = true;
     } else {
-      newSelectedRows[index] = true;
+      delete newSelectedRows[customerId];
     }
     setSelectedRows(newSelectedRows);
     onCheckboxChange(customerId, isSelected);
   };
 
-  const handleInputChange = (e, accessor) => {
-    setEditingRowData({
-      ...editingRowData,
-      [accessor]: e.target.value,
-    });
-  };
-
-
+  // const handleInputChange = (e, accessor) => {
+  //   setEditingRowData({
+  //     ...editingRowData,
+  //     [accessor]: e.target.value,
+  //   });
+  // };
+//   const handleDoubleEditmodeClick = () => {
+//     setOnUpdateMode(true);
+//     console.log(onUpdateMode)
+// }
+const handleInputChange = (e, accessor) => {
+  setEditingRowData({
+    ...editingRowData,
+    [accessor]: e.target.value,
+  });
+  console.log("editingRowData", editingRowData)
+};
   const handleNameClick = (rowData) => {
     setModalData(rowData);
     setShowModal(true);
+  };
+
+  const handleModalSave = async (updatedData) => {
+    try {
+      await instance.put(`/customer/info/${updatedData.customerId}`, updatedData);
+      await instance.put(`/customer/grade/${updatedData.customerId}`, updatedData);
+      await fetchTableData();
+      setShowModal(false);
+    } catch (error) {
+      console.error('Error updating customer:', error);
+    }
   };
 
   return (
@@ -198,37 +217,60 @@ const MgmtTable = ({
           </tr>
         </thead>
         <tbody className="table-group-divider">
+          {/* 등록모드 */}
           {onAddMode && (
             <tr>
               <td className="table-centered"></td>
               {columns.map((column) => (
                 <td key={column.accessor} className={column.className || 'table-centered'}>
-                  <input type="text" placeholder={column.header} className="form-control" />
+                  <input 
+                  type="text" 
+                  name={column.accessor} 
+                  placeholder={column.header} 
+                  value={editingRowData[column.accessor] || ''}
+                  onChange={(e) => handleInputChange(e, column.accessor)}
+                  className="form-control" />
                 </td>
               ))}
             </tr>
           )}
-           {filteredData.map((row, index) => (
+          {onUpdateMode && (
+            <tr>
+              <td className="table-centered"></td>
+              {columns.map((column) => (
+                <td 
+                  key={column.accessor} 
+                  className={column.className || 'table-centered'}>
+                  <input 
+                    type="text" 
+                    name={column.accessor} 
+                    value={editingRowData[column.accessor] || ''}
+                    className="form-control"
+                    onChange={(e) => handleInputChange(e, column.accessor)}
+                   />
+                </td>
+              ))}
+            </tr>
+          )}
+          {filteredData.map((row, index) => (
             <tr key={index}>
               <td className="table-centered">
                 <input
                   type="checkbox"
-                  checked={selectedRows[index] || false}
-                  onChange={() => handleRowSelect(index)}
+                  checked={selectedRows[row.customerId] || false}
+                  onChange={() => handleRowSelect(row.customerId, !selectedRows[row.customerId])}
                 />
               </td>
-              
 
-              {onUpdateMode && editingRowId === row.customerId ? (
-                columns.map((column) => (
-                  
-                  <td
+              {/* {onUpdateMode && editingRowId === row.customerId ? (
+                columns.map((column) => ( */}
+
+                  {/* <td
                     key={column.accessor}
                     className={column.className || 'table-centered'}
                     onClick={column.isName ? () => handleNameClick(row) : undefined}
                     style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}
                   >
-                    {console.log('onUpdateMode && editingRowId === row.customerId  조건충족', editingRowData)}
                     <input
                       type="text"
                       value={editingRowData[column.accessor] || ''}
@@ -236,25 +278,31 @@ const MgmtTable = ({
                     />
                   </td>
                 ))
-              ) : (
-                columns.map((column) => (
+              ) : ( */}
+
+                {columns.map((column) => (
                   <td
                     key={column.accessor}
                     className={column.className || 'table-centered'}
                     onClick={column.isName ? () => handleNameClick(row) : undefined}
                     style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}
                   >
-                    {console.log(onUpdateMode ,editingRowId ,row.customerId , "조건불충족")}
-                    {column.accessor === 'customerNotes' ? (
-                      Array.isArray(row[column.accessor]) && row[column.accessor].length > 0
-                        ? row[column.accessor][0].notes || '-'
-                        : '-'
-                    ) : (
-                      row[column.accessor]
-                    )}
+                    <input
+                      type="text"
+                      style ={{border : 'none'}}
+                      // onDoubleClick={handleDoubleEditmodeClick}
+                      value={column.accessor === 'customerNotes' ? (
+                        Array.isArray(row[column.accessor]) && row[column.accessor].length > 0
+                          ? row[column.accessor][0].notes || '-'
+                          : '-'
+                      ) : (
+                        row[column.accessor]
+                      )}
+                      readOnly
+                    />
                   </td>
-                ))
-              )}
+                ))}
+              {/* )} */}
             </tr>
           ))}
         </tbody>
@@ -273,6 +321,7 @@ const MgmtTable = ({
           show={showModal}
           onHide={() => setShowModal(false)}
           data={modalData}
+          onSave={handleModalSave}
         />)}
     </div>
   );
