@@ -221,10 +221,21 @@ border-radius: 5px; /* 둥근 막대 */
 transform: translateY(-50%); /* 막대를 정확히 중간에 맞추기 위한 이동 */
 }
 
+.date-content {
+  position: relative; /* 상대 위치 설정 */
+  height: 100%; /* 전체 높이 사용 */
+}
 
-.acorn-image {
-width: 15px;  /* 원하는 크기로 조정 */
-height: 15px; /* 원하는 크기로 조정 */
-display: block;
-margin: 0 auto;  /* 이미지를 중앙에 배치 */
+.date-number {
+  display: block;
+  text-align: right; /* 날짜 숫자를 오른쪽 정렬 */
+  margin-right: 5px; /* 숫자와 아이콘 사이에 약간의 여백 추가 */
+}
+
+.acorn-icon {
+  position: absolute; /* 절대 위치 설정 */
+  bottom: -3px; /* 하단에 배치 */
+  left: -5px; /* 왼쪽에 배치 */
+  width: 30px; /* 원하는 크기로 조정 */
+  height: 30px; /* 원하는 크기로 조정 */
 }
