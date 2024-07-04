@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Reservation.css';
 import { useOutletContext, useNavigate, useParams } from 'react-router-dom';
-import axios from '../../api/axios'; // 경로 수정
+import axios from '../../api/axios';
 
 const MainReg = () => {
   const { reservations, addReservation, updateReservation } = useOutletContext();
   const navigate = useNavigate();
   const { id } = useParams();
   const isEditMode = id !== undefined;
-
 
   const [formData, setFormData] = useState({
     id: '',
@@ -30,6 +29,10 @@ const MainReg = () => {
       if (existingReservation) {
         setFormData(existingReservation);
       }
+    } else {
+      // 새 예약 등록 시 자동으로 가장 높은 예약번호 + 1을 할당
+      const highestId = Math.max(...reservations.map(res => res.id), 0);
+      setFormData(prev => ({ ...prev, id: (highestId + 1).toString() }));
     }
   }, [id, isEditMode, reservations]);
 
@@ -47,42 +50,22 @@ const MainReg = () => {
 
     try {
       if (isEditMode) {
-        // Update reservation
         await axios.put(`/reservations/${formData.id}`, formData);
         updateReservation(formData);
       } else {
-        // Add new reservation
         await axios.post('/reservations', formData);
         addReservation(formData);
       }
-      navigate('/layout/reservationMgmt/resTable', { state: { reservations: [...reservations, formData] } });
+      
+      // 예약번호 순으로 정렬된 새로운 예약 목록 생성
+      const updatedReservations = [...reservations, formData].sort((a, b) => a.id - b.id);
+      
+      navigate('/layout/reservationMgmt/resTable', { state: { reservations: updatedReservations } });
     } catch (error) {
       console.error("Error saving reservation:", error);
       setErrorMessage('예약 저장 중 오류가 발생했습니다. 다시 시도하세요.');
     }
   };
-
-
-  /*
-    try {
-      if (isEditMode) {
-        // Update reservation
-        await axios.put(`/reservations/${formData.id}`, formData);
-        updateReservation(formData);
-      } else {
-        // Add new reservation
-        const response = await axios.post('/reservations', formData);
-        addReservation(response.data);
-      }
-      navigate('/layout/reservationMgmt/resTable');
-    } catch (error) {
-      console.error("Error saving reservation:", error);
-      setErrorMessage('예약 저장 중 오류가 발생했습니다. 다시 시도하세요.');
-    }
-  };
-
-
-  */
 
   return (
     <div>
@@ -126,7 +109,7 @@ const MainReg = () => {
                 <tr>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>예약 번호</th>
                   <td style={{ width: '30%' }}>
-                    <input type="text" name="id" placeholder="예약 번호" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.id} />
+                    <input type="text" name="id" placeholder="예약 번호" style={{ fontSize: '15px', width: '100%' }} onChange={handleChange} value={formData.id} readOnly={!isEditMode} />
                   </td>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap' }}>인원 수</th>
                   <td style={{ width: '30%' }}>
