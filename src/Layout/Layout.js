@@ -6,6 +6,7 @@ import './Layout.css';
 import MemoPad from './MemoPad';
 import ThemeToggle from './ThemeToggle';
 import LogoutIcon from './LogoutIcon';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Layout = () => {
   const [expandedItem, setExpandedItem] = useState(null);
