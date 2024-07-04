@@ -5,19 +5,23 @@ import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import CustomerStatusPagination from '../modules/PaginationModule';
 import ViewDetailsModal from './viewDetailsModal/viewDetailsModal';
 
-const MgmtTable = ({ rowsPerPage, onAddMode, onCheckboxChange}) => {
+const MgmtTable = ({
+  rowsPerPage, onAddMode, onUpdateMode, onCheckboxChange, selectedRows, setSelectedRows,
+  editingRowId, setEditingRowId, editingRowData, setEditingRowData,
+}) => {
+  //테이블 데이터 
   const [data, setData] = useState([]);
-  const [pageData, setPageData] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
-  const [rows, setRows] = React.useState([]);
+  const [rows, setRows] = React.useState([]); //data랑 row둘다 필요한지 확인
+  //데이터 선택
   const [selectAll, setSelectAll] = useState(false);
-  const [selectedRows, setSelectedRows] = useState({});
+  //데이터 정렬
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
-
   //페이지 네이션 데이터
+  const [pageData, setPageData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-
+  //모달 데이터
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({});
 
@@ -47,14 +51,12 @@ const MgmtTable = ({ rowsPerPage, onAddMode, onCheckboxChange}) => {
         registerDate: formatDate(item.registerDate),
         customerBirthDate: formatDate(item.customerBirthDate)
       }));
-
       //고객등급 데이터 호출
       const response_gradeData = await instance.get('/customer/getGrade');
       const data_grade = response_gradeData.data
       //특이사항 데이터 호출
       const response_notes = await instance.get('/customer/getNotes');
       const data_notes = response_notes.data
-
       //테이블데이터+고객등급데이터+특이사항데이터 병합
       const mergedData = data.map(customer => {
         const gradeInfo = data_grade.find(grade => grade.customerId === customer.customerId);
@@ -66,7 +68,6 @@ const MgmtTable = ({ rowsPerPage, onAddMode, onCheckboxChange}) => {
         };
       });
       setRows(mergedData);
-      console.log(rows)
 
       //페이지네이션 데이터
       const response_pageData = await instance.post(`/customer/getAllList?page=${currentPage - 1}&size=${rowsPerPage}`);
@@ -105,11 +106,14 @@ const MgmtTable = ({ rowsPerPage, onAddMode, onCheckboxChange}) => {
 
     const newSelectedRows = {};
     if (newSelectAll) {
-      filteredData.forEach((_, index) => {
-        newSelectedRows[index] = true;
+      data.forEach(item => {
+        newSelectedRows[item.customerId] = true;
       });
     }
     setSelectedRows(newSelectedRows);
+    // data.forEach(item => {
+    //   onCheckboxChange(item.customerId, newSelectAll);
+    // });
   };
 
   const handleSort = (key) => {
@@ -138,16 +142,24 @@ const MgmtTable = ({ rowsPerPage, onAddMode, onCheckboxChange}) => {
 
   };
 
-
-  const handleRowSelect = (index) => {
+  const handleRowSelect = (customerId, isSelected) => {
     const newSelectedRows = { ...selectedRows };
-    if (newSelectedRows[index]) {
-      delete newSelectedRows[index];
+    if (isSelected) {
+      newSelectedRows[customerId] = true;
     } else {
-      newSelectedRows[index] = true;
+      delete newSelectedRows[customerId];
     }
     setSelectedRows(newSelectedRows);
+    onCheckboxChange(customerId, isSelected);
   };
+
+  const handleInputChange = (e, accessor) => {
+    setEditingRowData({
+      ...editingRowData,
+      [accessor]: e.target.value,
+    });
+  };
+
 
   const handleNameClick = (rowData) => {
     setModalData(rowData);
@@ -196,7 +208,7 @@ const MgmtTable = ({ rowsPerPage, onAddMode, onCheckboxChange}) => {
           </tr>
         </thead>
         <tbody className="table-group-divider">
-        {onAddMode && (
+          {onAddMode && (
             <tr>
               <td className="table-centered"></td>
               {columns.map((column) => (
@@ -206,29 +218,53 @@ const MgmtTable = ({ rowsPerPage, onAddMode, onCheckboxChange}) => {
               ))}
             </tr>
           )}
-          {filteredData.map((row, index) => (
+           {filteredData.map((row, index) => (
             <tr key={index}>
               <td className="table-centered">
                 <input
                   type="checkbox"
-                  checked={selectedRows[index] || false}
-                  onChange={() => onCheckboxChange(row.customerId, !row.checked)}
+                  checked={selectedRows[row.customerId] || false}
+                  onChange={() => handleRowSelect(row.customerId, !selectedRows[row.customerId])}
                 />
               </td>
-              {columns.map((column) => (
-                <td
-                  key={column.accessor} className={column.className || 'table-centered'}
-                  onClick={column.isName ? () => handleNameClick(row) : undefined}
-                  style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}>
-                  {column.accessor === 'customerNotes' ? (
-                    Array.isArray(row[column.accessor]) && row[column.accessor].length > 0
-                      ? row[column.accessor][0].notes || '-'
-                      : '-'
-                  ) : (
-                    row[column.accessor]
-                  )}
-                </td>
-              ))}
+              
+
+              {onUpdateMode && editingRowId === row.customerId ? (
+                columns.map((column) => (
+                  
+                  <td
+                    key={column.accessor}
+                    className={column.className || 'table-centered'}
+                    onClick={column.isName ? () => handleNameClick(row) : undefined}
+                    style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}
+                  >
+                    {console.log('onUpdateMode && editingRowId === row.customerId  조건충족', editingRowData)}
+                    <input
+                      type="text"
+                      value={editingRowData[column.accessor] || ''}
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    />
+                  </td>
+                ))
+              ) : (
+                columns.map((column) => (
+                  <td
+                    key={column.accessor}
+                    className={column.className || 'table-centered'}
+                    onClick={column.isName ? () => handleNameClick(row) : undefined}
+                    style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}
+                  >
+                    {console.log(onUpdateMode ,editingRowId ,row.customerId , "조건불충족")}
+                    {column.accessor === 'customerNotes' ? (
+                      Array.isArray(row[column.accessor]) && row[column.accessor].length > 0
+                        ? row[column.accessor][0].notes || '-'
+                        : '-'
+                    ) : (
+                      row[column.accessor]
+                    )}
+                  </td>
+                ))
+              )}
             </tr>
           ))}
         </tbody>

@@ -7,12 +7,16 @@ import instance from './../../api/axios';
 const CusMgmt = () => {
   const [data, setData] = useState([]);
   const [formData, setFormData] = useState({});
-  const [onAddMode, setOnAddMode, onUpdateMode, setOnUpdateMode] = useState(false);
+  const [onAddMode, setOnAddMode] = useState(false);
+  const [onUpdateMode, setOnUpdateMode] = useState(false);
+  const [editingRowId, setEditingRowId] = useState([]);
+  const [editingRowData, setEditingRowData] = useState({});
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState(data);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [selectedRows, setSelectedRows] = useState({});
 
   useEffect(() => {
     const savedRowsPerPage = localStorage.getItem('CusMgmtRowsPerPage');
@@ -20,10 +24,17 @@ const CusMgmt = () => {
       setRowsPerPage(Number(savedRowsPerPage));
     }
 
-    fetch('/api/customers')
-      .then(response => response.json())
-      .then(data => setData(data))
-      .catch(error => console.error('Error fetching data:', error));
+    const fetchData = async () => {
+      try {
+        const response = await instance.get('/customer/getAllList');
+        setData(response.data);
+        setFilteredData(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
 
   }, []);
 
@@ -31,12 +42,11 @@ const CusMgmt = () => {
     setFilteredData(data);
   }, [data]);
 
-  const handleCheckboxChange = useCallback((index) => {
+  const handleCheckboxChange = useCallback((customerId, checked) => {
     setData(prevData => {
-      const updatedData = prevData.map((item, pos) =>
-        pos === index ? { ...item, checked: !item.checked } : item
+      return prevData.map(item =>
+        item.customerId === customerId ? { ...item, checked } : item
       );
-      return updatedData;
     });
   }, []);
 
@@ -49,44 +59,93 @@ const CusMgmt = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-
-  const handleAddClick = () => {
+  const handleAddModeClick = () => {
     setOnAddMode(true); // 추가 모드 활성화
   };
-  const handleUpdateClick = () => {
-    setOnUpdateMode(true); // 추가 모드 활성화
-  };
-  const handleEditClick = () => {
+  const handleCloseClick = () => {
     setOnAddMode(false); // 추가 모드 비활성화
-    setOnUpdateMode(false); // 추가 모드 비활성화
   };
-  
-  const handleDeleteClick = async () => {
-    try {
-      console.log("v", filteredData)
-      const responseDelete = await instance.delete(`/customer/delete/${formData.customerId}`);
-    } catch (error) {
-      console.error('Error saving changes:', error);
+  const handleEditModeClick = () => {
+    const selectedCustomerIds = Object.keys(selectedRows).filter(customerId => selectedRows[customerId]);
+    // console.log("Selected Customer IDs:", selectedCustomerIds); // 디버깅용
+    // console.log("Data Array:", filteredData); // 디버깅용
+
+    if (selectedCustomerIds.length > 0) {
+      setEditingRowId(selectedCustomerIds[0]); // 첫 번째 선택된 ID를 설정
+      const rowData = data.find(row => row.customerId.toString() === selectedCustomerIds[0].toString());
+      if (rowData) {
+        setEditingRowData(rowData); // editingRowData를 올바르게 설정
+        setOnUpdateMode(true);
+        // console.log("Selected Customer ID:", selectedCustomerIds[0]); // 디버깅용
+        // console.log("Editing Row Data:", rowData); // 디버깅용
+      } else {
+        console.log("Selected row data not found");
+      }
+    }
   }
 
+
+  const handleDeleteClick = async () => {
+    try {
+      const selectedCustomerIds = Object.keys(selectedRows).filter(customerId => selectedRows[customerId]);
+      for (const customerId of selectedCustomerIds) {
+        await instance.delete(`/customer/delete/${customerId}`);
+      }
+      setData(prevData => prevData.filter(item => !selectedRows[item.customerId]));
+      setSelectedRows({});
+    } catch (error) {
+      console.error('Error saving changes:', error);
+    }
   };
+  const handleSaveClick = async () => {
+    try {
+      for (const customerId of editingRowId) {
+        await instance.put(`/customer/info/${customerId}`, editingRowData);
+      }
+      setData(prevRows =>
+        prevRows.map(row =>
+          row.customerId === editingRowId ? editingRowData : row
+        )
+      );
+      setEditingRowId(null);
+      setEditingRowData({});
+      setOnUpdateMode(false);
+    } catch (error) {
+      console.error('Error updating customer:', error);
+    }
+  };
+  const isAnyRowSelected = Object.values(selectedRows).some(checked => checked);
+
   return (
     <div>
       <div className="Middle classification">
         <span>회원 관리</span>
       </div>
-
       <hr />
       <div className='items-subTitle'>
         <div className='items-subTitle'>
-          <span>
-            <button onClick={handleAddClick}>등록</button>
-            <>
-              <button onClick={handleUpdateClick}>수정</button>
-              <button onClick={handleDeleteClick}>삭제</button>
-            </>
-            <button onClick={handleEditClick}>취소</button>
-          </span>
+          <div className='items-subTitle'>
+            <span>
+              {onAddMode !== true && !isAnyRowSelected ? (
+                <button onClick={handleAddModeClick}>등록</button>
+              ) : onAddMode ? (
+                <>
+                  <button >확인</button>
+                  <button onClick={handleCloseClick}>취소</button>
+                </>
+              ) : null}
+              {isAnyRowSelected ? (
+                <>
+                  <button onClick={handleEditModeClick}>수정</button>
+                  <button onClick={handleDeleteClick}>삭제</button>
+                </>
+              ) : <>
+                <button onClick={() => handleSaveClick(data.customerId)}>확인</button>
+                <button onClick={handleCloseClick}>취소</button>
+              </>
+              }
+            </span>
+          </div>
         </div>
       </div>
 
@@ -124,6 +183,12 @@ const CusMgmt = () => {
         rowsPerPage={rowsPerPage}
         onAddMode={onAddMode}
         onUpdateMode={onUpdateMode}
+        onCheckboxChange={handleCheckboxChange}
+        selectedRows={selectedRows}
+        setSelectedRows={setSelectedRows}
+        editingRowId={editingRowId}  // 추가된 부분
+        editingRowData={editingRowData}  // 추가된 부분
+        setEditingRowData={setEditingRowData}  // 추가된 부분
       />
       {/* 엑셀&인쇄 */}
       <div className="excel-print">
