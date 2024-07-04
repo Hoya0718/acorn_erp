@@ -67,9 +67,7 @@ const Board = () => {
             ))}
           </tbody>
         </table>
-      </div>
-    </div>
-  );
-}
-
+        </div>
+        </div>
+        )}
 export default Board;

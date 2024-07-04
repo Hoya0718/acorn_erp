@@ -27,7 +27,6 @@ const BoardDetail = ({ match }) => {
         <p>{post.content}</p>
       </div>
     </div>
-  );
-}
+  )}
 
 export default BoardDetail;
