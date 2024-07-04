@@ -98,6 +98,8 @@ const CusMgmt = () => {
     try {
       for (const customerId of editingRowId) {
         await instance.put(`/customer/info/${customerId}`, editingRowData);
+        const response_grade = await instance.put(`/customer/grade/${customerId}`, editingRowData);
+        const response_notes = await instance.post(`/saveNotes`, editingRowData);
       }
       setData(prevRows =>
         prevRows.map(row =>
@@ -111,6 +113,7 @@ const CusMgmt = () => {
       console.error('Error updating customer:', error);
     }
   };
+
   const handleAddClick = async () => {
     try {
         // 필요한 필드 값 설정
@@ -120,16 +123,44 @@ const CusMgmt = () => {
           customerBirthDate: editingRowData.customerBirthDate || '',
           customerAddr: editingRowData.customerAddr || '',
           customerTel: editingRowData.customerTel || '',
-          registerDate: editingRowData.registerDate || new Date().toISOString(), // 현재 날짜 사용
+          registerDate: editingRowData.registerDate || new Date().toISOString().split('T')[0], // 현재 날짜 사용
         };
 
         const response = await instance.post(`/customer/add`, newCustomerData);
+        const customerId = response.data.customerId;
+        const newGradeData = {
+          customerId,
+          customerGrade: editingRowData.customerGrade || '일반', // 기본값 설정
+        };
+        console.log("newGradeData", newGradeData)
+        const responseGrade = await instance.put(`/customer/grade/${customerId}`, newGradeData);
+        
+        console.log("responseGrade", responseGrade)
+        // const newNotesData = {
+        //   customerId,
+        //   notesDate: new Date().toISOString(),
+        //   notes: editingRowData.customerNotes || '', // 기본값 설정
+        // };
+        
+        // const responseNotes = await instance.post(`/saveNotes`, newNotesData);
 
-        // 서버로부터 저장된 데이터를 가져옴
+        // await instance.get(`/calculate_age_group`, newCustomerData);
+        // await instance.get(`/calculate_region_group`, newCustomerData);
+        
+
+    
         const savedCustomerData = response.data;
+        const savedCustomerGrade = responseGrade.data;
+        // const savedCustomerNotes = responseNotes.data;
 
         // 로컬 상태를 업데이트하여 새 데이터를 포함하도록 설정
-        setData(prevRows => [...prevRows, savedCustomerData]);
+        setData(prevRows => 
+          [...prevRows, 
+            { ...savedCustomerData, 
+              customerGrade: savedCustomerGrade.customerGrade, 
+              // customerNotes: savedCustomerNotes.notes
+             }
+          ]);
 
         // 폼을 초기화
         setEditingRowId(null);
@@ -166,7 +197,7 @@ const CusMgmt = () => {
                 ) :
                   null
                 }
-                {onAddMode ? (
+                {onAddMode && !isAnyRowSelected ? (
                   <>
                     <button onClick={() => handleAddClick(data)}> 등록 확인</button>
                     <button onClick={handleCloseClick}>취소</button>

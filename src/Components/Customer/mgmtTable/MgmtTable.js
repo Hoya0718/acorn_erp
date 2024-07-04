@@ -168,7 +168,7 @@ const handleInputChange = (e, accessor) => {
     ...editingRowData,
     [accessor]: e.target.value,
   });
-  console.log("editingRowData", editingRowData)
+  // console.log("editingRowData", editingRowData)
 };
   const handleNameClick = (rowData) => {
     setModalData(rowData);
