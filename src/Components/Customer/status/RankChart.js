@@ -6,85 +6,163 @@ import "../../Main/Main.css"
 import "../Customer.css"
 import { GoTriangleDown } from "react-icons/go";
 import { GoTriangleUp } from "react-icons/go";
+import instance from './../../../api/axios';
+import ViewDetailsModal from '../viewDetailsModal/viewDetailsModal';
 
-//예제 데이터
+
+
+
 const Rank = () => {
     const [rangeValue, setRangeValue] = React.useState(10);
+    const [amount, setAmount] = React.useState([]);
+    const [count, setCount] = React.useState([]);
+
+    const [showModal, setShowModal] = React.useState(false);
+    const [modalData, setModalData] = React.useState({});
+
+    const [rows, setRows] = React.useState([]);
 
     React.useEffect(() => {
         const savedSettings = localStorage.getItem('customerStatusSettings');
-        if (savedSettings) {
-            const { rangeValue } = JSON.parse(savedSettings);
-            setRangeValue(Number(rangeValue));
+        const fetchTableData = async () => {
+            try {
+                const response_Amount = await instance.get('/customer/getTop10ByTotalAmount');
+                const data_Amount = response_Amount.data.map((item, index) => ({
+                    ...item,
+                    rank: index + 1,
+                    prevRank: item.prevRank_count || null
+                }));
+                setAmount(data_Amount);
+                const response_Count = await instance.get('/customer/getTop10ByTotalCount');
+                const data_Count = response_Count.data.map((item, index) => ({
+                    ...item,
+                    rank: index + 1,
+                    prevRank: item.prevRank_amount || null
+                }));
+
+                setCount(data_Count);
+
+                if (savedSettings) {
+                    const { rangeValue } = JSON.parse(savedSettings);
+                    setRangeValue(Number(rangeValue));
+                }
+
+                data_Amount.forEach(customer => {
+                    createRemarkCustomerRanking(customer.rank, customer.prevRank_amount, '최고 매출 고객', customer.customerId);
+                });
+                data_Count.forEach(customer => {
+                    createRemarkCustomerRanking(customer.rank, customer.prevRank_count, '최다 거래 고객', customer.customerId);
+                });
+                await fetchCustomerDetails();
+
+            } catch (error) {
+                console.error('Error get TableData_dist:', error);
+            }
         }
+        fetchTableData();
     }, []);
 
-    const count = [
-        { rank: 1, name: '박승희', count: 2000, prod: '소세지빵', prevRank: 2 },
-        { rank: 2, name: '송지환', count: 18, prod: '피자빵', prevRank: 1 },
-        { rank: 3, name: '이영희', count: 16, prod: '케이크', prevRank: 3 },
-        { rank: 4, name: '최민수', count: 15, prod: '도넛', prevRank: 4 },
-        { rank: 5, name: '정수연', count: 14, prod: '샌드위치', prevRank: 6 },
-        { rank: 6, name: '한지민', count: 13, prod: '머핀', prevRank: 5 },
-        { rank: 7, name: '박지훈', count: 12, prod: '크로와상', prevRank: 8 },
-        { rank: 8, name: '김지수', count: 11, prod: '베이글', prevRank: 7 },
-        { rank: 9, name: '이지은', count: 10, prod: '도넛', prevRank: 11 },
-        { rank: 10, name: '김민주', count: 9, prod: '샌드위치', prevRank: 9 },
-    ];
-    const amount = [
-        { rank: 1, name: '송지환', amount: 1000000, prod: '피자빵', prevRank: 2 },
-        { rank: 2, name: '이영수', amount: 900000, prod: '햄버거', prevRank: 1 },
-        { rank: 3, name: '박민수', amount: 800000, prod: '케이크', prevRank: 4 },
-        { rank: 4, name: '김지수', amount: 700000, prod: '도넛', prevRank: 3 },
-        { rank: 5, name: '정현수', amount: 600000, prod: '샌드위치', prevRank: 6 },
-        { rank: 6, name: '최유진', amount: 500000, prod: '머핀', prevRank: 5 },
-        { rank: 7, name: '최승희', amount: 400000, prod: '크로와상', prevRank: 8 },
-        { rank: 8, name: '김지현', amount: 300000, prod: '베이글', prevRank: 7 },
-        { rank: 9, name: '이지아', amount: 200000, prod: '도넛', prevRank: 11 },
-        { rank: 10, name: '박민준', amount: 100000, prod: '샌드위치', prevRank: '' },
-    ];
+
     const getRankChange = (rank, prevRank) => {
-        if (prevRank === null || prevRank === undefined || prevRank > 10) {
+        if (prevRank === null || prevRank === undefined || prevRank > rangeValue) {
             return { icon: <span className="badge text-bg-success">New</span>, text: '' }; // new
         }
         if (rank < prevRank) {
-            return { icon: <GoTriangleUp style={{ color: 'blue' }}/>, text: ` ${Math.abs(prevRank - rank)}` }; // 상승
+            return { icon: <GoTriangleUp style={{ color: 'blue' }} />, text: ` ${Math.abs(prevRank - rank)}` }; // 상승
         }
         if (rank > prevRank) {
             return { icon: <GoTriangleDown style={{ color: 'red' }} />, text: ` ${Math.abs(prevRank - rank)}` }; // 하락
         }
         return { icon: "-", text: '' }; // 동일
-
     };
+
     const formatNumber = (num) => {
         return num.toLocaleString();
     };
-    //전월 대비 랭킹 변동사항 확인: 변동사항 특이사항으로 저장하기
-    const createRemarkCustomerRanking = (rank, prevRank, chartName) => {
-        if (prevRank === null || prevRank === undefined || prevRank > rangeValue) {
-            const newMsg = `${chartName} 랭킹에 진입`;
-            console.log(newMsg);
-        } else {
-            const rankMsg = `{}월 ${chartName} 랭킹에서  ${rank}위 고객`;
-            console.log(rankMsg);
-        return;
+
+    //전월 대비 랭킹 변동사항 특이사항으로 저장하기
+    const createRemarkCustomerRanking = async (rank, prevRank, chartName, customerId) => {
+        try {
+            let notesMessage;
+            if (prevRank === null || prevRank === undefined || prevRank > rangeValue) {
+                notesMessage = `${chartName} 랭킹에 진입`;
+            } else {
+                notesMessage = `${chartName} 랭킹에서 ${rank}위`;
+            }
+            await instance.post('/customer/saveNotes', {
+                customerId: customerId,
+                notes: notesMessage
+            });
+            
+        } catch (error) {
+            console.error('Error saving changes:', error);
+        }
     }
-}
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+      };
+    
+    const fetchCustomerDetails = async () => {
+        try {
+           //테이블 데이터 호출
+        const response_tableData = await instance.get('/customer/getAllList');
+        const data = response_tableData.data.map(item => ({
+          ...item,
+          registerDate: formatDate(item.registerDate),
+          customerBirthDate: formatDate(item.customerBirthDate)
+        }));
+
+        //고객등급 데이터 호출
+        const response_gradeData = await instance.get('/customer/getGrade');
+        const data_grade = response_gradeData.data
+        //특이사항 데이터 호출
+        const response_notes = await instance.get('/customer/getNotes');
+        const data_notes = response_notes.data
+
+        //테이블데이터+고객등급데이터+특이사항데이터 병합
+        const mergedData = data.map(customer => {
+          const gradeInfo = data_grade.find(grade => grade.customerId === customer.customerId);
+          // const notesInfo = data_notes.find(CustomerNotes => CustomerNotes.customerId === customer.customerId);
+          const notes = data_notes.filter(note => note.customerId === customer.customerId);
+          return {
+            ...customer,
+            customerGrade: gradeInfo ? gradeInfo.customerGrade : '-',
+            // customerNotes: notesInfo ? notesInfo.notes : '-',
+            // customerNotes: notes,
+            customerNotes: notes.length ? notes : [{ notes: '-' }],
+          }});
+        setRows(mergedData);
+        } catch (error) {
+            console.error('Error fetching customer details:', error);
+            return null;
+        }
+    };
+
+    const handleNameClick = async (customer) => {
+        const customerDetails = rows.find(row => row.customerId === customer.customerId);
+        if (customerDetails) {
+            setModalData(customerDetails);;
+            setShowModal(true);
+        }
+    };
 
     const renderCustomers = (customers, type, chartName) => {
         return customers.slice(0, rangeValue).map((customer, index) => {
-            const rankChange = getRankChange(customer.rank, customer.prevRank);
-            createRemarkCustomerRanking(customer.rank, customer.prevRank, chartName); 
+            const rankChange = getRankChange(customer.rank, type === 'count' ? customer.prevRank_count : customer.prevRank_amount);
             return (
                 <tr key={index}>
-                    <td className="table-centered rank ">{customer.rank}</td>
-                    <td className="table-righted name"><a href="">{customer.name}</a></td>
+                    <td className="table-centered rank ">{index + 1}</td>
+                    <td className="table-centered name"
+                        onClick={() => handleNameClick(customer)}
+                        style={ {cursor: 'pointer', textDecoration: 'underline'} }
+                    >{customer.customerName}</td>
                     <td className="table-lefted">
                         {rankChange.icon}&nbsp;
                         {rankChange.text && <span> {rankChange.text}</span>}
                     </td>
-                    <td className="table-righted">{formatNumber(type === 'count' ? customer.count : customer.amount)}</td>
-                    <td className="table-centered prod">{customer.prod}</td>
+                    <td className="table-righted">{formatNumber(type === 'count' ? customer.totalCountForCustomer : customer.totalAmountForCustomer)}</td>
+                    <td className="table-centered prod">{type === 'count' ? customer.mostPurchasedProduct : customer.topSellingProduct}</td>
                 </tr>
             );
         });
@@ -143,6 +221,12 @@ const Rank = () => {
                     </div>
                 </div>
             </section>
+            {showModal && (
+                <ViewDetailsModal
+                    show={showModal}
+                    onHide={() => setShowModal(false)}
+                    data={modalData}
+                />)}
         </div>
     );
 }

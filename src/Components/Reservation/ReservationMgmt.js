@@ -8,6 +8,7 @@ import acornImage from './Acorn-illustration-png.png';  // 이미지 경로 설�
 
 const ReservationMgmt = () => {
   const [date, setDate] = useState(new Date());
+
   const [reservations, setReservations] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -24,6 +25,7 @@ const ReservationMgmt = () => {
     };
     fetchReservations();
   }, []);
+
 
   const addReservation = (newReservation) => {
     const updatedReservations = [...reservations, newReservation];
@@ -93,7 +95,9 @@ const ReservationMgmt = () => {
           }}
         >
           <span>{date}</span>
+
           {isReserved && isCurrentMonth && <img src={acornImage} alt="Reserved" className="acorn-image" />}
+
         </div>
       );
     });
@@ -282,9 +286,11 @@ const ReservationMgmt = () => {
             </div>
           </div>
         </div>
+
       </div>
       <div id="footer_Frame">
         <footer></footer>
+
       </div>
     </div>
 

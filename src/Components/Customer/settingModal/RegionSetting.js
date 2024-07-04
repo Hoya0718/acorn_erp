@@ -5,6 +5,7 @@ import "../../Main/Main.css"
 import LocationSelector_Provinces from './RegionAPIdataProvince'
 import LocationSelector_Cities from './RegionAPIdataCities'
 import {useCustomerStatus} from './CustomerStatusSettingContext';
+
 const SettingModal_Region = () => {
     // 전국 선택시 실제 데이터: 광역시도로 데이터 세팅
     // 광역시도 선택시(예:경기도): (경기도)시군구로 데이터 세팅
@@ -23,8 +24,16 @@ const SettingModal_Region = () => {
     }
 
     React.useEffect(() => {
-        setSelectedRegion('전국');
-    }, [setSelectedRegion]);
+        const savedSettings = localStorage.getItem('customerStatusSettings');
+        if (savedSettings) {
+            const { selectedRegion, selectedProvince, selectedCity } = JSON.parse(savedSettings);
+            setSelectedRegion(selectedRegion || '전국');
+            setSelectedProvince(selectedProvince || '');
+            setSelectedCity(selectedCity || '');
+        } else {
+            setSelectedRegion('전국');
+        }
+    }, [setSelectedRegion, setSelectedProvince, setSelectedCity]);
 
     return (
         <div>
@@ -60,19 +69,22 @@ const SettingModal_Region = () => {
                     {selectedRegion === '시도' && (
                         <sapn>
                             <LocationSelector_Provinces
-                                onSelectProvince={setSelectedProvince} />
+                                onSelectProvince={setSelectedProvince}
+                                selectedProvince={selectedProvince}  />
                         </sapn>
                     )}
                     {selectedRegion === '시군구' && (
                         <span>
                             <span>
                                 <LocationSelector_Provinces
-                                    onSelectProvince={setSelectedProvince} />
+                                    onSelectProvince={setSelectedProvince}
+                                    selectedProvince={selectedProvince} />
                             </span>&nbsp;&nbsp;
                             <span>
                                 <LocationSelector_Cities
                                     selectedProvince={selectedProvince}
-                                    onSelectCity={setSelectedCity}  />
+                                    onSelectCity={setSelectedCity}
+                                    selectedCity={selectedCity}  />
                             </span>
                         </span>
                     )}

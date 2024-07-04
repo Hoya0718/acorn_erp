@@ -1,108 +1,71 @@
-.vendorTable {
-    border-width: 2px;
-    width: 100%; /* 테이블 전체 너비를 화면에 맞춤 */
-    border-collapse: collapse; /* 셀 경계를 합침 */
+/* Vendor.css 파일에 적용될 CSS */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.vendorTable td,
-.vendorTable th {
-    border-bottom: 2px solid gray; /* 테이블의 각 셀에 밑줄 추가 */
-    text-align: center; /* 셀 내용 가운데 정렬 */
-    padding-top: 20px; /* 내용 주변 여백 설정 */    
-    padding-bottom: 20px;
+.table th {
+  text-align: center;
 }
 
-.vendorTable th {
-    background-color: #eaeaea; /* 첫 번째 행의 배경색을 회색으로 설정 */
-    color: #000;
+.vendor-table {
+  border: 1px solid #ddd; /* 테이블 테두리 설정 */
+  border-spacing: 0; /* 셀 사이 간격 제거 */
 }
 
-.vendorTable tr:hover {
-    background-color: #f2f2f2; /* 행에 마우스를 올렸을 때 연한 배경색 적용 */
+.vendor-table-header {
+  padding: 8px; /* 헤더 셀 내부 여백 */
+  background-color: #f2f2f2; /* 헤더 배경색 */
+  font-weight: bold; /* 헤더 글꼴 굵기 */
+  text-align: center; /* 헤더 텍스트 가운데 정렬 */
+  border: 1px solid #ddd; /* 헤더 셀 테두리 설정 */
 }
 
-.vendorTable input[type='checkbox'] {
-    width: 17px;
-    height: 17px;
+.vendor-table-cell {
+  padding: 8px; /* 셀 내부 여백 */
+  border: 1px solid #ddd; /* 셀 테두리 설정 */
 }
 
-.inputField td input {
-    max-width: '150px';
+.form-input {
+  width: 100%; /* 입력 필드 너비 100%로 설정 */
+  padding: 8px; /* 입력 필드 내부 여백 */
+  border: 1px solid #ccc; /* 입력 필드 테두리 설정 */
+  border-radius: 4px; /* 필요시 입력 필드 둥글게 설정 */
+  box-sizing: border-box; /* 입력 필드 박스 크기를 테두리를 포함한 크기로 설정 */
 }
 
-.inputField button {
-    background-color: black;
-    color: beige;
-    border-radius: 7px;
-    padding: 5px 20px; /* 상하 5px, 좌우 10px */
+.checkbox-label {
+  display: block;
+  position: relative;
+  padding-left: 24px; /* 체크박스 왼쪽 여백 */
+  cursor: pointer;
+  font-size: 14px; /* 폰트 사이즈 (필요시) */
 }
 
-.subTitle {
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 20px;
+.checkbox-label input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
 }
 
-.subTitle button {
-    margin-left: 10px;
-    background-color: black;
-    color: beige;
-    border-radius: 7px;
-    padding: 5px 30px; /* 상하 5px, 좌우 15px */
+.checkbox-custom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 16px; /* 체크박스 높이 */
 }
 
-.left {
-    display: flex; /* Flexbox를 사용하여 자식 요소들을 한 줄로 정렬 */
-    align-items: center; /* 자식 요소들을 세로 중앙 정렬 */
+.items-subTitle-button {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 2px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-left: 12px; /* 각 버튼 사이의 간격 설정 */
 }
-
-.newDatePickerContainer,
-.sorting {
-    margin-right: 10px; /* 요소들 간의 간격 설정 */
-}
-
-.searcher .right {
-    margin: 20px;
-}
-
-.searcher .right input[type='text'] { 
-    padding: 5px 10px; /* 오른쪽 패딩은 아이콘 공간 */
-    font-size: 16px;
-    border: 1px solid gray;
-    border-radius: 5px;
-    background-color: #f2f2f2; /* 연한 배경색 */
-    flex: 1; /* input 요소가 가능한 최대 공간을 차지하도록 설정 */
-    width: 500px;
-}
-
-.searcher .right button {
-    background-color: #71AAB2;
-    color: beige;
-    border-radius: 7px;
-    padding: 7px 15px; /* 상하 7px, 좌우 15px */
-    border: none;
-}
-
-.searcher .right button:hover {
-    background-color:  #5C8C95;
-}
-
-.print {
-    display: flex;
-    justify-content: flex-end; /* 버튼 오른쪽 정렬 */
-    margin-top: 20px;
-    margin-right: 10px;
-}
-
-.print button {
-    margin-left: 20px; /* 버튼 사이 간격 */
-    background-color: rgb(192, 187, 187);
-    color: white;
-    border-radius: 5px;
-    padding: 5px 15px; /* 상하 5px, 좌우 10px */
-    border: none;
-}
-
-.print button:hover {
-    background-color: rgb(134, 133, 133);
-}
+/* 
+.modal {
+  z-index: 1000; /* 원하는 숫자로 설정 */
+/*} */

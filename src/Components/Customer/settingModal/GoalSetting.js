@@ -17,9 +17,9 @@ const SettingModal_Goal = () => {
     } = useCustomerStatus();
     const [isEditMode, setIsEditMode] = React.useState(false);
 
-    React.useEffect(() => {
-        setGoalOption("전체고객수");
-    }, []);
+    // React.useEffect(() => {
+    //     setGoalOption("전체고객수");
+    // }, []);
     React.useEffect(() => {
         const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
         const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new Popover(popoverTriggerEl));
@@ -52,7 +52,7 @@ const SettingModal_Goal = () => {
             const currentThisYear = Number(customerCount) - Number(customerCount_lastyear);
             return {
                 targetLabel: "당해연도 목표 고객수",
-                targetValue: formatNumber(Number(targetThisYear)),
+                targetValue: formatNumber(targetThisYear),
                 currentLabel: "현재 달성 고객수",
                 currentValue: formatNumber(currentThisYear)
             };
@@ -80,10 +80,11 @@ const SettingModal_Goal = () => {
                 <div>
                     <strong>{targetLabel}</strong>&nbsp;&nbsp;
                     <input type='text'
-                        class="btn btn-lg btn-danger" 
+                        className="btn btn-lg btn-danger" 
                         data-bs-toggle="popover" 
                         data-bs-placement="top" 
-                        data-bs-content="[당해연도 목표 고객수] 목표 고객수-전년도 고객 수  [현재 달성 고객수] 현재 고객수-전년도 고객수"
+                        data-bs-content=
+                        "[전체 고객수] 전체 고객수로 보여집니다.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [당해연도 목표 고객수] 올해 증원 목표만 보여집니다."
                         style={{
                             border: 'none',
                             width: '230px',

@@ -1,37 +1,46 @@
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import './LoginForm.css';
+import axios from '../../api/axios'
+
 
 const LoginForm = () => {
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // 로그인 로직을 추가할 수 있습니다.
-    navigate('/layout'); // 로그인 버튼 클릭 시 /layout 경로로 이동합니다.
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('/changePw');
+      navigate('layout');
+    }
+    catch (err) {
+      console.error("에러 발생" + err);
+      navigate('layout');
+    }
   };
 
-  return (
-    <div>
-      <div className="col-lg-4 m-0 p-0 accounts_col">
-        <h1>ACORN's EPR</h1>
-        <div>
-          <input type='email' placeholder='이메일' />
-          <input type='password' placeholder='비밀번호' />
-          <button onClick={handleLogin}>로그인</button>
-        </div>
-        <div style={{ display: 'flex' }}>
-          <Link to="/findEmail">
-            <button style={{ width: '100px' }}>이메일 찾기</button>
-          </Link>&nbsp;&nbsp;|&nbsp;&nbsp;
-          <Link to="/findPw">
-            <button style={{ width: '100px' }}>비밀번호 찾기</button>
-          </Link>&nbsp;&nbsp;|&nbsp;&nbsp;
-          <Link to="/signUp">
-            <button style={{ width: '100px' }}>회원가입</button>
-          </Link>
-        </div>
-      </div>
+
+return (
+  <div className="wrapper">
+    <form className="form-signin" onSubmit={handleLogin}>
+      <div className="form-signin-heading">Acorn ERP🐿️</div>
+      <input type="email" className="form-control" name="username" placeholder="아이디(이메일)" required="" autoFocus="" />
+      <input type="password" className="form-control" name="password" placeholder="비밀번호" required="" />
+      <button className="btn btn-lg btn-primary btn-block" type="submit">로그인</button>
+    </form>
+
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+
+      <Link to="/findEmail" style={{ textDecoration: 'none', color: 'black' }}>
+        아이디 • 비밀번호 찾기
+      </Link>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <Link to="/signUp" style={{ textDecoration: 'none', color: 'black' }}>
+        회원가입
+      </Link>
     </div>
-  );
+  </div>
+);
 }
 
 export default LoginForm;
