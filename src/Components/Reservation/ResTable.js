@@ -16,6 +16,14 @@ const ResTable = () => {
     );
   };
 
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedReservations(reservations.map(res => res.id));
+    } else {
+      setSelectedReservations([]);
+    }
+  };
+
   const handleDelete = () => {
     deleteReservations(selectedReservations);
     setSelectedReservations([]);
@@ -40,12 +48,20 @@ const ResTable = () => {
       <table className="table table-hover" style={{ wordBreak: 'break-all' }}>
         <thead>
           <tr>
-            <th scope="col"></th>
+            <th scope="col">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="selectAll"
+                onChange={handleSelectAll}
+                checked={selectedReservations.length === reservations.length && reservations.length > 0}
+              />
+            </th>
             <th scope="col">예약번호</th>
             <th scope="col">예약자이름</th>
             <th scope="col">예약일시</th>
             <th scope="col">추가요청사항</th>
-            <th scope="col">결제내역</th>
+            <th scope="col">결제방식</th>
           </tr>
         </thead>
         <tbody className="table-group-divider">
@@ -62,7 +78,7 @@ const ResTable = () => {
               </th>
               <th scope="row">{reservation.id}</th>
               <td>{reservation.name}</td>
-              <td>{reservation.date}</td>
+              <td>{reservation.reservationDate}</td>
               <td>{reservation.requests}</td>
               <td>{reservation.payment}</td>
             </tr>
