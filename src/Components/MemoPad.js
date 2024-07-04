@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStickyNote } from "@fortawesome/free-solid-svg-icons";
@@ -42,7 +41,7 @@ const styles = {
     top: "30px",
     right: "0",
     width: "220px",
-    height: "210px",
+    height: "220px",
     border: "1px solid #ccc",
     borderRadius: "5px",
     backgroundColor: "white",

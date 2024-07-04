@@ -1,22 +1,28 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
+
+import { useTable } from 'react-table';
 import MgmtTable from './mgmtTable/MgmtTable'
-import ExcelPrint from '../Stock/Vendor/ExcelPrint';
-import instance from './../../api/axios';
 
 
 const CusMgmt = () => {
   const [data, setData] = useState([]);
-  const [formData, setFormData] = useState({});
-  const [onAddMode, setOnAddMode] = useState(false);
-  const [onUpdateMode, setOnUpdateMode] = useState(false);
-  const [editingRowId, setEditingRowId] = useState([]);
-  const [editingRowData, setEditingRowData] = useState({});
+  const [formData, setFormData] = useState({
+    id: '',
+    name: '',
+    gender: '',
+    contact: '',
+    dob: '',
+    joinDate: '',
+    membership: '',
+    notes: '',
+  });
 
+  const [showModal, setShowModal] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState(data);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [selectedRows, setSelectedRows] = useState({});
 
   useEffect(() => {
     const savedRowsPerPage = localStorage.getItem('CusMgmtRowsPerPage');
@@ -24,29 +30,23 @@ const CusMgmt = () => {
       setRowsPerPage(Number(savedRowsPerPage));
     }
 
-    const fetchData = async () => {
-      try {
-        const response = await instance.get('/customer/getAllList');
-        setData(response.data);
-        setFilteredData(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-
-  }, []);
+    fetch('/api/customers')
+      .then(response => response.json())
+      .then(data => setData(data))
+      .catch(error => console.error('Error fetching data:', error));
+ 
+    }, []);
 
   useEffect(() => {
     setFilteredData(data);
   }, [data]);
 
-  const handleCheckboxChange = useCallback((customerId, checked) => {
+  const handleCheckboxChange = useCallback((index) => {
     setData(prevData => {
-      return prevData.map(item =>
-        item.customerId === customerId ? { ...item, checked } : item
+      const updatedData = prevData.map((item, pos) =>
+        pos === index ? { ...item, checked: !item.checked } : item
       );
+      return updatedData;
     });
   }, []);
 
@@ -59,104 +59,130 @@ const CusMgmt = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  const handleAddModeClick = () => {
-    setOnAddMode(true); // 추가 모드 활성화
-  };
-  const handleCloseClick = () => {
-    setOnAddMode(false); // 추가 모드 비활성화
-  };
-  const handleEditModeClick = () => {
-    const selectedCustomerIds = Object.keys(selectedRows).filter(customerId => selectedRows[customerId]);
-    // console.log("Selected Customer IDs:", selectedCustomerIds); // 디버깅용
-    // console.log("Data Array:", filteredData); // 디버깅용
 
-    if (selectedCustomerIds.length > 0) {
-      setEditingRowId(selectedCustomerIds[0]); // 첫 번째 선택된 ID를 설정
-      const rowData = data.find(row => row.customerId.toString() === selectedCustomerIds[0].toString());
-      if (rowData) {
-        setEditingRowData(rowData); // editingRowData를 올바르게 설정
-        setOnUpdateMode(true);
-        // console.log("Selected Customer ID:", selectedCustomerIds[0]); // 디버깅용
-        // console.log("Editing Row Data:", rowData); // 디버깅용
-      } else {
-        console.log("Selected row data not found");
-      }
-    }
-  }
+  const handleDeleteRows = () => {
+    const idsToDelete = data.filter(item => item.checked).map(item => item.id);
 
-
-  const handleDeleteClick = async () => {
-    try {
-      const selectedCustomerIds = Object.keys(selectedRows).filter(customerId => selectedRows[customerId]);
-      for (const customerId of selectedCustomerIds) {
-        await instance.delete(`/customer/delete/${customerId}`);
-      }
-      setData(prevData => prevData.filter(item => !selectedRows[item.customerId]));
-      setSelectedRows({});
-    } catch (error) {
-      console.error('Error saving changes:', error);
-    }
+    fetch('/api/customers', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(idsToDelete),
+    })
+      .then(response => {
+        if (response.ok) {
+          setData(prevData => prevData.filter(item => !item.checked));
+        } else {
+          console.error('Failed to delete rows');
+        }
+      })
+      .catch(error => console.error('Error deleting rows:', error));
   };
-  const handleSaveClick = async () => {
-    try {
-      for (const customerId of editingRowId) {
-        await instance.put(`/customer/info/${customerId}`, editingRowData);
-      }
-      setData(prevRows =>
-        prevRows.map(row =>
-          row.customerId === editingRowId ? editingRowData : row
-        )
-      );
-      setEditingRowId(null);
-      setEditingRowData({});
-      setOnUpdateMode(false);
-    } catch (error) {
-      console.error('Error updating customer:', error);
+
+  const handleAddRow = () => {
+    setEditIndex(null);
+    setFormData({
+      id: '',
+      name: '',
+      gender: '',
+      contact: '',
+      dob: '',
+      joinDate: '',
+      membership: '',
+      notes: '',
+    });
+    setShowModal(true);
+  };
+
+  const handleEditRows = () => {
+    const selectedRow = data.findIndex(item => item.checked);
+    if (selectedRow !== -1) {
+      setEditIndex(selectedRow);
+      setFormData(data[selectedRow]);
+      setShowModal(true);
     }
   };
-  const isAnyRowSelected = Object.values(selectedRows).some(checked => checked);
+
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
+
+  const handleSaveChanges = () => {
+    if (editIndex !== null) {
+      fetch(`/api/customers/${formData.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+        .then(response => response.json())
+        .then(updatedItem => {
+          setData(prevData => {
+            const updatedData = [...prevData];
+            updatedData[editIndex] = { ...updatedItem, checked: false };
+            return updatedData;
+          });
+        })
+        .catch(error => console.error('Error updating row:', error));
+    } else {
+      fetch('/api/customers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+        .then(response => response.json())
+        .then(newItem => {
+          setData(prevData => [...prevData, { ...newItem, checked: false }]);
+        })
+        .catch(error => console.error('Error adding row:', error));
+    }
+    setShowModal(false);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearch = () => {
+    const filtered = data.filter(item =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredData(filtered);
+  };
+
 
   return (
     <div>
       <div className="Middle classification">
         <span>회원 관리</span>
       </div>
+
       <hr />
-      <div className='items-subTitle'>
-        <div className='items-subTitle'>
-          <div className='items-subTitle'>
-            <span>
-              {onAddMode !== true && !isAnyRowSelected ? (
-                <button onClick={handleAddModeClick}>등록</button>
-              ) : onAddMode ? (
-                <>
-                  <button >확인</button>
-                  <button onClick={handleCloseClick}>취소</button>
-                </>
-              ) : null}
-              {isAnyRowSelected ? (
-                <>
-                  <button onClick={handleEditModeClick}>수정</button>
-                  <button onClick={handleDeleteClick}>삭제</button>
-                </>
-              ) : <>
-                <button onClick={() => handleSaveClick(data.customerId)}>확인</button>
-                <button onClick={handleCloseClick}>취소</button>
-              </>
-              }
-            </span>
-          </div>
-        </div>
+
+      <div className="subTitle">
+        <button className="edit-button btn " onClick={handleEditRows}>
+          수정
+        </button>
+        <button className="add-button btn " onClick={handleAddRow}>
+          추가
+        </button>
+        <button className="delete-button btn " onClick={handleDeleteRows}>
+          삭제
+        </button>
       </div>
 
       <br />
       <select value={rowsPerPage} onChange={handleRowsPerPageChange}>
-        <option value={10}>10줄 보기</option>
-        <option value={20}>20줄 보기</option>
-        <option value={30}>30줄 보기</option>
-        <option value={40}>40줄 보기</option>
-        <option value={50}>50줄 보기</option>
-      </select>
+                    <option value={10}>10줄 보기</option>
+                    <option value={20}>20줄 보기</option>
+                    <option value={30}>30줄 보기</option>
+                    <option value={40}>40줄 보기</option>
+                    <option value={50}>50줄 보기</option>
+                  </select>
       <div className="searcher">
         <div className="left">
           <label htmlFor="date">
@@ -172,28 +198,73 @@ const CusMgmt = () => {
             className="search-input"
             placeholder="검색"
             value={searchTerm}
-            onChange={() => { }}
+            onChange={handleSearchChange}
           />
-          <button className="search-button" onClick={() => { }}>조회</button>
+          <button className="search-button" onClick={handleSearch}>조회</button>
         </div>
       </div>
-      <MgmtTable
-        data={filteredData}
+      <MgmtTable 
+        data={filteredData} 
         currentPage={currentPage}
         rowsPerPage={rowsPerPage}
-        onAddMode={onAddMode}
-        onUpdateMode={onUpdateMode}
-        onCheckboxChange={handleCheckboxChange}
-        selectedRows={selectedRows}
-        setSelectedRows={setSelectedRows}
-        editingRowId={editingRowId}  // 추가된 부분
-        editingRowData={editingRowData}  // 추가된 부분
-        setEditingRowData={setEditingRowData}  // 추가된 부분
-      />
-      {/* 엑셀&인쇄 */}
-      <div className="excel-print">
-        <ExcelPrint vendors={filteredData} />
-      </div>
+        />
+      {showModal && (
+        <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h1 className="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" className="btn-close" onClick={handleModalClose} aria-label="Close"></button>
+              </div>
+              <div className="modal-body">
+                <div className="form-group">
+                  <label>ID:</label>
+                  <input type="text" className="form-control" value={formData.id} onChange={(e) => setFormData({ ...formData, id: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>이름:</label>
+                  <input type="text" className="form-control" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>성별:</label>
+                  <input type="text" className="form-control" value={formData.gender} onChange={(e) => setFormData({ ...formData, gender: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>연락처:</label>
+                  <input type="text" className="form-control" value={formData.contact} onChange={(e) => setFormData({ ...formData, contact: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>생년월일:</label>
+                  <input type="text" className="form-control" value={formData.dob} onChange={(e) => setFormData({ ...formData, dob: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>가입일:</label>
+                  <input type="text" className="form-control" value={formData.joinDate} onChange={(e) => setFormData({ ...formData, joinDate: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>회원등급:</label>
+                  <input type="text" className="form-control" value={formData.membership} onChange={(e) => setFormData({ ...formData, membership: e.target.value })} />
+                </div>
+
+                <div className="form-group">
+                  <label>특이사항:</label>
+                  <input type="text" className="form-control" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={handleModalClose}>Close</button>
+                <button type="button" className="btn btn-primary" onClick={handleSaveChanges}>Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

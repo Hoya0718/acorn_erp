@@ -38,7 +38,6 @@ const Customer_status = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  
   const renderTable = () => {
 
     switch (activeTab) {

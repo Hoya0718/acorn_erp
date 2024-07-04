@@ -9,10 +9,11 @@ import {
 } from './Functions';
 
 const VendorList = ({
-  vendors, selectedVendors, selectAll, sortBy, searchTerm, isUpdateClicked,
+  vendors, selectedVendors, selectAll, sortBy, searchTerm, 
   handleCheckboxChange, handleSelectAll, handleUpdateClick, handleDeleteClick,
-  isAddClicked, setIsAddClicked, setIsUpdateClicked, setVendors, updateVendor,
+  isAddClicked, setIsAddClicked, setIsUpdateClicked, setVendors,
   setNewVendor, setSelectedVendors, setUpdateVendor, newVendor,
+  updateVendor, isUpdateClicked
 }) => {
 
   const { items: sortedVendors, requestSort, sortConfig } = useSortableData(vendors, { key: sortBy });

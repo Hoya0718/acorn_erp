@@ -5,19 +5,12 @@ import React, { useState, useEffect } from 'react';
 import "../../Main/Main.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
-import instance from './../../../api/axios';
-import ViewDetailsModal from '../mgmtTable/viewDetailsModal/viewDetailsModal';
 
-const TableModule = ({ data = [], columns = [], onSort = () => { }, rowsPerPage, currentPage, totalData = [] }) => {
-    //     const [tableDta, setTableData] = useState(data);
+const TableModule = ({  data = [], columns = [], onSort = () => {}, rowsPerPage, currentPage, totalData = []  }) => {
+//     const [tableDta, setTableData] = useState(data);
     const [selectAll, setSelectAll] = useState(false);
     const [selectedRows, setSelectedRows] = useState({});
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'none' });
-
-    const [showModal, setShowModal] = React.useState(false);
-    const [modalData, setModalData] = React.useState({});
-
-    const [rows, setRows] = React.useState([]);
 
     useEffect(() => {
         setSelectedRows({});
@@ -33,10 +26,20 @@ const TableModule = ({ data = [], columns = [], onSort = () => { }, rowsPerPage,
                 direction = 'none';
             }
         }
-
+        
         setSortConfig({ key, direction });
         onSort(key, direction);
     };
+
+    // const handleRowSelect = (index) => {
+    //     const newSelectedRows = { ...selectedRows };
+    //     if (newSelectedRows[index]) {
+    //         delete newSelectedRows[index];
+    //     } else {
+    //         newSelectedRows[index] = true;
+    //     }
+    //     setSelectedRows(newSelectedRows);
+    // };
 
     const formatNumber = (num) => {
         return num.toLocaleString();
@@ -53,7 +56,7 @@ const TableModule = ({ data = [], columns = [], onSort = () => { }, rowsPerPage,
     };
 
     const totalRow = columns.reduce((acc, column) => {
-        if (column.key && totalData.length > 0 && typeof totalData[0][column.key] === 'number') {
+        if (column.key  && totalData.length > 0 && typeof totalData[0][column.key] === 'number') {
             acc[column.key] = {
                 total: calculateTotal(column.key, totalData),
                 average: calculateAverage(column.key, totalData),
@@ -62,14 +65,6 @@ const TableModule = ({ data = [], columns = [], onSort = () => { }, rowsPerPage,
         return acc;
     }, {});
 
-    const handleNameClick = async (column, row) => {
-        if (column.isName) {
-            console.log("handleNameClick 실행");
-            setModalData(row); // 모달에 표시할 데이터 설정
-            setShowModal(true); // 모달 표시
-        }
-    };
-
     return (
         <div className="customer-status-table">
             <table className="table table-hover" style={{ wordBreak: 'break-all' }}>
@@ -77,16 +72,16 @@ const TableModule = ({ data = [], columns = [], onSort = () => { }, rowsPerPage,
                     <tr>
                         <th scope="col" className="table-centered">no.</th>
                         {columns.map((column) => (
-                            <th
-                                scope="col"
-                                className="table-centered"
-                                key={column.key}
-                                onClick={() => handleSort(column.key)}
+                            <th 
+                            scope="col" 
+                            className="table-centered" 
+                            key={column.key} 
+                            onClick={() => handleSort(column.key)}
                             >
                                 {column.header}
                                 {sortConfig.key === column.key && (
-                                    sortConfig.direction === 'ascending' ? <FontAwesomeIcon icon={faCaretDown} /> :
-                                        sortConfig.direction === 'descending' ? <FontAwesomeIcon icon={faCaretUp} /> : ''
+                                    sortConfig.direction === 'ascending' ? <FontAwesomeIcon icon={faCaretDown}/> :
+                                        sortConfig.direction === 'descending' ? <FontAwesomeIcon icon={faCaretUp}/> : ''
                                 )}
                             </th>
                         ))}
@@ -97,28 +92,16 @@ const TableModule = ({ data = [], columns = [], onSort = () => { }, rowsPerPage,
                         <tr key={index}>
                             <td className="table-centered">{(currentPage - 1) * rowsPerPage + index + 1}</td>
                             {columns.map((column) => (
-                                <td key={column.key} className={column.className || 'table-centered'}
-                                    onClick={() => handleNameClick(column, row)}
-                                    style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}>
-
-                                    {column.accessor === 'customerNotes' ? (
-                                        Array.isArray(row[column.accessor]) && row[column.accessor].length > 0
-                                            ? row[column.accessor][0].notes || '-'
-                                            : '-'
-                                    ) : (
-                                        column.format ? column.format(row[column.key]) : row[column.key]
-                                    )}
+                                <td key={column.key} className={column.className || 'table-centered'}>
+                                    {column.format ? column.format(row[column.key]) : row[column.key]}
                                 </td>
                             ))}
                         </tr>
                     ))}
                     <tr>
-                        <td colSpan={1} className="table-centered" style={{ borderTop: "12px solid balck" }}><strong>Total</strong></td>
+                        <td colSpan={1} className="table-centered" style={{borderTop: "12px solid balck"}}><strong>Total</strong></td>
                         {columns.map((column) => (
-                            <td
-                                key={column.key}
-                                className={column.className || 'table-centered'}
-                            >
+                            <td key={column.key} className={column.className || 'table-centered'}>
                                 {column.key === 'salesRating' && totalRow[column.key] ? <strong>{formatNumber(totalRow[column.key].average)}</strong> : ''}
                                 {column.key !== 'salesRating' && totalRow[column.key]
                                     ? <strong>{formatNumber(totalRow[column.key].total)}</strong>
@@ -128,12 +111,6 @@ const TableModule = ({ data = [], columns = [], onSort = () => { }, rowsPerPage,
                     </tr>
                 </tbody>
             </table>
-            {showModal && (
-                <ViewDetailsModal
-                    show={showModal}
-                    onHide={() => setShowModal(false)}
-                    data={modalData}
-                />)}
         </div>
     );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Financial.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileExcel, faPrint } from '@fortawesome/free-solid-svg-icons';
@@ -6,59 +6,29 @@ import TableComponent from './TableComponent';
 import IncomeRegistrationModal from './IncomeRegistrationModal';
 
 const FinanceTable = () => {
-  const [financialData, setFinancialData] = useState([]);
-
-  useEffect(() => {
-    const apiEndpoint = 'http://localhost:9099/api/financials/a';
-    
-    fetch(apiEndpoint)
-      .then(response => response.json())
-      .then(data => {
-        console.log('API Response:', data);
-        setFinancialData(data);
-      })
-      .catch(error => console.error('Error fetching financial data:', error));
-  }, []);
+  const [data, setData] = useState([
+    { "상품번호": "B001", "상품구분": "식재료", "상품명": "강력분", "매입처": "(주)음바페", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "30000", "단가": "30000", "수량": "1", "특이사항": "", checked: false },
+    { "상품번호": "B002", "상품구분": "식재료", "상품명": "박력분", "매입처": "(주)할란드", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "16000", "단가": "8000", "수량": "2", "특이사항": "", checked: false },
+    { "상품번호": "B003", "상품구분": "식재료", "상품명": "호두", "매입처": "(주)벨링엄", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "30000", "단가": "10000", "수량": "3", "특이사항": "", checked: false },
+    { "상품번호": "B004", "상품구분": "식재료", "상품명": "건포도", "매입처": "(주)비니시우스", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "20000", "단가": "5000", "수량": "4", "특이사항": "", checked: false },
+    { "상품번호": "B005", "상품구분": "포장지", "상품명": "OPP봉투", "매입처": "(주)포든", "거래일시": "2024-07-01", "결제상태": "완료", "금액": "150000", "단가": "30000", "수량": "5", "특이사항": "", checked: false },
+  ]);
 
   const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
 
   const toggleAllCheckboxes = () => {
-    const updatedData = financialData.map(row => ({ ...row, checked: !financialData.every(row => row.checked) }));
-    setFinancialData(updatedData);
+    const updatedData = data.map(row => ({ ...row, checked: !data.every(row => row.checked) }));
+    setData(updatedData);
   };
 
   const toggleSingleCheckbox = (index) => {
-    const updatedData = [...financialData];
+    const updatedData = [...data];
     updatedData[index] = { ...updatedData[index], checked: !updatedData[index].checked };
-    setFinancialData(updatedData);
+    setData(updatedData);
   };
 
-  const [formData, setFormData] = useState({
-    "proNo": '',
-    "proDsc": '',
-    "pronm": '',
-    "cusnm": '',
-    "proDtm": '',
-    "paySts": '완료',
-    "pay": '',
-    "unitPay": '',
-    "proNumber": '',
-    "etc": '',
-  });
-  
-  const columns = [
-    { header: "상품번호", key: "proNo" },
-    { header: "상품구분", key: "proDsc" },
-    { header: "상품명", key: "pronm" },
-    { header: "매입처", key: "cusnm" },
-    { header: "거래일시", key: "proDtm" },
-    { header: "결제상태", key: "paySts" },
-    { header: "금액", key: "pay" },
-    { header: "단가", key: "unitPay" },
-    { header: "수량", key: "proNumber" },
-    { header: "특이사항", key: "etc" },
-  ];
-  
+  const columns = ["상품번호", "상품구분", "상품명", "매입처", "거래일시", "결제상태", "금액", "단가", "수량", "특이사항"];
+
   const handleSearch = () => {
     console.log('검색 버튼 클릭');
   };
@@ -80,7 +50,7 @@ const FinanceTable = () => {
     }
     setSortConfig({ key, direction });
 
-    const sortedData = [...financialData].sort((a, b) => {
+    const sortedData = [...data].sort((a, b) => {
       if (a[key] < b[key]) {
         return direction === 'ascending' ? -1 : 1;
       }
@@ -89,7 +59,7 @@ const FinanceTable = () => {
       }
       return 0;
     });
-    setFinancialData(sortedData);
+    setData(sortedData);
   };
 
   return (
@@ -100,7 +70,7 @@ const FinanceTable = () => {
 
       <hr />
 
-      <IncomeRegistrationModal data={financialData} setData={setFinancialData} />
+      <IncomeRegistrationModal data={data} setData={setData} />
 
       <div className="row">
         <div className="col-md-4">
@@ -119,7 +89,7 @@ const FinanceTable = () => {
 
       <TableComponent
         columns={columns}
-        data={financialData}
+        data={data}
         toggleAllCheckboxes={toggleAllCheckboxes}
         toggleSingleCheckbox={toggleSingleCheckbox}
         handleSort={handleSort}

@@ -24,7 +24,7 @@ const FindEmail = () => {
   const handleFindEmail = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get(`/findEmail/${registrationNum}`);
+      const response = await axios.get(`/api/findEmail/${registrationNum}`);
       if (response.data) {
         // email 값을 문자열로 설정합니다.
         setEmail(response.data);
@@ -48,7 +48,6 @@ const FindEmail = () => {
             to="/findEmail"
             className={`link-heading ${activeLink === '/findEmail' ? 'active' : ''}`}
             onClick={() => handleLinkClick('/findEmail')}
-            style={{paddingLeft:"13px", paddingRight:"13px"}}
           >
             아이디 찾기
           </Link>
@@ -72,7 +71,7 @@ const FindEmail = () => {
           value={registrationNum}
           onChange={(e) => setRegistrationNum(e.target.value)}
         />
-        <button className="btn btn-lg btn-primary btn-block" type="submit" style={{marginTop:'50px'}}>
+        <button className="btn btn-lg btn-primary btn-block" type="submit">
           아이디 찾기
         </button>
       </form>
