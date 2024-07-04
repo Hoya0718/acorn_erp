@@ -1,29 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import "../Main/Main.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Reservation.css';
+import axios from '../../api/axios';
 import acornImage from './Acorn-illustration-png.png';  // 이미지 경로 설정
 
 const ReservationMgmt = () => {
   const [date, setDate] = useState(new Date());
-  const [reservations, setReservations] = useState([
-    { id: 1, name: '홍대희', date: '2024-02-14', requests: '준비물 X', payment: '2024-02-14 10:26 카드결제', phone: '010-1234-5678', gender: '남성', count: 2 },
-    { id: 2, name: '홍시진', date: '2024-02-14', requests: '주차 필요합니다.', payment: '2024-02-14 11:26 네이버페이', phone: '010-8765-4321', gender: '여성', count: 3 }
-  ]);
+  const [reservations, setReservations] = useState([]);
+
+  useEffect(() => {
+    // 서버에서 데이터를 가져오는 함수
+    const fetchReservations = async () => {
+      try {
+        const response = await axios.get('/reservations');
+        setReservations(response.data);
+      } catch (error) {
+        console.error('Error fetching reservations:', error);
+      }
+    };
+    fetchReservations();
+  }, []);
 
   const addReservation = (newReservation) => {
-    setReservations([...reservations, newReservation]);
+    const updatedReservations = [...reservations, newReservation];
+    setReservations(updatedReservations);
   };
 
   const deleteReservations = (idsToDelete) => {
-    setReservations(reservations.filter(reservation => !idsToDelete.includes(reservation.id)));
+    const updatedReservations = reservations.filter(reservation => !idsToDelete.includes(reservation.id));
+    setReservations(updatedReservations);
   };
 
   const updateReservation = (updatedReservation) => {
-    setReservations(reservations.map(reservation => 
+    const updatedReservations = reservations.map(reservation =>
       reservation.id === updatedReservation.id ? updatedReservation : reservation
-    ));
+    );
+    setReservations(updatedReservations);
   };
 
   const renderCalendar = () => {
@@ -53,22 +67,42 @@ const ReservationMgmt = () => {
     return dates.map((date, i) => {
       const condition = i >= firstDateIndex && i < lastDateIndex + 1 ? 'this' : 'other';
       const isToday = new Date().toDateString() === new Date(viewYear, viewMonth, date).toDateString();
-      const isReserved = reservations.some(reservation => new Date(reservation.date).toDateString() === new Date(viewYear, viewMonth, date).toDateString());
+      const isReserved = reservations.some(reservation => 
+        new Date(reservation.reservationDate).toDateString() === new Date(viewYear, viewMonth, date).toDateString()
+      );
+      const isCurrentMonth = condition === 'this';
       return (
         <div
           key={i}
           className={`date ${condition} ${isToday ? 'today' : ''}`}
-          onClick={() => handleDateClick(viewYear, viewMonth, date)}
+          onClick={() => {
+            let clickedMonth = viewMonth;
+            if (condition === 'other') {
+              clickedMonth = i < firstDateIndex ? viewMonth - 1 : viewMonth + 1;
+            }
+            handleDateClick(viewYear, clickedMonth, date);
+          }}
         >
-          {isReserved && <img src={acornImage} alt="Reserved" className="acorn-image" />}
           <span>{date}</span>
+          {isReserved && isCurrentMonth && <img src={acornImage} alt="Reserved" className="acorn-image" />}
         </div>
       );
     });
   };
 
   const handleDateClick = (year, month, day) => {
-    const selectedDate = new Date(year, month, day);
+    let selectedDate;
+    if (day < 1) {
+      // 이전 달의 날짜
+      selectedDate = new Date(year, month - 1, day);
+    } else if (day > new Date(year, month + 1, 0).getDate()) {
+      // 다음 달의 날짜
+      selectedDate = new Date(year, month + 1, day - new Date(year, month + 1, 0).getDate());
+    } else {
+      // 현재 달의 날짜
+      selectedDate = new Date(year, month, day);
+    }
+  
     const formattedDate = selectedDate.toLocaleDateString('ko-KR', {
       year: 'numeric',
       month: 'long',
@@ -76,7 +110,9 @@ const ReservationMgmt = () => {
       weekday: 'long'
     });
     
-    const reservationsForTheDay = reservations.filter(reservation => new Date(reservation.date).toDateString() === selectedDate.toDateString());
+    const reservationsForTheDay = reservations.filter(reservation => 
+      new Date(reservation.reservationDate).toDateString() === selectedDate.toDateString()
+    );
     
     const newWindow = window.open('', '_blank', 'width=600,height=400');
     newWindow.document.write(`
@@ -112,7 +148,7 @@ const ReservationMgmt = () => {
                     <td>${reservation.payment}</td>
                     <td>${reservation.requests}</td>
                     <td>${reservation.gender}</td>
-                    <td>${reservation.count}</td>
+                    <td>${reservation.rsCount}</td>
                   </tr>
                 `).join('')}
               </tbody>
@@ -143,10 +179,10 @@ const ReservationMgmt = () => {
           <div className="body_flow">
             <div className="row">
               <div className="col--12"></div>
+              <span>예약 관리</span>
               <div className="col-md-7 col-xs-12">
                 <div className="left">
                   <div className="Middle classification">
-                    <span>예약 관리</span>
                   </div>
                   <div className="calendar">
                     <div className="header">
