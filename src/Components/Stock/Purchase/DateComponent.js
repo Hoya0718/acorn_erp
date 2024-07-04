@@ -37,7 +37,6 @@ const DateComponent = ({ onChange }) => {
   return (
     <div className="left">
       <label htmlFor="startDate">
-        시작일:
         <input
           type="date"
           id="startDate"
@@ -49,7 +48,6 @@ const DateComponent = ({ onChange }) => {
       </label>
       ~
       <label htmlFor="endDate">
-        종료일:
         <input
           type="date"
           id="endDate"

@@ -1,0 +1,84 @@
+/* Main.css */
+
+/* 게시판 제목 스타일 */
+.Middle.classification {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  /* 선 스타일 */
+  hr {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border: none;
+    border-top: 1px solid #ccc;
+  }
+  
+  /* 서브 타이틀 스타일 */
+  .subTitle {
+    text-align: right;
+    margin-bottom: 10px;
+  }
+  
+  .searcher .left {
+    margin-right: 20px;
+  }
+  
+  .searcher label {
+    margin-right: 10px;
+  }
+  
+  .searcher input[type="text"], 
+  .searcher input[type="date"] {
+    padding: 5px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .searcher button {
+    padding: 8px 14px;
+    font-size: 13px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  /* 테이블 스타일 */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .table th, .table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+  }
+  
+  .table th {
+    background-color: #f2f2f2;
+  }
+  
+  .table td {
+    background-color: #ffffff;
+  }
+  
+  /* 글쓰기 버튼 스타일 */
+  section button {
+    padding: 8px 14px;
+    font-size: 13px;
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  section button:hover {
+    background-color: #2f312f;
+  }
+  
