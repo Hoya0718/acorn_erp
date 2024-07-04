@@ -1,29 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import "../Main/Main.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Reservation.css';
+import axios from '../../api/axios';
 import acornImage from './Acorn-illustration-png.png';  // 이미지 경로 설정
 
 const ReservationMgmt = () => {
   const [date, setDate] = useState(new Date());
-  const [reservations, setReservations] = useState([
-    { id: 1, name: '홍대희', date: '2024-02-14', requests: '준비물 X', payment: '카드결제', phone: '010-1234-5678', gender: '남성', count: 2 },
-    { id: 2, name: '홍시진', date: '2024-02-14', requests: '주차 필요합니다.', payment: '네이버페이', phone: '010-8765-4321', gender: '여성', count: 3 }
-  ]);
+
+  const [reservations, setReservations] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  useEffect(() => {
+    // 서버에서 데이터를 가져오는 함수
+    const fetchReservations = async () => {
+      try {
+        const response = await axios.get('/reservations');
+        setReservations(response.data);
+      } catch (error) {
+        console.error('Error fetching reservations:', error);
+      }
+    };
+    fetchReservations();
+  }, []);
+
 
   const addReservation = (newReservation) => {
-    setReservations([...reservations, newReservation]);
+    const updatedReservations = [...reservations, newReservation];
+    setReservations(updatedReservations);
   };
 
-  const deleteReservations = (idsToDelete) => {
-    setReservations(reservations.filter(reservation => !idsToDelete.includes(reservation.id)));
+  const deleteReservations = async (idsToDelete) => {
+    try {
+      await Promise.all(idsToDelete.map(async id => {
+        await axios.delete(`/reservations/${id}`);
+      }));
+      const updatedReservations = reservations.filter(reservation => !idsToDelete.includes(reservation.id));
+      setReservations(updatedReservations);
+    } catch (error) {
+      console.error('Error deleting reservations:', error);
+    }
   };
 
   const updateReservation = (updatedReservation) => {
-    setReservations(reservations.map(reservation => 
+    const updatedReservations = reservations.map(reservation =>
       reservation.id === updatedReservation.id ? updatedReservation : reservation
-    ));
+    );
+    setReservations(updatedReservations);
   };
 
   const renderCalendar = () => {
@@ -53,31 +78,55 @@ const ReservationMgmt = () => {
     return dates.map((date, i) => {
       const condition = i >= firstDateIndex && i < lastDateIndex + 1 ? 'this' : 'other';
       const isToday = new Date().toDateString() === new Date(viewYear, viewMonth, date).toDateString();
-      const isReserved = reservations.some(reservation => new Date(reservation.date).toDateString() === new Date(viewYear, viewMonth, date).toDateString());
+      const isReserved = reservations.some(reservation =>
+        new Date(reservation.reservationDate).toDateString() === new Date(viewYear, viewMonth, date).toDateString()
+      );
+      const isCurrentMonth = condition === 'this';
       return (
         <div
           key={i}
           className={`date ${condition} ${isToday ? 'today' : ''}`}
-          onClick={() => handleDateClick(viewYear, viewMonth, date)}
+          onClick={() => {
+            let clickedMonth = viewMonth;
+            if (condition === 'other') {
+              clickedMonth = i < firstDateIndex ? viewMonth - 1 : viewMonth + 1;
+            }
+            handleDateClick(viewYear, clickedMonth, date);
+          }}
         >
           <span>{date}</span>
-          {isReserved && <img src={acornImage} alt="Reserved" className="acorn-image" />}
+
+          {isReserved && isCurrentMonth && <img src={acornImage} alt="Reserved" className="acorn-image" />}
+
         </div>
       );
     });
   };
 
   const handleDateClick = (year, month, day) => {
-    const selectedDate = new Date(year, month, day);
+    let selectedDate;
+    if (day < 1) {
+      // 이전 달의 날짜
+      selectedDate = new Date(year, month - 1, day);
+    } else if (day > new Date(year, month + 1, 0).getDate()) {
+      // 다음 달의 날짜
+      selectedDate = new Date(year, month + 1, day - new Date(year, month + 1, 0).getDate());
+    } else {
+      // 현재 달의 날짜
+      selectedDate = new Date(year, month, day);
+    }
+
     const formattedDate = selectedDate.toLocaleDateString('ko-KR', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
       weekday: 'long'
     });
-    
-    const reservationsForTheDay = reservations.filter(reservation => new Date(reservation.date).toDateString() === selectedDate.toDateString());
-    
+
+    const reservationsForTheDay = reservations.filter(reservation =>
+      new Date(reservation.reservationDate).toDateString() === selectedDate.toDateString()
+    );
+
     const newWindow = window.open('', '_blank', 'width=600,height=400');
     newWindow.document.write(`
       <html>
@@ -112,7 +161,7 @@ const ReservationMgmt = () => {
                     <td>${reservation.payment}</td>
                     <td>${reservation.requests}</td>
                     <td>${reservation.gender}</td>
-                    <td>${reservation.count}</td>
+                    <td>${reservation.rsCount}</td>
                   </tr>
                 `).join('')}
               </tbody>
@@ -134,6 +183,43 @@ const ReservationMgmt = () => {
 
   const goToday = () => {
     setDate(new Date());
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = reservations.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const renderPagination = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(reservations.length / itemsPerPage); i++) {
+      pageNumbers.push(i);
+    }
+
+    return (
+      <nav aria-label="Page navigation example" style={{ marginTop: '50px' }}>
+        <ul className="pagination justify-content-center">
+          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+            <a className="page-link" href="#" onClick={() => paginate(currentPage - 1)} aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          {pageNumbers.map(number => (
+            <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
+              <a onClick={() => paginate(number)} href="#" className="page-link">
+                {number}
+              </a>
+            </li>
+          ))}
+          <li className={`page-item ${currentPage === Math.ceil(reservations.length / itemsPerPage) ? 'disabled' : ''}`}>
+            <a className="page-link" href="#" onClick={() => paginate(currentPage + 1)} aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    );
   };
 
   return (
@@ -186,28 +272,28 @@ const ReservationMgmt = () => {
                   </div>
                   <div className="right-mid">
                     <section id="sec">
-                      <Outlet context={{ reservations, addReservation, deleteReservations, updateReservation }} />
+                      <Outlet context={{
+                        reservations: currentItems,  // 현재 페이지의 항목만 전달
+                        addReservation,
+                        deleteReservations,
+                        updateReservation
+                      }} />
                     </section>
-                    <nav aria-label="Page navigation example" style={{ marginTop: '50px' }}>
-                      <ul className="pagination justify-content-center">
-                        <li className="page-item"><a className="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-                        <li className="page-item"><a className="page-link" href="#">1</a></li>
-                        <li className="page-item"><a className="page-link" href="#">2</a></li>
-                        <li className="page-item"><a className="page-link" href="#">3</a></li>
-                        <li className="page-item"><a className="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
-                      </ul>
-                    </nav>
+                    {renderPagination()}
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {/* <div id="footer_Frame">
-          <footer></footer>
-        </div> */}
+
+      </div>
+      <div id="footer_Frame">
+        <footer></footer>
+
       </div>
     </div>
+
   );
 };
 
