@@ -4,17 +4,19 @@ import "../Main/Main.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Reservation.css';
 import axios from '../../api/axios';
-import acornImage from './Acorn-illustration-png.png';  // 이미지 경로 설정
+import { PiAcornDuotone } from "react-icons/pi";  // react-icons 임포트
+import ReservationModal from './ReservationModal';
 
 const ReservationMgmt = () => {
   const [date, setDate] = useState(new Date());
-
   const [reservations, setReservations] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedReservations, setSelectedReservations] = useState([]);
 
   useEffect(() => {
-    // 서버에서 데이터를 가져오는 함수
     const fetchReservations = async () => {
       try {
         const response = await axios.get('/reservations');
@@ -25,7 +27,6 @@ const ReservationMgmt = () => {
     };
     fetchReservations();
   }, []);
-
 
   const addReservation = (newReservation) => {
     const updatedReservations = [...reservations, newReservation];
@@ -94,10 +95,10 @@ const ReservationMgmt = () => {
             handleDateClick(viewYear, clickedMonth, date);
           }}
         >
-          <span>{date}</span>
-
-          {isReserved && isCurrentMonth && <img src={acornImage} alt="Reserved" className="acorn-image" />}
-
+          <div className="date-content">
+            <span className="date-number">{date}</span>
+            {isReserved && isCurrentMonth && <PiAcornDuotone className="acorn-icon" />}
+          </div>
         </div>
       );
     });
@@ -106,13 +107,10 @@ const ReservationMgmt = () => {
   const handleDateClick = (year, month, day) => {
     let selectedDate;
     if (day < 1) {
-      // 이전 달의 날짜
       selectedDate = new Date(year, month - 1, day);
     } else if (day > new Date(year, month + 1, 0).getDate()) {
-      // 다음 달의 날짜
       selectedDate = new Date(year, month + 1, day - new Date(year, month + 1, 0).getDate());
     } else {
-      // 현재 달의 날짜
       selectedDate = new Date(year, month, day);
     }
 
@@ -127,50 +125,9 @@ const ReservationMgmt = () => {
       new Date(reservation.reservationDate).toDateString() === selectedDate.toDateString()
     );
 
-    const newWindow = window.open('', '_blank', 'width=600,height=400');
-    newWindow.document.write(`
-      <html>
-        <head>
-          <title>Reservations for ${formattedDate}</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
-          </style>
-        </head>
-        <body>
-          <h1>${formattedDate} 예약현황</h1>
-          ${reservationsForTheDay.length > 0 ? `
-            <table>
-              <thead>
-                <tr>
-                  <th>예약자 이름</th>
-                  <th>휴대전화</th>
-                  <th>결제 방식</th>
-                  <th>추가 요청사항</th>
-                  <th>성별</th>
-                  <th>인원 수</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${reservationsForTheDay.map(reservation => `
-                  <tr key=${reservation.id}>
-                    <td>${reservation.name}</td>
-                    <td>${reservation.phone}</td>
-                    <td>${reservation.payment}</td>
-                    <td>${reservation.requests}</td>
-                    <td>${reservation.gender}</td>
-                    <td>${reservation.rsCount}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          ` : '<p>No reservations for this date.</p>'}
-        </body>
-      </html>
-    `);
-    newWindow.document.close();
+    setSelectedDate(formattedDate);
+    setSelectedReservations(reservationsForTheDay);
+    setShowModal(true);
   };
 
   const prevMonth = () => {
@@ -229,7 +186,8 @@ const ReservationMgmt = () => {
           <div className="body_flow">
             <div className="row">
               <div className="col--12"></div>
-              <span>예약 관리</span>
+              <h4>예약 관리</h4>
+              <hr/>
               <div className="col-md-7 col-xs-12">
                 <div className="left">
                   <div className="Middle classification">
@@ -273,7 +231,7 @@ const ReservationMgmt = () => {
                   <div className="right-mid">
                     <section id="sec">
                       <Outlet context={{
-                        reservations: currentItems,  // 현재 페이지의 항목만 전달
+                        reservations: currentItems,
                         addReservation,
                         deleteReservations,
                         updateReservation
@@ -286,14 +244,17 @@ const ReservationMgmt = () => {
             </div>
           </div>
         </div>
-
       </div>
       <div id="footer_Frame">
         <footer></footer>
-
       </div>
+      <ReservationModal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        date={selectedDate}
+        reservations={selectedReservations}
+      />
     </div>
-
   );
 };
 
