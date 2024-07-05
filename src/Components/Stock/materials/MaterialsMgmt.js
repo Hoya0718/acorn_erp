@@ -2,28 +2,24 @@ import React, { useState, useEffect } from 'react';
 import axios from '../../../api/axios';
 import * as XLSX from 'xlsx'; 
 
-import DistributionDelete from './DistributionDelete';
-import DistributionAdd from './DistributionAdd';
-import DistributionUpdate from './DistributionUpdate';
-import DistributionSearch from './DistributionSearch';
-import DistributionSearchDate from './DistributionSearchDate';
+import MaterialsDelete from './MaterialsDelete';
+import MaterialsAdd from './MaterialsAdd';
+import MaterialsUpdate from './MaterialsUpdate';
+import MaterialsSearch from './MaterialsSearch';
+import MaterialsSearchDate from './MaterialsSearchDate';
 
 import "../../Main/Main.css";
-import "./Distribution.css";
+import "./Materials.css";
 
-const DistributionMgmt = () => {
+const MaterialsMgmt = () => {
     // 초기 상태를 정의
     const initialNewItemState = {
         id: null,
-        distributionCode: '',
-        distributionName: '',
-        receiptDate: '',
-        orderQty:'',
-        initialQty: '',
-        receivedQty: '',
-        releaseQty: '',
-        currentQty: '',
-        expectedReceiptDate: ''
+        materialsCode: '',
+        materialsName: '',
+        price: '',
+        quantity:'',
+        vendorCode: ''
     };
 
     // 상태 변수들
@@ -39,8 +35,8 @@ const DistributionMgmt = () => {
     const [sortOption, setSortOption] = useState("");  // 정렬 옵션
     const [startDate, setStartDate] = useState("");  // 시작 날짜
     const [endDate, setEndDate] = useState("");  // 종료 날짜
-    const [sortDirection, setSortDirection] = useState('asc'); // 정렬 방향 추가
-    const [purchaseData, setPurchaseData] = useState([]); // 구매 데이터 추가
+    const [sortMaterials, setSortMaterials] = useState('asc'); // 정렬 방향 추가
+    const [distributionData, setDistributionData] = useState([]); // 구매 데이터 추가
 
     useEffect(() => {
         fetchItems();
@@ -49,24 +45,25 @@ const DistributionMgmt = () => {
     //백엔드 API에서 배포 항목을 가져와 items 상태를 업데이트, 오류가 발생하면 콘솔에 출력
     const fetchItems = async () => {
         try {
-            const response = await axios.get('/distribution');
+            const response = await axios.get('/materials');
             setItems(response.data);
             console.log(response.data);
         } catch (error) {
             console.error("Error fetching items:", error);
         }
     };
-        // 백엔드 API에서 purchase 항목을 가져와 items 상태를 업데이트, 오류가 발생하면 콘솔에 출력
-        const fetchPurchaseItems = async () => {
+        // 백엔드 API에서 distribution 항목을 가져와 items 상태를 업데이트, 오류가 발생하면 콘솔에 출력
+        const fetchDistributionItems = async () => {
             try {
-                const response = await axios.get('/purchase/list');
-                setPurchaseData(response.data); // 구매 데이터 업데이트
+                console.log("물류 데이터 함수 호출!")
+                const response = await axios.get('/distribution');
+                setDistributionData(response.data); // 구매 데이터 업데이트
+                console.log("물류 데이터 성공!")
                 console.log(response.data);
             } catch (error) {
-                console.error("Error fetching purchase items:", error);
+                console.error("Error fetching distribution items:", error);
             }
         };
-        
 
     const handleSelectAll = () => {
         setCheckAll(!checkAll);
@@ -131,7 +128,7 @@ const DistributionMgmt = () => {
 
     // 등록 버튼 클릭 처리
     const handleRegisterClick = () => {
-        handleAddDistribution(newItem);
+        handleAddMaterials(newItem);
         setNewItem(initialNewItemState);
         setShowNewItemForm(false);
     };
@@ -148,12 +145,12 @@ const DistributionMgmt = () => {
     };
 
     // 새로운 물류 추가 처리
-    const handleAddDistribution = async (newDistribution) => {
+    const handleAddMaterials = async (newMaterials) => {
         try {
-            const response = await axios.post('/distribution', newDistribution);
+            const response = await axios.post('/materials', newMaterials);
             setItems([...items, response.data]);
         } catch (error) {
-            console.error("Error adding distribution:", error);
+            console.error("Error adding materials:", error);
         }
     };
 
@@ -166,7 +163,7 @@ const DistributionMgmt = () => {
     const handleSaveClick = async (itemId) => {
         const itemToSave = items.find(item => item.id === itemId);
         try {
-            await axios.put(`/distribution/${itemId}`, itemToSave);
+            await axios.put(`/materials/${itemId}`, itemToSave);
             setEditingItemId(null);
             fetchItems();  // 업데이트된 항목을 다시 불러옵니다.
         } catch (error) {
@@ -182,7 +179,7 @@ const DistributionMgmt = () => {
     // 검색 버튼 클릭 처리
     const handleSearchClick = async () => {
         try {
-            const response = await axios.get('http://localhost:9099/api/distribution/search', {
+            const response = await axios.get('http://localhost:9099/api/materials/search', {
                 params: {
                     searchTerm: searchTerm
                 }
@@ -195,17 +192,17 @@ const DistributionMgmt = () => {
 
     // 정렬 옵션 변경 처리
     const handleSortChange = (selectedField) => {
-        const isAsc = sortOption === selectedField && sortDirection === 'asc';
+        const isAsc = sortOption === selectedField && sortMaterials === 'asc';
         setSortOption(selectedField);
-        setSortDirection(isAsc ? 'desc' : 'asc');
+        setSortMaterials(isAsc ? 'desc' : 'asc');
 
         // 정렬된 항목들을 설정
         let sortedItems = [...items];
         sortedItems.sort((a, b) => {
-            if (selectedField === 'distributionCode') {
-                return isAsc ? a.distributionCode.localeCompare(b.distributionCode) : b.distributionCode.localeCompare(a.distributionCode);
-            } else if (selectedField === 'distributionName') {
-                return isAsc ? a.distributionName.localeCompare(b.distributionName) : b.distributionName.localeCompare(a.distributionName);
+            if (selectedField === 'materialsCode') {
+                return isAsc ? a.materialsCode.localeCompare(b.materialsCode) : b.materialsCode.localeCompare(a.materialsCode);
+            } else if (selectedField === 'materialsName') {
+                return isAsc ? a.materialsName.localeCompare(b.materialsName) : b.materialsName.localeCompare(a.materialsName);
             } else if (selectedField === 'receiptDate') {
                 return isAsc ? new Date(a.receiptDate) - new Date(b.receiptDate) : new Date(b.receiptDate) - new Date(a.receiptDate);
             }
@@ -245,7 +242,7 @@ const DistributionMgmt = () => {
     const handleExcelDownload = () => {
         const worksheet = XLSX.utils.json_to_sheet(items);
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Distributions");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Materialss");
 
         // 워크북을 바이너리 형식으로 변환
         const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
@@ -255,7 +252,7 @@ const DistributionMgmt = () => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', 'distributions.xlsx');
+        link.setAttribute('download', 'materials.xlsx');
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -268,7 +265,7 @@ const DistributionMgmt = () => {
         <div>
             {/* 제목 영역 */}
             <div className="Middle classification">
-                <span><h2>물류관리</h2></span>
+                <span><h2>자재관리</h2></span>
             </div>
             <hr />
 
@@ -276,7 +273,7 @@ const DistributionMgmt = () => {
             <div className="top-buttons">
                 <span><button onClick={toggleNewItemForm}>등록</button></span>
                 <span><button onClick={() => handleEditClick(selectedItems[0])} disabled={selectedItems.length === 0}>수정</button></span>
-                <span><DistributionDelete handleDeleteClick={handleDeleteClick} selectedItems={selectedItems} /></span>
+                <span><MaterialsDelete handleDeleteClick={handleDeleteClick} selectedItems={selectedItems} /></span>
             </div>
             <br />
 
@@ -285,7 +282,7 @@ const DistributionMgmt = () => {
                 <div className="left">
                     <div className="middle-buttons">
                         {/* 날짜 검색 컴포넌트 */}
-                        <DistributionSearchDate
+                        <MaterialsSearchDate
                             startDate={startDate}
                             endDate={endDate}
                             handleStartDateChange={handleStartDateChange}
@@ -302,27 +299,27 @@ const DistributionMgmt = () => {
                     </div>
                 </div>
                 {/* 검색 입력란 */}
-                <DistributionSearch
+                <MaterialsSearch
                     handleSearchChange={handleSearchChange}
                     handleSearchClick={handleSearchClick}
                 />
             </div>
 
             {/* 테이블 영역 */}
-            <section className="distribution-table-container">
+            <section className="materials-table-container">
                 <br/><br/><br/>
-                {/* <table className='distribution-table'>
+                {/* <table className='materials-table'>
                     <thead>
                         <tr>
                             <th><input type="checkbox" onChange={handleSelectAll} checked={checkAll} /></th>
                             <th onClick={() => handleSortChange('itemCode')}>
-                                품목코드{/* 품목코드 {sortOption === 'itemCode' && sortDirection === 'asc' ? '▲' : '▼'} */}
+                                품목코드{/* 품목코드 {sortOption === 'itemCode' && sortMaterials === 'asc' ? '▲' : '▼'} */}
                             {/* </th>
                             <th onClick={() => handleSortChange('itemName')}>
-                                품목이름{/*  {sortOption === 'itemName' && sortDirection === 'asc' ? '▲' : '▼'} */}
+                                품목이름{/*  {sortOption === 'itemName' && sortMaterials === 'asc' ? '▲' : '▼'} */}
                             {/* </th>
                             <th onClick={() => handleSortChange('receiptDate')}>
-                                입고일자{/*  {sortOption === 'receiptDate' && sortDirection === 'asc' ? '▲' : '▼'} */}
+                                입고일자{/*  {sortOption === 'receiptDate' && sortMaterials === 'asc' ? '▲' : '▼'} */}
                             {/* </th>
                             <th>발주수량</th>
                             <th>입고수량</th>
@@ -336,11 +333,11 @@ const DistributionMgmt = () => {
                     <tbody> */} 
                         
                         {/* {showNewItemForm &&
-                            <DistributionAdd
-                                onAddDistribution={handleAddDistribution}
+                            <MaterialsAdd
+                                onAddMaterials={handleAddMaterials}
                                 handleCancelClick={handleCancelClick}
-                                fetchPurchaseItems={fetchPurchaseItems}
-                                purchaseData={purchaseData} 
+                                fetchDistributionItems={fetchDistributionItems}
+                                distributionData={distributionData} 
                                 checkAll={checkAll}
                             />
                         } */}
@@ -350,7 +347,7 @@ const DistributionMgmt = () => {
                                 <td><input type="checkbox" onChange={() => handleCheckboxChange(item.id)} checked={selectedItems.includes(item.id)} /></td>
                                 {/* 수정 중인 항목 */}
                                 {/* {editingItemId === item.id ? (
-                                    <DistributionUpdate
+                                    <MaterialsUpdate
                                         item={item}
                                         handleInputChange={handleInputChange}
                                         handleSaveClick={handleSaveClick}
@@ -362,11 +359,11 @@ const DistributionMgmt = () => {
                                 )}
                             </tr> 
                         // ))} */} 
-                                    <DistributionAdd
-                                    onAddDistribution={handleAddDistribution}
+                                    <MaterialsAdd
+                                    onAddMaterials={handleAddMaterials}
                                     handleCancelClick={handleCancelClick}
-                                    fetchPurchaseItems={fetchPurchaseItems}
-                                    purchaseData={purchaseData} 
+                                    fetchDistributionItems={fetchDistributionItems}
+                                    distributionData={distributionData} 
                                     checkAll={checkAll} 
                                     handleSelectAll={handleSelectAll}
                                     />
@@ -383,4 +380,4 @@ const DistributionMgmt = () => {
     );
 };
 
-export default DistributionMgmt; 
+export default MaterialsMgmt; 
