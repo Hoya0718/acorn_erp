@@ -6,6 +6,7 @@ import './Layout.css';
 import MemoPad from './MemoPad';
 import ThemeToggle from './ThemeToggle';
 import LogoutIcon from './LogoutIcon';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Layout = () => {
   const [expandedItem, setExpandedItem] = useState(null);
@@ -123,8 +124,13 @@ const menuItems = [
   },
   {
     title: "📆 예약 관리",
-    path: "/layout/reservationMgmt"
-  }
+    path: "/layout/reservationMgmt", 
+  },
+  {
+    title: "커뮤니티",
+    path: "/layout/board",
+  },
+
 ];
 
 export default Layout;

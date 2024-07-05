@@ -1,0 +1,129 @@
+.board-container {
+  width: 100%;
+  margin: auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+  
+  .board-header {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .board-divider {
+    border-color: #9FBED2;
+  }
+  
+  .board-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .board-button {
+    background-color: #9FBED2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .board-button:hover {
+    background-color: #85A9C7;
+  }
+  
+  .board-search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+  }
+  
+  .board-search {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+  }
+  
+  .board-search-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    flex: 2; /* 입력 필드를 더 길게 설정 */
+  }
+  
+  .board-search-button {
+    background-color: #9FBED2;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .board-search-button:hover {
+    background-color: #85A9C7;
+  }
+  
+  .board-date {
+    display: flex;
+    align-items: center;
+  }
+  
+  .board-date label {
+    margin-right: 10px;
+  }
+  
+  .board-date-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .board-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .board-table th {
+    background-color: #9FBED2;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 4px solid #9FBED2; /* 굵은 아래 선 */
+    cursor: pointer; /* 제목을 클릭할 때 마우스 커서를 포인터로 변경 */
+  }
+  
+  .board-table td {
+    padding: 10px;
+    text-align: center;
+    border: none;
+    border-bottom: 1px solid #000; /* 검은색 선 추가 */
+  }
+  
+  .board-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .board-write-button {
+    background-color: #9FBED2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .board-write-button:hover {
+    background-color: #85A9C7;
+
+  }
+  

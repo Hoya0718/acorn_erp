@@ -44,26 +44,23 @@ const VendorForm = ({
         />
       </td>
       <td>
-        <input
-          className="form-input"
-          type="text"
-          value={vendorData.vendorRemark}
-          onChange={(e) => handleChange('vendorRemark', e.target.value)}
-          placeholder="비고"
-        />
-      </td>
-      <td>
-        <label>
           <input
             type="checkbox"
             checked={vendorData.deliverableStatus}
             onChange={(e) => handleChange('deliverableStatus', e.target.checked)}
           />
+      </td>  
+      <td>
+        <input
+          className="form-input"
+          type="text"
+          value={vendorData.vendorRemark}
+          onChange={(e) => handleChange('vendorRemark', e.target.value)}
+          placeholder="특이사항"
+        />  
         <button type="submit" className="items-subTitle-button" onClick={handleSubmit}>
           {isNewVendor ? '✔' : '✔'}
         </button>
-        </label>
-       
       </td>
     </tr>
   );

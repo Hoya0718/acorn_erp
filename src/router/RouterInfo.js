@@ -42,10 +42,12 @@ import ShowEmail from '../Components/Login/ShowEmail.js'
 
 // 게시판
 import Board from '../Components/Board/Board.js';
-
+import BoardDetail from '../Components/Board/BoardDetail.js';
+import BoardPost from '../Components/Board/BoardPost.js';
 
 // Router 
 import { createBrowserRouter } from 'react-router-dom';
+
 
 export const RouterInfo = createBrowserRouter([
   {
@@ -146,15 +148,25 @@ export const RouterInfo = createBrowserRouter([
           }
         ]
       },
+      // 게시판 관련 경로
       {
         path: "board",
         element: <Board />,
+      },    
+      {
+        path: "post",
+        element: <BoardPost />
+      },
+      {
+        path: "detail/:id",
+        element: <BoardDetail />
       },
       // 새로운 경로 설정 추가
       {
         path: "customerMgmt/cusStatus",
         element: <CusStatus />
       },
+  
     ]
   },
   {
