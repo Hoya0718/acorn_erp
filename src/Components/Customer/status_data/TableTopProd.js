@@ -4,6 +4,7 @@
 import * as React from 'react'
 import "../../Main/Main.css"
 import TableModule from "../modules/TableModule"
+import ExcelPrint from "../modules/ExcelPrint"
 import CustomerStatusPagination from '../modules/PaginationModule';
 import instance from './../../../api/axios';
 import { useCustomerStatus } from '../settingModal/CustomerStatusSettingContext';
@@ -18,6 +19,8 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
   const [totalItems, setTotalItems] = React.useState(0);
   // const [itemsPerPage, setItemsPerPage] = React.useState(10); 
   const [filteredData, setFilteredData] = React.useState([]);
+  const [filename, setFilename] = React.useState("상품별 고객선호도 테이블");
+  const [columns, setColumns] = React.useState([]);
 
   React.useEffect(() => {
     const fetchTableData = async () => {
@@ -42,7 +45,9 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
   React.useEffect(() => {
     handleTable(activeLabel, rows);
   }, [activeLabel, currentPage, rowsPerPage, rows]);
-
+  React.useEffect(() => {
+    setFilename(filename);
+  }, [filename])
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const currentData = rows.slice(startIndex, endIndex);
@@ -117,8 +122,9 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
     }
   }
 
-  // React.useEffect(() => {
-  // }, [activeLabel]);
+  React.useEffect(() => {
+    setColumns(getColumns(activeLabel));
+  }, [activeLabel, setColumns]);
 
   const handleTable = (activeLabel, rows) => {
     let sortedRows = [...rows];
@@ -163,6 +169,9 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
           currentPage={currentPage}
           onPageChange={setCurrentPage}
         />
+        <div className="excel-print">
+          <ExcelPrint printData={filteredData} columns={columns} filename={filename}/>
+      </div>
         <br></br>
         <br></br>
         <br></br>

@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import MgmtTable from './mgmtTable/MgmtTable'
-// import ExcelPrint from '../Stock/Vendor/';
+import ExcelPrint from '../Customer/modules/ExcelPrint';
 import instance from './../../api/axios';
 
 
@@ -17,6 +17,9 @@ const CusMgmt = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [selectedRows, setSelectedRows] = useState({});
+
+  const [columns, setColumns] = useState([]);
+  const [filename, setFilename] = useState('');
 
   useEffect(() => {
     const savedRowsPerPage = localStorage.getItem('CusMgmtRowsPerPage');
@@ -182,12 +185,12 @@ const CusMgmt = () => {
       setEditingRowData({});
       setOnAddMode(false);
 
-      console.log("handleAddClick ", savedCustomerData);
     } catch (error) {
       console.error('Error adding customer:', error);
     }
   };
   const isAnyRowSelected = Object.values(selectedRows).some(checked => checked);
+
   return (
     <div>
       <div className="Middle classification">
@@ -265,14 +268,16 @@ const CusMgmt = () => {
         onCheckboxChange={handleCheckboxChange}
         selectedRows={selectedRows}
         setSelectedRows={setSelectedRows}
-        editingRowId={editingRowId}  // 추가된 부분
-        editingRowData={editingRowData}  // 추가된 부분
-        setEditingRowData={setEditingRowData}  // 추가된 부분
+        editingRowId={editingRowId}  
+        editingRowData={editingRowData}  
+        setEditingRowData={setEditingRowData}  
+        setColumns={setColumns}
+        setFilename={setFilename}
       />
       {/* 엑셀&인쇄 */}
-      {/* <div className="excel-print">
-          <ExcelPrint vendors={filteredData} />
-        </div> */}
+      <div className="excel-print">
+          <ExcelPrint printData={filteredData} columns={columns} filename={filename}/>
+        </div>
     </div>
   );
 };

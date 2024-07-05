@@ -5,7 +5,7 @@ import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import CustomerStatusPagination from '../modules/PaginationModule';
 import ViewDetailsModal from '../viewDetailsModal/viewDetailsModal';
 
-const MgmtTable = ({ rowsPerPage }) => {
+const MgmtTable = ({ rowsPerPage, setColumns }) => {
   const [data, setData] = useState([]);
   const [pageData, setPageData] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
@@ -35,6 +35,10 @@ const MgmtTable = ({ rowsPerPage }) => {
     { header: '회원등급', accessor: 'customerGrade' },
     { header: '특이사항', accessor: 'customerNotes' },
   ], []);
+
+  useEffect(() => {
+    setColumns(columns);
+  }, [columns, setColumns]);
 
   useEffect(() => {
     const fetchTableData = async () => {
@@ -157,6 +161,7 @@ const MgmtTable = ({ rowsPerPage }) => {
         <thead>
           <tr>
             <th scope="col" className="table-centered">
+              {/* 첫행: 체크박스 */}
               <input
                 className="form-check-input"
                 type="checkbox"
@@ -165,6 +170,7 @@ const MgmtTable = ({ rowsPerPage }) => {
                 id="flexCheckDefault"
               />
             </th>
+            {/* 첫행: 행제목 */}
             {columns.map((column) => (
               <th
                 scope="col"
@@ -182,6 +188,7 @@ const MgmtTable = ({ rowsPerPage }) => {
           </tr>
         </thead>
         <tbody className="table-group-divider">
+          {/* 행반복 */}
           {filteredData.map((row, index) => (
             <tr key={index}>
               <td className="table-centered">

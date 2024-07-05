@@ -6,7 +6,7 @@ import "../../Main/Main.css"
 import instance from './../../../api/axios';
 import { useCustomerStatus } from '../settingModal/CustomerStatusSettingContext';
 
-const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
+const CustomerStatusTable_Dist = ({ activeLabel, onSort, setColumns, setFilename }) => {
     const { selectedRegion } = useCustomerStatus();
     const [data_grade_soso, setData_grade_soso] = React.useState([]); //일반고객인원
     const [data_grade_good, setData_grade_good] = React.useState([]); //우수고객인원

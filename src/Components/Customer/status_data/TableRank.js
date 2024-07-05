@@ -4,6 +4,7 @@
 import * as React from 'react'
 import "../../Main/Main.css"
 import TableModule from "../modules/TableModule"
+import ExcelPrint from "../modules/ExcelPrint"
 import CustomerStatusPagination from '../modules/PaginationModule';
 import instance from './../../../api/axios';
 
@@ -13,6 +14,8 @@ const [rows, setRows] = React.useState([]);
 const [currentPage, setCurrentPage] = React.useState( 1);
 const [totalItems, setTotalItems] = React.useState(0);
 const [filteredData, setFilteredData] = React.useState([]);
+const [filename, setFilename] = React.useState("고개랭킹 테이블");
+const [columns, setColumns] = React.useState([]);
 
   React.useEffect(() => {
     const fetchTableData = async () => {
@@ -40,6 +43,12 @@ const [filteredData, setFilteredData] = React.useState([]);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const currentData = rows.slice(startIndex, endIndex);
+
+
+
+  React.useEffect(() => {
+    setFilename(filename);
+  }, [filename])
 
   const getColumns = (label) => {
     switch (label) {
@@ -73,8 +82,9 @@ const [filteredData, setFilteredData] = React.useState([]);
     }
   };
 
-  // React.useEffect(() => {
-  // }, [activeLabel]);
+  React.useEffect(() => {
+    setColumns(getColumns(activeLabel));
+  }, [activeLabel, setColumns]);
 
   const handleTable = (activeLabel, rows) => {
     let sortedRows = [...rows];
@@ -105,7 +115,7 @@ const [filteredData, setFilteredData] = React.useState([]);
       <TableModule 
         data={filteredData} 
         // sortedData={filteredData} 
-        columns={getColumns(activeLabel)} 
+        columns={columns} 
         onSort={handleSort}  
         currentPage={currentPage}
         rowsPerPage={rowsPerPage}
@@ -117,6 +127,9 @@ const [filteredData, setFilteredData] = React.useState([]);
         currentPage={currentPage}
         onPageChange={setCurrentPage}
       /> 
+      <div className="excel-print">
+          <ExcelPrint printData={filteredData} columns={columns} filename={filename}/>
+        </div>
       <br></br>
       <br></br>
       <br></br>

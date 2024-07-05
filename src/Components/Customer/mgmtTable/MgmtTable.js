@@ -3,11 +3,11 @@ import instance from './../../../api/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import CustomerStatusPagination from '../modules/PaginationModule';
-import ViewDetailsModal from '../viewDetailsModal/viewDetailsModal';
+import ViewDetailsModal from './viewDetailsModal/viewDetailsModal';
 
 const MgmtTable = ({
   rowsPerPage, onAddMode, onUpdateMode, setOnUpdateMode, onCheckboxChange, selectedRows, setSelectedRows,
-  editingRowId, setEditingRowId, editingRowData, setEditingRowData,
+  editingRowId, setEditingRowId, editingRowData, setEditingRowData, setColumns, setFilename
 }) => {
   //테이블 데이터 
   const [data, setData] = useState([]);
@@ -29,6 +29,11 @@ const MgmtTable = ({
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
+  const [filename] = useState("고개관리 테이블");
+
+  useEffect(() => {
+    setFilename(filename);
+  }, [filename, setFilename]);
 
   const columns = useMemo(() => [
     { header: 'ID', accessor: 'customerId' },
@@ -42,6 +47,10 @@ const MgmtTable = ({
     { header: '특이사항', accessor: 'customerNotes' },
   ], []);
 
+  useEffect(() => {
+    setColumns(columns);
+  }, [columns, setColumns]);
+  
   const fetchTableData = async () => {
     try {
       //테이블 데이터 호출

@@ -208,8 +208,7 @@ const Dist = () => {
     });
 
     return (
-        <div className="c_dist" 
-        style={{backgroundColor: 'transparent'}}>
+        <div className="c_dist" >
             <section>
                 <div className="row title">
                     <div className="col-10">
@@ -220,7 +219,7 @@ const Dist = () => {
                     {chartNames.length > 0 ? (
                         chartNames.map((chart, index) => (
                             <div key={index} className="col-lg-4 col-md-6  col-sm-12 chart1" >
-                                <div className="app-card app-card-stat shadow-sm h-100" style={{ backgroundColor: 'white' }}>
+                                <div className="app-card app-card-stat shadow-sm h-100">
                                     <div className="app-card-header p-3 border-0">
                                         <h4 className="app-card-title" style={{ marginBottom: '-15px' }}>{chart.label}</h4>
                                     </div>

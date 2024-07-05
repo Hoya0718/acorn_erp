@@ -7,7 +7,7 @@ import "../Customer.css"
 import { GoTriangleDown } from "react-icons/go";
 import { GoTriangleUp } from "react-icons/go";
 import instance from './../../../api/axios';
-import ViewDetailsModal from '../viewDetailsModal/viewDetailsModal';
+import ViewDetailsModal from '../mgmtTable/viewDetailsModal/viewDetailsModal';
 
 
 
@@ -175,7 +175,7 @@ const Rank = () => {
                 <div className="row" style={{ margin: "auto" }}>
                     {/* 최다 거래 고객 랭킹 */}
                     <div className="col-md-6 col-lg-6" style={{ marginTop: "10px" }}>
-                        <div className="app-card app-card-stats-table h-100 shadow-sm" style={{ backgroundColor: 'white', marginTop: '30px' }}>
+                        <div className="app-card app-card-stats-table h-100 shadow-sm" style={{marginTop: '30px' }}>
                             <div className="app-card-header p-3 title" style={{ marginBottom: "-20px" }}>
                                 <h3 className="app-card-title">최고 매출 고객 랭킹</h3>
                             </div>
@@ -198,7 +198,7 @@ const Rank = () => {
                     </div>
                     {/* 최고 매출 고객 랭킹 */}
                     <div className="col-md-6 col-lg-6" style={{ marginTop: "10px" }}>
-                        <div className="app-card app-card-stats-table h-100 shadow-sm" style={{ backgroundColor: 'white', marginTop: '30px' }}>
+                        <div className="app-card app-card-stats-table h-100 shadow-sm" style={{ marginTop: '30px' }}>
                             <div className="app-card-header p-3 title" style={{ marginBottom: "-20px" }}>
                                 <h3 className="app-card-title">최다 거래 고객 랭킹</h3>
                             </div>
