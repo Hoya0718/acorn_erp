@@ -20,10 +20,17 @@ const LoginForm = () => {
         email: email,
         password: password
         }
-      });
+      }
+    );
+
+    console.log('Response data:', response.data);
+    
+    // shopname 추출 및 출력
+    const { shopName } = response.data;
+    console.log('Shop Name:', shopName);
       
       if (response.status === 200) {
-        navigate('/layout');
+        navigate('/layout', {state : {shopName : shopName}});
       }
     } catch (err) {
       console.error("에러 발생: " + err);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { useLocation, Outlet, Link } from 'react-router-dom';
 import { Slide, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Layout.css';
@@ -8,9 +8,11 @@ import ThemeToggle from './ThemeToggle';
 import LogoutIcon from './LogoutIcon';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 const Layout = () => {
   const [expandedItem, setExpandedItem] = useState(null);
-
+    const location = useLocation();
+    const { shopName } = location.state; // shopName 가져오기
 
   useEffect(() => {
     toast.success(`${shopName}님, 안녕하세요!`);
