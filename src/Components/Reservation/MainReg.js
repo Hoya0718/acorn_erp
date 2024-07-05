@@ -78,8 +78,16 @@ const MainReg = () => {
 
   return (
     <div>
-      <h2 style={{ textAlign: 'center' }}>{isEditMode ? '예약 수정' : '예약 등록'}</h2>
-      <br /><br /><br />
+      <h2 style={{ textAlign: 'center',
+    fontFamily: 'Arial, sans-serif',
+    fontSize: '2rem',
+    fontWeight: 'bold',
+    color: '#333333', // Dark gray 
+    backgroundColor: '#ADD8E6', // Light blue background
+    padding: '20px',
+    borderRadius: '10px',
+    margin: '20px 0',}}>{isEditMode ? '예약 수정' : '예약 등록'}</h2>
+      <br /><br />
       <main>
         <div>
           <form onSubmit={handleSubmit}>
@@ -128,6 +136,7 @@ const MainReg = () => {
               </thead>
             </table>
             {errorMessage && <p style={{ color: 'red', textAlign: 'center' }}>{errorMessage}</p>}
+            <br/><br/>
             <section id="calculator" align="center">
               <div id="calculator_addBtn">
                 <button 
