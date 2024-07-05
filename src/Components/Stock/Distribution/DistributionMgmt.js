@@ -15,10 +15,9 @@ const DistributionMgmt = () => {
     // 초기 상태를 정의
     const initialNewItemState = {
         id: null,
-        distributionCode: '',
-        distributionName: '',
+        itemCode: '',
+        itemName: '',
         receiptDate: '',
-        orderQty:'',
         initialQty: '',
         receivedQty: '',
         releaseQty: '',
@@ -40,7 +39,6 @@ const DistributionMgmt = () => {
     const [startDate, setStartDate] = useState("");  // 시작 날짜
     const [endDate, setEndDate] = useState("");  // 종료 날짜
     const [sortDirection, setSortDirection] = useState('asc'); // 정렬 방향 추가
-    const [purchaseData, setPurchaseData] = useState([]); // 구매 데이터 추가
 
     useEffect(() => {
         fetchItems();
@@ -56,16 +54,6 @@ const DistributionMgmt = () => {
             console.error("Error fetching items:", error);
         }
     };
-        // 백엔드 API에서 purchase 항목을 가져와 items 상태를 업데이트, 오류가 발생하면 콘솔에 출력
-        const fetchPurchaseItems = async () => {
-            try {
-                const response = await axios.get('/purchase/list');
-                setPurchaseData(response.data); // 구매 데이터 업데이트
-                console.log(response.data);
-            } catch (error) {
-                console.error("Error fetching purchase items:", error);
-            }
-        };
 
     const handleSelectAll = () => {
         setCheckAll(!checkAll);
@@ -201,10 +189,10 @@ const DistributionMgmt = () => {
         // 정렬된 항목들을 설정
         let sortedItems = [...items];
         sortedItems.sort((a, b) => {
-            if (selectedField === 'distributionCode') {
-                return isAsc ? a.distributionCode.localeCompare(b.distributionCode) : b.distributionCode.localeCompare(a.distributionCode);
-            } else if (selectedField === 'distributionName') {
-                return isAsc ? a.distributionName.localeCompare(b.distributionName) : b.distributionName.localeCompare(a.distributionName);
+            if (selectedField === 'itemCode') {
+                return isAsc ? a.itemCode.localeCompare(b.itemCode) : b.itemCode.localeCompare(a.itemCode);
+            } else if (selectedField === 'itemName') {
+                return isAsc ? a.itemName.localeCompare(b.itemName) : b.itemName.localeCompare(a.itemName);
             } else if (selectedField === 'receiptDate') {
                 return isAsc ? new Date(a.receiptDate) - new Date(b.receiptDate) : new Date(b.receiptDate) - new Date(a.receiptDate);
             }
@@ -309,46 +297,41 @@ const DistributionMgmt = () => {
 
             {/* 테이블 영역 */}
             <section className="distribution-table-container">
-                <br/><br/><br/>
-                {/* <table className='distribution-table'>
+                <table className='distribution-table'>
                     <thead>
                         <tr>
                             <th><input type="checkbox" onChange={handleSelectAll} checked={checkAll} /></th>
                             <th onClick={() => handleSortChange('itemCode')}>
-                                품목코드{/* 품목코드 {sortOption === 'itemCode' && sortDirection === 'asc' ? '▲' : '▼'} */}
-                            {/* </th>
+                                품목코드 {sortOption === 'itemCode' && sortDirection === 'asc' ? '▲' : '▼'}
+                            </th>
                             <th onClick={() => handleSortChange('itemName')}>
-                                품목이름{/*  {sortOption === 'itemName' && sortDirection === 'asc' ? '▲' : '▼'} */}
-                            {/* </th>
+                                품목이름 {sortOption === 'itemName' && sortDirection === 'asc' ? '▲' : '▼'}
+                            </th>
                             <th onClick={() => handleSortChange('receiptDate')}>
-                                입고일자{/*  {sortOption === 'receiptDate' && sortDirection === 'asc' ? '▲' : '▼'} */}
-                            {/* </th>
-                            <th>발주수량</th>
+                                입고일자 {sortOption === 'receiptDate' && sortDirection === 'asc' ? '▲' : '▼'}
+                            </th>
                             <th>입고수량</th>
                             <th>기초재고</th>
                             <th>출고수량</th>
                             <th>집계재고</th>
                             <th>입고예정일</th>
-                            {showNewItemForm && <th></th>} */}
-                        {/* </tr>
+                            {showNewItemForm && <th></th>}
+                        </tr>
                     </thead>
-                    <tbody> */} 
+                    <tbody>
                         
-                        {/* {showNewItemForm &&
+                        {showNewItemForm &&
                             <DistributionAdd
                                 onAddDistribution={handleAddDistribution}
                                 handleCancelClick={handleCancelClick}
-                                fetchPurchaseItems={fetchPurchaseItems}
-                                purchaseData={purchaseData} 
-                                checkAll={checkAll}
                             />
-                        } */}
+                        }
                         {/* 물류 테이블 데이터 */}
-                        {/* {itemsToRender.map(item => (
+                        {itemsToRender.map(item => (
                             <tr key={item.id}>
                                 <td><input type="checkbox" onChange={() => handleCheckboxChange(item.id)} checked={selectedItems.includes(item.id)} /></td>
                                 {/* 수정 중인 항목 */}
-                                {/* {editingItemId === item.id ? (
+                                {editingItemId === item.id ? (
                                     <DistributionUpdate
                                         item={item}
                                         handleInputChange={handleInputChange}
@@ -356,21 +339,22 @@ const DistributionMgmt = () => {
                                     />
                                 ) : (
 
-                                   
-                               
+                                    // 일반 데이터 표시
+                                    <>
+                                        <td>{item.itemCode}</td>
+                                        <td>{item.itemName}</td>
+                                        <td>{item.receiptDate}</td>
+                                        <td>{item.initialQty}</td>
+                                        <td>{item.receivedQty}</td>
+                                        <td>{item.releaseQty}</td>
+                                        <td>{item.currentQty}</td>
+                                        <td>{item.expectedReceiptDate}</td>
+                                    </>
                                 )}
-                            </tr> 
-                        // ))} */} 
-                                    <DistributionAdd
-                                    onAddDistribution={handleAddDistribution}
-                                    handleCancelClick={handleCancelClick}
-                                    fetchPurchaseItems={fetchPurchaseItems}
-                                    purchaseData={purchaseData} 
-                                    checkAll={checkAll} 
-                                    handleSelectAll={handleSelectAll}
-                                    />
-                    {/* </tbody>
-                </table> */}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </section>
             
             {/* 하단 버튼 영역 */}
@@ -382,4 +366,4 @@ const DistributionMgmt = () => {
     );
 };
 
-export default DistributionMgmt; 
+export default DistributionMgmt; ////

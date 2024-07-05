@@ -7,7 +7,10 @@ import "../Customer.css"
 import { GoTriangleDown } from "react-icons/go";
 import { GoTriangleUp } from "react-icons/go";
 import instance from './../../../api/axios';
-import ViewDetailsModal from '../mgmtTable/viewDetailsModal/viewDetailsModal';
+import ViewDetailsModal from '../viewDetailsModal/viewDetailsModal';
+
+
+
 
 const Rank = () => {
     const [rangeValue, setRangeValue] = React.useState(10);
@@ -120,10 +123,13 @@ const Rank = () => {
         //테이블데이터+고객등급데이터+특이사항데이터 병합
         const mergedData = data.map(customer => {
           const gradeInfo = data_grade.find(grade => grade.customerId === customer.customerId);
+          // const notesInfo = data_notes.find(CustomerNotes => CustomerNotes.customerId === customer.customerId);
           const notes = data_notes.filter(note => note.customerId === customer.customerId);
           return {
             ...customer,
             customerGrade: gradeInfo ? gradeInfo.customerGrade : '-',
+            // customerNotes: notesInfo ? notesInfo.notes : '-',
+            // customerNotes: notes,
             customerNotes: notes.length ? notes : [{ notes: '-' }],
           }});
         setRows(mergedData);

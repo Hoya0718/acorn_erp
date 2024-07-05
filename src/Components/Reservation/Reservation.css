@@ -1,21 +1,14 @@
 #Frame {
   display: flex;
   justify-content:column;
-  /* height : 100vh; */
+  height : 100vh;
+
 }
 
-#add_reg:hover, #add_cancel:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-}
-
-
-
-/* 달력 전체 크기 조정 (옵션) */
 .calendar {
-  width: 650px;  /* 달력 전체 너비를 키웁니다 */
-  margin: 10px;
-  margin-left: 0px;
+width: 600px;
+margin: 10px;
+margin-left: 0px;
 }
 
 .flex-shrink-0 {
@@ -59,40 +52,25 @@ display: flex;
 margin: 25px 0 10px;
 }
 
-/* 요일 글자 크기 증가 */
 .day {
-  width: calc(100% / 7);
-  text-align: center;
-  font-size: 1.5rem;  /* 요일 글자 크기를 키웁니다 */
-  font-weight: bold;  /* 요일을 굵게 표시합니다 */
-  padding: 10px 0;  /* 위아래 여백을 추가합니다 */
+width: calc(100% / 7);
+text-align: center;
 }
 
-/* 날짜 칸 높이 조정 (옵션) */
 .dates {
-  display: flex;
-  flex-flow: row wrap;
-  height: 550px;  /* 달력 높이를 키웁니다 */
-  border-top: 1px solid #333333;
-  border-right: 1px solid #333333;
+display: flex;
+flex-flow: row wrap;
+height: 500px;
+border-top: 1px solid #333333;
+border-right: 1px solid #333333;
 }
 
-/* 날짜 글자 크기 증가 */
 .date {
-  width: calc(100% / 7);
-  padding: 15px;
-  text-align: right;
-  border-bottom: 1px solid #333333;
-  border-left: 1px solid #333333;
-  font-size: 1.5rem;  /* 날짜 글자 크기를 키웁니다 */
-  font-weight: bold;
-  position: relative;  /* 도토리 이미지 위치 조정을 위해 추가 */
-}
-
-.date span {
-  display: block;
-  text-align: right;
-  margin-bottom: 5px;  /* 날짜와 도토리 이미지 사이 간격 조정 */
+width: calc(100% / 7);
+padding: 15px;
+text-align: right;
+border-bottom: 1px solid #333333;
+border-left: 1px solid #333333;
 }
 
 .day:nth-child(7n + 1),
@@ -106,22 +84,37 @@ color: #396EE2;
 }
 
 .other {
-  opacity: 0.3;
+opacity: .3;
 }
 
 .date:hover {
   background-color: #f0f0f0;
 }
 
-.today:not(.other) {
-  position: relative;
-  color: black;
-  background-color: antiquewhite;
+.today {
+position: relative;
+color: black;
+background-color: antiquewhite;
+}
+
+.today::before {
+position: absolute;
+top: 50%;
+left: 50%;
+z-index: -1;
+display: block;
+width: 30px;
+height: 30px;
+background-color: #FF0000;
+border-radius: 50%;
+transform: translate(-50%, -50%);
+content: '';
 }
 
 .custom-right-column {
 margin-top: 7rem
 }
+
 
 
 /* ResTable.css */
@@ -244,21 +237,11 @@ transform: translateY(-50%); /* 막대를 정확히 중간에 맞추기 위한 �
 }
 
 
-.date-content {
-  position: relative; /* 상대 위치 설정 */
-  height: 100%; /* 전체 높이 사용 */
+.acorn-image {
+width: 15px;  /* 원하는 크기로 조정 */
+height: 15px; /* 원하는 크기로 조정 */
+display: block;
+margin: 0 auto;  /* 이미지를 중앙에 배치 */
 }
 
-.date-number {
-  display: block;
-  text-align: right; /* 날짜 숫자를 오른쪽 정렬 */
-  margin-right: 5px; /* 숫자와 아이콘 사이에 약간의 여백 추가 */
-}
 
-.acorn-icon {
-  position: absolute; /* 절대 위치 설정 */
-  bottom: -3px; /* 하단에 배치 */
-  left: -5px; /* 왼쪽에 배치 */
-  width: 30px; /* 원하는 크기로 조정 */
-  height: 30px; /* 원하는 크기로 조정 */
-}

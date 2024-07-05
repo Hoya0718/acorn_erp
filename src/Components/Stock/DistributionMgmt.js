@@ -1,11 +1,11 @@
 import React from 'react';
 import "../Main/Main.css"
-const MeterialMgmt = () => {
+const DistributionMgmt = () => {
   return (
     <div>
 
       <div className="Middle classification">
-        <span>자재 관리</span>
+        <span>물류 관리</span>
       </div>
 
       <hr />
@@ -39,4 +39,4 @@ const MeterialMgmt = () => {
   );
 };
 
-export default MeterialMgmt;
+export default DistributionMgmt;

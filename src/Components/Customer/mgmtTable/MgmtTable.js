@@ -3,10 +3,10 @@ import instance from './../../../api/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import CustomerStatusPagination from '../modules/PaginationModule';
-import ViewDetailsModal from './viewDetailsModal/viewDetailsModal';
+import ViewDetailsModal from '../viewDetailsModal/viewDetailsModal';
 
 const MgmtTable = ({
-  rowsPerPage, onAddMode, onUpdateMode, onCheckboxChange, selectedRows, setSelectedRows,
+  rowsPerPage, onAddMode, onUpdateMode, setOnUpdateMode, onCheckboxChange, selectedRows, setSelectedRows,
   editingRowId, setEditingRowId, editingRowData, setEditingRowData,
 }) => {
   //테이블 데이터 
@@ -111,9 +111,9 @@ const MgmtTable = ({
       });
     }
     setSelectedRows(newSelectedRows);
-    // data.forEach(item => {
-    //   onCheckboxChange(item.customerId, newSelectAll);
-    // });
+    data.forEach(item => {
+      onCheckboxChange(item.customerId, newSelectAll);
+    });
   };
 
   const handleSort = (key) => {
@@ -153,14 +153,23 @@ const MgmtTable = ({
     onCheckboxChange(customerId, isSelected);
   };
 
-  const handleInputChange = (e, accessor) => {
-    setEditingRowData({
-      ...editingRowData,
-      [accessor]: e.target.value,
-    });
-  };
-
-
+  // const handleInputChange = (e, accessor) => {
+  //   setEditingRowData({
+  //     ...editingRowData,
+  //     [accessor]: e.target.value,
+  //   });
+  // };
+//   const handleDoubleEditmodeClick = () => {
+//     setOnUpdateMode(true);
+//     console.log(onUpdateMode)
+// }
+const handleInputChange = (e, accessor) => {
+  setEditingRowData({
+    ...editingRowData,
+    [accessor]: e.target.value,
+  });
+  // console.log("editingRowData", editingRowData)
+};
   const handleNameClick = (rowData) => {
     setModalData(rowData);
     setShowModal(true);
@@ -208,17 +217,119 @@ const MgmtTable = ({
           </tr>
         </thead>
         <tbody className="table-group-divider">
+          {/* 등록모드 */}
           {onAddMode && (
             <tr>
-              <td className="table-centered"></td>
-              {columns.map((column) => (
-                <td key={column.accessor} className={column.className || 'table-centered'}>
-                  <input type="text" placeholder={column.header} className="form-control" />
+               <td className="table-centered"></td>
+               {columns.map((column) => (
+             <td key={column.accessor} className={column.className || 'table-centered'}>
+                  {column.accessor === 'customerId' ? (
+                    <input type="text" value="자동 생성" className="form-control" readOnly />
+                  ) : column.accessor === 'customerBirthDate' ? (
+                    <input
+                      type="date"
+                      className="form-control"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] || ''}
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    />
+                  ) : column.accessor === 'registerDate' ? (
+                    <input
+                      type="date"
+                      className="form-control"
+                      name={column.accessor}
+                      value={new Date().toISOString().split('T')[0]}
+                    />
+                   ) : column.accessor === 'customerGrade' ? (
+                      <select
+                        className="form-control"
+                        name={column.accessor}
+                        value={editingRowData[column.accessor] !== undefined ? editingRowData[column.accessor] : '일반'}
+                        onChange={(e) => handleInputChange(e, column.accessor)}
+                      >
+                        <option value="">등급 선택</option>
+                        <option value="우수">우수</option>
+                        <option value="주의">주의</option>
+                        <option value="일반">일반</option>
+                      </select>
+                  ) : (
+                    <input
+                      type="text"
+                      placeholder={column.header}
+                      className="form-control"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] || ''}
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    />
+
+                  )}
                 </td>
               ))}
             </tr>
           )}
-           {filteredData.map((row, index) => (
+          {/* 수정모드 */}
+          {onUpdateMode && (
+            <tr>
+             <td className="table-centered"></td>
+              {columns.map((column) => (
+                <td 
+                  key={column.accessor} 
+                  className={column.className || 'table-centered'}>
+                  {column.accessor === 'customerId' ? (
+                    <input type="text" value={editingRowData[column.accessor] || '자동 생성'} className="form-control" readOnly />
+                  ) : column.accessor === 'customerBirthDate' ? (
+                    <input
+                      type="date"
+                      className="form-control"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] || ''}
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    />
+                  ) : column.accessor === 'registerDate' ? (
+                    <input
+                      type="date"
+                      className="form-control"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] || new Date().toISOString().split('T')[0]}
+                      readOnly
+                    />
+                  ) : column.accessor === 'customerGender' ? (
+                    <select
+                      className="form-control"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] || ''}
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    >
+                      <option value="">성별 선택</option>
+                      <option value="남성">남성</option>
+                      <option value="여성">여성</option>
+                    </select>
+                  ) : column.accessor === 'customerGrade' ? (
+                    <select
+                      className="form-control"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] || ''}
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    >
+                      <option value="">등급 선택</option>
+                      <option value="우수">우수</option>
+                      <option value="주의">주의</option>
+                      <option value="일반" selected >일반</option>
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] || ''}
+                      className="form-control"
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    />
+                  )}
+                </td>
+              ))}
+            </tr>
+          )}
+          {filteredData.map((row, index) => (
             <tr key={index}>
               <td className="table-centered">
                 <input
@@ -227,18 +338,16 @@ const MgmtTable = ({
                   onChange={() => handleRowSelect(row.customerId, !selectedRows[row.customerId])}
                 />
               </td>
-              
 
-              {onUpdateMode && editingRowId === row.customerId ? (
-                columns.map((column) => (
-                  
-                  <td
+              {/* {onUpdateMode && editingRowId === row.customerId ? (
+                columns.map((column) => ( */}
+
+                  {/* <td
                     key={column.accessor}
                     className={column.className || 'table-centered'}
                     onClick={column.isName ? () => handleNameClick(row) : undefined}
                     style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}
                   >
-                    {console.log('onUpdateMode && editingRowId === row.customerId  조건충족', editingRowData)}
                     <input
                       type="text"
                       value={editingRowData[column.accessor] || ''}
@@ -246,25 +355,31 @@ const MgmtTable = ({
                     />
                   </td>
                 ))
-              ) : (
-                columns.map((column) => (
+              ) : ( */}
+
+                {columns.map((column) => (
                   <td
                     key={column.accessor}
                     className={column.className || 'table-centered'}
                     onClick={column.isName ? () => handleNameClick(row) : undefined}
                     style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}
                   >
-                    {console.log(onUpdateMode ,editingRowId ,row.customerId , "조건불충족")}
-                    {column.accessor === 'customerNotes' ? (
-                      Array.isArray(row[column.accessor]) && row[column.accessor].length > 0
-                        ? row[column.accessor][0].notes || '-'
-                        : '-'
-                    ) : (
-                      row[column.accessor]
-                    )}
+                    <input
+                      type="text"
+                      style ={{border : 'none'}}
+                      // onDoubleClick={handleDoubleEditmodeClick}
+                      value={column.accessor === 'customerNotes' ? (
+                        Array.isArray(row[column.accessor]) && row[column.accessor].length > 0
+                          ? row[column.accessor][0].notes || '-'
+                          : '-'
+                      ) : (
+                        row[column.accessor]
+                      )}
+                      readOnly
+                    />
                   </td>
-                ))
-              )}
+                ))}
+              {/* )} */}
             </tr>
           ))}
         </tbody>

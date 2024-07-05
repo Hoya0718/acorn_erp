@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
@@ -9,7 +10,7 @@ const ThemeToggle = () => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) {
       setTheme(savedTheme);
-      document.body.setAttribute("data-theme", savedTheme);
+      document.documentElement.setAttribute("data-theme", savedTheme);
     }
   }, []);
 
@@ -17,7 +18,7 @@ const ThemeToggle = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
-    document.body.setAttribute("data-theme", newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
   };
 
   return (

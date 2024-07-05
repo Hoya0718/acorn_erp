@@ -68,7 +68,7 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 1000
+    zIndex: 1000,
   },
   popupContent: {
     backgroundColor: "white",
@@ -80,7 +80,7 @@ const styles = {
   button: {
     margin: "10px",
     padding: "10px 20px",
-    backgroundColor: "#4D7F9D",
+    backgroundColor: "#2341a6",
     color: "white",
     border: "none",
     borderRadius: "5px",

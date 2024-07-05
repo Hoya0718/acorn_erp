@@ -48,7 +48,6 @@ const FindPw = () => {
             to="/findEmail"
             className={`link-heading ${activeLink === '/findEmail' ? 'active' : ''}`}
             onClick={() => handleLinkClick('/findEmail')}
-            style={{paddingLeft:"13px", paddingRight:"13px"}}
           >
             아이디 찾기
           </Link>

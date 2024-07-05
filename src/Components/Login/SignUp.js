@@ -42,9 +42,9 @@ const SignUp = () => {
                 </div>
                 <div className="form-signin-heading2">회원가입</div>
                 <div className="form-signin-heading3">회원가입을 위해 정보를 입력해주세요</div>
-                <input type="text" className="form-control" name="registrationNum" value={registrationNum} onChange={(e) => setRegistrationNum(e.target.value)} placeholder="사업자번호(10자)" required="" autofocus="" />
-                <input type="text" className="form-control" name="shopName" onChange={(e) => setShopName(e.target.value)} value={shopName} placeholder="상호명" required="" />
-                <input type="email" className="form-control" name="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="아이디(이메일)" required="" />
+                <input type="text" className="form-control" name="storenum" value={registrationNum} onChange={(e) => setRegistrationNum(e.target.value)} placeholder="사업자번호(10자)" required="" autofocus="" />
+                <input type="text" className="form-control" name="storename" onChange={(e) => setShopName(e.target.value)} value={shopName} placeholder="상호명" required="" />
+                <input type="email" className="form-control" name="username" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="아이디(이메일)" required="" />
                 <input type="password" className="form-control" name="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="비밀번호" required="" />
                 <button className="btn btn-lg btn-primary btn-block" type="submit">가입하기</button>
             </form>
