@@ -11,9 +11,9 @@ import 'react-toastify/dist/ReactToastify.css';
 const Layout = () => {
   const [expandedItem, setExpandedItem] = useState(null);
 
-  //글꼴
+
   useEffect(() => {
-    toast.success('${shopName}님, 안녕하세요');
+    toast.success(`${shopName}님, 안녕하세요!`);
   }, []);
 
   const handleItemClick = (item) => {
