@@ -100,13 +100,23 @@ const MainReg = () => {
                   </td>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap', padding: '10px' }}>휴대전화</th>
                   <td style={{ width: '30%', padding: '10px' }}>
-                    <input type="text" name="phone" placeholder="휴대전화" style={{ fontSize: '15px', width: '100%', borderRadius: '4px', padding: '5px' }} onChange={handleChange} value={formData.phone} />
+                    <input type="text" name="phone" placeholder="010-0000-0000" style={{ fontSize: '15px', width: '100%', borderRadius: '4px', padding: '5px' }} onChange={handleChange} value={formData.phone} />
                   </td>
                 </tr>
                 <tr>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap', padding: '10px' }}>결제 방식</th>
                   <td style={{ width: '30%', padding: '10px' }}>
-                    <input type="text" name="payment" placeholder="결제 방식" style={{ fontSize: '15px', width: '100%', borderRadius: '4px', padding: '5px' }} onChange={handleChange} value={formData.payment} />
+                    <select
+                      name="payment"
+                      style={{ fontSize: '12px', width: '100%', borderRadius: '4px', padding: '5px' }}
+                      onChange={handleChange}
+                      value={formData.payment}
+                    >
+                      <option value="">결제 방식을 선택하세요</option>
+                      <option value="카드">카드</option>
+                      <option value="계좌이체">계좌이체</option>
+                      <option value="네이버페이">네이버페이</option>
+                    </select>
                   </td>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap', padding: '10px' }}>추가 요청사항</th>
                   <td style={{ width: '30%', padding: '10px' }}>
@@ -116,7 +126,16 @@ const MainReg = () => {
                 <tr style={{ backgroundColor: '#f8f9fa' }}>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap', padding: '10px' }}>성별</th>
                   <td style={{ width: '30%', padding: '10px' }}>
-                    <input type="text" name="gender" placeholder="성별" style={{ fontSize: '15px', width: '100%', borderRadius: '4px', padding: '5px' }} onChange={handleChange} value={formData.gender} />
+                    <select
+                      name="gender"
+                      style={{ fontSize: '12px', width: '100%', borderRadius: '4px', padding: '5px' }}
+                      onChange={handleChange}
+                      value={formData.gender}
+                    >
+                      <option value="">성별을 선택하세요</option>
+                      <option value="남자">남자</option>
+                      <option value="여자">여자</option>
+                    </select>
                   </td>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap', padding: '10px' }}>예약 일시</th>
                   <td style={{ width: '30%', padding: '10px' }}>

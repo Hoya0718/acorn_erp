@@ -1,0 +1,27 @@
+.date-picker-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .custom-date-picker {
+    width: 150px;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .custom-date-picker:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 8px rgba(0, 86, 179, 0.2);
+  }
+  
+  .date-picker-separator {
+    margin: 0 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  

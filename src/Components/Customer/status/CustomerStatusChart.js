@@ -10,9 +10,31 @@ import TopProd from './TopProdChart.js'
 import "../Customer.css"
 
 const CustomerMain = () => {
+//맨위로 버튼 만들다: 실패
+  const [showButton, setShowButton] = React.useState(false);
+
+  React.useEffect(() => {
+  const handleScroll = () => {
+    if (window.scrollY > 300) {
+      setShowButton(true);
+    } else {
+      setShowButton(false);
+    }
+  };
+
+  window.addEventListener('scroll', handleScroll);
+  return () => {
+    window.removeEventListener('scroll', handleScroll);
+  };
+}, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className='CustomerMain'>
-      <div className="content" style={{ display: "flex", paddingTop: "15px" ,paddingBottom: "15px"}}>
+      <div className="content" style={{ display: "flex", paddingTop: "15px", paddingBottom: "15px" }}>
         <section id="sec">
           <div className="row first">
             {/*고객수목표 달성도*/}
@@ -29,11 +51,16 @@ const CustomerMain = () => {
             <TopProd />
           </div>
           {/*고객구매실적*/}
-          <div className="row third rank" style={{ marginTop: "20px", paddingBottom: "15px"}}>
+          <div className="row third rank" style={{ marginTop: "20px", paddingBottom: "15px" }}>
             <Rank />
           </div>
         </section>
       </div>
+      {showButton && (
+        <button onClick={scrollToTop} className="scroll-to-top">
+          맨 위로
+        </button>
+      )}
     </div>
   );
 }
