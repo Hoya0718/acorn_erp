@@ -9,7 +9,6 @@ const ChangePw = () => {
     const [newPw1, setNewPw1] = useState('');
     const [newPw2, setNewPw2] = useState('');
     const [isMismatch, setIsMismatch] = useState(false);
-
     const navigate = useNavigate();
     const location = useLocation();
     const { registrationNum } = location.state; // registrationNum 가져오기
@@ -49,13 +48,19 @@ const ChangePw = () => {
                     <FontAwesomeIcon icon={faCircleXmark} size="2xl" />
                 </div>
                 <div className="form-signin-heading2">비밀번호 재설정</div>
-                <div className="form-signin-heading3">새로운 비밀번호를 입력해주세요</div>
+                <div className="form-signin-heading3">새로운 비밀번호를 입력해주세요.<br/>(영문,숫자 조합 3~16글자)</div>
                 <input type="password" className="form-control" name="newpw1" placeholder="새 비밀번호" required="" autoFocus="" style={{ marginBottom: "1px" }} value={newPw1}
+                    minLength="3" // 최소 3글자 설정
+                    maxLength="16" // 최대 16글자 설정
+                    pattern="(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{3,16}" // 영문과 숫자 필수로 포함
                     onChange={(e) => {
                         setNewPw1(e.target.value);
                         setIsMismatch(false); // 입력 시 불일치 메시지 초기화
                     }} />
                 <input type="password" className="form-control" name="newpw2" placeholder="새 비밀번호 확인" required="" value={newPw2}
+                    minLength="3" // 최소 3글자 설정
+                    maxLength="16" // 최대 16글자 설정
+                    pattern="(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{3,16}" // 영문과 숫자 필수로 포함
                     onChange={(e) => {
                         setNewPw2(e.target.value);
                         setIsMismatch(false); // 입력 시 불일치 메시지 초기화

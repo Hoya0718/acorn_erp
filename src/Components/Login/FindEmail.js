@@ -12,7 +12,6 @@ const FindEmail = () => {
   const [activeLink, setActiveLink] = useState(location.pathname);
   const [registrationNum, setRegistrationNum] = useState('');
   const [email,setEmail] = useState('');
-
   const handleLinkClick = (path) => {
     setActiveLink(path);
   };
@@ -24,7 +23,7 @@ const FindEmail = () => {
   const handleFindEmail = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.get(`/api/findEmail/${registrationNum}`);
+      const response = await axios.get(`/findEmail/${registrationNum}`);
       if (response.data) {
         // email 값을 문자열로 설정합니다.
         setEmail(response.data);
@@ -65,12 +64,15 @@ const FindEmail = () => {
           className="form-control"
           name="storenum"
           placeholder="사업자번호(10자)"
+          maxLength="10"
+          pattern="\d{10}"
           required
           autoFocus
           style={{ marginBottom: '70px' }}
           value={registrationNum}
           onChange={(e) => setRegistrationNum(e.target.value)}
         />
+  
         <button className="btn btn-lg btn-primary btn-block" type="submit">
           아이디 찾기
         </button>

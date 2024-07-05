@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import './Layout.css';
-import MemoPad from '../Components/MemoPad';
+import MemoPad from './MemoPad';
 import ThemeToggle from './ThemeToggle';
 import LogoutIcon from './LogoutIcon';
 
