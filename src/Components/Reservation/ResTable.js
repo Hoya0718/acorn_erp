@@ -53,10 +53,17 @@ const ResTable = () => {
     setEditReservation({});
   };
 
-  const handleSaveChanges = () => {
-    updateReservation(editReservation);
-    setShowModal(false);
-    setSelectedReservations([]);
+  const handleSaveChanges = async () => {
+    try {
+      await updateReservation(editReservation);
+      setShowModal(false);
+      setSelectedReservations([]);
+      // 페이지 새로고침
+      window.location.reload();
+    } catch (error) {
+      console.error('Error updating reservation:', error);
+      alert('예약 수정 중 오류가 발생했습니다.');
+    }
   };
 
   return (
