@@ -42,10 +42,55 @@ const SignUp = () => {
                 </div>
                 <div className="form-signin-heading2">회원가입</div>
                 <div className="form-signin-heading3">회원가입을 위해 정보를 입력해주세요</div>
-                <input type="text" className="form-control" name="registrationNum" value={registrationNum} onChange={(e) => setRegistrationNum(e.target.value)} placeholder="사업자번호(10자)" required="" autofocus="" />
-                <input type="text" className="form-control" name="shopName" onChange={(e) => setShopName(e.target.value)} value={shopName} placeholder="상호명" required="" />
-                <input type="email" className="form-control" name="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="아이디(이메일)" required="" />
-                <input type="password" className="form-control" name="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="비밀번호" required="" />
+                {/* 사업자번호 10자리를 꼭 채우되 숫자만 받기 */}
+                <input 
+                    type="text" 
+                    className="form-control" 
+                    name="storenum" 
+                    value={registrationNum} 
+                    onChange={(e) => setRegistrationNum(e.target.value)} 
+                    placeholder="사업자번호(10자)" 
+                    required 
+                    maxLength="10"
+                    pattern="\d{10}" // 숫자만 10자리 받도록 설정
+                    autoFocus 
+                />
+                {/* 상호명은 최대 30글자 */}
+                <input 
+                    type="text" 
+                    className="form-control" 
+                    name="storename" 
+                    onChange={(e) => setShopName(e.target.value)} 
+                    value={shopName} 
+                    placeholder="상호명" 
+                    required 
+                    maxLength="30" // 최대 30글자 설정
+                />
+                {/* 아이디는 최소 3글자부터 16글자 */}
+                <input 
+                    type="email" 
+                    className="form-control" 
+                    name="username" 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)} 
+                    placeholder="아이디(이메일)" 
+                    required 
+                    minLength="3" // 최소 3글자 설정
+                    maxLength="30" // 최대 16글자 설정
+                />
+                {/* 비밀번호는 최소 3글자부터 16글자, 영문과 숫자가 필수로 들어가야 됨 */}
+                <input 
+                    type="password" 
+                    className="form-control" 
+                    name="password" 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                    placeholder="비밀번호(영문+숫자 3~16글자)" 
+                    required 
+                    minLength="3" // 최소 3글자 설정
+                    maxLength="16" // 최대 16글자 설정
+                    pattern="(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{3,16}" // 영문과 숫자 필수로 포함
+                />
                 <button className="btn btn-lg btn-primary btn-block" type="submit">가입하기</button>
             </form>
         </div>

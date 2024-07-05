@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Righteous&display=swap');
 
 :root {
   --background-color: #ffffff;
@@ -21,8 +20,10 @@
 .header1 .erp-title {
   text-decoration: none;
   color: black  !important; 
-  font-family: 'Lilita One', cursive;
-  font-size: 30px;
+  font-family: "Audiowide", sans-serif;
+  font-weight: 550;
+  font-style: normal;
+  font-size: 33px;
   padding-left: 17px;
 }
 

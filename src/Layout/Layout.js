@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { useLocation, Outlet, Link } from 'react-router-dom';
 import { Slide, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Layout.css';
@@ -8,12 +8,15 @@ import ThemeToggle from './ThemeToggle';
 import LogoutIcon from './LogoutIcon';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 const Layout = () => {
   const [expandedItem, setExpandedItem] = useState(null);
 
-  //글꼴
+    const location = useLocation();
+    const { shopName } = location.state; // shopName 가져오기
+
   useEffect(() => {
-    toast.success('${shopName}님, 안녕하세요');
+    toast.success(`${shopName} 님, 안녕하세요!`);
   }, []);
 
   const handleItemClick = (item) => {
@@ -27,7 +30,7 @@ const Layout = () => {
   return (
     <div className="layout1">
       <header className='header1'>
-        <Link to="/layout" className="erp-title" onClick={handleLogoClick}>ACORN ERP🐿️</Link>
+        <Link to="/layout" className="erp-title" onClick={handleLogoClick}>Acorn ERP🐿️</Link>
         <MemoPad />
       </header>
       <div className="container1">
@@ -58,7 +61,7 @@ const Layout = () => {
       <ToastContainer
       position="top-center"
       transition={Slide}
-      autoClose={1000}
+      autoClose={2000}
       hideProgressBar={true}
       closeOnClick
       rtl={false}
@@ -124,7 +127,7 @@ const menuItems = [
     path: "/layout/reservationMgmt", 
   },
   {
-    title: "커뮤니티",
+    title: "💭 커뮤니티",
     path: "/layout/board",
   },
 

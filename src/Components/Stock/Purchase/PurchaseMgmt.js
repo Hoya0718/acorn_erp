@@ -4,12 +4,15 @@ import DangerAlert from './DangerAlert';
 import DeleteModal from './DeleteModal';
 import DateComponent from './DateComponent';
 import PurchaseList from './PurchaseList'; // PurchaseList로 변경
+import Pagination from '../../Customer/modules/PaginationModule';
+import instance from './../../../api/axios';
+
 import {
   fetchPurchases, handleAddClick, handleUpdateClick, handleDeleteClick, handleSubmitAdd,
   handleSubmitUpdate, handleCheckboxChange, handleSelectAll, handleChangeNewPurchase, // 함수 이름 변경
   handleChangeUpdateVendor, handleConfirmDelete, handleCancelForm, handleModalConfirmDelete, handleUpdateClickWrapper,
   handleChangeUpdatePurchase, handleCancelAdd, handleCancelUpdate, handleModalClose, handleDeleteClickWrapper,
-  handleSearch, 
+  handleSearch,
 } from './Functions'; // Functions.js에서 모든 필요한 함수들을 import합니다.
 
 const PurchaseMgmt = () => {
@@ -29,6 +32,13 @@ const PurchaseMgmt = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
+  //페이지 네이션 데이터
+  const [filteredData, setFilteredData] = useState(purchases);
+  const [pageData, setPageData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
   useEffect(() => {
     fetchPurchases(setPurchases); // fetchPurchases로 변경
   }, []);
@@ -37,8 +47,8 @@ const PurchaseMgmt = () => {
     handleAddClick(setIsAddClicked, setIsUpdateClicked); // handleAddClick로 변경
   };
 
-   // 검색어 변경 핸들러
-   const handleSearchChange = (event) => {
+  // 검색어 변경 핸들러
+  const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
@@ -47,6 +57,23 @@ const PurchaseMgmt = () => {
     setStartDate(start);
     setEndDate(end);
   };
+  //페이지네이션 데이터
+  const fetchPageData = async () => {
+    try {
+      const response_pageData = await instance.get(`/purchase/listPage?page=${currentPage - 1}&size=${rowsPerPage}`);
+      const page = response_pageData.data;
+      const formattedPageData = page.content.map(item => ({
+        ...item
+      }));
+      setFilteredData(formattedPageData);
+      setTotalItems(page.totalElements);
+    } catch (error) {
+      console.error('Error get PageData:', error);
+    }
+  }
+  useEffect(() => {
+    fetchPageData();
+  }, [currentPage, rowsPerPage]);
 
   const handleCancelForm = () => {
     setIsAddClicked(false);
@@ -61,10 +88,10 @@ const PurchaseMgmt = () => {
     <div>
       <div className='Middle classification'>
         <h3>발주 관리</h3>
-      </div><hr/>
+      </div><hr />
 
-       {/* 경고창 */}
-       {showAlert && <DangerAlert onClose={() => setShowAlert(false)} />}
+      {/* 경고창 */}
+      {showAlert && <DangerAlert onClose={() => setShowAlert(false)} />}
 
       <div className='items-subTitle'>
         <span>
@@ -85,51 +112,57 @@ const PurchaseMgmt = () => {
 
       <div className="searcher">
         <div className="left">
-          <DateComponent onChange={handleDateChange}/>
+          <DateComponent onChange={handleDateChange} />
         </div>
 
         <div className="right">
-          <input type="text" placeholder='🔍 품목명으로 조회' value={searchTerm} onChange={handleSearchChange}/>
+          <input type="text" placeholder='🔍 품목명으로 조회' value={searchTerm} onChange={handleSearchChange} />
           <button onClick={handleSearch}>조회 &gt;</button>
         </div>
       </div><br />
-      
+
       {/* PurchaseList 컴포넌트에 필요한 props 모두 전달 */}
       <PurchaseList
-        purchases={purchases} 
+        purchases={filteredData}
         selectedPurchases={selectedPurchases}
         selectAll={selectAll}
         sortBy={sortBy}
-        handleCheckboxChange={(purchaseCode) => handleCheckboxChange(purchaseCode, selectedPurchases, setSelectedPurchases)} 
-        handleSelectAll={() => handleSelectAll(selectAll, purchases, setSelectedPurchases, setSelectAll)} 
-        handleUpdateClick={handleUpdateClickWrapper} 
-        handleDeleteClick={() => handleDeleteClick(selectedPurchases, purchases, setPurchases, setSelectedPurchases)} 
+        handleCheckboxChange={(purchaseCode) => handleCheckboxChange(purchaseCode, selectedPurchases, setSelectedPurchases)}
+        handleSelectAll={() => handleSelectAll(selectAll, purchases, setSelectedPurchases, setSelectAll)}
+        handleUpdateClick={handleUpdateClickWrapper}
+        handleDeleteClick={() => handleDeleteClick(selectedPurchases, purchases, setPurchases, setSelectedPurchases)}
         isAddClicked={isAddClicked}
         setIsAddClicked={setIsAddClicked}
         setIsUpdateClicked={setIsUpdateClicked}
-        setPurchases={setPurchases} 
-        setNewPurchase={setNewPurchase} 
-        setSelectedPurchases={setSelectedPurchases} 
-        setUpdatePurchase={setUpdatePurchase} 
-        newPurchase={newPurchase} 
-        updatePurchase={updatePurchase} 
-        isUpdateClicked={isUpdateClicked} 
+        setPurchases={setPurchases}
+        setNewPurchase={setNewPurchase}
+        setSelectedPurchases={setSelectedPurchases}
+        setUpdatePurchase={setUpdatePurchase}
+        newPurchase={newPurchase}
+        updatePurchase={updatePurchase}
+        isUpdateClicked={isUpdateClicked}
         handleUpdateClickWrapper={handleUpdateClickWrapper}
         searchTerm={searchTerm}
         startDate={startDate}
         endDate={endDate}
-      /> <br/>
-  
+      /> <br />
+      {/* 페이지네이션 */}
+      <Pagination
+        totalItems={totalItems}
+        itemsPerPage={rowsPerPage}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
       {/* 엑셀&인쇄 */}
       <div className="excel-print">
-        <ExcelPrint purchases={purchases}/>       
+        <ExcelPrint purchases={purchases} />
       </div>
 
-        {/* 삭제 모달 */}
-        <DeleteModal
-          isOpen={showDeleteModal}
-          onClose={() => handleModalClose(setShowDeleteModal)}
-          onConfirm={() => handleModalConfirmDelete(selectedPurchases, purchases, setPurchases, setSelectedPurchases, setShowDeleteModal)}
+      {/* 삭제 모달 */}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => handleModalClose(setShowDeleteModal)}
+        onConfirm={() => handleModalConfirmDelete(selectedPurchases, purchases, setPurchases, setSelectedPurchases, setShowDeleteModal)}
       />
     </div>
   );
