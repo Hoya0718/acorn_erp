@@ -127,7 +127,7 @@
 .today:not(.other) {
   position: relative;
   color: #fff;
-  background-color: #4a90e2;
+  background-color: #FFD5D2
 }
 
 .custom-right-column {
@@ -212,10 +212,11 @@
 }
 
 .btn-register, .btn-search {
-  background-color: black;
+  background-color: #396EE2;
   color: #fff;
   border: none;
-  padding: 8px 16px;
+  padding: 14px 24px;
+  font-size: 14px;
   cursor: pointer;
   border-radius: 4px;
   transition: background-color 0.3s, transform 0.3s;
@@ -252,6 +253,7 @@
   display: block;
   text-align: right;
   margin-right: 5px;
+  font-size: 14px;
 }
 
 .acorn-icon {
