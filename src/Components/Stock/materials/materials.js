@@ -1,8 +1,11 @@
 import * as React from 'react'
 import "../../Main/Main.css"
 import "./materials.css"
+import Pagination from '../../Customer/modules/PaginationModule';
+import instance from './../../../api/axios';
 
 const Materials= ()=> {
+  
     return (
         <div>
     

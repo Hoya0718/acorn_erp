@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import MgmtTable from './mgmtTable/MgmtTable'
-import ExcelPrint from '../Stock/Vendor/ExcelPrint';
+import ExcelPrint from '../Customer/modules/ExcelPrint';
 import instance from './../../api/axios';
 
 
@@ -17,6 +17,9 @@ const CusMgmt = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [selectedRows, setSelectedRows] = useState({});
+
+  const [columns, setColumns] = useState([]);
+  const [filename, setFilename] = useState('');
 
   useEffect(() => {
     const savedRowsPerPage = localStorage.getItem('CusMgmtRowsPerPage');
@@ -64,11 +67,10 @@ const CusMgmt = () => {
   };
   const handleCloseClick = () => {
     setOnAddMode(false); // 추가 모드 비활성화
+    setOnUpdateMode(false);
   };
   const handleEditModeClick = () => {
     const selectedCustomerIds = Object.keys(selectedRows).filter(customerId => selectedRows[customerId]);
-    // console.log("Selected Customer IDs:", selectedCustomerIds); // 디버깅용
-    // console.log("Data Array:", filteredData); // 디버깅용
 
     if (selectedCustomerIds.length > 0) {
       setEditingRowId(selectedCustomerIds[0]); // 첫 번째 선택된 ID를 설정
@@ -76,8 +78,6 @@ const CusMgmt = () => {
       if (rowData) {
         setEditingRowData(rowData); // editingRowData를 올바르게 설정
         setOnUpdateMode(true);
-        // console.log("Selected Customer ID:", selectedCustomerIds[0]); // 디버깅용
-        // console.log("Editing Row Data:", rowData); // 디버깅용
       } else {
         console.log("Selected row data not found");
       }
@@ -99,19 +99,94 @@ const CusMgmt = () => {
   };
   const handleSaveClick = async () => {
     try {
-      for (const customerId of editingRowId) {
-        await instance.put(`/customer/info/${customerId}`, editingRowData);
+      for (let customerId of editingRowId) {
+        const response = await instance.put(`/customer/info/${customerId}`, editingRowData);
+        console.log(editingRowData)
+
+        customerId = editingRowData.customerId;
+
+        const newGradeData = {
+          customerId,
+          customerGrade: editingRowData.customerGrade || '일반', // 기본값 설정
+        };
+
+        const responseGrade = await instance.put(`/customer/grade/${customerId}`, newGradeData);
+        console.log('Customer Grade Update Response:', responseGrade.data);
+        const newNotesData = {
+          customerId,
+          notesDate: new Date().toISOString().split('T')[0],
+          notes: editingRowData.customerNotes || '', // 기본값 설정
+        };
+        console.log('New Notes Data:', newNotesData);
+
+        const responseNotes = await instance.post(`/customer/saveNotes`, newNotesData);
+
+        console.log('Customer Notes Save Response:', responseNotes.data);
+        setData(prevRows =>
+          prevRows.map(row =>
+            row.customerId === customerId ? { ...row, ...editingRowData } : row
+          )
+        );
+        setEditingRowId(null);
+        setEditingRowData({});
+        setOnUpdateMode(false);
       }
-      setData(prevRows =>
-        prevRows.map(row =>
-          row.customerId === editingRowId ? editingRowData : row
-        )
-      );
-      setEditingRowId(null);
-      setEditingRowData({});
-      setOnUpdateMode(false);
     } catch (error) {
       console.error('Error updating customer:', error);
+    }
+  };
+
+  const handleAddClick = async () => {
+    try {
+      // 필요한 필드 값 설정
+      const newCustomerData = {
+        customerName: editingRowData.customerName || '',
+        customerGender: editingRowData.customerGender || '',
+        customerBirthDate: editingRowData.customerBirthDate || '',
+        customerAddr: editingRowData.customerAddr || '',
+        customerTel: editingRowData.customerTel || '',
+        registerDate: editingRowData.registerDate || new Date().toISOString().split('T')[0], // 현재 날짜 사용
+      };
+
+      const response = await instance.post(`/customer/add`, newCustomerData);
+      const customerId = response.data.customerId;
+      const newGradeData = {
+        customerId,
+        customerGrade: editingRowData.customerGrade || '일반', // 기본값 설정
+      };
+      const responseGrade = await instance.put(`/customer/grade/${customerId}`, newGradeData);
+
+      const newNotesData = {
+        customerId,
+        notesDate: new Date().toISOString(),
+        notes: editingRowData.customerNotes || '', // 기본값 설정
+      };
+      const responseNotes = await instance.post(`/customer/saveNotes`, newNotesData);
+
+      await instance.get(`/customer/calculate_age_group`, newCustomerData);
+      await instance.get(`/customer/calculate_region_group`, newCustomerData);
+
+      const savedCustomerData = response.data;
+      const savedCustomerGrade = responseGrade.data;
+      const savedCustomerNotes = responseNotes.data;
+
+      // 로컬 상태를 업데이트하여 새 데이터를 포함하도록 설정
+      setData(prevRows =>
+        [...prevRows,
+        {
+          ...savedCustomerData,
+          customerGrade: savedCustomerGrade.customerGrade,
+          customerNotes: savedCustomerNotes.notes
+        }
+        ]);
+
+      // 폼을 초기화
+      setEditingRowId(null);
+      setEditingRowData({});
+      setOnAddMode(false);
+
+    } catch (error) {
+      console.error('Error adding customer:', error);
     }
   };
   const isAnyRowSelected = Object.values(selectedRows).some(checked => checked);
@@ -126,24 +201,30 @@ const CusMgmt = () => {
         <div className='items-subTitle'>
           <div className='items-subTitle'>
             <span>
-              {onAddMode !== true && !isAnyRowSelected ? (
-                <button onClick={handleAddModeClick}>등록</button>
-              ) : onAddMode ? (
-                <>
-                  <button >확인</button>
-                  <button onClick={handleCloseClick}>취소</button>
-                </>
-              ) : null}
-              {isAnyRowSelected ? (
+              {!onUpdateMode && isAnyRowSelected ? (
                 <>
                   <button onClick={handleEditModeClick}>수정</button>
                   <button onClick={handleDeleteClick}>삭제</button>
                 </>
-              ) : <>
-                <button onClick={() => handleSaveClick(data.customerId)}>확인</button>
-                <button onClick={handleCloseClick}>취소</button>
-              </>
+              ) : null}
+              {onUpdateMode && isAnyRowSelected ? (
+                <>
+                  <button onClick={() => handleSaveClick(data.customerId)}>수정 확인</button>
+                  <button onClick={handleCloseClick}>취소</button>
+                </>
+              ) :
+                null
               }
+              {onAddMode && !isAnyRowSelected ? (
+                <>
+                  <button onClick={() => handleAddClick(data)}> 등록 확인</button>
+                  <button onClick={handleCloseClick}>취소</button>
+                </>
+              ) : null
+              }
+              {!onAddMode && !onUpdateMode && !isAnyRowSelected ? (
+                <button onClick={handleAddModeClick}>등록</button>
+              ) : null}
             </span>
           </div>
         </div>
@@ -183,17 +264,20 @@ const CusMgmt = () => {
         rowsPerPage={rowsPerPage}
         onAddMode={onAddMode}
         onUpdateMode={onUpdateMode}
+        setOnUpdateMode={setOnUpdateMode}
         onCheckboxChange={handleCheckboxChange}
         selectedRows={selectedRows}
         setSelectedRows={setSelectedRows}
-        editingRowId={editingRowId}  // 추가된 부분
-        editingRowData={editingRowData}  // 추가된 부분
-        setEditingRowData={setEditingRowData}  // 추가된 부분
+        editingRowId={editingRowId}  
+        editingRowData={editingRowData}  
+        setEditingRowData={setEditingRowData}  
+        setColumns={setColumns}
+        setFilename={setFilename}
       />
       {/* 엑셀&인쇄 */}
       <div className="excel-print">
-        <ExcelPrint vendors={filteredData} />
-      </div>
+          <ExcelPrint printData={filteredData} columns={columns} filename={filename}/>
+        </div>
     </div>
   );
 };

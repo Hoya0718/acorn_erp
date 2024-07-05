@@ -9,6 +9,11 @@ const CustomerStatusPagination = ({ totalItems, itemsPerPage, currentPage, onPag
   // const startIndex = (currentPage - 1) * itemsPerPage;
   // const endIndex = startIndex + itemsPerPage;
 
+  console.log("totalPages",totalPages)
+  console.log("totalItems",totalItems)
+  console.log("itemsPerPage",itemsPerPage)
+  console.log("itemsPerPage",itemsPerPage)
+
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
       onPageChange(page);
@@ -19,6 +24,8 @@ const CustomerStatusPagination = ({ totalItems, itemsPerPage, currentPage, onPag
     const pageNumbers = [];
     const startPage = Math.max(1, currentPage - 2);
     const endPage = Math.min(totalPages, currentPage + 2);
+    console.log("startPage",startPage)
+    console.log("endPage",endPage)
     for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(
         <li key={i} className={`page-item ${i === currentPage ? 'active' : ''}`}>

@@ -79,7 +79,7 @@ const TopProd = () => {
     const renderProducts = (products) => {
         return products.map((product, index) => (
             <div className="col-12 col-lg-4" style={{ marginTop: '10px' }} key={index}>
-                <div className="app-card app-card-chart h-100 shadow-sm" style={{ backgroundColor: 'white' }}>
+                <div className="app-card app-card-chart h-100 shadow-sm">
                     <div className="app-card-header p-3 border-0" style={{ marginBottom: '-20px' }}>
                         <h4 className="app-card-title">TOP {index + 1}</h4>
                     </div>

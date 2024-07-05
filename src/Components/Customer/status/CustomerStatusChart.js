@@ -33,9 +33,9 @@ const CustomerMain = () => {
   };
 
   return (
-    <div className='CustomerMain'>
-      <div className="content" style={{ display: "flex", paddingTop: "15px", paddingBottom: "15px" }}>
-        <section id="sec">
+    <div className='CustomerMain'style={{ display: "flex", width: "100%", margin:"auto"}}>
+      <div className="content" style={{ display: "flex", paddingTop: "15px", paddingBottom: "15px" , width: "100%", margin:"auto"}}>
+        <section id="sec"style={{ width: "100%", margin:"auto"}}>
           <div className="row first">
             {/*고객수목표 달성도*/}
             <div className="col-xl-3 col-lg-12 goal" style={{ marginTop: "10px" }}>{/*칸이 작아지면 수직정렬*/}
