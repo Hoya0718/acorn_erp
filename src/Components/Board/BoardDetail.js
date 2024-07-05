@@ -1,17 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from '../../api/axios'; // axios를 직접 import
+import BoardComment from './BoardComment'; // 댓글창 컴포넌트 import
 
-const BoardDetail = ({ match }) => {
-  // 상세 페이지 컴포넌트
-  const postId = match.params.id; // URL 파라미터에서 게시물 ID 가져오기
+const BoardDetail = () => {
+  const { id } = useParams();
+  const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
 
-  // 실제로는 postId를 사용하여 해당 게시물의 데이터를 불러오는 로직이 들어갈 수 있습니다.
-  const post = {
-    id: postId,
-    title: `테스트 글 제목 ${postId}`,
-    author: '작성자A',
-    date: '2024-07-18',
-    content: '게시물 내용입니다.',
+  useEffect(() => {
+    const fetchPostById = async (id) => {
+      try {
+        const response = await axios.get(`/board/posts/${id}`);
+        setPost(response.data);
+        setComments(response.data.comments); // 게시글의 comments 필드를 받아와서 사용
+      } catch (error) {
+        console.error('Error fetching post:', error);
+      }
+    };
+
+    fetchPostById(id);
+  }, [id]);
+
+  const handleAddComment = (newComment) => {
+    setComments((prevComments) => [...prevComments, newComment]); // 새 댓글을 목록에 추가
   };
+
+  if (!post) return <div>Loading...</div>;
 
   return (
     <div className="board-container">
@@ -26,7 +41,26 @@ const BoardDetail = ({ match }) => {
         <p>작성일: {post.date}</p>
         <p>{post.content}</p>
       </div>
+
+      <div className="comment-section">
+        <h3>댓글</h3>
+        <ul>
+        {comments.length > 0 && (
+          <ul>
+            {comments.map((comment) => (
+              <li key={comment.id}>
+                <p>작성자: {comment.author}</p>
+                <p>{comment.content}</p>
+                <p>작성일: {comment.date}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+        </ul>
+        <BoardComment postId={id} onAddComment={handleAddComment} />
+      </div>
     </div>
-  )}
+  );
+};
 
 export default BoardDetail;

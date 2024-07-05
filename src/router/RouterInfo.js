@@ -23,8 +23,6 @@ import Return from '../Components/Sales/Return.js';
 
 // 재무 관리
 import FinancialMgmt from '../Components/Financial/FinancialMgmt.js';
-import IncomeMgmt from '../Components/Financial/IncomeMgmt.js';
-import ExportMgmt from '../Components/Financial/ExportMgmt.js';
 
 // 예약 관리
 import ReservationMgmt from '../Components/Reservation/ReservationMgmt.js';
@@ -119,16 +117,6 @@ export const RouterInfo = createBrowserRouter([
       {
         path: "financialMgmt",
         element: <FinancialMgmt />,
-        children: [
-          {
-            path: "incomeMgmt",
-            element: <IncomeMgmt />
-          },
-          {
-            path: "exportMgmt",
-            element: <ExportMgmt />
-          }
-        ]
       },
       {
         path: "reservationMgmt",
