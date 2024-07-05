@@ -3,6 +3,8 @@ import VendorList from './VendorList';
 import ExcelPrint from './ExcelPrint';
 import DeleteModal from './DeleteModal';
 import DangerAlert from './DangerAlert';
+import Pagination from '../../Customer/modules/PaginationModule';
+import instance from './../../../api/axios';
 import {
   fetchVendors, handleAddClick, handleUpdateClick, handleDeleteClick, handleSubmitAdd,
   handleSubmitUpdate, handleCheckboxChange, handleSelectAll, handleChangeNewVendor,
@@ -24,6 +26,13 @@ const VendorMgmt = () => {
   const [showAlert, setShowAlert] = useState(false); // showAlert 상태 추가
   const [sortBy, setSortBy] = useState('vendorCode'); //정렬 기준을 상태로 추가, 기본값은 'vendorCode'
   const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 변수
+  
+  //페이지 네이션 데이터
+  const [filteredData, setFilteredData] = useState(vendors);
+  const [pageData, setPageData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
     fetchVendors(setVendors);
@@ -33,6 +42,30 @@ const VendorMgmt = () => {
     const handleSearchChange = (event) => {
       setSearchTerm(event.target.value);
     };
+
+    //페이지네이션 데이터
+    const fetchPageData = async () => {
+      try {
+    // const response = await instance.get(`/vendor/list`);
+    // const data = response.data;
+    const response_pageData = await instance.get(`/vendor/listPage?page=${currentPage - 1}&size=${rowsPerPage}`);
+    const page = response_pageData.data;
+    const formattedPageData = page.content.map(item => ({
+      ...item
+    }));
+    setFilteredData(formattedPageData);
+    setTotalItems(page.totalElements);
+  } catch (error) {
+    console.error('Error get PageData:', error);
+  }
+}
+useEffect(() => {
+  fetchPageData();
+}, [currentPage, rowsPerPage]);
+
+// useEffect(() => {
+//   setFilteredData(vendors.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+// }, [vendors, currentPage, rowsPerPage]);
 
   return (
     <div>
@@ -70,7 +103,7 @@ const VendorMgmt = () => {
       
       {/* VendorList 컴포넌트에 필요한 props 모두 전달 */}
       <VendorList
-        vendors={vendors}
+        vendors={filteredData}
         selectedVendors={selectedVendors}
         selectAll={selectAll}
         sortBy={sortBy}
@@ -91,7 +124,13 @@ const VendorMgmt = () => {
         searchTerm={searchTerm} // 검색어 상태 전달
       />
       <br />
-
+      {/* 페이지네이션 */}
+      <Pagination
+        totalItems={totalItems}
+        itemsPerPage={rowsPerPage}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
       {/* 엑셀&인쇄 */}
       <div className="excel-print">
         <ExcelPrint vendors={vendors}/>       
