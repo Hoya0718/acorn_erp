@@ -2,6 +2,8 @@ import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import MgmtTable from './mgmtTable/MgmtTable'
 import ExcelPrint from '../Customer/modules/ExcelPrint';
 import instance from './../../api/axios';
+import MgmtMenu from './mgmtTable/MgmtMenu';
+import CustomerStatusPagination from './modules/PaginationModule';
 
 
 const CusMgmt = () => {
@@ -9,17 +11,21 @@ const CusMgmt = () => {
   const [formData, setFormData] = useState({});
   const [onAddMode, setOnAddMode] = useState(false);
   const [onUpdateMode, setOnUpdateMode] = useState(false);
-  const [editingRowId, setEditingRowId] = useState([]);
+  const [editingRowId, setEditingRowId] = useState(null);
   const [editingRowData, setEditingRowData] = useState({});
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredData, setFilteredData] = useState(data);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [currentPage, setCurrentPage] = React.useState(1);
   const [selectedRows, setSelectedRows] = useState({});
 
   const [columns, setColumns] = useState([]);
   const [filename, setFilename] = useState('');
+
+  //페이지 네이션 데이터
+  const [pageData, setPageData] = useState([]);
+  const [filteredData, setFilteredData] = useState(data);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   useEffect(() => {
     const savedRowsPerPage = localStorage.getItem('CusMgmtRowsPerPage');
@@ -44,7 +50,10 @@ const CusMgmt = () => {
   useEffect(() => {
     setFilteredData(data);
   }, [data]);
-
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
   const handleCheckboxChange = useCallback((customerId, checked) => {
     setData(prevData => {
       return prevData.map(item =>
@@ -52,6 +61,30 @@ const CusMgmt = () => {
       );
     });
   }, []);
+
+  const fetchPageData = async () => {
+    try {
+    const response_pageData = await instance.post(`/customer/getAllList?page=${currentPage - 1}&size=${rowsPerPage}`);
+    const page = response_pageData.data;
+    const formattedPageData = page.content.map(item => ({
+      ...item,
+      registerDate: formatDate(item.registerDate),
+      customerBirthDate: formatDate(item.customerBirthDate)
+    }));
+    setPageData(formattedPageData);
+    setFilteredData(formattedPageData);
+    setTotalItems(page.totalElements);
+
+  } catch (error) {
+    console.error('Error get MgmtTable:', error);
+  }
+}
+
+useEffect(() => {
+  fetchPageData();
+}, [currentPage, rowsPerPage]);
+  
+
 
   const handleRowsPerPageChange = (event) => {
     const newRowsPerPage = Number(event.target.value);
@@ -62,13 +95,16 @@ const CusMgmt = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
   const handleAddModeClick = () => {
     setOnAddMode(true); // 추가 모드 활성화
   };
+
   const handleCloseClick = () => {
     setOnAddMode(false); // 추가 모드 비활성화
     setOnUpdateMode(false);
   };
+
   const handleEditModeClick = () => {
     const selectedCustomerIds = Object.keys(selectedRows).filter(customerId => selectedRows[customerId]);
 
@@ -84,7 +120,6 @@ const CusMgmt = () => {
     }
   }
 
-
   const handleDeleteClick = async () => {
     try {
       const selectedCustomerIds = Object.keys(selectedRows).filter(customerId => selectedRows[customerId]);
@@ -99,11 +134,9 @@ const CusMgmt = () => {
   };
   const handleSaveClick = async () => {
     try {
-      for (let customerId of editingRowId) {
-        const response = await instance.put(`/customer/info/${customerId}`, editingRowData);
-        console.log(editingRowData)
+        const response = await instance.put(`/customer/info/${editingRowId}`, editingRowData);
 
-        customerId = editingRowData.customerId;
+        const customerId = editingRowData.customerId;
 
         const newGradeData = {
           customerId,
@@ -121,7 +154,6 @@ const CusMgmt = () => {
 
         const responseNotes = await instance.post(`/customer/saveNotes`, newNotesData);
 
-        console.log('Customer Notes Save Response:', responseNotes.data);
         setData(prevRows =>
           prevRows.map(row =>
             row.customerId === customerId ? { ...row, ...editingRowData } : row
@@ -130,7 +162,7 @@ const CusMgmt = () => {
         setEditingRowId(null);
         setEditingRowData({});
         setOnUpdateMode(false);
-      }
+
     } catch (error) {
       console.error('Error updating customer:', error);
     }
@@ -197,67 +229,19 @@ const CusMgmt = () => {
         <span>회원 관리</span>
       </div>
       <hr />
-      <div className='items-subTitle'>
-        <div className='items-subTitle'>
-          <div className='items-subTitle'>
-            <span>
-              {!onUpdateMode && isAnyRowSelected ? (
-                <>
-                  <button onClick={handleEditModeClick}>수정</button>
-                  <button onClick={handleDeleteClick}>삭제</button>
-                </>
-              ) : null}
-              {onUpdateMode && isAnyRowSelected ? (
-                <>
-                  <button onClick={() => handleSaveClick(data.customerId)}>수정 확인</button>
-                  <button onClick={handleCloseClick}>취소</button>
-                </>
-              ) :
-                null
-              }
-              {onAddMode && !isAnyRowSelected ? (
-                <>
-                  <button onClick={() => handleAddClick(data)}> 등록 확인</button>
-                  <button onClick={handleCloseClick}>취소</button>
-                </>
-              ) : null
-              }
-              {!onAddMode && !onUpdateMode && !isAnyRowSelected ? (
-                <button onClick={handleAddModeClick}>등록</button>
-              ) : null}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <br />
-      <select value={rowsPerPage} onChange={handleRowsPerPageChange}>
-        <option value={10}>10줄 보기</option>
-        <option value={20}>20줄 보기</option>
-        <option value={30}>30줄 보기</option>
-        <option value={40}>40줄 보기</option>
-        <option value={50}>50줄 보기</option>
-      </select>
-      <div className="searcher">
-        <div className="left">
-          <label htmlFor="date">
-            날짜를 선택하세요:
-
-            <input type="date" id="date" max="2077-06-20" min="2077-06-05" value="2024-06-18" />
-          </label>
-        </div>
-
-        <div className="right">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="검색"
-            value={searchTerm}
-            onChange={() => { }}
-          />
-          <button className="search-button" onClick={() => { }}>조회</button>
-        </div>
-      </div>
+      <MgmtMenu 
+        setRowsPerPage={setRowsPerPage}
+        handleAddModeClick={handleAddModeClick}
+        handleEditModeClick={handleEditModeClick}
+        handleDeleteClick={handleDeleteClick}
+        handleSaveClick={handleSaveClick}
+        handleCloseClick={handleCloseClick}
+        handleAddClick={handleAddClick}
+        isAnyRowSelected={isAnyRowSelected}
+        onUpdateMode={onUpdateMode}
+        onAddMode={onAddMode}
+      />
+       
       <MgmtTable
         data={filteredData}
         currentPage={currentPage}
@@ -274,10 +258,13 @@ const CusMgmt = () => {
         setColumns={setColumns}
         setFilename={setFilename}
       />
-      {/* 엑셀&인쇄 */}
-      <div className="excel-print">
-          <ExcelPrint printData={filteredData} columns={columns} filename={filename}/>
-        </div>
+      <CustomerStatusPagination
+        totalItems={totalItems}
+        itemsPerPage={rowsPerPage}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
+      <ExcelPrint printData={filteredData} columns={columns} filename={filename}/>
     </div>
   );
 };

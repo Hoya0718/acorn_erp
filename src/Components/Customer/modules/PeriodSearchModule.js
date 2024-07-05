@@ -44,7 +44,7 @@ const CustomerStatusPeriodSerch = ({ setPeriod }) => {
 
   React.useEffect(() => {
     setPeriod({ selectedOption, startDate, endDate });
-  }, [startDate, endDate, setPeriod]);
+  }, [selectedOption, startDate, endDate, setPeriod]);
 
   // React.useEffect(() => {
   //   setSelectedOption('1년');
@@ -62,8 +62,8 @@ const CustomerStatusPeriodSerch = ({ setPeriod }) => {
   }
 
   return (
-    <div className="customer-status-period-serchbox">
-      <div className="radio righted">
+    <div className="customer-status-period-serchbox row ">
+      <div className="radio righted col-8" >
         {datas.map((data) => (
           <label key={data}>
             <input
@@ -76,7 +76,7 @@ const CustomerStatusPeriodSerch = ({ setPeriod }) => {
           </label>
         ))}
       </div>
-      <div className="dateSerchBox righted">
+      <div className="dateSerchBox righted col-4">
         <input type="date" id="startDate"
           disabled={selectedOption !== '사용자 지정'}
           value={startDate}

@@ -3,13 +3,13 @@
 import * as React from 'react'
 import "../../Main/Main.css"
 
-const CustomerStatusSearchButton = ({ onSearch }) => {
+const SearchButtonModule = ({ onSearch }) => {
 
   return (
-      <div className="righted searchBox">
-        <input type="submit" value="조회" className="btn btn-dark" onClick={ onSearch } />
-      </div>
+      <span>
+        <button type="submit" value="조회" className="btn btn-dark" onClick={ onSearch } >조회</button>
+      </span>
   );
 }
 
-export default CustomerStatusSearchButton;
+export default SearchButtonModule;

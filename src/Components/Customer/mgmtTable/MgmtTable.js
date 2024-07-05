@@ -1,13 +1,15 @@
-import React, { useMemo, useCallback, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import instance from './../../../api/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
-import CustomerStatusPagination from '../modules/PaginationModule';
 import ViewDetailsModal from './viewDetailsModal/viewDetailsModal';
 
 const MgmtTable = ({
-  rowsPerPage, onAddMode, onUpdateMode, setOnUpdateMode, onCheckboxChange, selectedRows, setSelectedRows,
-  editingRowId, setEditingRowId, editingRowData, setEditingRowData, setColumns, setFilename
+  rowsPerPage, currentPage, setCurrentPage,
+  onAddMode, onUpdateMode, setOnUpdateMode, 
+  onCheckboxChange, selectedRows, setSelectedRows,
+  editingRowId, setEditingRowId, editingRowData, setEditingRowData, 
+  setColumns, setFilename, formatDate, 
 }) => {
   //테이블 데이터 
   const [data, setData] = useState([]);
@@ -17,20 +19,16 @@ const MgmtTable = ({
   const [selectAll, setSelectAll] = useState(false);
   //데이터 정렬
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
-  //페이지 네이션 데이터
-  const [pageData, setPageData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
   //모달 데이터
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState({});
 
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
+  // const formatDate = (dateString) => {
+  //   const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+  //   return new Date(dateString).toLocaleDateString(undefined, options);
+  // };
   const [filename] = useState("고개관리 테이블");
-
+  
   useEffect(() => {
     setFilename(filename);
   }, [filename, setFilename]);
@@ -50,7 +48,8 @@ const MgmtTable = ({
   useEffect(() => {
     setColumns(columns);
   }, [columns, setColumns]);
-  
+
+  useEffect(() => {
   const fetchTableData = async () => {
     try {
       //테이블 데이터 호출
@@ -77,28 +76,12 @@ const MgmtTable = ({
         };
       });
       setRows(mergedData);
-
-      //페이지네이션 데이터
-      const response_pageData = await instance.post(`/customer/getAllList?page=${currentPage - 1}&size=${rowsPerPage}`);
-      const page = response_pageData.data;
-      const formattedPageData = page.content.map(item => ({
-        ...item,
-        registerDate: formatDate(item.registerDate),
-        customerBirthDate: formatDate(item.customerBirthDate)
-      }));
-      setPageData(formattedPageData);
-      setFilteredData(formattedPageData);
-      setTotalItems(page.totalElements);
-
     } catch (error) {
       console.error('Error get MgmtTable:', error);
     }
   }
-
-  useEffect(() => {
-    fetchTableData();
-  }, [currentPage, rowsPerPage]);
-
+  fetchTableData();
+}, [formatDate]);
 
   useEffect(() => {
     setFilteredData(rows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
@@ -183,12 +166,15 @@ const handleInputChange = (e, accessor) => {
     setModalData(rowData);
     setShowModal(true);
   };
-
+  useEffect(() => {
+    setFilteredData(rows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+  }, [rows, currentPage, rowsPerPage]);
+  
   const handleModalSave = async (updatedData) => {
     try {
       await instance.put(`/customer/info/${updatedData.customerId}`, updatedData);
       await instance.put(`/customer/grade/${updatedData.customerId}`, updatedData);
-      await fetchTableData();
+      // await fetchTableData();
       setShowModal(false);
     } catch (error) {
       console.error('Error updating customer:', error);
@@ -347,25 +333,6 @@ const handleInputChange = (e, accessor) => {
                   onChange={() => handleRowSelect(row.customerId, !selectedRows[row.customerId])}
                 />
               </td>
-
-              {/* {onUpdateMode && editingRowId === row.customerId ? (
-                columns.map((column) => ( */}
-
-                  {/* <td
-                    key={column.accessor}
-                    className={column.className || 'table-centered'}
-                    onClick={column.isName ? () => handleNameClick(row) : undefined}
-                    style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}
-                  >
-                    <input
-                      type="text"
-                      value={editingRowData[column.accessor] || ''}
-                      onChange={(e) => handleInputChange(e, column.accessor)}
-                    />
-                  </td>
-                ))
-              ) : ( */}
-
                 {columns.map((column) => (
                   <td
                     key={column.accessor}
@@ -393,15 +360,6 @@ const handleInputChange = (e, accessor) => {
           ))}
         </tbody>
       </table>
-      <CustomerStatusPagination
-        totalItems={totalItems}
-        itemsPerPage={rowsPerPage}
-        currentPage={currentPage}
-        onPageChange={setCurrentPage}
-      />
-      <br></br>
-      <br></br>
-      <br></br>
       {showModal && (
         <ViewDetailsModal
           show={showModal}
