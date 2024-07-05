@@ -15,11 +15,17 @@ const FinanceTable = () => {
       .then(response => response.json())
       .then(data => {
         console.log('API Response:', data);
-        setFinancialData(data);
+        if (Array.isArray(data)) {
+          setFinancialData(data);
+        } else {
+          console.error('Expected array data, received:', data);
+        }
       })
       .catch(error => console.error('Error fetching financial data:', error));
   }, []);
 
+
+  
   const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
 
   const toggleAllCheckboxes = () => {
