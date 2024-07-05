@@ -58,7 +58,13 @@ const Board = () => {
               <tr key={post.id}>
                 <td>{post.id}</td>
                 {/* 게시물 제목을 클릭하면 상세 페이지로 이동 */}
-                <td><Link to={`/layout/detail/${post.id}`}>{post.title}</Link></td>
+                <td>
+                  {post.id ? (
+                    <Link to={`/layout/detail/${post.id}`}>{post.title}</Link>
+                  ) : (
+                    <span>{post.title}</span>
+                  )}
+                </td>
                 <td>{post.author}</td>
                 <td>{post.date}</td>
                 <td>{post.views}</td>
@@ -67,7 +73,9 @@ const Board = () => {
             ))}
           </tbody>
         </table>
-        </div>
-        </div>
-        )}
+      </div>
+    </div>
+  );
+};
+
 export default Board;

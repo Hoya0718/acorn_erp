@@ -117,10 +117,7 @@ const menuItems = [
   },
   {
     title: "💰 재무 관리",
-    subMenuItems: [
-      { title: "매입 관리", path: "/layout/financialMgmt/incomeMgmt" },
-      { title: "매출 관리", path: "/layout/financialMgmt/exportMgmt" }
-    ]
+    path: "/layout/financialMgmt"
   },
   {
     title: "📆 예약 관리",
