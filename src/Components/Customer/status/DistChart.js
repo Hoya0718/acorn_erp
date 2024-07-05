@@ -208,8 +208,7 @@ const Dist = () => {
     });
 
     return (
-        <div className="c_dist" 
-        style={{backgroundColor: 'transparent'}}>
+        <div className="c_dist">
             <section>
                 <div className="row title">
                     <div className="col-10">

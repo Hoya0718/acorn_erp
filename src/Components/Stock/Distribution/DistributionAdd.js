@@ -1,57 +1,247 @@
 import React, { useState, useEffect } from 'react';
+import axios from '../../../api/axios';
 
-const DistributionAdd = ({ checkAll, onAddDistribution, handleCancelClick }) => {
+const DistributionAdd = ({
+    checkAll,
+    onAddDistribution,
+    handleCancelClick,
+    fetchPurchaseItems,
+    purchaseData,
+    handleSelectAll
+}) => {
     const [isChecked, setIsChecked] = useState(false);
-    const [distributionData, setDistributionData] = useState({
-        itemCode: '',
-        itemName: '',
-        receiptDate: '',
-        initialQty: '',
-        receivedQty: '',
-        releaseQty: '',
-        currentQty: '',
-        expectedReceiptDate: ''
-    });
+    const [distributionDataList, setDistributionDataList] = useState([]);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setDistributionData({ ...distributionData, [name]: value });
-    };
-
-    const handleAdd = () => {
-        onAddDistribution({ ...distributionData, isChecked });
-        setDistributionData({
-            itemCode: '',
-            itemName: '',
-            entryDate: '',
+    useEffect(() => {
+        const initialDataList = purchaseData.map((purchase) => ({
+            distributionCode: purchase.purchaseCode || '',
+            distributionName: purchase.purchaseName || '',
+            receiptDate: '',
+            orderQty: purchase.orderQty || '',
             initialQty: '',
             receivedQty: '',
             releaseQty: '',
             currentQty: '',
             expectedReceiptDate: ''
-        });
-    };
+        }));
+        setDistributionDataList(initialDataList);
+    }, [purchaseData]);
 
+    const handleInputChange = (index, name, value) => {
+        const updatedDataList = [...distributionDataList];
+        updatedDataList[index] = { ...updatedDataList[index], [name]: value };
+        setDistributionDataList(updatedDataList);
+    };
+    const handleAdd = async (index) => {
+        try {
+            const dataToSend = {
+                distributionCode: parseInt(distributionDataList[index].distributionCode),
+                distributionName: distributionDataList[index].distributionName,
+                receiptDate: distributionDataList[index].receiptDate,
+                orderQty: parseInt(distributionDataList[index].orderQty),
+                initialQty: parseInt(distributionDataList[index].initialQty),
+                receivedQty: parseInt(distributionDataList[index].receivedQty),
+                releaseQty: parseInt(distributionDataList[index].releaseQty),
+                currentQty: parseInt(distributionDataList[index].currentQty),
+                expectedReceiptDate: distributionDataList[index].expectedReceiptDate
+            };
+    
+            console.log('전송할 데이터:', dataToSend);
+            // axios를 사용해 서버에 데이터 전송
+            const response = await axios.post('/distribution', dataToSend);
+    
+            // 데이터 추가 후 초기화
+            const updatedList = [...distributionDataList];
+            updatedList[index] = {
+                distributionCode: purchaseData[index].purchaseCode || '',
+                distributionName: purchaseData[index].purchaseName || '',
+                receiptDate: '',
+                orderQty: purchaseData[index].orderQty || '',
+                initialQty: '',
+                receivedQty: '',
+                releaseQty: '',
+                currentQty: '',
+                expectedReceiptDate: ''
+            };
+            setDistributionDataList(updatedList);
+    
+            // 추가된 데이터를 상위 컴포넌트로 전달
+            onAddDistribution(response.data);
+    
+            // 여기서 적절한 처리: 예를 들어 저장 성공 메시지 출력 등
+            console.log('Data added successfully:', response.data);
+        } catch (error) {
+            console.error('Error adding data:', error);
+            // 여기서 적절한 오류 처리
+        }
+    };
     useEffect(() => {
         setIsChecked(checkAll);
     }, [checkAll]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            await fetchPurchaseItems();
+        };
+        fetchData();
+    }, []);
+
     return (
-        <tr>
-            <td><input type='checkbox' checked={isChecked} onChange={() => setIsChecked(!isChecked)} /></td>
-            <td><input type='text' placeholder='품목코드' name='itemCode' value={distributionData.itemCode} onChange={handleInputChange} /></td>
-            <td><input type='text' placeholder='품목이름' name='itemName' value={distributionData.itemName} onChange={handleInputChange} /></td>
-            <td><input type='date' placeholder='입고일자' name='receiptDate' value={distributionData.receiptDate} onChange={handleInputChange} /></td>
-            <td><input type='number' placeholder='입고수량' name='initialQty' value={distributionData.initialQty} onChange={handleInputChange} /></td>
-            <td><input type='number' placeholder='기초재고' name='receivedQty' value={distributionData.receivedQty} onChange={handleInputChange} /></td>
-            <td><input type='number' placeholder='출고수량' name='releaseQty' value={distributionData.releaseQty} onChange={handleInputChange} /></td>
-            <td><input type='number' placeholder='집계재고' name='currentQty' value={distributionData.currentQty} onChange={handleInputChange} /></td>
-            <td><input type='date' placeholder='입고예정일' name='expectedReceiptDate' value={distributionData.expectedReceiptDate} onChange={handleInputChange} /></td>
-            <td>
-                <button onClick={handleAdd}>추가</button>
-                <button onClick={handleCancelClick}>취소</button>
-            </td>
-        </tr>
+        <table className='table'>
+            <thead>
+                <tr>
+                    <th>
+                        <input
+                            type='checkbox'
+                            onChange={handleSelectAll}
+                            checked={checkAll}
+                        />
+                    </th>
+                    <th>품목코드</th><th>품목이름</th><th>입고일자</th><th>발주수량</th><th>입고수량</th><th>기초재고</th><th>출고수량</th><th>집계재고</th><th>입고예정일</th> 
+                </tr>
+            </thead>
+            <tbody>
+                {purchaseData.map((purchase, index) => (
+                    <tr key={index}>
+                        <td>
+                            <input type='checkbox' checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
+                        </td>        
+                        <td>
+                            <input style={{border:'none', textAlign:'center'}}
+                                    type='text' placeholder={purchase.purchaseCode} name='distributionCode'
+                                    value={distributionDataList[index]?.distributionCode || ''} 
+                                    onChange={(e) =>
+                                        handleInputChange(
+                                            index, e.target.name, e.target.value
+                                        )}
+                                    readOnly
+                            />
+                        </td>
+                        <td>
+                            <input style={{border:'none', textAlign:'center'}}
+                                type='text'
+                                placeholder={purchase.purchaseName} name='distributionName'
+                                value={distributionDataList[index]?.distributionName || ''}
+                                onChange={(e) =>
+                                    handleInputChange(
+                                        index, e.target.name, e.target.value
+                                    )
+                                }
+                            />
+                        </td>
+                        <td>
+                            <input
+                                type='date'
+                                placeholder='입고일자'
+                                name='receiptDate'
+                                value={distributionDataList[index]?.receiptDate || ''}
+                                onChange={(e) =>
+                                    handleInputChange(
+                                        index,
+                                        e.target.name,
+                                        e.target.value
+                                    )
+                                }
+                            />
+                        </td>
+                        <td>
+                            <input style={{border:'none', textAlign:'center'}}
+                                type='number'
+                                placeholder={purchase.orderQty}
+                                name='orderQty'
+                                value={distributionDataList[index]?.orderQty || ''}
+                                onChange={(e) =>
+                                    handleInputChange(
+                                        index,
+                                        e.target.name,
+                                        e.target.value
+                                    )
+                                }
+                            />
+                        </td>
+                        <td>
+                            <input
+                                type='number'
+                                placeholder='입고수량'
+                                name='initialQty'
+                                value={distributionDataList[index]?.initialQty || ''}
+                                onChange={(e) =>
+                                    handleInputChange(
+                                        index,
+                                        e.target.name,
+                                        e.target.value
+                                    )
+                                }
+                            />
+                        </td>
+                        <td>
+                            <input
+                                type='number'
+                                placeholder='기초재고'
+                                name='receivedQty'
+                                value={distributionDataList[index]?.receivedQty || ''}
+                                onChange={(e) =>
+                                    handleInputChange(
+                                        index,
+                                        e.target.name,
+                                        e.target.value
+                                    )
+                                }
+                            />
+                        </td>
+                        <td>
+                            <input
+                                type='number'
+                                placeholder='출고수량'
+                                name='releaseQty'
+                                value={distributionDataList[index]?.releaseQty || ''}
+                                onChange={(e) =>
+                                    handleInputChange(
+                                        index,
+                                        e.target.name,
+                                        e.target.value
+                                    )
+                                }
+                            />
+                        </td>
+                        <td>
+                            <input
+                                type='number'
+                                placeholder='집계재고'
+                                name='currentQty'
+                                value={distributionDataList[index]?.currentQty || ''}
+                                onChange={(e) =>
+                                    handleInputChange(
+                                        index,
+                                        e.target.name,
+                                        e.target.value
+                                    )
+                                }
+                            />
+                        </td>
+                        <td>
+                            <input
+                                type='date'
+                                placeholder='입고예정일'
+                                name='expectedReceiptDate'
+                                value={distributionDataList[index]?.expectedReceiptDate || ''}
+                                onChange={(e) =>
+                                    handleInputChange(
+                                        index,
+                                        e.target.name,
+                                        e.target.value
+                                    )
+                                }
+                            />
+                        </td>
+                        <td>
+                            <button onClick={() => handleAdd(index)}>추가</button>
+                            <button onClick={handleCancelClick}>취소</button>
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
     );
 };
 

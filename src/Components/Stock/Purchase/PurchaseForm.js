@@ -2,10 +2,7 @@ import React from 'react';
 import './Purchase.css';
 
 const PurchaseForm = ({
-  handleSubmit,
-  purchaseData,
-  handleChange,
-  isNewPurchase,
+  handleSubmit, purchaseData, handleChange, isNewPurchase,
 }) => {
   return (
     <tr>
@@ -14,10 +11,7 @@ const PurchaseForm = ({
       </td>
       <td>
         <input
-          className="form-input"
-          type="text"
-          placeholder="/" 
-          readOnly
+          className="form-input" type="text" placeholder="/" readOnly
         />
       </td>
       <td>

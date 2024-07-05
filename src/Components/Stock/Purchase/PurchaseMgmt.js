@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import ExcelPrint from './ExcelPrint';
+import DangerAlert from './DangerAlert';
+import DeleteModal from './DeleteModal';
+import DateComponent from './DateComponent';
 import PurchaseList from './PurchaseList'; // PurchaseList로 변경
 import {
   fetchPurchases, handleAddClick, handleUpdateClick, handleDeleteClick, handleSubmitAdd,
   handleSubmitUpdate, handleCheckboxChange, handleSelectAll, handleChangeNewPurchase, // 함수 이름 변경
-  handleChangeUpdatePurchase, handleCancelAdd, handleCancelUpdate,
+  handleChangeUpdateVendor, handleConfirmDelete, handleCancelForm, handleModalConfirmDelete, handleUpdateClickWrapper,
+  handleChangeUpdatePurchase, handleCancelAdd, handleCancelUpdate, handleModalClose, handleDeleteClickWrapper,
+  handleSearch, 
 } from './Functions'; // Functions.js에서 모든 필요한 함수들을 import합니다.
 
 const PurchaseMgmt = () => {
@@ -16,6 +22,12 @@ const PurchaseMgmt = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [isAddClicked, setIsAddClicked] = useState(false);
   const [isUpdateClicked, setIsUpdateClicked] = useState(false); // isUpdateClicked 변수 추가
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [sortBy, setSortBy] = useState('purchaseCode'); //정렬 기준을 상태로 추가, 기본값은 'vendorCode'
+  const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 변수
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
     fetchPurchases(setPurchases); // fetchPurchases로 변경
@@ -23,6 +35,17 @@ const PurchaseMgmt = () => {
 
   const handleAddClickWrapper = () => {
     handleAddClick(setIsAddClicked, setIsUpdateClicked); // handleAddClick로 변경
+  };
+
+   // 검색어 변경 핸들러
+   const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  // 날짜
+  const handleDateChange = (start, end) => {
+    setStartDate(start);
+    setEndDate(end);
   };
 
   const handleCancelForm = () => {
@@ -38,8 +61,10 @@ const PurchaseMgmt = () => {
     <div>
       <div className='Middle classification'>
         <h3>발주 관리</h3>
-      </div>
-      <hr/>
+      </div><hr/>
+
+       {/* 경고창 */}
+       {showAlert && <DangerAlert onClose={() => setShowAlert(false)} />}
 
       <div className='items-subTitle'>
         <span>
@@ -48,8 +73,8 @@ const PurchaseMgmt = () => {
           )}
           {selectedPurchases.length > 0 && !isAddClicked && !isUpdateClicked && (
             <>
-              <button onClick={() => handleUpdateClick(selectedPurchases, purchases, setUpdatePurchase, setIsUpdateClicked, setIsAddClicked)}>수정</button>
-              <button onClick={() => handleDeleteClick(selectedPurchases, purchases, setPurchases, setSelectedPurchases)}>삭제</button>
+              <button onClick={() => handleUpdateClickWrapper(selectedPurchases, setIsUpdateClicked, setIsAddClicked, purchases, setUpdatePurchase, setShowAlert)}>수정</button>
+              <button onClick={() => handleDeleteClickWrapper(setShowDeleteModal)}>삭제</button>
             </>
           )}
           {(isAddClicked || isUpdateClicked) && (
@@ -60,25 +85,24 @@ const PurchaseMgmt = () => {
 
       <div className="searcher">
         <div className="left">
-          <label htmlFor="date">날짜를 선택하세요 :
-            <input type="date" id="date" max="2077-06-20" min="2077-06-05" value="2024-07-18" />
-          </label>
+          <DateComponent onChange={handleDateChange}/>
         </div>
 
         <div className="right">
-          <input type="text" placeholder='🔍 검색' /><button>조회 &gt;</button>
+          <input type="text" placeholder='🔍 품목명으로 조회' value={searchTerm} onChange={handleSearchChange}/>
+          <button onClick={handleSearch}>조회 &gt;</button>
         </div>
-      </div>
-      <br />
-
+      </div><br />
+      
       {/* PurchaseList 컴포넌트에 필요한 props 모두 전달 */}
       <PurchaseList
         purchases={purchases} 
         selectedPurchases={selectedPurchases}
         selectAll={selectAll}
+        sortBy={sortBy}
         handleCheckboxChange={(purchaseCode) => handleCheckboxChange(purchaseCode, selectedPurchases, setSelectedPurchases)} 
         handleSelectAll={() => handleSelectAll(selectAll, purchases, setSelectedPurchases, setSelectAll)} 
-        handleUpdateClick={() => handleUpdateClick(selectedPurchases, purchases, setUpdatePurchase, setIsUpdateClicked, setIsAddClicked)} 
+        handleUpdateClick={handleUpdateClickWrapper} 
         handleDeleteClick={() => handleDeleteClick(selectedPurchases, purchases, setPurchases, setSelectedPurchases)} 
         isAddClicked={isAddClicked}
         setIsAddClicked={setIsAddClicked}
@@ -90,12 +114,23 @@ const PurchaseMgmt = () => {
         newPurchase={newPurchase} 
         updatePurchase={updatePurchase} 
         isUpdateClicked={isUpdateClicked} 
+        handleUpdateClickWrapper={handleUpdateClickWrapper}
+        searchTerm={searchTerm}
+        startDate={startDate}
+        endDate={endDate}
       /> <br/>
-
+  
+      {/* 엑셀&인쇄 */}
       <div className="excel-print">
-        <button>엑셀 다운</button>
-        <button>인쇄</button>
+        <ExcelPrint purchases={purchases}/>       
       </div>
+
+        {/* 삭제 모달 */}
+        <DeleteModal
+          isOpen={showDeleteModal}
+          onClose={() => handleModalClose(setShowDeleteModal)}
+          onConfirm={() => handleModalConfirmDelete(selectedPurchases, purchases, setPurchases, setSelectedPurchases, setShowDeleteModal)}
+      />
     </div>
   );
 };
