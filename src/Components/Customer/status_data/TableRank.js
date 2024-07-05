@@ -5,16 +5,15 @@ import * as React from 'react'
 import "../../Main/Main.css"
 import TableModule from "../modules/TableModule"
 import CustomerStatusPagination from '../modules/PaginationModule';
+import instance from './../../../api/axios';
 
-const CustomerStatusTable_Rank = ({ activeLabel, data, onSort, totalItems, itemsPerPage, currentPage, onPageChange}) => {
+const CustomerStatusTable_Rank = ({ activeLabel, onSort, totalItems, itemsPerPage, currentPage, onPageChange}) => {
   // 예제 데이터
-const [rows, setRows] = React.useState([
-  { customerName: '홍길동', orderCount: 10, orderCount_prod: '고구마식빵', salesRating: 4.5, salesRating_prod: '소금빵', orderAmount: 1000, orderAmount_prod: '고구마식빵', remarks: '특이사항1' },
-  { customerName: '김영희', orderCount: 5, orderCount_prod: '소금빵', salesRating: 4.9, salesRating_prod: '소금빵', orderAmount: 500, orderrCount_prod: '고구마식빵', remarks: '특이사항2' },
-]);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentData = rows.slice(startIndex, endIndex);
+const [rows, setRows] = React.useState([]);
+
+  // const startIndex = (currentPage - 1) * itemsPerPage;
+  // const endIndex = startIndex + itemsPerPage;
+  // const currentData = rows.slice(startIndex, endIndex);
 
   // const handlePageChange = (page) => {
   //   setCurrentPage(page);
@@ -38,37 +37,51 @@ const [rows, setRows] = React.useState([
   //   setFilteredRows(filteredData);
   //   setCurrentPage(1); // 검색 시 첫 페이지로 이동
   // };
- 
+
+  React.useEffect(() => {
+    const fetchTableData = async () => {
+        try {
+            const response_tableData = await instance.get('/customer/getListRankTable');
+            const data = response_tableData.data; 
+            //console.log("data_getListProdTable: ", data);
+            setRows(data);
+        }catch (error) {
+          console.error('Error get TableData_rank:', error);
+      }
+      }
+      fetchTableData();
+    }, [activeLabel]);
+    
   const getColumns = (label) => {
     switch (label) {
       case '최고금액고객':
         return [
           { header: '번호', key: 'index', format: (_, index) => index + 1, className: 'table-centered' },
           { header: '고객명', key: 'customerName', className: 'table-centered' },
-          { header: '거래금액', key: 'orderAmount', format: (value) => value.toLocaleString(), className: 'table-righted' },
-          { header: '최고매출 상품명', key: 'orderAmount_prod', className: 'table-centered' },
-          { header: '거래횟수', key: 'orderCount', format: (value) => value.toLocaleString(), className: 'table-righted' },
-          { header: '최다거래 상품명', key: 'orderCount_prod', className: 'table-centered' },
+          { header: '거래금액', key: 'totalAmountForCustomer', format: (value) => value.toLocaleString(), className: 'table-righted' },
+          { header: '최고매출 상품명', key: 'topSellingProduct', className: 'table-centered' },
+          { header: '거래횟수', key: 'totalCountForCustomer', format: (value) => value.toLocaleString(), className: 'table-righted' },
+          { header: '최다거래 상품명', key: 'mostPurchasedProduct', className: 'table-centered' },
           { header: '특이사항', key: 'remarks', className: 'table-centered' },
         ];
       case '최다거래고객':
         return [
           { header: '번호', key: 'index', format: (_, index) => index + 1, className: 'table-centered' },
           { header: '고객명', key: 'customerName', className: 'table-centered' },
-          { header: '거래횟수', key: 'orderCount', format: (value) => value.toLocaleString(), className: 'table-righted' },
-          { header: '최다거래 상품명', key: 'orderCount_prod', className: 'table-centered' },
-          { header: '거래금액', key: 'orderAmount', format: (value) => value.toLocaleString(), className: 'table-righted' },
-          { header: '최고매출 상품명', key: 'orderAmount_prod', className: 'table-centered' },
+          { header: '거래횟수', key: 'totalCountForCustomer', format: (value) => value.toLocaleString(), className: 'table-righted' },
+          { header: '최다거래 상품명', key: 'mostPurchasedProduct', className: 'table-centered' },
+          { header: '거래금액', key: 'totalAmountForCustomer', format: (value) => value.toLocaleString(), className: 'table-righted' },
+          { header: '최고매출 상품명', key: 'topSellingProduct', className: 'table-centered' },
           { header: '특이사항', key: 'remarks', className: 'table-centered' },
         ];
       default:
         return [
           { header: '번호', key: 'index', format: (_, index) => index + 1, className: 'table-centered' },
           { header: '고객명', key: 'customerName', className: 'table-centered' },
-          { header: '거래횟수', key: 'orderCount', format: (value) => value.toLocaleString(), className: 'table-righted' },
-          { header: '최다거래 상품명', key: 'orderCount_prod', className: 'table-centered' },
-          { header: '거래금액', key: 'orderAmount', format: (value) => value.toLocaleString(), className: 'table-righted' },
-          { header: '최고매출 상품명', key: 'orderAmount_prod', className: 'table-centered' },
+          { header: '거래횟수', key: 'totalCountForCustomer', format: (value) => value.toLocaleString(), className: 'table-righted' },
+          { header: '최다거래 상품명', key: 'mostPurchasedProduct', className: 'table-centered' },
+          { header: '거래금액', key: 'totalAmountForCustomer', format: (value) => value.toLocaleString(), className: 'table-righted' },
+          { header: '최고매출 상품명', key: 'topSellingProduct', className: 'table-centered' },
            { header: '특이사항', key: 'remarks', className: 'table-centered' },
         ];
     }
@@ -95,12 +108,12 @@ const [rows, setRows] = React.useState([
   return (
     <div>
       <TableModule data={rows} columns={getColumns(activeLabel)} onSort={onSort} />
-      {/* <CustomerStatusPagination
+      <CustomerStatusPagination
         totalItems={totalItems}
         itemsPerPage={itemsPerPage}
         currentPage={currentPage}
         onPageChange={onPageChange}
-      />  */}
+      /> 
     </div>
   );
 }
