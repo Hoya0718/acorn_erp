@@ -267,6 +267,7 @@ const handleInputChange = (e, accessor) => {
               ))}
             </tr>
           )}
+          {/* 수정모드 */}
           {onUpdateMode && (
             <tr>
              <td className="table-centered"></td>
@@ -286,7 +287,7 @@ const handleInputChange = (e, accessor) => {
                     />
                   ) : column.accessor === 'registerDate' ? (
                     <input
-                      type="text"
+                      type="date"
                       className="form-control"
                       name={column.accessor}
                       value={editingRowData[column.accessor] || new Date().toISOString().split('T')[0]}
