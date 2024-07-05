@@ -1,28 +1,20 @@
 import React, { useState } from 'react';
 import './Sales.css';
 
-const orders = [
-  {
-    orderNumber: '1001',
-    itemName: '단팥빵',
-    csName: '홍길동',
-    csPhoneNumber: '010-1234-5678',
-    csAddress: '서울시 강남구',
-    unitPrice: 100000,
-    quantity: 100,
-    deliveryFee: 5000,
-    totalPrice: 105000,
-    orderDate: '2023-06-15 10:30',
-    itemReq: '',
-    orderStatus: '결제 완료'
-  }
-];
-
-const OrderTable = () => {
+const OrderTable = ({ handleFormSubmit, orders, selectedOrders, setSelectedOrders }) => {
   const [selectAll, setSelectAll] = useState(false);
-  const [selectedOrders, setSelectedOrders] = useState([]);
+  const [errors, setErrors] = useState({
+    orderNum: '',
+    itemName: '',
+    customerName: '',
+    customerTel: '',
+    quantity: '',
+    totalPrice: '',
+    orderDate: '',
+    orderStatus: ''
+  });
+  const [sortConfig, setSortConfig] = useState({ key: '', direction: 'ascending' });
 
-  // 전체 선택 토글
   const toggleSelectAll = () => {
     setSelectAll(!selectAll);
     if (!selectAll) {
@@ -32,9 +24,8 @@ const OrderTable = () => {
     }
   };
 
-  // 개별 주문 선택
   const toggleOrderSelection = (order) => {
-    const selectedIndex = selectedOrders.findIndex((selectedOrder) => selectedOrder.orderNumber === order.orderNumber);
+    const selectedIndex = selectedOrders.findIndex((selectedOrder) => selectedOrder.orderNum === order.orderNum);
     if (selectedIndex === -1) {
       setSelectedOrders([...selectedOrders, order]);
     } else {
@@ -44,8 +35,59 @@ const OrderTable = () => {
     }
   };
 
-  // 전체 선택 체크박스의 상태
+  //컬럼 정렬
+  const handleSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    const sortedData = [...orders].sort((a, b) => {
+      if (a[key] < b[key]) {
+        return direction === 'ascending' ? -1 : 1;
+      }
+      if (a[key] > b[key]) {
+        return direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
+    });
+    setSelectedOrders([]);
+    setSortConfig({ key, direction });
+  };
+  const getSortDirection = (key) => {
+    if (sortConfig.key === key) {
+      return sortConfig.direction === 'ascending' ? '▲' : '▼';
+    }
+    return '▼';
+  };
+
+  const handleFormSubmitInternal = (event) => {
+    event.preventDefault();
+    handleFormSubmit();
+  };
+
+  // orders 배열의 요소들을 숫자로 변환하여 새로운 배열을 생성
+  const parsedOrders = orders.map(order => ({
+    ...order,
+    item_qty: parseInt(order.item_qty, 10), // item_qty를 정수로 변환
+    order_total_price: parseFloat(order.order_total_price) // order_total_price를 부동 소수점 숫자로 변환
+  }));
+
+  // 정렬된 주문 목록
+  const sortedOrders = [...orders].sort((a, b) => {
+    if (sortConfig.key) {
+      const direction = sortConfig.direction === 'ascending' ? 1 : -1;
+      if (a[sortConfig.key] < b[sortConfig.key]) {
+        return -1 * direction;
+      }
+      if (a[sortConfig.key] > b[sortConfig.key]) {
+        return 1 * direction;
+      }
+    }
+    return 0;
+  });
+
   const selectAllCheckboxState = selectAll || (selectedOrders.length === orders.length && orders.length > 0);
+
 
   return (
     <div>
@@ -53,38 +95,38 @@ const OrderTable = () => {
         <thead>
           <tr>
             <th><input type="checkbox" checked={selectAllCheckboxState} onChange={toggleSelectAll} /></th>
-            <th>주문번호</th>
-            <th>상품명</th>
-            <th>이름</th>
-            <th>연락처</th>
-            <th>주소</th>
-            <th>단가</th>
-            <th>수량</th>
-            <th>배송비</th>
-            <th>판매금액</th>
-            <th>판매일시</th>
-            <th>요청사항</th>
-            <th>주문상태</th>
-            <th>배송정보</th>
+            <th onClick={() => handleSort('orderNum')}>주문번호{getSortDirection('orderNum')}</th>
+            <th onClick={() => handleSort('orderDate')}>판매일시{getSortDirection('orderDate')}</th>
+            <th onClick={() => handleSort('customerName')}>이름{getSortDirection('customerName')}</th>
+            <th onClick={() => handleSort('customerTel')}>연락처{getSortDirection('customerTel')}</th>
+            {/* <th onClick={() => handleSort('customerAddr')}>주소{getSortDirection('customerAddr')}</th> */}
+            <th onClick={() => handleSort('itemName')}>상품명{getSortDirection('itemName')}</th>
+            <th onClick={() => handleSort('quantity')}>수량{getSortDirection('quantity')}</th>
+            {/* <th onClick={() => handleSort('unitPrice')}>단가{getSortDirection('unitPrice')}</th> */}
+            {/* <th onClick={() => handleSort('deliveryFee')}>배송비{getSortDirection('deliveryFee')}</th> */}
+            <th onClick={() => handleSort('totalPrice')}>판매금액{getSortDirection('totalPrice')}</th>
+            {/* <th onClick={() => handleSort('itemReq')}>요청사항{getSortDirection('itemReq')}</th> */}
+            <th onClick={() => handleSort('orderStatus')}>주문상태{getSortDirection('orderStatus')}</th>
+            {/* <th>배송정보</th> */}
           </tr>
         </thead>
         <tbody>
-          {orders.map((order, index) => (
+          {sortedOrders.map((order, index) => (
             <tr key={index}>
-              <td><input type="checkbox" checked={selectedOrders.some(selectedOrder => selectedOrder.orderNumber === order.orderNumber)} onChange={() => toggleOrderSelection(order)} /></td>
-              <td>{order.orderNumber}</td>
-              <td>{order.itemName}</td>
-              <td>{order.csName}</td>
-              <td>{order.csPhoneNumber}</td>
-              <td>{order.csAddress}</td>
-              <td>{order.unitPrice.toLocaleString()} 원</td>
-              <td>{order.quantity}</td>
-              <td>{order.deliveryFee.toLocaleString()} 원</td>
-              <td>{order.totalPrice.toLocaleString()} 원</td>
+              <td><input type="checkbox" checked={selectedOrders.some(selectedOrder => selectedOrder.orderNum === order.orderNum)} onChange={() => toggleOrderSelection(order)} /></td>
+              <td>{order.orderNum}</td>
               <td>{order.orderDate}</td>
-              <td>{order.itemReq}</td>
+              <td>{order.customerName}</td>
+              <td>{order.customerTel}</td>
+              {/* <td>{order.customerAddr}</td> */}
+              <td>{order.itemName}</td>
+              <td>{order.quantity}</td>
+              {/* <td>{order.unitPrice.toLocaleString()} 원</td> */}
+              {/* <td>{order.deliveryFee.toLocaleString()} 원</td> */}
+              <td>{order.totalPrice} 원</td>
+              {/* <td>{order.itemReq}</td> */}
               <td>{order.orderStatus}</td>
-              <td><button className="button-register">등록</button></td>
+              {/* <td><button className="button-register">등록</button></td> */}
             </tr>
           ))}
         </tbody>

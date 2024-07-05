@@ -13,10 +13,10 @@ const Layout = () => {
   const [expandedItem, setExpandedItem] = useState(null);
 
     const location = useLocation();
-    const { shopName } = location.state; // shopName 가져오기
+    //const { shopName } = location.state; // shopName 가져오기
 
   useEffect(() => {
-    toast.success(`${shopName} 님, 안녕하세요!`);
+    //toast.success(`${shopName} 님, 안녕하세요!`);
   }, []);
 
   const handleItemClick = (item) => {

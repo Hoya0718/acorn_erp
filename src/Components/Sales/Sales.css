@@ -158,7 +158,9 @@
   background-color: #fff;
 }
 
-/* 상품수량 입력 필드 스타일 */
+/* 입력 필드 스타일 */
 .table input[type="number"] {
   width: 100px;
 }
+
+
