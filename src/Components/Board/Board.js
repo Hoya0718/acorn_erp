@@ -38,7 +38,7 @@ const Board = () => {
           </div>
         </div>
         {/* 글쓰기 버튼을 Link 컴포넌트로 설정 */}
-        <Link to="/layout/post" className="board-button board-write-button">글쓰기</Link>
+        <Link to="/layout/post" className="board-button board-write-button" style={{textDecoration: 'none'}}>글쓰기</Link>
       </div>
 
       <div className="board-table">
