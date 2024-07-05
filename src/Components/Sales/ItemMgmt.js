@@ -11,7 +11,7 @@ const ItemMgmt = () => {
     itemName: '',
     itemStatus: '',
     itemPrice: '',
-    itemQuantity: ''
+    itemQty: ''
   });
   
   const [orders, setOrders] = useState([]);
@@ -53,7 +53,35 @@ const ItemMgmt = () => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    // 유효성 검사 등 필요한 로직 추가
+    try {
+      let response = null;
+      if (selectedOrder) {
+        response = await axios.put(`/items/${selectedOrder.itemCode}`, formData);
+      } else {
+        response = await axios.post('/items', formData);
+      }
+      const updatedOrder = response.data;
+
+      const updatedOrders = [...orders];
+      if (selectedOrder) {
+        const index = updatedOrders.findIndex(order => order.itemCode === selectedOrder.itemCode);
+        if (index !== -1) {
+          updatedOrders[index] = { ...updatedOrder };
+        }
+      } else {
+        updatedOrders.unshift(updatedOrder);
+      }
+      setOrders(updatedOrders);
+
+      handleSaveSuccess();
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
+  };
+
+  const handleSaveSuccess = () => {
     setIsFormVisible(false);
     clearFormData();
     setSelectedOrders([]);
@@ -66,7 +94,7 @@ const ItemMgmt = () => {
       itemName: '',
       itemStatus: '',
       itemPrice: '',
-      itemQuantity: ''
+      itemQty: ''
     });
     setSelectedOrder(null); 
   };
@@ -77,34 +105,6 @@ const ItemMgmt = () => {
       ...formData,
       [name]: value
     });
-  };
-
-  const handleFormSubmit = async () => {
-    if (!validateForm()) return;
-
-    try {
-      if (selectedOrder) {
-        const response = await axios.put(`/items/${selectedOrder.itemCode}`, formData);
-        const updatedOrders = orders.map(order => 
-          order.itemCode === selectedOrder.itemCode ? response.data : order
-        );
-        setOrders(updatedOrders);
-      } else {
-        const response = await axios.post('/items', formData);
-        setOrders([response.data, ...orders]);
-      }
-      handleSave();
-    } catch (error) {
-      console.error('Error submitting order:', error);
-    }
-  };
-
-  const validateForm = () => {
-    return formData.itemType.trim() !== '' &&
-           formData.itemName.trim() !== '' &&
-           formData.itemStatus.trim() !== '' &&
-           formData.itemPrice !== '' &&
-           formData.itemQuantity !== '';
   };
 
   const handleDeleteClick = async () => {
@@ -158,11 +158,12 @@ const ItemMgmt = () => {
             isFormVisible={isFormVisible}
             formData={formData}
             handleInputChange={handleInputChange}
-            handleFormSubmit={handleFormSubmit}
+            handleFormSubmit={handleSave}
             orders={orders}
             selectedOrder={selectedOrder}
             selectedOrders={selectedOrders}
             setSelectedOrders={setSelectedOrders}
+            setIsFormVisible={setIsFormVisible} // 부모 컴포넌트로부터 추가된 prop
           />
         </section>
       </div>
