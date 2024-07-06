@@ -17,12 +17,11 @@ const Mgmtmenu = ({
     selectedRows, setEditingRowData, 
     showModal_deleteCheck, setShowModal_deleteCheck,
     showModal_editRowsSelectAlert, setShowModal_editRowsSelectAlert,
-    isAnyRowSelected
+    isAnyRowSelected,
+    searchKeyword, setSearchKeyword 
 }) => {
     const [period, setPeriod] = React.useState({});
-    // const [data, setData] = React.useState();
 
-    // const [showModal_deleteCheck, setShowModal_deleteCheck] = React.useState(false);
     const [modalData_deleteCheck, setModalData_deleteCheck] = React.useState({});
     const [modalData_editRowsSelectAlert, setModalData_editRowsSelectAlert] = React.useState({});
     
@@ -67,7 +66,12 @@ const Mgmtmenu = ({
         setOnAddMode(false);
         setOnUpdateMode(false);
     };
-
+    const handleSearchChange = (e) => {
+        setSearchKeyword(e.target.value);
+      };
+    const onSearch = () => {
+        setOnAddMode(true);
+    };
     return (
         <div>
             <div className='items-subTitle righted'>
@@ -109,10 +113,16 @@ const Mgmtmenu = ({
                     />
                 </div>
                 <div className='col-10 righted' style={{ margin: '0' }} >
-                    <SearchModule />
+                    <SearchModule
+                       value={searchKeyword}
+                       onChange={handleSearchChange}
+                    />
                 </div>
                 <div className='col-1'>
-                    <SearchButtonModule />
+                    <SearchButtonModule 
+                       value={searchKeyword}
+                       onChange={handleSearchChange}
+                    />
                 </div>
             </div>
 

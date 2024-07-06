@@ -4,7 +4,7 @@ import * as React from 'react'
 import "../../Main/Main.css"
 
 const SearchButtonModule = ({ onSearch }) => {
-
+  
   return (
       <span>
         <button type="submit" value="조회" className="btn btn-dark" onClick={ onSearch } >조회</button>

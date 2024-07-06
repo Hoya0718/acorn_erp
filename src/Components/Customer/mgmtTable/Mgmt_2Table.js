@@ -13,7 +13,8 @@ const MgmtTable = ({
   setColumns, setFilename, formatDate, 
   handleModalSave,
   modalData_viewDetail, setModalData_viewDetail,
-  showModal_viewDetail, setShowModal_viewDetail
+  showModal_viewDetail, setShowModal_viewDetail,
+  searchKeyword
  
 }) => {
   //테이블 데이터 
@@ -146,6 +147,27 @@ const MgmtTable = ({
     setRows(sortedRows);
     setFilteredData(sortedRows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
   };
+  useEffect(() => {
+    let updatedData = rows;
+
+    if (searchKeyword) {
+      updatedData = rows.filter(row => 
+        Object.values(row).some(value => 
+          value && value.toString().toLowerCase().includes(searchKeyword.toLowerCase())
+        )
+      );
+    }
+
+    if (sortConfig.key) {
+      updatedData = [...updatedData].sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'ascending' ? -1 : 1;
+        if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'ascending' ? 1 : -1;
+        return 0;
+      });
+    }
+
+    setFilteredData(updatedData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+  }, [rows, currentPage, rowsPerPage, searchKeyword, sortConfig]);
 
   //각 행 중 특정컬럼선택시 모달창 보기
   const handleNameClick = (rowData) => {

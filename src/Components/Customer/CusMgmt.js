@@ -7,23 +7,27 @@ import CustomerStatusPagination from './modules/PaginationModule';
 
 
 const CusMgmt = () => {
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState(data);
+
   const [onAddMode, setOnAddMode] = useState(false);
   const [onUpdateMode, setOnUpdateMode] = useState(false);
   const [editingRowId, setEditingRowId] = useState(null);
   const [editingRowData, setEditingRowData] = useState({});
+  //검색
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchedData, setSearchedData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  //페이지 네이션 데이터
+  const [pageData, setPageData] = useState([]);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   //테이블 데이터
   const [filename, setFilename] = useState('');
   const [columns, setColumns] = useState([]);
   const [selectedRows, setSelectedRows] = useState({});
-  const [data, setData] = useState([]);
   const [formData, setFormData] = useState({});
-  //페이지 네이션 데이터
-  const [pageData, setPageData] = useState([]);
-  const [filteredData, setFilteredData] = useState(data);
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const [totalItems, setTotalItems] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   //모달 데이터
   const [showModal_viewDetail, setShowModal_viewDetail] = React.useState(false);
   const [modalData_viewDetail, setModalData_viewDetail] = React.useState({});
@@ -211,6 +215,30 @@ const CusMgmt = () => {
     }));
   }, []);
 
+  const fetchSearchResults = async (keyword) => {
+    try {
+      const response_keyword = await instance.get(`/customer/searchKeyword?keyword=${keyword}`);
+      const searchResults = response_keyword.data.map(item => ({
+        ...item,
+        registerDate: formatDate(item.registerDate),
+        customerBirthDate: formatDate(item.customerBirthDate)
+      }));
+      setFilteredData(searchResults.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+      
+      setTotalItems(searchResults.length);
+    } catch (error) {
+      console.error('Error fetchSearchResults:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (searchKeyword) {
+      fetchSearchResults(searchKeyword);
+    } else {
+      setFilteredData(data);
+    }
+  }, [searchKeyword, data]);
+
   const isAnyRowSelected = Object.values(selectedRows).some(checked => checked);
 
   return (
@@ -239,6 +267,9 @@ const CusMgmt = () => {
         setShowModal_deleteCheck={setShowModal_deleteCheck}
         showModal_editRowsSelectAlert={showModal_editRowsSelectAlert}
         setShowModal_editRowsSelectAlert={setShowModal_editRowsSelectAlert}
+
+        searchKeyword={searchKeyword}
+        setSearchKeyword={setSearchKeyword}
       />
 
       <MgmtTable
@@ -264,6 +295,8 @@ const CusMgmt = () => {
         modalData_viewDetail={modalData_viewDetail}
         setShowModal_viewDetail={setShowModal_viewDetail}
         showModal_viewDetail={showModal_viewDetail}
+
+        searchKeyword={searchKeyword}
       />
       <div className='row'>
         <div className='col-10'>

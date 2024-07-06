@@ -12,7 +12,7 @@ import Table_Prod from './TableTopProd';
 import Table_Rank from './TableRank';
 import CustomerStatusSettingModal from '../settingModal/settingModal.js';
 import SearchButton from '../modules/SearchButtonModule.js'
-import KeywordSearch from '../modules/KeywordSearchModule.js'
+import KeywordSearch from '../modules/SearchModule.js'
 
 const Customer_status = () => {
   const [activeTab, setActiveTab] = React.useState('distribution'); //탭버튼 상태(대분류)
