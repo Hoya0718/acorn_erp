@@ -1,32 +1,34 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
-import MgmtTable from './mgmtTable/MgmtTable'
+import MgmtTable from './mgmtTable/Mgmt_2Table'
 import ExcelPrint from '../Customer/modules/ExcelPrint';
 import instance from './../../api/axios';
-import MgmtMenu from './mgmtTable/MgmtMenu';
+import MgmtMenu from './mgmtTable/Mgmt_1TopMenu';
 import CustomerStatusPagination from './modules/PaginationModule';
 
 
 const CusMgmt = () => {
-  const [data, setData] = useState([]);
-  const [formData, setFormData] = useState({});
   const [onAddMode, setOnAddMode] = useState(false);
   const [onUpdateMode, setOnUpdateMode] = useState(false);
   const [editingRowId, setEditingRowId] = useState(null);
   const [editingRowData, setEditingRowData] = useState({});
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRows, setSelectedRows] = useState({});
-
-  const [columns, setColumns] = useState([]);
+  //테이블 데이터
   const [filename, setFilename] = useState('');
-
+  const [columns, setColumns] = useState([]);
+  const [selectedRows, setSelectedRows] = useState({});
+  const [data, setData] = useState([]);
+  const [formData, setFormData] = useState({});
   //페이지 네이션 데이터
   const [pageData, setPageData] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
+  //모달 데이터
+  const [showModal_viewDetail, setShowModal_viewDetail] = React.useState(false);
+  const [modalData_viewDetail, setModalData_viewDetail] = React.useState({});
+  const [showModal_deleteCheck, setShowModal_deleteCheck] = React.useState(false);
   useEffect(() => {
     const savedRowsPerPage = localStorage.getItem('CusMgmtRowsPerPage');
     if (savedRowsPerPage) {
@@ -50,118 +52,59 @@ const CusMgmt = () => {
   useEffect(() => {
     setFilteredData(data);
   }, [data]);
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-  const handleCheckboxChange = useCallback((customerId, checked) => {
-    setData(prevData => {
-      return prevData.map(item =>
-        item.customerId === customerId ? { ...item, checked } : item
-      );
-    });
-  }, []);
 
   const fetchPageData = async () => {
     try {
-    const response_pageData = await instance.post(`/customer/getAllList?page=${currentPage - 1}&size=${rowsPerPage}`);
-    const page = response_pageData.data;
-    const formattedPageData = page.content.map(item => ({
-      ...item,
-      registerDate: formatDate(item.registerDate),
-      customerBirthDate: formatDate(item.customerBirthDate)
-    }));
-    setPageData(formattedPageData);
-    setFilteredData(formattedPageData);
-    setTotalItems(page.totalElements);
+      const response_pageData = await instance.post(`/customer/getAllList?page=${currentPage - 1}&size=${rowsPerPage}`);
+      const page = response_pageData.data;
+      const formattedPageData = page.content.map(item => ({
+        ...item,
+        registerDate: formatDate(item.registerDate),
+        customerBirthDate: formatDate(item.customerBirthDate)
+      }));
+      setPageData(formattedPageData);
+      setFilteredData(formattedPageData);
+      setTotalItems(page.totalElements);
 
-  } catch (error) {
-    console.error('Error get MgmtTable:', error);
-  }
-}
-
-useEffect(() => {
-  fetchPageData();
-}, [currentPage, rowsPerPage]);
-  
-
-
-  const handleRowsPerPageChange = (event) => {
-    const newRowsPerPage = Number(event.target.value);
-    setRowsPerPage(newRowsPerPage);
-    localStorage.setItem('CusMgmtRowsPerPage', newRowsPerPage);  // 행수 저장
-  }
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-  const handleAddModeClick = () => {
-    setOnAddMode(true); // 추가 모드 활성화
-  };
-
-  const handleCloseClick = () => {
-    setOnAddMode(false); // 추가 모드 비활성화
-    setOnUpdateMode(false);
-  };
-
-  const handleEditModeClick = () => {
-    const selectedCustomerIds = Object.keys(selectedRows).filter(customerId => selectedRows[customerId]);
-
-    if (selectedCustomerIds.length > 0) {
-      setEditingRowId(selectedCustomerIds[0]); // 첫 번째 선택된 ID를 설정
-      const rowData = data.find(row => row.customerId.toString() === selectedCustomerIds[0].toString());
-      if (rowData) {
-        setEditingRowData(rowData); // editingRowData를 올바르게 설정
-        setOnUpdateMode(true);
-      } else {
-        console.log("Selected row data not found");
-      }
-    }
-  }
-
-  const handleDeleteClick = async () => {
-    try {
-      const selectedCustomerIds = Object.keys(selectedRows).filter(customerId => selectedRows[customerId]);
-      for (const customerId of selectedCustomerIds) {
-        await instance.delete(`/customer/delete/${customerId}`);
-      }
-      setData(prevData => prevData.filter(item => !selectedRows[item.customerId]));
-      setSelectedRows({});
     } catch (error) {
-      console.error('Error saving changes:', error);
+      console.error('Error get MgmtTable:', error);
     }
-  };
+  }
+
+  useEffect(() => {
+    fetchPageData();
+  }, [currentPage, rowsPerPage]);
+
   const handleSaveClick = async () => {
     try {
-        const response = await instance.put(`/customer/info/${editingRowId}`, editingRowData);
+      const response = await instance.put(`/customer/info/${editingRowId}`, editingRowData);
 
-        const customerId = editingRowData.customerId;
+      const customerId = editingRowData.customerId;
 
-        const newGradeData = {
-          customerId,
-          customerGrade: editingRowData.customerGrade || '일반', // 기본값 설정
-        };
+      const newGradeData = {
+        customerId,
+        customerGrade: editingRowData.customerGrade || '일반', // 기본값 설정
+      };
 
-        const responseGrade = await instance.put(`/customer/grade/${customerId}`, newGradeData);
-        console.log('Customer Grade Update Response:', responseGrade.data);
-        const newNotesData = {
-          customerId,
-          notesDate: new Date().toISOString().split('T')[0],
-          notes: editingRowData.customerNotes || '', // 기본값 설정
-        };
-        console.log('New Notes Data:', newNotesData);
+      const responseGrade = await instance.put(`/customer/grade/${customerId}`, newGradeData);
+      console.log('Customer Grade Update Response:', responseGrade.data);
+      const newNotesData = {
+        customerId,
+        notesDate: new Date().toISOString().split('T')[0],
+        notes: editingRowData.customerNotes || '', // 기본값 설정
+      };
+      console.log('New Notes Data:', newNotesData);
 
-        const responseNotes = await instance.post(`/customer/saveNotes`, newNotesData);
+      const responseNotes = await instance.post(`/customer/saveNotes`, newNotesData);
 
-        setData(prevRows =>
-          prevRows.map(row =>
-            row.customerId === customerId ? { ...row, ...editingRowData } : row
-          )
-        );
-        setEditingRowId(null);
-        setEditingRowData({});
-        setOnUpdateMode(false);
+      setData(prevRows =>
+        prevRows.map(row =>
+          row.customerId === customerId ? { ...row, ...editingRowData } : row
+        )
+      );
+      setEditingRowId(null);
+      setEditingRowData({});
+      setOnUpdateMode(false);
 
     } catch (error) {
       console.error('Error updating customer:', error);
@@ -186,6 +129,7 @@ useEffect(() => {
         customerId,
         customerGrade: editingRowData.customerGrade || '일반', // 기본값 설정
       };
+
       const responseGrade = await instance.put(`/customer/grade/${customerId}`, newGradeData);
 
       const newNotesData = {
@@ -193,22 +137,32 @@ useEffect(() => {
         notesDate: new Date().toISOString(),
         notes: editingRowData.customerNotes || '', // 기본값 설정
       };
-      const responseNotes = await instance.post(`/customer/saveNotes`, newNotesData);
 
-      await instance.get(`/customer/calculate_age_group`, newCustomerData);
-      await instance.get(`/customer/calculate_region_group`, newCustomerData);
-
+      let responseNotes = null;
+      if (editingRowData.customerNotes) {
+        newNotesData = {
+          customerId,
+          notesDate: new Date().toISOString().split('T')[0],
+          notes: editingRowData.customerNotes,
+        };
+        responseNotes = await instance.post(`/customer/saveNotes`, newNotesData);
+      }
+      if (editingRowData.customerBirthDate) {
+        await instance.get(`/customer/calculate_age_group`, newCustomerData);
+      }
+      if (editingRowData.customerAddr) {
+        await instance.get(`/customer/calculate_region_group`, newCustomerData);
+      }
       const savedCustomerData = response.data;
       const savedCustomerGrade = responseGrade.data;
-      const savedCustomerNotes = responseNotes.data;
 
-      // 로컬 상태를 업데이트하여 새 데이터를 포함하도록 설정
+
       setData(prevRows =>
         [...prevRows,
         {
           ...savedCustomerData,
           customerGrade: savedCustomerGrade.customerGrade,
-          customerNotes: savedCustomerNotes.notes
+          customerNotes: responseNotes ? responseNotes.data.notes : '',
         }
         ]);
 
@@ -221,7 +175,66 @@ useEffect(() => {
       console.error('Error adding customer:', error);
     }
   };
+
+  const handleModalSave = async (updatedData) => {
+    try {
+      await instance.put(`/customer/info/${updatedData.customerId}`, updatedData);
+      await instance.put(`/customer/grade/${updatedData.customerId}`, updatedData);
+      setShowModal_viewDetail(false);
+    } catch (error) {
+      console.error('Error updating customer:', error);
+    }
+  };
+
+  const handleDeleteClick = async () => {
+    try {
+      const selectedCustomerIds = Object.keys(selectedRows).filter(customerId => selectedRows[customerId]);
+      for (const customerId of selectedCustomerIds) {
+        await instance.delete(`/customer/delete/${customerId}`);
+      }
+      setData(prevData => prevData.filter(item => !selectedRows[item.customerId]));
+      setSelectedRows({});
+      setShowModal_deleteCheck(false);
+    } catch (error) {
+      console.error('Error saving changes:', error);
+    }
+  };
+  
+
+
+/////////////////////////////////////////////////////////////////////////
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+//////////////////////////////////////////////////////////////////////////////////
   const isAnyRowSelected = Object.values(selectedRows).some(checked => checked);
+
+///////////////////////////////////////////////
+const formatDate = (dateString) => {
+  const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+};
+
+
+  // const handleRowsPerPageChange = (event) => {
+  //   const newRowsPerPage = Number(event.target.value);
+  //   setRowsPerPage(newRowsPerPage);
+  //   localStorage.setItem('CusMgmtRowsPerPage', newRowsPerPage);  // 행수 저장
+  // }
+
+///////////////////////////////////////////////////////
+const handleCheckboxChange = useCallback((customerId, checked) => {
+  // setData(prevData => {
+  //   return prevData.map(item =>
+  //     // item.customerId === customerId ? { ...item, checked } : item
+  //   );
+  // });
+  setSelectedRows((prevSelectedRows) => ({
+    ...prevSelectedRows,
+    [customerId]: checked,
+  }));
+}, []);
 
   return (
     <div>
@@ -229,19 +242,25 @@ useEffect(() => {
         <span>회원 관리</span>
       </div>
       <hr />
-      <MgmtMenu 
+      <MgmtMenu
         setRowsPerPage={setRowsPerPage}
-        handleAddModeClick={handleAddModeClick}
-        handleEditModeClick={handleEditModeClick}
         handleDeleteClick={handleDeleteClick}
         handleSaveClick={handleSaveClick}
-        handleCloseClick={handleCloseClick}
         handleAddClick={handleAddClick}
         isAnyRowSelected={isAnyRowSelected}
         onUpdateMode={onUpdateMode}
         onAddMode={onAddMode}
+        editingRowId={editingRowId}
+        setEditingRowId={setEditingRowId}
+        setOnUpdateMode={setOnUpdateMode}
+        setOnAddMode={setOnAddMode}
+        selectedRows={selectedRows}
+        setEditingRowData={setEditingRowData}
+
+        showModal_deleteCheck={showModal_deleteCheck}
+        setShowModal_deleteCheck={setShowModal_deleteCheck}
       />
-       
+
       <MgmtTable
         data={filteredData}
         currentPage={currentPage}
@@ -252,19 +271,38 @@ useEffect(() => {
         onCheckboxChange={handleCheckboxChange}
         selectedRows={selectedRows}
         setSelectedRows={setSelectedRows}
-        editingRowId={editingRowId}  
-        editingRowData={editingRowData}  
-        setEditingRowData={setEditingRowData}  
+        editingRowId={editingRowId}
+        editingRowData={editingRowData}
+        setEditingRowData={setEditingRowData}
         setColumns={setColumns}
         setFilename={setFilename}
+        formatDate={formatDate}
+        setCurrentPage={setCurrentPage}
+
+        handleModalSave={handleModalSave}
+        setModalData_viewDetail={setModalData_viewDetail}
+        modalData_viewDetail={modalData_viewDetail}
+        setShowModal_viewDetail={setShowModal_viewDetail}
+        showModal_viewDetail={showModal_viewDetail}
       />
-      <CustomerStatusPagination
-        totalItems={totalItems}
-        itemsPerPage={rowsPerPage}
-        currentPage={currentPage}
-        onPageChange={setCurrentPage}
-      />
-      <ExcelPrint printData={filteredData} columns={columns} filename={filename}/>
+      <div className='row'>
+        <div className='col-10'>
+          <CustomerStatusPagination
+            totalItems={totalItems}
+            itemsPerPage={rowsPerPage}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+        <div className='col-2'>
+          <ExcelPrint
+            printData={filteredData}
+            columns={columns}
+            filename={filename}
+          />
+        </div>
+      </div>
+      
     </div>
   );
 };

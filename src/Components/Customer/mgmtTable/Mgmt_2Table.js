@@ -1,32 +1,29 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import instance from './../../../api/axios';
+import instance from '../../../api/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import ViewDetailsModal from './viewDetailsModal/viewDetailsModal';
 
 const MgmtTable = ({
+  data, 
   rowsPerPage, currentPage, setCurrentPage,
-  onAddMode, onUpdateMode, setOnUpdateMode, 
+  onAddMode, onUpdateMode, 
   onCheckboxChange, selectedRows, setSelectedRows,
   editingRowId, setEditingRowId, editingRowData, setEditingRowData, 
-  setColumns, setFilename, formatDate, 
+  setColumns, setFilename, formatDate, handlePageChange,
+  handleModalSave,
+  modalData_viewDetail, setModalData_viewDetail,
+  showModal_viewDetail, setShowModal_viewDetail
+ 
 }) => {
   //테이블 데이터 
-  const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
-  const [rows, setRows] = React.useState([]); //data랑 row둘다 필요한지 확인
+  const [rows, setRows] = React.useState([]); 
   //데이터 선택
   const [selectAll, setSelectAll] = useState(false);
   //데이터 정렬
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
-  //모달 데이터
-  const [showModal, setShowModal] = useState(false);
-  const [modalData, setModalData] = useState({});
 
-  // const formatDate = (dateString) => {
-  //   const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  //   return new Date(dateString).toLocaleDateString(undefined, options);
-  // };
   const [filename] = useState("고개관리 테이블");
   
   useEffect(() => {
@@ -49,7 +46,6 @@ const MgmtTable = ({
     setColumns(columns);
   }, [columns, setColumns]);
 
-  useEffect(() => {
   const fetchTableData = async () => {
     try {
       //테이블 데이터 호출
@@ -59,6 +55,7 @@ const MgmtTable = ({
         registerDate: formatDate(item.registerDate),
         customerBirthDate: formatDate(item.customerBirthDate)
       }));
+
       //고객등급 데이터 호출
       const response_gradeData = await instance.get('/customer/getGrade');
       const data_grade = response_gradeData.data
@@ -77,11 +74,13 @@ const MgmtTable = ({
       });
       setRows(mergedData);
     } catch (error) {
-      console.error('Error get MgmtTable:', error);
+      console.error('Error fetching MgmtTable:', error);
     }
-  }
-  fetchTableData();
-}, [formatDate]);
+  };
+    
+  useEffect(() => {
+    fetchTableData();
+  }, []);
 
   useEffect(() => {
     setFilteredData(rows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
@@ -92,22 +91,37 @@ const MgmtTable = ({
     setSelectAll(false);
   }, [data]);
 
+  //체크박스: 전체 행 선택
   const handleSelectAll = () => {
     const newSelectAll = !selectAll;
     setSelectAll(newSelectAll);
 
     const newSelectedRows = {};
     if (newSelectAll) {
-      data.forEach(item => {
+      filteredData.forEach(item => {
         newSelectedRows[item.customerId] = true;
       });
     }
     setSelectedRows(newSelectedRows);
-    data.forEach(item => {
+    filteredData.forEach(item => {
       onCheckboxChange(item.customerId, newSelectAll);
     });
   };
+  //체크박스: 선택한 행 선택
+  const handleRowSelect = (customerId, isSelected) => {
+    const newSelectedRows = { ...selectedRows };
 
+    console.log("handleRowSelect 실행")
+    
+    if (isSelected) {
+      newSelectedRows[customerId] = true;
+    } else {
+      delete newSelectedRows[customerId];
+    }
+    setSelectedRows(newSelectedRows);
+    onCheckboxChange(customerId, isSelected);
+  };
+  //제목행 컬럼 선택: 정렬
   const handleSort = (key) => {
     let direction = 'ascending';
     setCurrentPage(1);
@@ -131,54 +145,21 @@ const MgmtTable = ({
 
     setRows(sortedRows);
     setFilteredData(sortedRows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
-
   };
 
-  const handleRowSelect = (customerId, isSelected) => {
-    const newSelectedRows = { ...selectedRows };
-    if (isSelected) {
-      newSelectedRows[customerId] = true;
-    } else {
-      delete newSelectedRows[customerId];
-    }
-    setSelectedRows(newSelectedRows);
-    onCheckboxChange(customerId, isSelected);
-  };
-
-  // const handleInputChange = (e, accessor) => {
-  //   setEditingRowData({
-  //     ...editingRowData,
-  //     [accessor]: e.target.value,
-  //   });
-  // };
-//   const handleDoubleEditmodeClick = () => {
-//     setOnUpdateMode(true);
-//     console.log(onUpdateMode)
-// }
-const handleInputChange = (e, accessor) => {
-  setEditingRowData({
-    ...editingRowData,
-    [accessor]: e.target.value,
-  });
-  // console.log("editingRowData", editingRowData)
-};
+  //각 행 중 특정컬럼선택시 모달창 보기
   const handleNameClick = (rowData) => {
-    setModalData(rowData);
-    setShowModal(true);
+    setModalData_viewDetail(rowData);
+    setShowModal_viewDetail(true);
   };
-  useEffect(() => {
-    setFilteredData(rows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
-  }, [rows, currentPage, rowsPerPage]);
   
-  const handleModalSave = async (updatedData) => {
-    try {
-      await instance.put(`/customer/info/${updatedData.customerId}`, updatedData);
-      await instance.put(`/customer/grade/${updatedData.customerId}`, updatedData);
-      // await fetchTableData();
-      setShowModal(false);
-    } catch (error) {
-      console.error('Error updating customer:', error);
-    }
+  //수정 모드 및 추가 모드에서 입력 데이터
+  const handleInputChange = (e, accessor) => {
+    setEditingRowData({
+      ...editingRowData,
+      [accessor]: e.target.value,
+    });
+   
   };
 
   return (
@@ -212,6 +193,7 @@ const handleInputChange = (e, accessor) => {
           </tr>
         </thead>
         <tbody className="table-group-divider">
+
           {/* 등록모드 */}
           {onAddMode && (
             <tr>
@@ -262,6 +244,7 @@ const handleInputChange = (e, accessor) => {
               ))}
             </tr>
           )}
+
           {/* 수정모드 */}
           {onUpdateMode && (
             <tr>
@@ -324,6 +307,8 @@ const handleInputChange = (e, accessor) => {
               ))}
             </tr>
           )}
+
+          {/* 테이블데이터렌더링 */}
           {filteredData.map((row, index) => (
             <tr key={index}>
               <td className="table-centered">
@@ -360,11 +345,11 @@ const handleInputChange = (e, accessor) => {
           ))}
         </tbody>
       </table>
-      {showModal && (
+      {showModal_viewDetail && (
         <ViewDetailsModal
-          show={showModal}
-          onHide={() => setShowModal(false)}
-          data={modalData}
+          show={showModal_viewDetail}
+          onHide={() => setShowModal_viewDetail(false)}
+          data={modalData_viewDetail}
           onSave={handleModalSave}
         />)}
     </div>

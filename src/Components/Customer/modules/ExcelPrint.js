@@ -9,8 +9,8 @@ const ExcelPrint = ({printData, columns, filename}) => {
       columns.forEach(column => {
         rowData[column.header] = data[column.accessor||column.key] || '';
       });
-      console.log("columns",columns)
-      console.log("rowData",rowData)
+      // console.log("columns",columns)
+      // console.log("rowData",rowData)
       return rowData;
     });
   
