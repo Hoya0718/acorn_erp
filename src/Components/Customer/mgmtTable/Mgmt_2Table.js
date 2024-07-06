@@ -14,7 +14,7 @@ const MgmtTable = ({
   handleModalSave,
   modalData_viewDetail, setModalData_viewDetail,
   showModal_viewDetail, setShowModal_viewDetail,
-  searchKeyword
+  searchKeyword, startDate, endDate
  
 }) => {
   //테이블 데이터 
@@ -157,7 +157,12 @@ const MgmtTable = ({
         )
       );
     }
-
+    if (startDate && endDate) {
+      updatedData = updatedData.filter(row => {
+        const registerDate = new Date(row.registerDate);
+        return registerDate >= new Date(startDate) && registerDate <= new Date(endDate);
+      });
+    }
     if (sortConfig.key) {
       updatedData = [...updatedData].sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'ascending' ? -1 : 1;
@@ -167,7 +172,7 @@ const MgmtTable = ({
     }
 
     setFilteredData(updatedData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
-  }, [rows, currentPage, rowsPerPage, searchKeyword, sortConfig]);
+  }, [rows, currentPage, rowsPerPage, searchKeyword, sortConfig, startDate, endDate]);
 
   //각 행 중 특정컬럼선택시 모달창 보기
   const handleNameClick = (rowData) => {

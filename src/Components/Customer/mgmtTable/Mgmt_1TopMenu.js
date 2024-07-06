@@ -5,6 +5,7 @@ import SearchButtonModule from '../modules/SearchButtonModule';
 import DropdownModule from '../modules/DropdownModule';
 import DeleteModalModule from '../modules/DeleteModalModule';
 import EditRowsSelectAlertModal from './Modal/EditRowsSelectAlertModal';
+import {Button} from 'react-bootstrap';
 
 
 const Mgmtmenu = ({
@@ -18,7 +19,8 @@ const Mgmtmenu = ({
     showModal_deleteCheck, setShowModal_deleteCheck,
     showModal_editRowsSelectAlert, setShowModal_editRowsSelectAlert,
     isAnyRowSelected,
-    searchKeyword, setSearchKeyword 
+    searchKeyword, setSearchKeyword, startDate, setStartDate,  endDate, setEndDate,
+    onSearch
 }) => {
     const [period, setPeriod] = React.useState({});
 
@@ -68,41 +70,46 @@ const Mgmtmenu = ({
     };
     const handleSearchChange = (e) => {
         setSearchKeyword(e.target.value);
+        // setStartDate(e.target.value);
+        // setEndDate(e.target.value);
       };
-    const onSearch = () => {
-        setOnAddMode(true);
-    };
+
     return (
         <div>
             <div className='items-subTitle righted'>
                 <span>
                     {!onUpdateMode && isAnyRowSelected ? (
                         <>
-                            <button onClick={handleEditModeClick}>수정</button>
-                            <button onClick={handleDeletebuttonClick}>삭제</button>
+                            <Button onClick={handleEditModeClick}>수정</Button>
+                            <Button onClick={handleDeletebuttonClick}>삭제</Button>
                         </>
                     ) : null}
                     {onUpdateMode && isAnyRowSelected ? (
                         <>
-                            <button onClick={() => handleSaveClick(data.customerId)}>수정 확인</button>
-                            <button onClick={handleCloseClick}>취소</button>
+                            <Button onClick={() => handleSaveClick(data.customerId)}>수정 확인</Button>
+                            <Button onClick={handleCloseClick}>취소</Button>
                         </>
                     ) :
                         null
                     }
                     {onAddMode && !isAnyRowSelected ? (
                         <>
-                            <button onClick={handleAddClick}> 등록 확인</button>
-                            <button onClick={handleCloseClick}>취소</button>
+                            <Button onClick={handleAddClick}> 등록 확인</Button>
+                            <Button onClick={handleCloseClick}>취소</Button>
                         </>
                     ) : null
                     }
                     {!onAddMode && !onUpdateMode && !isAnyRowSelected ? (
-                        <button onClick={handleAddModeClick}>등록</button>
+                        <Button onClick={handleAddModeClick}>등록</Button>
                     ) : null}
                 </span>
             </div>
-            <PeriodSearchButtonModule setPeriod={setPeriod} />
+            <PeriodSearchButtonModule
+                setPeriod={({ startDate, endDate }) => {
+                    setStartDate(startDate);
+                    setEndDate(endDate);
+                  }}
+            />
 
             <div className='row'>
                 <div className='col-1'>
@@ -121,7 +128,7 @@ const Mgmtmenu = ({
                 <div className='col-1'>
                     <SearchButtonModule 
                        value={searchKeyword}
-                       onChange={handleSearchChange}
+                       onClick={onSearch}
                     />
                 </div>
             </div>

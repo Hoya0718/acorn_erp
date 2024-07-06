@@ -13,6 +13,7 @@ import Table_Rank from './TableRank';
 import CustomerStatusSettingModal from '../settingModal/settingModal.js';
 import SearchButton from '../modules/SearchButtonModule.js'
 import KeywordSearch from '../modules/SearchModule.js'
+import { Button } from 'react-bootstrap';
 
 const Customer_status = () => {
   const [activeTab, setActiveTab] = React.useState('distribution'); //탭버튼 상태(대분류)
@@ -21,7 +22,7 @@ const Customer_status = () => {
   const [keyword, setKeyword] = React.useState(''); //검색어
   const [rowsPerPage, setRowsPerPage] = React.useState(10); //블럭당 보여질 행 갯수
   const [currentPage, setCurrentPage] = React.useState(1);  //현재 페이지
-  
+
   useEffect(() => {
     const savedRowsPerPage = localStorage.getItem('StatusDataRowsPerPage');
     if (savedRowsPerPage) {
@@ -33,7 +34,7 @@ const Customer_status = () => {
     const newRowsPerPage = Number(event.target.value);
     setRowsPerPage(newRowsPerPage);
     localStorage.setItem('StatusDataRowsPerPage', newRowsPerPage);  // 행수 저장
- 
+
   }
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -83,9 +84,11 @@ const Customer_status = () => {
           <span> 회원 현황 데이터 </span>
         </div>
         <div className="col-3  righted" >
-          <Link to="/layout/customerMgmt/cusStatus">
-            <input type="submit" className="btn btn-dark" value="데이터" />
-          </Link>
+          <a href={"/layout/customerMgmt/cusStatus"}>
+            <Button>
+              데이터
+            </Button>
+          </a>
         </div>
         <div className="col-1 centered">
           <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#SettingModal">
@@ -119,7 +122,7 @@ const Customer_status = () => {
                 {/* <SearchButton onSearch={handleSearch} /> */}
               </div>
             </div>
-            {renderTable() }
+            {renderTable()}
           </form>
         </section>
       </div>

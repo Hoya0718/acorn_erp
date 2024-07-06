@@ -16,6 +16,8 @@ const CusMgmt = () => {
   const [editingRowData, setEditingRowData] = useState({});
   //검색
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [searchedData, setSearchedData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   //페이지 네이션 데이터
@@ -215,31 +217,60 @@ const CusMgmt = () => {
     }));
   }, []);
 
-  const fetchSearchResults = async (keyword) => {
+  const fetchSearchResults = async (keyword, startDate, endDate) => {
     try {
+      let searchResults = [];
+      let periodResults = [];
+
+    // 키워드 검색 요청
+    if (keyword) {
       const response_keyword = await instance.get(`/customer/searchKeyword?keyword=${keyword}`);
-      const searchResults = response_keyword.data.map(item => ({
+      searchResults = response_keyword.data.map(item => ({
         ...item,
         registerDate: formatDate(item.registerDate),
         customerBirthDate: formatDate(item.customerBirthDate)
       }));
-      setFilteredData(searchResults.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
-      
-      setTotalItems(searchResults.length);
+    }
+
+    // 기간 검색 요청
+    if (startDate && endDate) {
+      const response_period = await instance.get(`/customer/searchPeriod?startDate=${startDate}&endDate=${endDate}`);
+      periodResults = response_period.data.map(item => ({
+        ...item,
+        registerDate: formatDate(item.registerDate),
+        customerBirthDate: formatDate(item.customerBirthDate)
+      }));
+    }
+
+      // 검색 결과 결합
+    let combinedResults = searchResults;
+    if (startDate && endDate) {
+      const periodIds = new Set(periodResults.map(item => item.customerId));
+      combinedResults = searchResults.filter(item => periodIds.has(item.customerId));
+    }
+
+    setFilteredData(combinedResults.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+    setTotalItems(combinedResults.length);
+    setCurrentPage(1);
     } catch (error) {
       console.error('Error fetchSearchResults:', error);
     }
   };
 
   useEffect(() => {
-    if (searchKeyword) {
-      fetchSearchResults(searchKeyword);
+    if (searchKeyword || startDate || endDate) {
+      fetchSearchResults(searchKeyword, startDate, endDate);
     } else {
       setFilteredData(data);
     }
-  }, [searchKeyword, data]);
+  }, [searchKeyword, data, startDate, endDate]);
 
   const isAnyRowSelected = Object.values(selectedRows).some(checked => checked);
+
+  const handleSearch = () => {
+    setCurrentPage(1);
+    fetchSearchResults(searchKeyword, startDate, endDate);
+  };
 
   return (
     <div>
@@ -270,6 +301,11 @@ const CusMgmt = () => {
 
         searchKeyword={searchKeyword}
         setSearchKeyword={setSearchKeyword}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate} 
+        setEndDate={setEndDate}
+        onSearch={handleSearch}
       />
 
       <MgmtTable
@@ -297,6 +333,8 @@ const CusMgmt = () => {
         showModal_viewDetail={showModal_viewDetail}
 
         searchKeyword={searchKeyword}
+        startDate={startDate}
+        endDate={endDate} 
       />
       <div className='row'>
         <div className='col-10'>
