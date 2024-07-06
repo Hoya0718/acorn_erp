@@ -1,8 +1,8 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect,  } from 'react';
 import instance from '../../../api/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
-import ViewDetailsModal from './viewDetailsModal/viewDetailsModal';
+import ViewDetailsModal from './Modal/viewDetailsModal';
 
 const MgmtTable = ({
   data, 
@@ -10,7 +10,7 @@ const MgmtTable = ({
   onAddMode, onUpdateMode, 
   onCheckboxChange, selectedRows, setSelectedRows,
   editingRowId, setEditingRowId, editingRowData, setEditingRowData, 
-  setColumns, setFilename, formatDate, handlePageChange,
+  setColumns, setFilename, formatDate, 
   handleModalSave,
   modalData_viewDetail, setModalData_viewDetail,
   showModal_viewDetail, setShowModal_viewDetail
@@ -161,6 +161,7 @@ const MgmtTable = ({
     });
    
   };
+
 
   return (
     <div className="customer-status-table">

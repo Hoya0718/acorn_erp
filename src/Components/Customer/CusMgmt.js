@@ -1,6 +1,6 @@
-import React, { useMemo, useCallback, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback, } from 'react';
 import MgmtTable from './mgmtTable/Mgmt_2Table'
-import ExcelPrint from '../Customer/modules/ExcelPrint';
+import ExcelPrint from './modules/ExcelPrintModule';
 import instance from './../../api/axios';
 import MgmtMenu from './mgmtTable/Mgmt_1TopMenu';
 import CustomerStatusPagination from './modules/PaginationModule';
@@ -11,7 +11,6 @@ const CusMgmt = () => {
   const [onUpdateMode, setOnUpdateMode] = useState(false);
   const [editingRowId, setEditingRowId] = useState(null);
   const [editingRowData, setEditingRowData] = useState({});
-
   const [searchTerm, setSearchTerm] = useState('');
   //테이블 데이터
   const [filename, setFilename] = useState('');
@@ -29,6 +28,8 @@ const CusMgmt = () => {
   const [showModal_viewDetail, setShowModal_viewDetail] = React.useState(false);
   const [modalData_viewDetail, setModalData_viewDetail] = React.useState({});
   const [showModal_deleteCheck, setShowModal_deleteCheck] = React.useState(false);
+  const [showModal_editRowsSelectAlert, setShowModal_editRowsSelectAlert] = React.useState(false);
+  
   useEffect(() => {
     const savedRowsPerPage = localStorage.getItem('CusMgmtRowsPerPage');
     if (savedRowsPerPage) {
@@ -52,6 +53,11 @@ const CusMgmt = () => {
   useEffect(() => {
     setFilteredData(data);
   }, [data]);
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
 
   const fetchPageData = async () => {
     try {
@@ -156,7 +162,6 @@ const CusMgmt = () => {
       const savedCustomerData = response.data;
       const savedCustomerGrade = responseGrade.data;
 
-
       setData(prevRows =>
         [...prevRows,
         {
@@ -166,7 +171,6 @@ const CusMgmt = () => {
         }
         ]);
 
-      // 폼을 초기화
       setEditingRowId(null);
       setEditingRowData({});
       setOnAddMode(false);
@@ -200,41 +204,14 @@ const CusMgmt = () => {
     }
   };
   
+  const handleCheckboxChange = useCallback((customerId, checked) => {
+    setSelectedRows((prevSelectedRows) => ({
+      ...prevSelectedRows,
+      [customerId]: checked,
+    }));
+  }, []);
 
-
-/////////////////////////////////////////////////////////////////////////
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-//////////////////////////////////////////////////////////////////////////////////
   const isAnyRowSelected = Object.values(selectedRows).some(checked => checked);
-
-///////////////////////////////////////////////
-const formatDate = (dateString) => {
-  const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  return new Date(dateString).toLocaleDateString(undefined, options);
-};
-
-
-  // const handleRowsPerPageChange = (event) => {
-  //   const newRowsPerPage = Number(event.target.value);
-  //   setRowsPerPage(newRowsPerPage);
-  //   localStorage.setItem('CusMgmtRowsPerPage', newRowsPerPage);  // 행수 저장
-  // }
-
-///////////////////////////////////////////////////////
-const handleCheckboxChange = useCallback((customerId, checked) => {
-  // setData(prevData => {
-  //   return prevData.map(item =>
-  //     // item.customerId === customerId ? { ...item, checked } : item
-  //   );
-  // });
-  setSelectedRows((prevSelectedRows) => ({
-    ...prevSelectedRows,
-    [customerId]: checked,
-  }));
-}, []);
 
   return (
     <div>
@@ -243,6 +220,7 @@ const handleCheckboxChange = useCallback((customerId, checked) => {
       </div>
       <hr />
       <MgmtMenu
+        data={data}
         setRowsPerPage={setRowsPerPage}
         handleDeleteClick={handleDeleteClick}
         handleSaveClick={handleSaveClick}
@@ -259,6 +237,8 @@ const handleCheckboxChange = useCallback((customerId, checked) => {
 
         showModal_deleteCheck={showModal_deleteCheck}
         setShowModal_deleteCheck={setShowModal_deleteCheck}
+        showModal_editRowsSelectAlert={showModal_editRowsSelectAlert}
+        setShowModal_editRowsSelectAlert={setShowModal_editRowsSelectAlert}
       />
 
       <MgmtTable

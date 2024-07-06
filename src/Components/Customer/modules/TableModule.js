@@ -6,7 +6,7 @@ import "../../Main/Main.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import instance from './../../../api/axios';
-import ViewDetailsModal from '../mgmtTable/viewDetailsModal/viewDetailsModal';
+import ViewDetailsModal from '../mgmtTable/Modal/viewDetailsModal';
 
 const TableModule = ({ data = [], columns = [], onSort = () => { }, rowsPerPage, currentPage, totalData = [] }) => {
     //     const [tableDta, setTableData] = useState(data);

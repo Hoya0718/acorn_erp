@@ -4,21 +4,28 @@ import PeriodSearchButtonModule from '../modules/PeriodSearchModule';
 import SearchButtonModule from '../modules/SearchButtonModule';
 import DropdownModule from '../modules/DropdownModule';
 import DeleteModalModule from '../modules/DeleteModalModule';
+import EditRowsSelectAlertModal from './Modal/EditRowsSelectAlertModal';
+
 
 const Mgmtmenu = ({
-    setRowsPerPage, isAnyRowSelected,
+    data,
+    setRowsPerPage, 
     editingRowId, setEditingRowId,
     onUpdateMode, setOnUpdateMode, onAddMode, setOnAddMode,
     handleSaveClick, handleAddClick,
     handleDeleteClick,
-    selectedRows, setEditingRowData, showModal_deleteCheck, setShowModal_deleteCheck
-
+    selectedRows, setEditingRowData, 
+    showModal_deleteCheck, setShowModal_deleteCheck,
+    showModal_editRowsSelectAlert, setShowModal_editRowsSelectAlert,
+    isAnyRowSelected
 }) => {
     const [period, setPeriod] = React.useState({});
-    const [data, setData] = React.useState();
+    // const [data, setData] = React.useState();
 
     // const [showModal_deleteCheck, setShowModal_deleteCheck] = React.useState(false);
     const [modalData_deleteCheck, setModalData_deleteCheck] = React.useState({});
+    const [modalData_editRowsSelectAlert, setModalData_editRowsSelectAlert] = React.useState({});
+    
     
     const [selectedOption_dropdown, setSelectedOption_dropdown] = React.useState('10줄 보기');
 
@@ -38,7 +45,7 @@ const Mgmtmenu = ({
     const handleEditModeClick = () => {
         const selectedCustomerIds = Object.keys(selectedRows).filter(customerId => selectedRows[customerId]);
 
-        if (selectedCustomerIds.length > 0) {
+        if (selectedCustomerIds.length === 1) {
             setEditingRowId(selectedCustomerIds[0]); // 첫 번째 선택된 ID를 설정
             const rowData = data.find(row => row.customerId.toString() === selectedCustomerIds[0].toString());
             if (rowData) {
@@ -47,6 +54,8 @@ const Mgmtmenu = ({
             } else {
                 console.log("Selected row data not found");
             }
+        }else {
+            setShowModal_editRowsSelectAlert(true)
         }
     }
 
@@ -106,12 +115,20 @@ const Mgmtmenu = ({
                     <SearchButtonModule />
                 </div>
             </div>
+
             {showModal_deleteCheck && (
                 <DeleteModalModule
                     show={showModal_deleteCheck}
                     onHide={() => setShowModal_deleteCheck(false)}
-                    data={modalData_deleteCheck}
+                    // data={modalData_deleteCheck}
                     handleDeleteClick={handleDeleteClick}
+                />
+            )}
+            {showModal_editRowsSelectAlert && (
+                <EditRowsSelectAlertModal
+                    show={showModal_editRowsSelectAlert}
+                    onHide={() => setShowModal_editRowsSelectAlert(false)}
+                    // data={modalData_editRowsSelectAlert}
                 />
             )}
         </div>

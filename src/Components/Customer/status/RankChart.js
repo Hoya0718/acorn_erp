@@ -7,7 +7,7 @@ import "../Customer.css"
 import { GoTriangleDown } from "react-icons/go";
 import { GoTriangleUp } from "react-icons/go";
 import instance from './../../../api/axios';
-import ViewDetailsModal from '../mgmtTable/viewDetailsModal/viewDetailsModal';
+import ViewDetailsModal from '../mgmtTable/Modal/viewDetailsModal';
 
 
 
