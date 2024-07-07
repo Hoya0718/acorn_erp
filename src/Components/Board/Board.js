@@ -1,17 +1,34 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from '../../api/axios';
 import './Board.css'; // Assuming Board-specific styles are in Board.css
+import getUserInfo from '../../api/getUserInfo';
 
 const Board = () => {
   // 게시물 목록을 담을 상태 변수
   const [posts, setPosts] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
 
   // 컴포넌트가 마운트될 때 게시물 데이터를 가져오는 useEffect
   useEffect(() => {
     fetchPosts();
+    fetchUserInfo();
   }, []);
 
+
+  // 사용자 정보를 가져오는 함수
+  const fetchUserInfo = async () => {
+    try {
+      const userInfo = await getUserInfo();
+      console.log('User Info:커뮤니티 ', userInfo);
+      console.log("아이디" + userInfo.id);
+      setUserInfo(userInfo);
+    } catch (error) {
+      console.error('Error fetching user info: 커뮤니티', error);
+    }
+  };
+  
   // 게시물 데이터를 서버에서 가져오는 함수
   const fetchPosts = async () => {
     try {
