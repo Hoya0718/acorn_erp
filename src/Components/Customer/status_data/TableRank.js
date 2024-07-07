@@ -4,7 +4,7 @@
 import * as React from 'react'
 import "../../Main/Main.css"
 import TableModule from "../modules/TableModule"
-import ExcelPrint from "../modules/ExcelPrint"
+import ExcelPrint from "../modules/ExcelPrintModule"
 import CustomerStatusPagination from '../modules/PaginationModule';
 import instance from './../../../api/axios';
 

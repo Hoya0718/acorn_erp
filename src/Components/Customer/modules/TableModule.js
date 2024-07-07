@@ -6,10 +6,15 @@ import "../../Main/Main.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import instance from './../../../api/axios';
-import ViewDetailsModal from '../mgmtTable/viewDetailsModal/viewDetailsModal';
+import ViewDetailsModal from '../mgmtTable/Modal/viewDetailsModal';
 
-const TableModule = ({ data = [], columns = [], onSort = () => { }, rowsPerPage, currentPage, totalData = [] }) => {
-    //     const [tableDta, setTableData] = useState(data);
+const TableModule = ({ 
+    data = [], 
+    columns = [], 
+    onSort = () => { }, 
+    rowsPerPage, currentPage, totalData = [],
+    formatDate
+}) => {
     const [selectAll, setSelectAll] = useState(false);
     const [selectedRows, setSelectedRows] = useState({});
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'none' });
@@ -82,11 +87,6 @@ const TableModule = ({ data = [], columns = [], onSort = () => { }, rowsPerPage,
         }
         return acc;
     }, {});
-
-    const formatDate = (dateString) => {
-        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
-    };
     
     const fetchCustomerDetails = async () => {
         try {

@@ -1,34 +1,34 @@
-import React, { useMemo, useCallback, useState, useEffect } from 'react';
-import instance from './../../../api/axios';
+import React, { useMemo, useState, useEffect, } from 'react';
+import instance from '../../../api/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
-import CustomerStatusPagination from '../modules/PaginationModule';
-import ViewDetailsModal from './viewDetailsModal/viewDetailsModal';
+import ViewDetailsModal from './Modal/viewDetailsModal';
+import { Button } from 'react-bootstrap';
+import AddressSearchModal from './Modal/SearchAddr';
 
 const MgmtTable = ({
-  rowsPerPage, onAddMode, onUpdateMode, setOnUpdateMode, onCheckboxChange, selectedRows, setSelectedRows,
-  editingRowId, setEditingRowId, editingRowData, setEditingRowData, setColumns, setFilename
+  data,
+  rowsPerPage, currentPage, setCurrentPage,
+  onAddMode, onUpdateMode,
+  onCheckboxChange, selectedRows, setSelectedRows,
+  editingRowId, setEditingRowId, editingRowData, setEditingRowData,
+  setColumns, setFilename, formatDate,
+  handleModalSave,
+  modalData_viewDetail, setModalData_viewDetail,
+  showModal_viewDetail, setShowModal_viewDetail,
+  searchKeyword, startDate, endDate
+
 }) => {
   //테이블 데이터 
-  const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
-  const [rows, setRows] = React.useState([]); //data랑 row둘다 필요한지 확인
+  const [rows, setRows] = React.useState([]);
   //데이터 선택
   const [selectAll, setSelectAll] = useState(false);
   //데이터 정렬
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
-  //페이지 네이션 데이터
-  const [pageData, setPageData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
-  //모달 데이터
-  const [showModal, setShowModal] = useState(false);
-  const [modalData, setModalData] = useState({});
 
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
+  const [showAddressModal, setShowAddressModal] = useState(false);
+
   const [filename] = useState("고개관리 테이블");
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const MgmtTable = ({
     { header: '성별', accessor: 'customerGender' },
     { header: '연락처', accessor: 'customerTel' },
     { header: '생년월일', accessor: 'customerBirthDate' },
-    { header: '주소', accessor: 'customerAddr' },
+    { header: '주소', accessor: 'customerAddr', isAddr: true },
     { header: '가입일', accessor: 'registerDate' },
     { header: '회원등급', accessor: 'customerGrade' },
     { header: '특이사항', accessor: 'customerNotes' },
@@ -50,7 +50,7 @@ const MgmtTable = ({
   useEffect(() => {
     setColumns(columns);
   }, [columns, setColumns]);
-  
+
   const fetchTableData = async () => {
     try {
       //테이블 데이터 호출
@@ -60,6 +60,7 @@ const MgmtTable = ({
         registerDate: formatDate(item.registerDate),
         customerBirthDate: formatDate(item.customerBirthDate)
       }));
+
       //고객등급 데이터 호출
       const response_gradeData = await instance.get('/customer/getGrade');
       const data_grade = response_gradeData.data
@@ -77,28 +78,14 @@ const MgmtTable = ({
         };
       });
       setRows(mergedData);
-
-      //페이지네이션 데이터
-      const response_pageData = await instance.post(`/customer/getAllList?page=${currentPage - 1}&size=${rowsPerPage}`);
-      const page = response_pageData.data;
-      const formattedPageData = page.content.map(item => ({
-        ...item,
-        registerDate: formatDate(item.registerDate),
-        customerBirthDate: formatDate(item.customerBirthDate)
-      }));
-      setPageData(formattedPageData);
-      setFilteredData(formattedPageData);
-      setTotalItems(page.totalElements);
-
     } catch (error) {
-      console.error('Error get MgmtTable:', error);
+      console.error('Error fetching MgmtTable:', error);
     }
-  }
+  };
 
   useEffect(() => {
     fetchTableData();
-  }, [currentPage, rowsPerPage]);
-
+  }, []);
 
   useEffect(() => {
     setFilteredData(rows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
@@ -109,22 +96,37 @@ const MgmtTable = ({
     setSelectAll(false);
   }, [data]);
 
+  //체크박스: 전체 행 선택
   const handleSelectAll = () => {
     const newSelectAll = !selectAll;
     setSelectAll(newSelectAll);
 
     const newSelectedRows = {};
     if (newSelectAll) {
-      data.forEach(item => {
+      filteredData.forEach(item => {
         newSelectedRows[item.customerId] = true;
       });
     }
     setSelectedRows(newSelectedRows);
-    data.forEach(item => {
+    filteredData.forEach(item => {
       onCheckboxChange(item.customerId, newSelectAll);
     });
   };
+  //체크박스: 선택한 행 선택
+  const handleRowSelect = (customerId, isSelected) => {
+    const newSelectedRows = { ...selectedRows };
 
+    console.log("handleRowSelect 실행")
+
+    if (isSelected) {
+      newSelectedRows[customerId] = true;
+    } else {
+      delete newSelectedRows[customerId];
+    }
+    setSelectedRows(newSelectedRows);
+    onCheckboxChange(customerId, isSelected);
+  };
+  //제목행 컬럼 선택: 정렬
   const handleSort = (key) => {
     let direction = 'ascending';
     setCurrentPage(1);
@@ -148,51 +150,59 @@ const MgmtTable = ({
 
     setRows(sortedRows);
     setFilteredData(sortedRows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
-
   };
+  useEffect(() => {
+    let updatedData = rows;
 
-  const handleRowSelect = (customerId, isSelected) => {
-    const newSelectedRows = { ...selectedRows };
-    if (isSelected) {
-      newSelectedRows[customerId] = true;
-    } else {
-      delete newSelectedRows[customerId];
+    if (searchKeyword) {
+      updatedData = rows.filter(row =>
+        Object.values(row).some(value =>
+          value && value.toString().toLowerCase().includes(searchKeyword.toLowerCase())
+        )
+      );
     }
-    setSelectedRows(newSelectedRows);
-    onCheckboxChange(customerId, isSelected);
-  };
+    if (startDate && endDate) {
+      updatedData = updatedData.filter(row => {
+        const registerDate = new Date(row.registerDate);
+        return registerDate >= new Date(startDate) && registerDate <= new Date(endDate);
+      });
+    }
+    if (sortConfig.key) {
+      updatedData = [...updatedData].sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'ascending' ? -1 : 1;
+        if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'ascending' ? 1 : -1;
+        return 0;
+      });
+    }
 
-  // const handleInputChange = (e, accessor) => {
-  //   setEditingRowData({
-  //     ...editingRowData,
-  //     [accessor]: e.target.value,
-  //   });
-  // };
-//   const handleDoubleEditmodeClick = () => {
-//     setOnUpdateMode(true);
-//     console.log(onUpdateMode)
-// }
-const handleInputChange = (e, accessor) => {
-  setEditingRowData({
-    ...editingRowData,
-    [accessor]: e.target.value,
-  });
-  // console.log("editingRowData", editingRowData)
-};
+    setFilteredData(updatedData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+  }, [rows, currentPage, rowsPerPage, searchKeyword, sortConfig, startDate, endDate]);
+
+  //각 행 중 특정컬럼선택시 모달창 보기
   const handleNameClick = (rowData) => {
-    setModalData(rowData);
-    setShowModal(true);
+    setModalData_viewDetail(rowData);
+    setShowModal_viewDetail(true);
   };
 
-  const handleModalSave = async (updatedData) => {
-    try {
-      await instance.put(`/customer/info/${updatedData.customerId}`, updatedData);
-      await instance.put(`/customer/grade/${updatedData.customerId}`, updatedData);
-      await fetchTableData();
-      setShowModal(false);
-    } catch (error) {
-      console.error('Error updating customer:', error);
-    }
+  //수정 모드 및 추가 모드에서 입력 데이터
+  const handleInputChange = (e, accessor) => {
+    setEditingRowData({
+      ...editingRowData,
+      [accessor]: e.target.value,
+    });
+
+  };
+
+  const handleAddressSearch = () => {
+    setShowAddressModal(true);
+  };
+
+  const handleSelectAddress = (address) => {
+    setEditingRowData({
+      ...editingRowData,
+      customerAddr: address
+    });
+    setShowAddressModal(false);
   };
 
   return (
@@ -226,14 +236,15 @@ const handleInputChange = (e, accessor) => {
           </tr>
         </thead>
         <tbody className="table-group-divider">
+
           {/* 등록모드 */}
           {onAddMode && (
             <tr>
-               <td className="table-centered"></td>
-               {columns.map((column) => (
-             <td key={column.accessor} className={column.className || 'table-centered'}>
+              <td className="table-centered"></td>
+              {columns.map((column) => (
+                <td key={column.accessor} className={column.className || 'table-centered'}>
                   {column.accessor === 'customerId' ? (
-                    <input type="text" value="자동 생성" className="form-control" readOnly />
+                    <input type="text" value="No." className="form-control" readOnly />
                   ) : column.accessor === 'customerBirthDate' ? (
                     <input
                       type="date"
@@ -249,40 +260,62 @@ const handleInputChange = (e, accessor) => {
                       name={column.accessor}
                       value={new Date().toISOString().split('T')[0]}
                     />
-                   ) : column.accessor === 'customerGrade' ? (
-                      <select
-                        className="form-control"
-                        name={column.accessor}
-                        value={editingRowData[column.accessor] !== undefined ? editingRowData[column.accessor] : '일반'}
-                        onChange={(e) => handleInputChange(e, column.accessor)}
-                      >
-                        <option value="">등급 선택</option>
-                        <option value="우수">우수</option>
-                        <option value="주의">주의</option>
-                        <option value="일반">일반</option>
-                      </select>
-                  ) : (
-                    <input
-                      type="text"
-                      placeholder={column.header}
+                  )  : column.accessor === 'customerGender' ? (
+                    <select
                       className="form-control"
                       name={column.accessor}
-                      value={editingRowData[column.accessor] || ''}
+                      value={editingRowData[column.accessor] !== undefined ? editingRowData[column.accessor] : '일반'}
                       onChange={(e) => handleInputChange(e, column.accessor)}
-                    />
-
+                    >
+                      <option value="">성별 선택</option>
+                      <option value="남성">남성</option>
+                      <option value="여성">여성</option>
+                    </select>
+                  ) : column.accessor === 'customerGrade' ? (
+                    <select
+                      className="form-control"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] !== undefined ? editingRowData[column.accessor] : '일반'}
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    >
+                      <option value="">등급 선택</option>
+                      <option value="우수">우수</option>
+                      <option value="주의">주의</option>
+                      <option value="일반">일반</option>
+                    </select>
+                  ) : (
+                    <div className="input-group">
+                      <input
+                        type="text"
+                        placeholder={column.header}
+                        className="form-control"
+                        name={column.accessor}
+                        value={editingRowData[column.accessor] || ''}
+                        onChange={(e) => handleInputChange(e, column.accessor)}
+                      />
+                      {column.isAddr && (
+                        <Button
+                          className="btn btn-secondary"
+                          type="button"
+                          onClick={handleAddressSearch}
+                        >
+                          주소검색
+                        </Button>
+                      )}
+                    </div>
                   )}
                 </td>
               ))}
             </tr>
           )}
+
           {/* 수정모드 */}
           {onUpdateMode && (
             <tr>
-             <td className="table-centered"></td>
+              <td className="table-centered"></td>
               {columns.map((column) => (
-                <td 
-                  key={column.accessor} 
+                <td
+                  key={column.accessor}
                   className={column.className || 'table-centered'}>
                   {column.accessor === 'customerId' ? (
                     <input type="text" value={editingRowData[column.accessor] || '자동 생성'} className="form-control" readOnly />
@@ -338,6 +371,8 @@ const handleInputChange = (e, accessor) => {
               ))}
             </tr>
           )}
+
+          {/* 테이블 렌더링 */}
           {filteredData.map((row, index) => (
             <tr key={index}>
               <td className="table-centered">
@@ -347,68 +382,45 @@ const handleInputChange = (e, accessor) => {
                   onChange={() => handleRowSelect(row.customerId, !selectedRows[row.customerId])}
                 />
               </td>
-
-              {/* {onUpdateMode && editingRowId === row.customerId ? (
-                columns.map((column) => ( */}
-
-                  {/* <td
-                    key={column.accessor}
-                    className={column.className || 'table-centered'}
-                    onClick={column.isName ? () => handleNameClick(row) : undefined}
-                    style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}
-                  >
-                    <input
-                      type="text"
-                      value={editingRowData[column.accessor] || ''}
-                      onChange={(e) => handleInputChange(e, column.accessor)}
-                    />
-                  </td>
-                ))
-              ) : ( */}
-
-                {columns.map((column) => (
-                  <td
-                    key={column.accessor}
-                    className={column.className || 'table-centered'}
-                    onClick={column.isName ? () => handleNameClick(row) : undefined}
-                    style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}
-                  >
-                    <input
-                      type="text"
-                      style ={{border : 'none'}}
-                      // onDoubleClick={handleDoubleEditmodeClick}
-                      value={column.accessor === 'customerNotes' ? (
-                        Array.isArray(row[column.accessor]) && row[column.accessor].length > 0
-                          ? row[column.accessor][0].notes || '-'
-                          : '-'
-                      ) : (
-                        row[column.accessor]
-                      )}
-                      readOnly
-                    />
-                  </td>
-                ))}
+              {columns.map((column) => (
+                <td
+                  key={column.accessor}
+                  className={column.className || 'table-centered'}
+                  onClick={column.isName ? () => handleNameClick(row) : undefined}
+                  style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}
+                >
+                  <input
+                    type="text"
+                    style={{ border: 'none' }}
+                    // onDoubleClick={handleDoubleEditmodeClick}
+                    value={column.accessor === 'customerNotes' ? (
+                      Array.isArray(row[column.accessor]) && row[column.accessor].length > 0
+                        ? row[column.accessor][0].notes || '-'
+                        : '-'
+                    ) : (
+                      row[column.accessor]
+                    )}
+                    readOnly
+                  />
+                </td>
+              ))}
               {/* )} */}
             </tr>
           ))}
         </tbody>
       </table>
-      <CustomerStatusPagination
-        totalItems={totalItems}
-        itemsPerPage={rowsPerPage}
-        currentPage={currentPage}
-        onPageChange={setCurrentPage}
-      />
-      <br></br>
-      <br></br>
-      <br></br>
-      {showModal && (
+      {showModal_viewDetail && (
         <ViewDetailsModal
-          show={showModal}
-          onHide={() => setShowModal(false)}
-          data={modalData}
+          show={showModal_viewDetail}
+          onHide={() => setShowModal_viewDetail(false)}
+          data={modalData_viewDetail}
           onSave={handleModalSave}
         />)}
+         <AddressSearchModal
+        show={showAddressModal}
+        onHide={() => setShowAddressModal(false)}
+        onSelectAddress={handleSelectAddress}
+      />
     </div>
   );
 }
