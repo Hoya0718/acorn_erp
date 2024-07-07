@@ -68,10 +68,9 @@ const Mgmtmenu = ({
         setOnAddMode(false);
         setOnUpdateMode(false);
     };
+    
     const handleSearchChange = (e) => {
         setSearchKeyword(e.target.value);
-        // setStartDate(e.target.value);
-        // setEndDate(e.target.value);
       };
 
     return (

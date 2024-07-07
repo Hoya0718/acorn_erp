@@ -118,6 +118,8 @@ const CusMgmt = () => {
       setEditingRowData({});
       setOnUpdateMode(false);
 
+      window.location.reload();
+
     } catch (error) {
       console.error('Error updating customer:', error);
     }
@@ -150,7 +152,7 @@ const CusMgmt = () => {
         notes: editingRowData.customerNotes || '', // 기본값 설정
       };
 
-      let responseNotes = null;
+      let responseNotes= { data: { notes: '' } };
       if (editingRowData.customerNotes) {
         newNotesData = {
           customerId,
@@ -167,19 +169,22 @@ const CusMgmt = () => {
       }
       const savedCustomerData = response.data;
       const savedCustomerGrade = responseGrade.data;
+      const savedCustomerNotes = responseNotes.data;
 
-      setData(prevRows =>
-        [...prevRows,
+      setData(prevRows => [
+        ...prevRows,
         {
           ...savedCustomerData,
           customerGrade: savedCustomerGrade.customerGrade,
-          customerNotes: responseNotes ? responseNotes.data.notes : '',
-        }
-        ]);
+          customerNotes: savedCustomerNotes.notes,
+        },
+      ]);
 
       setEditingRowId(null);
       setEditingRowData({});
-      setOnAddMode(false);
+      setOnAddMode(false); 
+
+      window.location.reload();
 
     } catch (error) {
       console.error('Error adding customer:', error);
@@ -191,6 +196,9 @@ const CusMgmt = () => {
       await instance.put(`/customer/info/${updatedData.customerId}`, updatedData);
       await instance.put(`/customer/grade/${updatedData.customerId}`, updatedData);
       setShowModal_viewDetail(false);
+
+      window.location.reload();
+
     } catch (error) {
       console.error('Error updating customer:', error);
     }
@@ -205,6 +213,9 @@ const CusMgmt = () => {
       setData(prevData => prevData.filter(item => !selectedRows[item.customerId]));
       setSelectedRows({});
       setShowModal_deleteCheck(false);
+
+      window.location.reload();
+
     } catch (error) {
       console.error('Error saving changes:', error);
     }
@@ -252,6 +263,7 @@ const CusMgmt = () => {
     setFilteredData(combinedResults.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
     setTotalItems(combinedResults.length);
     setCurrentPage(1);
+    
     } catch (error) {
       console.error('Error fetchSearchResults:', error);
     }

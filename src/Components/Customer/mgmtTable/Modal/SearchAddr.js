@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, FormControl } from 'react-bootstrap';
-import axios from '../../../api/axios';
+import axios from '../../../../api/axios';
 
 const AddressSearchModal = ({ show, onHide, onSelectAddress }) => {
     const [searchText, setSearchText] = useState('');
@@ -27,7 +27,7 @@ const AddressSearchModal = ({ show, onHide, onSelectAddress }) => {
     }, []);
 
     const searchAddress = async () => {
-        if (searchText === '') {
+        if (searchText === 'Enter') {
             alert('주소를 입력해주세요');
             return;
         }
@@ -58,7 +58,7 @@ const AddressSearchModal = ({ show, onHide, onSelectAddress }) => {
                             placeholder="도로명 또는 지번을 입력하세요"
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
-                            onKeyDown={searchAddress}
+                            onKeyDown={(e) => e.key === 'Enter' && searchAddress()}
                         />
                     </div>
                     <div className='col-2'>
@@ -67,7 +67,7 @@ const AddressSearchModal = ({ show, onHide, onSelectAddress }) => {
                         </Button>
                     </div>
                 </div>
-                {loading && <p>검색 중...</p>}
+                {/* {loading && <p>검색 중...</p>} */}
                 <br></br>
                 <ul>
                     {results.map((item, index) => (

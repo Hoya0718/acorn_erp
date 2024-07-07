@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import ViewDetailsModal from './Modal/viewDetailsModal';
 import { Button } from 'react-bootstrap';
-import AddressSearchModal from '../addrAPI/SearchAddr';
+import AddressSearchModal from './Modal/SearchAddr';
 
 const MgmtTable = ({
   data,
@@ -260,6 +260,17 @@ const MgmtTable = ({
                       name={column.accessor}
                       value={new Date().toISOString().split('T')[0]}
                     />
+                  )  : column.accessor === 'customerGender' ? (
+                    <select
+                      className="form-control"
+                      name={column.accessor}
+                      value={editingRowData[column.accessor] !== undefined ? editingRowData[column.accessor] : '일반'}
+                      onChange={(e) => handleInputChange(e, column.accessor)}
+                    >
+                      <option value="">성별 선택</option>
+                      <option value="남성">남성</option>
+                      <option value="여성">여성</option>
+                    </select>
                   ) : column.accessor === 'customerGrade' ? (
                     <select
                       className="form-control"
