@@ -12,7 +12,8 @@ const baseURL_Province = "https://api.vworld.kr/ned/data/admCodeList";
 const baseURL_City = "https://api.vworld.kr/ned/data/admSiList";
 const baseURL_Town = "https://api.vworld.kr/ned/data/admDongList";
 const serverKey_Region = "48C7F5A0-50CE-33A3-89F1-2CF64F2E39DE"; //process.API_KEY_RegionGroup;
-
+const serverKey_Addr = "U01TX0FVVEgyMDI0MDcwNzExMDMxNjExNDg5Nzk=";
+const baseURL_Addr = "https://business.juso.go.kr/addrlink/addrLinkApi.do"
 app.use(cors());
 
 let cachedData = null; // 데이터를 캐싱할 변수
@@ -106,8 +107,35 @@ app.get('/api/towns', async (req, res) => {
     res.status(500).send('Error fetching towns data');
   }
 });
-
+async function fetchAddrData() {
+  try {
+    const response = await axios.get(baseURL_Addr, {
+      params: {
+        confmKey: serverKey_Addr,
+        currentPage: 1, //시도시군구코드
+        countPerPage: 10,
+        keyword: `${searchText}`,
+        resultType: 'json',
+      },
+    });
+    return response.results.juso || [];
+  } catch (error) {
+    console.error('Error fetching Addr data:', error.message);
+    throw error;
+  }
+}
+app.get('/api/addr', async (req, res) => {
+  const { searchText } = req.query;
+  if (!searchText) {
+    return res.status(400).send('searchText code is required');
+  }
+  try {
+    const towns = await fetchTownsData(cityCode);
+    res.json(towns||[]);
+  } catch (error) {
+    res.status(500).send('Error fetching towns data');
+  }
+});
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
-  console.log(`serverKey_Region`,serverKey_Region);
 });
