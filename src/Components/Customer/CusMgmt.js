@@ -191,18 +191,18 @@ const CusMgmt = () => {
     }
   };
 
-  const handleModalSave = async (updatedData) => {
-    try {
-      await instance.put(`/customer/info/${updatedData.customerId}`, updatedData);
-      await instance.put(`/customer/grade/${updatedData.customerId}`, updatedData);
-      setShowModal_viewDetail(false);
+  // const handleModalSave = async (updatedData) => {
+  //   try {
+  //     await instance.put(`/customer/info/${updatedData.customerId}`, updatedData);
+  //     await instance.put(`/customer/grade/${updatedData.customerId}`, updatedData);
+  //     setShowModal_viewDetail(false);
 
-      window.location.reload();
+  //     window.location.reload();
 
-    } catch (error) {
-      console.error('Error updating customer:', error);
-    }
-  };
+  //   } catch (error) {
+  //     console.error('Error updating customer:', error);
+  //   }
+  // };
 
   const handleDeleteClick = async () => {
     try {
@@ -322,6 +322,7 @@ const CusMgmt = () => {
 
       <MgmtTable
         data={filteredData}
+        setData={setData}
         currentPage={currentPage}
         rowsPerPage={rowsPerPage}
         onAddMode={onAddMode}
@@ -338,7 +339,7 @@ const CusMgmt = () => {
         formatDate={formatDate}
         setCurrentPage={setCurrentPage}
 
-        handleModalSave={handleModalSave}
+        // handleModalSave={handleModalSave}
         setModalData_viewDetail={setModalData_viewDetail}
         modalData_viewDetail={modalData_viewDetail}
         setShowModal_viewDetail={setShowModal_viewDetail}

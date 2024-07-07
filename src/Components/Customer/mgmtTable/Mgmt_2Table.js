@@ -7,7 +7,7 @@ import { Button } from 'react-bootstrap';
 import AddressSearchModal from './Modal/SearchAddr';
 
 const MgmtTable = ({
-  data,
+  data,setData,
   rowsPerPage, currentPage, setCurrentPage,
   onAddMode, onUpdateMode,
   onCheckboxChange, selectedRows, setSelectedRows,
@@ -415,6 +415,7 @@ const MgmtTable = ({
           onHide={() => setShowModal_viewDetail(false)}
           data={modalData_viewDetail}
           onSave={handleModalSave}
+          setData={setData}
         />)}
          <AddressSearchModal
         show={showAddressModal}
