@@ -107,35 +107,35 @@ app.get('/api/towns', async (req, res) => {
     res.status(500).send('Error fetching towns data');
   }
 });
-async function fetchAddrData() {
-  try {
-    const response = await axios.get(baseURL_Addr, {
-      params: {
-        confmKey: serverKey_Addr,
-        currentPage: 1, //시도시군구코드
-        countPerPage: 10,
-        keyword: `${searchText}`,
-        resultType: 'json',
-      },
-    });
-    return response.results.juso || [];
-  } catch (error) {
-    console.error('Error fetching Addr data:', error.message);
-    throw error;
-  }
-}
-app.get('/api/addr', async (req, res) => {
-  const { searchText } = req.query;
-  if (!searchText) {
-    return res.status(400).send('searchText code is required');
-  }
-  try {
-    const towns = await fetchTownsData(cityCode);
-    res.json(towns||[]);
-  } catch (error) {
-    res.status(500).send('Error fetching towns data');
-  }
-});
+// async function fetchAddrData() {
+//   try {
+//     const response = await axios.get(baseURL_Addr, {
+//       params: {
+//         confmKey: serverKey_Addr,
+//         currentPage: 1, //시도시군구코드
+//         countPerPage: 10,
+//         keyword: `${searchText}`,
+//         resultType: 'json',
+//       },
+//     });
+//     return response.results.juso || [];
+//   } catch (error) {
+//     console.error('Error fetching Addr data:', error.message);
+//     throw error;
+//   }
+// }
+// app.get('/api/addr', async (req, res) => {
+//   const { searchText } = req.query;
+//   if (!searchText) {
+//     return res.status(400).send('searchText code is required');
+//   }
+//   try {
+//     const towns = await fetchTownsData(cityCode);
+//     res.json(towns||[]);
+//   } catch (error) {
+//     res.status(500).send('Error fetching towns data');
+//   }
+// });
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

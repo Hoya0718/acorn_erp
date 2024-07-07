@@ -192,8 +192,17 @@ const MgmtTable = ({
     });
 
   };
+
   const handleAddressSearch = () => {
     setShowAddressModal(true);
+  };
+
+  const handleSelectAddress = (address) => {
+    setEditingRowData({
+      ...editingRowData,
+      customerAddr: address
+    });
+    setShowAddressModal(false);
   };
 
   return (
@@ -399,6 +408,7 @@ const MgmtTable = ({
          <AddressSearchModal
         show={showAddressModal}
         onHide={() => setShowAddressModal(false)}
+        onSelectAddress={handleSelectAddress}
       />
     </div>
   );
