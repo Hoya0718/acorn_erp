@@ -3,6 +3,7 @@ import { GrDocumentUpload } from "react-icons/gr";
 import { HiPrinter } from "react-icons/hi2";
 
 const ExcelPrint = ({vendors}) => {
+  
     // vendors 객체를 prop으로 전달받아 배열로 변환 
     const csvData = vendors.map(vendor => ({
         vendorName: vendor.vendorName,

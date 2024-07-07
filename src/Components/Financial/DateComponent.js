@@ -5,6 +5,7 @@ const DateComponent = ({ onChange }) => {
   const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
+    // 초기화 시 오늘 날짜 설정
     const today = new Date();
     const year = today.getFullYear();
     let month = today.getMonth() + 1;
@@ -25,13 +26,13 @@ const DateComponent = ({ onChange }) => {
 
   const handleStartDateChange = (event) => {
     const value = event.target.value;
-    setStartDate(value); // 상태 업데이트
+    setStartDate(value); // 시작 날짜 업데이트
     onChange(value, endDate); // 변경된 값을 사용하여 onChange 호출
   };
 
   const handleEndDateChange = (event) => {
     const value = event.target.value;
-    setEndDate(value); // 상태 업데이트
+    setEndDate(value); // 종료 날짜 업데이트
     onChange(startDate, value); // 변경된 값을 사용하여 onChange 호출
   };
 

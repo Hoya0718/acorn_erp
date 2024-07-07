@@ -12,8 +12,13 @@ const BoardPost = () => {
     e.preventDefault();
 
     try {
+      // 현재 날짜를 포맷팅하여 postDate 변수에 저장
+      const currentDate = new Date();
+      const formattedDate = currentDate.toISOString().slice(0, 10); // YYYY-MM-DD 형식으로 포맷
+
       const formData = {
         title: title,
+        postDate: formattedDate, // 포맷팅된 현재 날짜
         content: content
       };
 

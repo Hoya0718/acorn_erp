@@ -6,6 +6,7 @@ export const fetchPurchases = async (setPurchases) => {
   try {
     const response = await axios.get('/purchase/list');
     setPurchases(response.data);
+    console.log(response.data);
   } catch (error) {
     console.error('Error fetching purchases:', error);
   }
@@ -272,4 +273,3 @@ export const useSortableData = (items, initialSortConfig = { key: null, directio
 
   return { items: sortedItems, requestSort, sortConfig };
 };
-

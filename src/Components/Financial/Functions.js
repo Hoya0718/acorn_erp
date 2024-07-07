@@ -1,71 +1,69 @@
-import axios from '../../../api/axios';
-import DangerAlert from './DangerAlert';
-import { useState, useMemo } from 'react';
+import axios from '../../api/axios';
 
-
-export const handleSearch = async (searchTerm) => {
-  try {
-    const response = await fetch(`/vendor/search?keyword=${searchTerm}`);
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+// 아이템 데이터 가져오기
+export const fetchItems = async () => {
+    try {
+        console.log('Fetching items...');
+        const response = await axios.get('/items');
+        console.log("Item 데이터 호출 성공:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching items:', error);
+        return [];
     }
-    const data = await response.json();
-    return data; // 검색 결과를 반환
-  } catch (error) {
-    console.error('Error fetching search results:', error);
-    throw error; // 에러를 다시 throw하여 상위 컴포넌트에서 처리할 수 있도록 함
-  }
 };
 
-export const sortVendors = (vendors, sortBy, sortOrder) => {
-  return [...vendors].sort((a, b) => {
-    if (!sortBy) {
-      return a.vendorCode.toString().localeCompare(b.vendorCode.toString());
+// 주문 데이터 가져오기
+export const fetchOrders = async () => {
+    try {
+        console.log('Fetching orders...');
+        const response = await axios.get('/orders');
+        console.log("Order 데이터 호출 성공:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        return [];
     }
-
-    let aValue = a[sortBy];
-    let bValue = b[sortBy];
-
-    if (typeof aValue !== 'string') {
-      aValue = aValue.toString();
-    }
-    if (typeof bValue !== 'string') {
-      bValue = bValue.toString();
-    }
-
-    return sortOrder === 'ascending' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
-  });
 };
 
-export const useSortableData = (items, initialSortConfig = { key: null, direction: 'ascending' }) => {
-  const [sortConfig, setSortConfig] = useState(initialSortConfig);
+// combinedData 조합하기
+export const combineData = (orders, items) => {
+    if (orders.length === 0 || items.length === 0) return [];
 
-  const sortedItems = useMemo(() => {
-    if (!Array.isArray(items)) {
-      return []; // items가 배열이 아니면 빈 배열 반환
-    }
-    let sortableItems = [...items];
-    if (sortConfig.key !== null) {
-      sortableItems.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-    return sortableItems;
-  }, [items, sortConfig]);
+    const combined = orders.map(order => {
+        const item = items.find(item => item.itemName === order.itemName);
+        return {
+            itemCode: item ? item.itemCode : '',
+            itemType: item ? item.itemType : '',
+            itemName: order.itemName,
+            orderDate: order.orderDate,
+            orderStatus: order.orderStatus,
+            orderPrice: order.orderPrice,
+            orderTotalPrice: order.orderTotalPrice,
+            itemQty: order.itemQty
+        };
+    });
 
-  const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
+    return combined;
+};
 
-  return { items: sortedItems, requestSort, sortConfig };
+// 총매출 계산하기
+export const calculateTotalSales = (combinedData) => {
+    return combinedData.reduce((acc, data) => acc + data.orderTotalPrice, 0);
+};
+
+// 데이터 필터링하기
+export const filterData = (searchTerm, combinedData) => {
+    let filteredBySearch = combinedData;
+
+    if (searchTerm.trim() !== '') {
+        const regex = new RegExp(searchTerm, 'i');
+        filteredBySearch = combinedData.filter(data =>
+            regex.test(data.itemName) ||
+            (typeof data.itemCode === 'string' && data.itemCode.includes(searchTerm)) ||
+            (typeof data.itemCode === 'number' && data.itemCode.toString().includes(searchTerm))
+        );
+    }
+
+    return filteredBySearch;
 };

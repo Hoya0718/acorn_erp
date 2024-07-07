@@ -29,8 +29,8 @@ const ExcelPrint = ({ purchases }) => {
         target="_blank"
       >
        <button><GrDocumentUpload size={16}/> 엑셀 다운</button>
-        </CSVLink>
-        <button onClick={handlePrint}><HiPrinter size={16}/> 인쇄</button>
+      </CSVLink>
+      <button onClick={handlePrint}><HiPrinter size={16}/> 인쇄</button>
     </div>
   );
 };
