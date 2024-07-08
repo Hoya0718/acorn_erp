@@ -150,7 +150,7 @@ const DistributionMgmt = () => {
     // 새로운 물류 추가 처리
     const handleAddDistribution = async (newDistribution) => {
         try {
-            const response = await axios.post('/distribution', newDistribution);
+            const response = await axios.post('/materials', newDistribution);
             setItems([...items, response.data]);
         } catch (error) {
             console.error("Error adding distribution:", error);

@@ -14,11 +14,12 @@ import "./Materials.css";
 const MaterialsMgmt = () => {
     // 초기 상태를 정의
     const initialNewItemState = {
-        id: null,
+        id: '',
         materialsCode: '',
         materialsName: '',
+        receiptDate: '',
         price: '',
-        quantity:'',
+        quantity: '',
         vendorCode: ''
     };
 
@@ -36,7 +37,6 @@ const MaterialsMgmt = () => {
     const [startDate, setStartDate] = useState("");  // 시작 날짜
     const [endDate, setEndDate] = useState("");  // 종료 날짜
     const [sortMaterials, setSortMaterials] = useState('asc'); // 정렬 방향 추가
-    const [distributionData, setDistributionData] = useState([]); // 구매 데이터 추가
 
     useEffect(() => {
         fetchItems();
@@ -52,18 +52,6 @@ const MaterialsMgmt = () => {
             console.error("Error fetching items:", error);
         }
     };
-        // 백엔드 API에서 distribution 항목을 가져와 items 상태를 업데이트, 오류가 발생하면 콘솔에 출력
-        const fetchDistributionItems = async () => {
-            try {
-                console.log("물류 데이터 함수 호출!")
-                const response = await axios.get('/distribution');
-                setDistributionData(response.data); // 구매 데이터 업데이트
-                console.log("물류 데이터 성공!")
-                console.log(response.data);
-            } catch (error) {
-                console.error("Error fetching distribution items:", error);
-            }
-        };
 
     const handleSelectAll = () => {
         setCheckAll(!checkAll);
@@ -242,7 +230,7 @@ const MaterialsMgmt = () => {
     const handleExcelDownload = () => {
         const worksheet = XLSX.utils.json_to_sheet(items);
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Materialss");
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Materials");
 
         // 워크북을 바이너리 형식으로 변환
         const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
@@ -307,46 +295,40 @@ const MaterialsMgmt = () => {
 
             {/* 테이블 영역 */}
             <section className="materials-table-container">
-                <br/><br/><br/>
-                {/* <table className='materials-table'>
+                <table className='materials-table'>
                     <thead>
                         <tr>
                             <th><input type="checkbox" onChange={handleSelectAll} checked={checkAll} /></th>
-                            <th onClick={() => handleSortChange('itemCode')}>
-                                품목코드{/* 품목코드 {sortOption === 'itemCode' && sortMaterials === 'asc' ? '▲' : '▼'} */}
-                            {/* </th>
-                            <th onClick={() => handleSortChange('itemName')}>
-                                품목이름{/*  {sortOption === 'itemName' && sortMaterials === 'asc' ? '▲' : '▼'} */}
-                            {/* </th>
+                            <th onClick={() => handleSortChange('materialsCode')}>
+                                품목코드 {sortOption === 'materialsCode' && sortMaterials === 'asc' ? '▲' : '▼'}
+                            </th>
+                            <th onClick={() => handleSortChange('materialsName')}>
+                                품목이름 {sortOption === 'materialsName' && sortMaterials === 'asc' ? '▲' : '▼'}
+                            </th>
                             <th onClick={() => handleSortChange('receiptDate')}>
-                                입고일자{/*  {sortOption === 'receiptDate' && sortMaterials === 'asc' ? '▲' : '▼'} */}
-                            {/* </th>
-                            <th>발주수량</th>
-                            <th>입고수량</th>
-                            <th>기초재고</th>
-                            <th>출고수량</th>
-                            <th>집계재고</th>
-                            <th>입고예정일</th>
-                            {showNewItemForm && <th></th>} */}
-                        {/* </tr>
+                                입고일자 {sortOption === 'receiptDate' && sortMaterials === 'asc' ? '▲' : '▼'}
+                            </th>
+                
+                            <th>가격</th>
+                            <th>수량</th>
+                            <th>거래처코드</th>
+                            {showNewItemForm && <th></th>}
+                        </tr>
                     </thead>
-                    <tbody> */} 
+                    <tbody>
                         
-                        {/* {showNewItemForm &&
+                        {showNewItemForm &&
                             <MaterialsAdd
                                 onAddMaterials={handleAddMaterials}
                                 handleCancelClick={handleCancelClick}
-                                fetchDistributionItems={fetchDistributionItems}
-                                distributionData={distributionData} 
-                                checkAll={checkAll}
                             />
-                        } */}
+                        }
                         {/* 물류 테이블 데이터 */}
-                        {/* {itemsToRender.map(item => (
+                        {itemsToRender.map(item => (
                             <tr key={item.id}>
                                 <td><input type="checkbox" onChange={() => handleCheckboxChange(item.id)} checked={selectedItems.includes(item.id)} /></td>
                                 {/* 수정 중인 항목 */}
-                                {/* {editingItemId === item.id ? (
+                                {editingItemId === item.id ? (
                                     <MaterialsUpdate
                                         item={item}
                                         handleInputChange={handleInputChange}
@@ -354,21 +336,22 @@ const MaterialsMgmt = () => {
                                     />
                                 ) : (
 
-                                   
-                               
+                                    // 일반 데이터 표시
+                                    <>
+                                        <td>{item.materialsCode}</td>
+                                        <td>{item.materialsName}</td>
+                                        <td>{item.receiptDate}</td>
+                                        <td>{item.price}</td>
+                                        <td>{item.quantity}</td>
+                                        <td>{item.vendorCode}</td>
+                                    </>
                                 )}
-                            </tr> 
-                        // ))} */} 
-                                    <MaterialsAdd
-                                    onAddMaterials={handleAddMaterials}
-                                    handleCancelClick={handleCancelClick}
-                                    fetchDistributionItems={fetchDistributionItems}
-                                    distributionData={distributionData} 
-                                    checkAll={checkAll} 
-                                    handleSelectAll={handleSelectAll}
-                                    />
-                    {/* </tbody>
-                </table> */}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                
             </section>
             
             {/* 하단 버튼 영역 */}
@@ -380,4 +363,4 @@ const MaterialsMgmt = () => {
     );
 };
 
-export default MaterialsMgmt; 
+export default MaterialsMgmt; //
