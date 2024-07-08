@@ -121,7 +121,7 @@ const OrderMgmt = () => {
   return (
     <div className="Orders">
       <div className="Middle classification">
-        <h4> 주문 관리 </h4>
+        <h3> 주문 관리 </h3>
       </div>
       <hr />
 
@@ -157,7 +157,7 @@ const OrderMgmt = () => {
           <input type="text" placeholder='🔍 검색' /><button>조회</button>
         </div>
       </div>
-      <br />
+      {/* <br /> */}
       <div>
         <section>
           <OrderTable 

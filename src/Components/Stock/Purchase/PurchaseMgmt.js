@@ -119,7 +119,7 @@ const PurchaseMgmt = () => {
           )}
         </span>
       </div>
-      <br />
+      {/* <br /> */}
 
       <div className="searcher">
         <div className="left">
@@ -128,10 +128,9 @@ const PurchaseMgmt = () => {
 
         <div className="right">
           <input type="text" placeholder='🔍 품목명으로 조회' value={searchTerm} onChange={handleSearchChange} />
-          <button onClick={handleSearch}>조회 &gt;</button>
+          <button onClick={handleSearch}>조회</button>
         </div>
       </div>
-      <br />
 
       <PurchaseList
         purchases={filteredData}

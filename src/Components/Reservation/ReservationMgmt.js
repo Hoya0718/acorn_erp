@@ -192,8 +192,8 @@ const ReservationMgmt = () => {
           <div className="body_flow">
             <div className="row">
               <div className="col--12"></div>
-              <h4>예약 관리</h4>
-              <hr/>
+              <h3>예약 관리</h3>
+              <hr style={{    margin: "1rem 0"}}/>
               <div className="col-md-7 col-xs-12">
                 <div className="left">
                   <div className="Middle classification">
@@ -250,9 +250,6 @@ const ReservationMgmt = () => {
             </div>
           </div>
         </div>
-      </div>
-      <div id="footer_Frame">
-        <footer></footer>
       </div>
       <ReservationModal
         show={showModal}

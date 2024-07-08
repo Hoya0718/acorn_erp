@@ -14,7 +14,7 @@ const Customer_status = () => {
     <div className="Customer_status">
       <div className="row">
         <div className="col title">
-          <span> 회원 현황 </span>
+          <h3> 회원 현황 </h3>
         </div>
         <div className="col-3  righted" >
           <a href={"/layout/customerMgmt/statusDataMain"}>

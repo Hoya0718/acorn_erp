@@ -17,27 +17,30 @@ const Board = () => {
   const [userInfo, setUserInfo] = useState(null);
 
 
-  useEffect(() => {
-    fetchPosts();
+   useEffect(() => {
+   fetchPosts();
 
-  }, [sortBy, sortOrder]); // sortBy, sortOrder가 변경될 때마다 useEffect가 다시 실행됨
+   }, [sortBy, sortOrder]); // sortBy, sortOrder가 변경될 때마다 useEffect가 다시 실행됨
 
 
-    fetchUserInfo();
+   useEffect(() => {
+    // 컴포넌트가 마운트될 때 한 번만 실행되어야 하는 fetchUserInfo 함수 호출
+    // fetchUserInfo();
   }, []);
+  
 
 
-  // 사용자 정보를 가져오는 함수
-  const fetchUserInfo = async () => {
-    try {
-      const userInfo = await getUserInfo();
-      console.log('User Info:커뮤니티 ', userInfo);
-      console.log("아이디" + userInfo.id);
-      setUserInfo(userInfo);
-    } catch (error) {
-      console.error('Error fetching user info: 커뮤니티', error);
-    }
-  };
+  // // 사용자 정보를 가져오는 함수
+  // const fetchUserInfo = async () => {
+  //   try {
+  //     const userInfo = await getUserInfo();
+  //     console.log('User Info:커뮤니티 ', userInfo);
+  //     console.log("아이디" + userInfo.id);
+  //     setUserInfo(userInfo);
+  //   } catch (error) {
+  //     console.error('Error fetching user info: 커뮤니티', error);
+  //   }
+  // };
   
   // 게시물 데이터를 서버에서 가져오는 함수
 
@@ -92,8 +95,8 @@ const Board = () => {
         <Link to="/layout/post" className="board-button board-write-button" style={{textDecoration: 'none'}}>글쓰기</Link>
       </div>
 
-      <div className="board-table">
-        <table>
+      <div>
+        <table className="board-table">
           <thead>
             <tr>
               <th>번호</th>
@@ -104,7 +107,7 @@ const Board = () => {
               <th>댓글</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className='board-tbody'>
             {posts.map(post => (
               <tr key={post.id}>
                 <td>{post.id}</td>

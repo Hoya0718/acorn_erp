@@ -288,7 +288,7 @@ const CusMgmt = () => {
   return (
     <div>
       <div className="Middle classification">
-        <span>회원 관리</span>
+        <h3>회원 관리</h3>
       </div>
       <hr />
       <MgmtMenu

@@ -64,14 +64,13 @@
 .board-write-form .button-group {
   display: flex;
   justify-content: flex-end; /* 우측 정렬 */
-  gap: 10px; /* 버튼 간격 설정 */
-}
+  }
 
 .board-write-form .button-group .btn {
-  width: 120px; /* 버튼 너비 설정 */
-  padding: 12px; /* 패딩 설정 */
+  width: 75px; /* 버튼 너비 설정 */
+  padding: 10px; /* 패딩 설정 */
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 14px;
   display: flex; /* 플렉스박스 사용 */
   align-items: center; /* 수직 중앙 정렬 */
   justify-content: center; /* 수평 중앙 정렬 */

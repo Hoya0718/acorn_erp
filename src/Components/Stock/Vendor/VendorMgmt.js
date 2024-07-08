@@ -59,12 +59,12 @@ const VendorMgmt = () => {
            <button onClick={() => handleCancelForm(setIsAddClicked, setIsUpdateClicked, setNewVendor, setUpdateVendor)}>취소</button>
           )}
         </span>
-      </div> <br />
+      </div>
      
       <div className="searcher">
-        <div className="right">
+        <div className="right" style={{marginBottom: "-15px"}}>
           <input type="text" placeholder='🔍 거래처명으로 조회' value={searchTerm} onChange={handleSearchChange} />
-          <button onClick={handleSearch}>조회 &gt;</button>
+          <button onClick={handleSearch}>조회</button>
         </div>
       </div><br />
       
