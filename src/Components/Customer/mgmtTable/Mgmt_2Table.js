@@ -16,7 +16,8 @@ const MgmtTable = ({
   handleModalSave,
   modalData_viewDetail, setModalData_viewDetail,
   showModal_viewDetail, setShowModal_viewDetail,
-  searchKeyword, startDate, endDate
+  searchKeyword, startDate, endDate,
+  
 
 }) => {
   //테이블 데이터 
@@ -98,6 +99,7 @@ const MgmtTable = ({
 
   //체크박스: 전체 행 선택
   const handleSelectAll = () => {
+    if (onUpdateMode||onAddMode) return; 
     const newSelectAll = !selectAll;
     setSelectAll(newSelectAll);
 
@@ -114,6 +116,7 @@ const MgmtTable = ({
   };
   //체크박스: 선택한 행 선택
   const handleRowSelect = (customerId, isSelected) => {
+    if (onUpdateMode||onAddMode) return; 
     const newSelectedRows = { ...selectedRows };
 
     console.log("handleRowSelect 실행")

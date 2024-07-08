@@ -5,11 +5,9 @@ import "../../Main/Main.css"
 import "../Customer.css"
 
 const CustomerStatusPagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => {
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  // if (totalItems === 0) return null;
 
-  // console.log("totalPages",totalPages)
-  // console.log("totalItems",totalItems)
-  // console.log("itemsPerPage",itemsPerPage)
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -21,8 +19,13 @@ const CustomerStatusPagination = ({ totalItems, itemsPerPage, currentPage, onPag
     const pageNumbers = [];
     const startPage = Math.max(1, currentPage - 2);
     const endPage = Math.min(totalPages, currentPage + 2);
+
     console.log("startPage",startPage)
     console.log("endPage",endPage)
+    console.log("totalItems",totalItems)
+    console.log("totalPages",totalPages)
+    console.log("currentPage",currentPage)
+
     for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(
         <li key={i} className={`page-item ${i === currentPage ? 'active' : ''}`}>
