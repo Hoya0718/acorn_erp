@@ -350,7 +350,7 @@ const CusMgmt = () => {
         endDate={endDate} 
       />
       <div className='row'>
-        <div className='col-10'>
+        <div className='col-10 col-md-8'>
           <CustomerStatusPagination
             totalItems={totalItems}
             itemsPerPage={rowsPerPage}
@@ -358,7 +358,7 @@ const CusMgmt = () => {
             onPageChange={setCurrentPage}
           />
         </div>
-        <div className='col-2'>
+        <div className='col-2 col-md-4'>
           <ExcelPrint
             printData={filteredData}
             columns={columns}

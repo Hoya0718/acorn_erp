@@ -117,3 +117,46 @@
   opacity: 1;
   visibility: visible;
 }
+
+.custom-carousel-control .carousel-control-prev-icon,
+.custom-carousel-control .carousel-control-next-icon {
+  /* background-color: gray; 화살표 색상 */
+  width: 50px; /* 화살표 너비 */
+  height: 50px; /* 화살표 높이 */
+  filter: invert(1) sepia(1) saturate(5) hue-rotate(180deg); 
+}
+
+.carousel-control-prev-icon::before,
+.carousel-control-next-icon::before {
+  font-size: 2rem; /* 화살표 크기 */
+  
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 5%; /* 화살표 클릭 영역 너비 */
+}
+
+.carousel-control-prev {
+  left: -50px; /* 왼쪽으로 50px 이동 */
+}
+
+.carousel-control-next {
+  right: -50px; /* 오른쪽으로 50px 이동 */
+}
+
+
+.carousel-control-prev,
+.carousel-control-next {
+  position: absolute;
+  top: 50%;
+  width: 5%; /* 화살표 클릭 영역 너비 */
+}
+
+.carousel-control-prev {
+  transform: translateX(-50%);
+}
+
+.carousel-control-next {
+  transform: translateX(50%);
+}
