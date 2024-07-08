@@ -1,22 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, Outlet, Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { Slide, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Layout.css';
 import MemoPad from './MemoPad';
 import ThemeToggle from './ThemeToggle';
 import LogoutIcon from './LogoutIcon';
-import 'react-toastify/dist/ReactToastify.css';
-
 
 const Layout = () => {
   const [expandedItem, setExpandedItem] = useState(null);
-
-    const location = useLocation();
-    //const { shopName } = location.state; // shopName 가져오기
+  const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
-    //toast.success(`${shopName} 님, 안녕하세요!`);
+    // 세션 스토리지에서 사용자 정보 가져오기
+    const userInfoFromStorage = sessionStorage.getItem('userInfo');
+    
+    if (userInfoFromStorage) {
+      const user = JSON.parse(userInfoFromStorage);
+      setUserInfo(user);
+
+      // 환영 메시지가 이미 표시되었는지 확인
+      const hasWelcomed = sessionStorage.getItem('hasWelcomed');
+      if (!hasWelcomed) {
+        // 환영 메시지 표시
+        toast.success(`${user.shopName} 님, 안녕하세요!`);
+        // 메시지를 표시한 후 상태 저장
+        sessionStorage.setItem('hasWelcomed', 'true');
+      }
+    }
   }, []);
 
   const handleItemClick = (item) => {
@@ -59,20 +70,17 @@ const Layout = () => {
         </main>
       </div>
       <ToastContainer
-      position="top-center"
-      transition={Slide}
-      autoClose={2000}
-      hideProgressBar={true}
-      closeOnClick
-      rtl={false}
-      limit={1}
+        position="top-center"
+        transition={Slide}
+        autoClose={2000}
+        hideProgressBar={true}
+        closeOnClick
+        rtl={false}
+        limit={1}
       />
     </div>
   );
 };
-
-
-
 
 const MenuItem = ({ title, subMenuItems, expanded, onClick, path }) => {
   return (
@@ -130,7 +138,6 @@ const menuItems = [
     title: "💭 커뮤니티",
     path: "/layout/board",
   },
-
 ];
 
 export default Layout;

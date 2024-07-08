@@ -6,13 +6,10 @@ import "../Customer.css"
 
 const CustomerStatusPagination = ({ totalItems, itemsPerPage, currentPage, onPageChange }) => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
-  // const startIndex = (currentPage - 1) * itemsPerPage;
-  // const endIndex = startIndex + itemsPerPage;
 
-  console.log("totalPages",totalPages)
-  console.log("totalItems",totalItems)
-  console.log("itemsPerPage",itemsPerPage)
-  console.log("itemsPerPage",itemsPerPage)
+  // console.log("totalPages",totalPages)
+  // console.log("totalItems",totalItems)
+  // console.log("itemsPerPage",itemsPerPage)
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {

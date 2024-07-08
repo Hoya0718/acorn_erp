@@ -6,7 +6,8 @@ const instance = axios.create({
     withCredentials: true, // 세션 쿠키를 포함
     headers : {
         'Content-Type' : 'application/json'
-    }
+    },
+    withCredentials: true // 모든 요청에 쿠키를 포함시킵니다.
 });
 
 export default instance; 
