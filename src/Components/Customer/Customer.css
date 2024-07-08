@@ -27,7 +27,7 @@
   align-items: flex-start;
 }
 /* 테이블 가운데 정렬 */
-  .table-centered {
+.table-centered {
     text-align: center;
 }
 /* 테이블 오른쪽정렬 */
@@ -55,7 +55,7 @@
   color: red !important;
 }
 
-table {
+/* table {
   width: 100%;
   border-collapse: collapse;
 }
@@ -77,7 +77,7 @@ table {
 
 .table .table-row:last-child {
   border-bottom: none;
-}
+} */
 
 
 /* 페이지네이션 스타일 */

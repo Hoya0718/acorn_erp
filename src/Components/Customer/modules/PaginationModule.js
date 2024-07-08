@@ -20,11 +20,11 @@ const CustomerStatusPagination = ({ totalItems, itemsPerPage, currentPage, onPag
     const startPage = Math.max(1, currentPage - 2);
     const endPage = Math.min(totalPages, currentPage + 2);
 
-    console.log("startPage",startPage)
-    console.log("endPage",endPage)
-    console.log("totalItems",totalItems)
-    console.log("totalPages",totalPages)
-    console.log("currentPage",currentPage)
+    // console.log("startPage",startPage)
+    // console.log("endPage",endPage)
+    // console.log("totalItems",totalItems)
+    // console.log("totalPages",totalPages)
+    // console.log("currentPage",currentPage)
 
     for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(
