@@ -8,7 +8,9 @@ const SearchButtonModule = ({ onSearch }) => {
   
   return (
       <span>
-        <Button type="submit" value="조회" className="btn btn-dark" onClick={ onSearch } >조회</Button>
+        <Button type="submit" value="조회" className="btn righted" onClick={ onSearch } 
+        style={{paddingTop: '8px', paddingBottom: '8px', paddingLeft: '15px', paddingRight: '15px'}}>
+          조회</Button>
       </span>
   );
 }

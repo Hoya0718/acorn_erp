@@ -12,20 +12,24 @@ import { Button } from 'react-bootstrap';
 const Customer_status = () => {
   return (
     <div className="Customer_status">
-      <div className="row">
+      <div className="row ">
         <div className="col title">
           <span> 회원 현황 </span>
         </div>
-        <div className="col-3  righted" >
+        <div className="col-3 righted"
+        style={{margin: "0px"}} >
           <a href={"/layout/customerMgmt/statusDataMain"}>
             <Button>
               데이터
             </Button>
           </a>
         </div>
-        <div className="col-1 centered">
+        <div className="col-1 uppered">
           <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#SettingModal">
-            <FontAwesomeIcon icon={faGear} style={{ fontSize: '2em' }} />
+            <FontAwesomeIcon icon={faGear} 
+            style={{ fontSize: '2em',
+
+             }} />
           </button>
         </div>
       </div>
