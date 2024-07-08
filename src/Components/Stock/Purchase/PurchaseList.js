@@ -1,4 +1,4 @@
-import React from 'react';
+import {React, useEffect} from 'react';
 import PurchaseForm from './PurchaseForm'; 
 import './Purchase.css';
 import {
@@ -8,8 +8,8 @@ import {
 } from './Functions';
 
 const PurchaseList = ({
-  purchases, selectedPurchases, selectAll, handleCheckboxChange,
-  handleSelectAll, handleUpdateClick, handleDeleteClick,
+  purchases, selectedPurchases, selectAll, handleCheckboxChange, setFilteredData, 
+  handleSelectAll, handleUpdateClick, handleDeleteClick, filteredData,
   isAddClicked, setIsAddClicked, setIsUpdateClicked, setPurchases, 
   setNewPurchase, setSelectedPurchases, setUpdatePurchase, newPurchase, 
   updatePurchase, isUpdateClicked, sortBy, searchTerm, startDate, endDate
@@ -21,6 +21,10 @@ const PurchaseList = ({
     const direction = sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
     requestSort(key, direction);
   };
+
+  useEffect(() => {
+    setFilteredData(purchases);
+  }, [purchases]);
 
   return (
     <div>
