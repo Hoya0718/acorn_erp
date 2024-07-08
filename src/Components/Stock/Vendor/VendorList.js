@@ -1,6 +1,5 @@
 import {React, useState, useEffect} from 'react';
 import VendorForm from './VendorForm';
-import UpdateModal from './DangerAlert'; 
 import './Vendor.css';
 import {
   handleCheckboxChange, handleSelectAll, handleUpdateClick, handleDeleteClick,
@@ -9,10 +8,10 @@ import {
 } from './Functions';
 
 const VendorList = ({
-  vendors, selectedVendors, selectAll, sortBy, searchTerm, isUpdateClicked,
+  vendors, selectedVendors, selectAll, sortBy, searchTerm, isUpdateClicked, setFilteredData,
   handleCheckboxChange, handleSelectAll, handleUpdateClick, handleDeleteClick,
   isAddClicked, setIsAddClicked, setIsUpdateClicked, setVendors, updateVendor,
-  setNewVendor, setSelectedVendors, setUpdateVendor, newVendor,
+  setNewVendor, setSelectedVendors, setUpdateVendor, newVendor, filteredData
 }) => {
 
   const { items: sortedVendors, requestSort, sortConfig } = useSortableData(vendors, { key: sortBy });
@@ -22,6 +21,9 @@ const VendorList = ({
     requestSort(key, direction);
   };
 
+  useEffect(() => {
+    setFilteredData(vendors);
+  }, [vendors]);
 
 return (
   <div>

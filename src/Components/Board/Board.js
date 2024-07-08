@@ -23,21 +23,21 @@ const Board = () => {
   }, [sortBy, sortOrder]); // sortBy, sortOrder가 변경될 때마다 useEffect가 다시 실행됨
 
 
-    fetchUserInfo();
-  }, []);
+  //   fetchUserInfo();
+  // }, []);
 
 
-  // 사용자 정보를 가져오는 함수
-  const fetchUserInfo = async () => {
-    try {
-      const userInfo = await getUserInfo();
-      console.log('User Info:커뮤니티 ', userInfo);
-      console.log("아이디" + userInfo.id);
-      setUserInfo(userInfo);
-    } catch (error) {
-      console.error('Error fetching user info: 커뮤니티', error);
-    }
-  };
+  // // 사용자 정보를 가져오는 함수
+  // const fetchUserInfo = async () => {
+  //   try {
+  //     const userInfo = await getUserInfo();
+  //     console.log('User Info:커뮤니티 ', userInfo);
+  //     console.log("아이디" + userInfo.id);
+  //     setUserInfo(userInfo);
+  //   } catch (error) {
+  //     console.error('Error fetching user info: 커뮤니티', error);
+  //   }
+  // };
   
   // 게시물 데이터를 서버에서 가져오는 함수
 
