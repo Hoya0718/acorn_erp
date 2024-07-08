@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
 import './Sales.css';
 
-const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmit, orders, selectedOrder, selectedOrders, setSelectedOrders, setIsFormVisible }) => {
+const ItemTable = ({
+  isFormVisible,
+  formData,
+  handleInputChange,
+  handleFormSubmit,
+  items,
+  selectedItem,
+  selectedItems,
+  setSelectedItems,
+  setIsFormVisible
+}) => {
   const [selectAll, setSelectAll] = useState(false);
   const [errors, setErrors] = useState({
     itemCode: '',
@@ -9,27 +19,27 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
     itemStatus: '',
     itemName: '',
     itemQty: '',
-    itemPrice: '',
+    itemPrice: ''
   });
   const [sortConfig, setSortConfig] = useState({ key: '', direction: 'ascending' });
 
   const toggleSelectAll = () => {
     setSelectAll(!selectAll);
     if (!selectAll) {
-      setSelectedOrders([...orders]);
+      setSelectedItems([...items]);
     } else {
-      setSelectedOrders([]);
+      setSelectedItems([]);
     }
   };
 
-  const toggleOrderSelection = (order) => {
-    const selectedIndex = selectedOrders.findIndex((selectedOrder) => selectedOrder.itemCode === order.itemCode);
+  const toggleItemSelection = (item) => {
+    const selectedIndex = selectedItems.findIndex((selectedItem) => selectedItem.itemCode === item.itemCode);
     if (selectedIndex === -1) {
-      setSelectedOrders([...selectedOrders, order]);
+      setSelectedItems([...selectedItems, item]);
     } else {
-      const updatedOrders = [...selectedOrders];
-      updatedOrders.splice(selectedIndex, 1);
-      setSelectedOrders(updatedOrders);
+      const updatedItems = [...selectedItems];
+      updatedItems.splice(selectedIndex, 1);
+      setSelectedItems(updatedItems);
     }
   };
 
@@ -39,7 +49,7 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
       direction = 'descending';
     }
-    const sortedData = [...orders].sort((a, b) => {
+    const sortedData = [...items].sort((a, b) => {
       if (a[key] < b[key]) {
         return direction === 'ascending' ? -1 : 1;
       }
@@ -48,7 +58,7 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
       }
       return 0;
     });
-    setSelectedOrders([]);
+    setSelectedItems([]);
     setSortConfig({ key, direction });
   };
 
@@ -59,13 +69,27 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
     return '▼';
   };
 
-  const handleFormSubmitInternal = (event) => {
-    event.preventDefault();
-    handleFormSubmit();
-    setIsFormVisible(false); // 저장 버튼을 클릭하면 입력 필드가 사라지도록 설정
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.itemType) newErrors.itemType = '구분을 선택하세요.';
+    if (!formData.itemStatus) newErrors.itemStatus = '판매상태를 선택하세요.';
+    if (!formData.itemName) newErrors.itemName = '상품명을 입력하세요.';
+    if (!formData.itemQty || isNaN(formData.itemQty) || parseInt(formData.itemQty) <= 0) newErrors.itemQty = '유효한 수량을 입력하세요.';
+    if (!formData.itemPrice || isNaN(formData.itemPrice) || parseFloat(formData.itemPrice) <= 0) newErrors.itemPrice = '유효한 단가를 입력하세요.';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const sortedOrders = [...orders].sort((a, b) => {
+  const handleFormSubmitInternal = (event) => {
+    event.preventDefault();
+    if (validateForm()) {
+      handleFormSubmit();
+      setIsFormVisible(false); // 저장 버튼을 클릭하면 입력 필드가 사라지도록 설정
+    }
+  };
+
+  const sortedItems = [...items].sort((a, b) => {
     if (sortConfig.key) {
       const direction = sortConfig.direction === 'ascending' ? 1 : -1;
       if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -79,7 +103,7 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
   });
 
   // 전체 선택 체크박스 상태 결정
-  const selectAllCheckboxState = selectAll || (selectedOrders.length === orders.length && orders.length > 0);
+  const selectAllCheckboxState = selectAll || (selectedItems.length === items.length && items.length > 0);
 
   return (
     <div>
@@ -91,12 +115,12 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
             <th onClick={() => handleSort('itemType')}>구분 {getSortDirection('itemType')}</th>
             <th onClick={() => handleSort('itemStatus')}>판매상태 {getSortDirection('itemStatus')}</th>
             <th onClick={() => handleSort('itemName')}>상품명 {getSortDirection('itemName')}</th>
-            <th onClick={() => handleSort('itemQty')}>상품수량(개) {getSortDirection('itemQty')}</th>
+            <th onClick={() => handleSort('itemQty')}>상품수량 {getSortDirection('itemQty')}</th>
             <th onClick={() => handleSort('itemPrice')}>단가(원) {getSortDirection('itemPrice')}</th>
           </tr>
         </thead>
         <tbody>
-          {isFormVisible && !selectedOrder && (
+          {isFormVisible && !selectedItem && (
             <tr>
               <td></td>
               <td>
@@ -176,8 +200,8 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
               </td>
             </tr>
           )}
-          {sortedOrders.map((order, index) => (
-            selectedOrder && selectedOrder.itemCode === order.itemCode ? (
+          {sortedItems.map((item, index) => (
+            selectedItem && selectedItem.itemCode === item.itemCode ? (
               <tr key={index}>
                 <td></td>
                 <td>
@@ -260,13 +284,13 @@ const ItemTable = ({ isFormVisible, formData, handleInputChange, handleFormSubmi
               </tr>
             ) : (
               <tr key={index}>
-                <td><input type="checkbox" checked={selectedOrders.some((selectedOrder) => selectedOrder.itemCode === order.itemCode)} onChange={() => toggleOrderSelection(order)} /></td>
-                <td>{order.itemCode}</td>
-                <td>{order.itemType}</td>
-                <td>{order.itemStatus}</td>
-                <td>{order.itemName}</td>
-                <td>{order.itemQty.toLocaleString()}</td>
-                <td>{order.itemPrice.toLocaleString()}</td>
+                <td><input type="checkbox" checked={selectedItems.some((selectedItem) => selectedItem.itemCode === item.itemCode)} onChange={() => toggleItemSelection(item)} /></td>
+                <td>{item.itemCode}</td>
+                <td>{item.itemType}</td>
+                <td>{item.itemStatus}</td>
+                <td>{item.itemName}</td>
+                <td>{item.itemQty.toLocaleString()} 개</td>
+                <td>{item.itemPrice.toLocaleString()} 원</td>
               </tr>
             )
           ))}

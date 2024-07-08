@@ -13,25 +13,25 @@ const ItemMgmt = () => {
     itemPrice: '',
     itemQty: ''
   });
-  
-  const [orders, setOrders] = useState([]);
-  const [selectedOrders, setSelectedOrders] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  const [items, setItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchOrders();
+    fetchItems();
   }, []);
 
-  const fetchOrders = async () => {
+  const fetchItems = async () => {
     setLoading(true);
     try {
       const response = await axios.get('/items');
-      const fetchedOrders = response.data;
-      const sortedOrders = fetchedOrders.sort((a, b) => new Date(b.itemCode) - new Date(a.itemCode));
-      setOrders(sortedOrders);
+      const fetchedItems = response.data;
+      const sortedItems = fetchedItems.sort((a, b) => new Date(b.itemCode) - new Date(a.itemCode));
+      setItems(sortedItems);
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      console.error('Error fetching items:', error);
     } finally {
       setLoading(false);
     }
@@ -39,41 +39,30 @@ const ItemMgmt = () => {
 
   const handleAddButtonClick = () => {
     setIsFormVisible(true);
-    setSelectedOrder(null); 
+    setSelectedItem(null); 
     clearFormData();
   };
 
-  const handleUpdateButtonClick = () => {
-    if (selectedOrders.length === 1) {
-      setIsFormVisible(true);
-      setSelectedOrder(selectedOrders[0]);
-      setFormData(selectedOrders[0]);
-    } else {
-      alert("하나의 항목만 선택하세요.");
-    }
-  };
-
   const handleSave = async () => {
-    // 유효성 검사 등 필요한 로직 추가
     try {
       let response = null;
-      if (selectedOrder) {
-        response = await axios.put(`/items/${selectedOrder.itemCode}`, formData);
+      if (selectedItem) {
+        response = await axios.put(`/items/${selectedItem.itemCode}`, formData);
       } else {
         response = await axios.post('/items', formData);
       }
-      const updatedOrder = response.data;
+      const updatedItem = response.data;
 
-      const updatedOrders = [...orders];
-      if (selectedOrder) {
-        const index = updatedOrders.findIndex(order => order.itemCode === selectedOrder.itemCode);
+      const updatedItems = [...items];
+      if (selectedItem) {
+        const index = updatedItems.findIndex(item => item.itemCode === selectedItem.itemCode);
         if (index !== -1) {
-          updatedOrders[index] = { ...updatedOrder };
+          updatedItems[index] = { ...updatedItem };
         }
       } else {
-        updatedOrders.unshift(updatedOrder);
+        updatedItems.unshift(updatedItem);
       }
-      setOrders(updatedOrders);
+      setItems(updatedItems);
 
       handleSaveSuccess();
     } catch (error) {
@@ -84,7 +73,7 @@ const ItemMgmt = () => {
   const handleSaveSuccess = () => {
     setIsFormVisible(false);
     clearFormData();
-    setSelectedOrders([]);
+    setSelectedItems([]);
   };
 
   const clearFormData = () => {
@@ -96,7 +85,7 @@ const ItemMgmt = () => {
       itemPrice: '',
       itemQty: ''
     });
-    setSelectedOrder(null); 
+    setSelectedItem(null); 
   };
 
   const handleInputChange = (e) => {
@@ -107,16 +96,27 @@ const ItemMgmt = () => {
     });
   };
 
+  //삭제 기능
   const handleDeleteClick = async () => {
     if (window.confirm('선택한 항목을 삭제하시겠습니까?')) {
       try {
-        const itemCodes = selectedOrders.map(order => order.itemCode);
+        const itemCodes = selectedItems.map(item => item.itemCode);
         await Promise.all(itemCodes.map(itemCode => axios.delete(`/items/${itemCode}`)));
-        fetchOrders();
-        setSelectedOrders([]);
+        fetchItems();
+        setSelectedItems([]);
       } catch (error) {
         console.error('주문 삭제 중 오류 발생:', error);
       }
+    }
+  };
+
+  const handleUpdateButtonClick = () => {
+    if (selectedItems.length === 1) {
+      setIsFormVisible(true);
+      setSelectedItem(selectedItems[0]);
+      setFormData(selectedItems[0]);
+    } else {
+      alert("하나의 항목만 선택하세요.");
     }
   };
 
@@ -159,11 +159,11 @@ const ItemMgmt = () => {
             formData={formData}
             handleInputChange={handleInputChange}
             handleFormSubmit={handleSave}
-            orders={orders}
-            selectedOrder={selectedOrder}
-            selectedOrders={selectedOrders}
-            setSelectedOrders={setSelectedOrders}
-            setIsFormVisible={setIsFormVisible} // 부모 컴포넌트로부터 추가된 prop
+            items={items}
+            selectedItem={selectedItem}
+            selectedItems={selectedItems}
+            setSelectedItems={setSelectedItems}
+            setIsFormVisible={setIsFormVisible}
           />
         </section>
       </div>
