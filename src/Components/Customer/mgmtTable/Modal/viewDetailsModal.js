@@ -14,7 +14,6 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
     React.useEffect(() => {
         setFormData(data);
     }, [data]);
-
     const formatDateForInput = (dateString) => {
         const date = new Date(dateString);
         const year = date.getFullYear();
@@ -47,6 +46,7 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
             console.error('Error saving changes:', error);
         }
     };
+
     const handleSaveNotes = async () => {
         try {
             if (customerNotes) {
@@ -58,7 +58,7 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
 
                 const newNote = {
                     notes: customerNotes,
-                    notesDate: new Date().toISOString().split('T')[0] // 현재 날짜를 ISO 형식으로 설정
+                    notesDate: new Date().toISOString().split('T')[0] 
                 };
 
                 // 상태 업데이트
@@ -73,12 +73,13 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
             console.error('Error saving Notes:', error);
         }
     };
+
     const handleEditNotes = async (index) => {
         try {
             const updatedNotes = {
                 ...formData.customerNotes[index],
                 notes: customerNotes,
-                notesDate: new Date().toISOString().split('T')[0] // 현재 날짜를 ISO 형식으로 설정
+                notesDate: new Date().toISOString().split('T')[0]
             };
             await instance.put(`/customer/updateNotes/${formData.customerId}`, updatedNotes[index]);
 
@@ -97,13 +98,15 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
     
         try {
             const notesId = formData.customerNotes[index].notesId;
-            
             const response = await instance.delete(`/customer/notes/${notesId}`);
-            console.log(response.data)
-            setFormData(prevFormData => ({
-                ...prevFormData,
-                customerNotes: prevFormData.customerNotes.filter((_, idx) => idx !== index)
-            }));
+            if (response.status === 200) {
+                setFormData(prevFormData => ({
+                    ...prevFormData,
+                    customerNotes: prevFormData.customerNotes.filter((_, idx) => idx !== index)
+                }));
+            } else {
+                console.error('Failed to delete note:', response.data);
+            }
         } catch (error) {
             console.error('Error deleting note:', error);
         }
@@ -303,11 +306,14 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
                                             onChange={(e) => setCustomerNotes(e.target.value)}
                                             onKeyDown={(e) => e.key === 'Enter' && handleSaveNotes()}
                                         />
+                                        
                                         {Array.isArray(formData.customerNotes) && formData.customerNotes.map((note, idx) => (
+                                            formData.customerNotes[0].notes !== '-' ? (    
                                             <React.Fragment key={idx}>
                                                 <div className="row">
                                                     <div className="col-md-3  centered">
                                                         {formatDateForInput(note.notesDate)}
+                                                        
                                                     </div>
                                                     <div className="col-md-7 centered">
                                                         {editNoteIndex === idx ? (
@@ -346,6 +352,7 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
                                                     </div>
                                                 </div>
                                             </React.Fragment>
+                                             ) : null
                                         ))}
                                     </div>
                                 </div>
