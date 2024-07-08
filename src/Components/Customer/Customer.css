@@ -137,14 +137,6 @@
   width: 5%; /* 화살표 클릭 영역 너비 */
 }
 
-.carousel-control-prev {
-  left: -50px; /* 왼쪽으로 50px 이동 */
-}
-
-.carousel-control-next {
-  right: -50px; /* 오른쪽으로 50px 이동 */
-}
-
 
 .carousel-control-prev,
 .carousel-control-next {
@@ -154,9 +146,9 @@
 }
 
 .carousel-control-prev {
-  transform: translateX(-50%);
+  transform: translateX(-80%);
 }
 
 .carousel-control-next {
-  transform: translateX(50%);
+  transform: translateX(80%);
 }

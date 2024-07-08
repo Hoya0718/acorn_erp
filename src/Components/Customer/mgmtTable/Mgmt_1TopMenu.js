@@ -118,8 +118,9 @@ const Mgmtmenu = ({
                         options={dropdownData}
                     />
                 </div>
-                <div className='col-10 righted uppered'
-                style={{ marginBottom: '-15px' }}
+                <div 
+                    className='col-10 righted uppered'
+                    style={{ marginBottom: '-15px' }}
                  >
                     <SearchModule
                        value={searchKeyword}

@@ -64,8 +64,8 @@ const CustomerMain = () => {
       {/* //   )} */}
       {/* // </div> */}
 
-      <div id="carouselExample" class="carousel slide" style={{ display: "flex", width: "110%", margin: "auto" }}>
-        <div class="carousel-inner"  style={{ display: "flex", width: "90%", margin: "auto" }}>
+      <div id="carouselExample" class="carousel slide" style={{ display: "flex", width: "80%", margin: "auto" }}>
+        <div class="carousel-inner" >
           <div class="carousel-item active">
             <div className="row first">
               {/*고객수목표 달성도*/}

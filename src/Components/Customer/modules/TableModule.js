@@ -13,7 +13,10 @@ const TableModule = ({
     columns = [],
     onSort = () => { },
     rowsPerPage, currentPage, totalData = [],
+    searchKeyword, startDate, endDate, onsearch
+    
 }) => {
+    const [filteredData, setFilteredData] = useState(data);
     const [selectAll, setSelectAll] = useState(false);
     const [selectedRows, setSelectedRows] = useState({});
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'none' });
@@ -45,6 +48,34 @@ const TableModule = ({
         setSortConfig({ key, direction });
         onSort(key, direction);
     };
+    useEffect(() => {
+        let updatedData = rows;
+    
+        if (searchKeyword) {
+          updatedData = rows.filter(row =>
+            Object.values(row).some(value =>
+              value && value.toString().toLowerCase().includes(searchKeyword.toLowerCase())
+            )
+          );
+        }
+        if (startDate && endDate) {
+          updatedData = updatedData.filter(row => {
+            const registerDate = new Date(row.registerDate);
+            return registerDate >= new Date(startDate) && registerDate <= new Date(endDate);
+          });
+        }
+        if (sortConfig.key) {
+          updatedData = [...updatedData].sort((a, b) => {
+            if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'ascending' ? -1 : 1;
+            if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'ascending' ? 1 : -1;
+            return 0;
+          });
+        }
+    
+        setFilteredData(updatedData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+      }, [rows, currentPage, rowsPerPage, searchKeyword, sortConfig, startDate, endDate]);
+
+      
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
         return new Date(dateString).toLocaleDateString(undefined, options);

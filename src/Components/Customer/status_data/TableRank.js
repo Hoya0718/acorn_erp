@@ -9,7 +9,14 @@ import ExcelPrint from "../modules/ExcelPrintModule"
 import CustomerStatusPagination from '../modules/PaginationModule';
 import instance from './../../../api/axios';
 
-const CustomerStatusTable_Rank = ({ activeLabel, onSort, onPageChange, rowsPerPage }) => {
+const CustomerStatusTable_Rank = ({ activeLabel, onSort, onPageChange, rowsPerPage,
+  searchKeyword,
+    setSearchKeyword,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+ }) => {
 
   const [rows, setRows] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -119,19 +126,65 @@ const CustomerStatusTable_Rank = ({ activeLabel, onSort, onPageChange, rowsPerPa
     setFilteredData(sortedRows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
   }
 
-  // const handleSort = (key, direction) => {
-  //   let sortedData = [...rows];
-  //   if (direction === 'ascending') {
-  //     setCurrentPage(1);
-  //     sortedData.sort((a, b) => (a[key] > b[key] ? 1 : -1));
-  //   } else if (direction === 'descending') {
-  //     sortedData.sort((a, b) => (a[key] < b[key] ? 1 : -1));
-  //   } else {
-  //     sortedData = [...defaultSortedRows]; // Reset to original order
-  //   }
-  //   setRows(sortedData);
-  //   setFilteredData(sortedData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
-  // };
+  const fetchSearchResults = async (keyword, startDate, endDate) => {
+    try {
+      let searchResults = [];
+      let periodResults = [];
+
+    // 키워드 검색 요청
+    if (keyword) {
+      const response_keyword = await instance.get(`/customer/searchKeywordTransactionInfo?keyword=${keyword}`);
+      searchResults = response_keyword.data.map(item => ({
+        ...item,
+        registerDate: formatDate(item.registerDate),
+        customerBirthDate: formatDate(item.customerBirthDate)
+      }));
+    }
+
+    // 기간 검색 요청
+    if (startDate && endDate) {
+      const response_period = await instance.get(`/customer/searchPeriodTransactionInfo?startDate=${startDate}&endDate=${endDate}`);
+      periodResults = response_period.data.map(item => ({
+        ...item,
+        registerDate: formatDate(item.registerDate),
+        customerBirthDate: formatDate(item.customerBirthDate)
+      }));
+    }
+
+      // 검색 결과 결합
+    let combinedResults = searchResults;
+    if (startDate && endDate) {
+      const periodIds = new Set(periodResults.map(item => item.customerId));
+      combinedResults = searchResults.filter(item => periodIds.has(item.customerId));
+    }
+
+    setFilteredData(combinedResults.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+    setTotalItems(combinedResults.length);
+    setCurrentPage(1);
+    
+    } catch (error) {
+      console.error('Error fetchSearchResults:', error);
+    }
+  };
+
+  React.useEffect(() => {
+    if (searchKeyword || startDate || endDate) {
+      fetchSearchResults(searchKeyword, startDate, endDate);
+    } else {
+      const startIndex = (currentPage - 1) * rowsPerPage;
+      const endIndex = startIndex + rowsPerPage;
+      setFilteredData(rows.slice(startIndex, endIndex));
+      setTotalItems(rows.length);
+    }
+  }, [searchKeyword, rows, startDate, endDate]);
+
+
+  const handleSearch = () => {
+    setCurrentPage(1);
+    fetchSearchResults(searchKeyword, startDate, endDate);
+  };
+
+
   return (
     <div>
       <TableModule
@@ -143,7 +196,10 @@ const CustomerStatusTable_Rank = ({ activeLabel, onSort, onPageChange, rowsPerPa
         currentPage={currentPage}
         rowsPerPage={rowsPerPage}
         totalData={rows}
-
+        searchKeyword={searchKeyword}
+        startDate={startDate}
+        endDate={endDate} 
+        onSearch={handleSearch}
       />
       <CustomerStatusPagination
         totalItems={totalItems}
