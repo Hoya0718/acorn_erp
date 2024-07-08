@@ -12,12 +12,13 @@ const OrderMgmt = () => {
     itemName: '',
     customerName: '',
     customerTel: '',
-    quantity: '',
-    totalPrice: '',
+    itemQty: '',
+    orderPrice: '',
     orderDate: '',
     orderStatus: ''
   });
-  
+
+  const [errors, setErrors] = useState({});
   const [orders, setOrders] = useState([]);
   const [selectedOrders, setSelectedOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -33,13 +34,7 @@ const OrderMgmt = () => {
     setLoading(true);
     try {
       const response = await axios.get('/orders');
-      const fetchedOrders = response.data;
-      const sortedOrders = fetchedOrders.map(order => ({
-        ...order,
-        item_qty: parseInt(order.item_qty, 10), // item_qty를 정수로 변환
-        order_total_price: parseFloat(order.order_total_price) // order_total_price를 부동 소수점 숫자로 변환
-      }));
-      setOrders(sortedOrders);
+      setOrders(response.data);
     } catch (error) {
       console.error('Error fetching orders:', error);
     } finally {
@@ -47,6 +42,11 @@ const OrderMgmt = () => {
     }
   };
 
+  const handleAddButtonClick = () => {
+    setIsFormVisible(true);
+    setSelectedOrder(null); 
+    clearFormData();
+  };
 
   const handleSave = () => {
     setIsFormVisible(false);
@@ -60,11 +60,12 @@ const OrderMgmt = () => {
       itemName: '',
       customerName: '',
       customerTel: '',
-      quantity: '',
-      totalPrice: '',
+      itemQty: '',
+      orderPrice: '',
       orderDate: '',
       orderStatus: ''
     });
+    setErrors({});
     setSelectedOrder(null); 
   };
 
@@ -76,7 +77,8 @@ const OrderMgmt = () => {
     });
   };
 
-  const handleFormSubmit = async () => {
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
     if (!validateForm()) return;
 
     try {
@@ -87,7 +89,9 @@ const OrderMgmt = () => {
         );
         setOrders(updatedOrders);
       } else {
-        const response = await axios.post('/orders', formData);
+        const totalPrice = parseFloat(formData.orderPrice) * parseInt(formData.itemQty);
+        const newOrder = { ...formData, orderTotalPrice: totalPrice };
+        const response = await axios.post('/orders', newOrder);
         setOrders([response.data, ...orders]);
       }
       handleSave();
@@ -97,27 +101,17 @@ const OrderMgmt = () => {
   };
 
   const validateForm = () => {
-    return formData.orderNum !== '' &&
-           formData.itemName !== '' &&
-           formData.customerName !== '' &&
-           formData.customerTel !== '' &&
-           formData.quantity !== '' &&
-           formData.totalPrice !== '' &&
-           formData.orderDate !== '' &&
-           formData.orderStatus !== '';
-  };
+    const newErrors = {};
+    if (!formData.itemName) newErrors.itemName = '상품명을 입력하세요.';
+    if (!formData.customerName) newErrors.customerName = '고객명을 입력하세요.';
+    if (!formData.customerTel) newErrors.customerTel = '연락처를 입력하세요.';
+    if (!formData.itemQty || isNaN(formData.itemQty) || parseInt(formData.itemQty) <= 0) newErrors.itemQty = '유효한 수량을 입력하세요.';
+    if (!formData.orderPrice || isNaN(formData.orderPrice) || parseFloat(formData.orderPrice) <= 0) newErrors.orderPrice = '유효한 단가를 입력하세요.';
+    if (!formData.orderDate) newErrors.orderDate = '주문 날짜를 선택하세요.';
+    if (!formData.orderStatus) newErrors.orderStatus = '주문 상태를 입력하세요.';
 
-  const handleDeleteClick = async () => {
-    if (window.confirm('선택한 항목을 삭제하시겠습니까?')) {
-      try {
-        const orderNums = selectedOrders.map(order => order.orderNum);
-        await Promise.all(orderNums.map(orderNum => axios.delete(`/orders/${orderNum}`)));
-        fetchOrders();
-        setSelectedOrders([]);
-      } catch (error) {
-        console.error('주문 삭제 중 오류 발생:', error);
-      }
-    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleLinkClick = (path) => {
@@ -140,12 +134,18 @@ const OrderMgmt = () => {
           </button>
           <button
             className={selectedLink === '/layout/salesMgmt/return' ? 'selected' : ''}
-            onClick={() => handleLinkClick('/slayout/alesMgmt/return')}>
+            onClick={() => handleLinkClick('/layout/salesMgmt/return')}>
             <Link to="/layout/salesMgmt/return">취소 주문서 조회</Link>
           </button>
         </span>
       </div>
       <br />
+
+      <div className="items-subTitle">
+        <span>
+          <button onClick={handleAddButtonClick}>등록</button>
+        </span>
+      </div>
 
       <div className="searcher">
         <div className="left">
@@ -169,6 +169,8 @@ const OrderMgmt = () => {
             selectedOrder={selectedOrder}
             selectedOrders={selectedOrders}
             setSelectedOrders={setSelectedOrders}
+            setIsFormVisible={setIsFormVisible}
+            errors={errors} // 오류 메시지를 OrderTable에 전달
           />
         </section>
       </div>
