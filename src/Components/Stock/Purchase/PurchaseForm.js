@@ -70,9 +70,9 @@ const PurchaseForm = ({
           type="text"
           value={purchaseData.remark} 
           onChange={(e) => handleChange('remark', e.target.value)}
-          placeholder="특이사항"
+          placeholder="특이사항"  style={{ width: '120px' }}
         />
-         <button type="submit" className="items-subTitle-button" onClick={handleSubmit}>
+         <button type="submit" className="items-subTitle-button" onClick={handleSubmit}  style={{ marginLeft: '10px' }}>
             {isNewPurchase ? '✔' : '✔'} 
          </button>
       </td>

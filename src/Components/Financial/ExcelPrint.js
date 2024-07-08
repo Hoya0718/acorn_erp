@@ -4,7 +4,6 @@ import { GrDocumentUpload } from "react-icons/gr";
 import { HiPrinter } from "react-icons/hi2";
 
 const ExcelPrint = ({ combinedData }) => {
-    // combinedData를 prop으로 전달받아 배열로 변환하여 CSV 데이터 준비
     const csvData = combinedData.map(data => ({
         itemCode: data.itemCode,
         itemType: data.itemType,

@@ -3,94 +3,69 @@ import ExcelPrint from './ExcelPrint';
 import DangerAlert from './DangerAlert';
 import DeleteModal from './DeleteModal';
 import DateComponent from './DateComponent';
-import PurchaseList from './PurchaseList'; // PurchaseList로 변경
-import Pagination from '../../Customer/modules/PaginationModule';
-import instance from './../../../api/axios';
-
+import PurchaseList from './PurchaseList';
 import {
   fetchPurchases, handleAddClick, handleUpdateClick, handleDeleteClick, handleSubmitAdd,
-  handleSubmitUpdate, handleCheckboxChange, handleSelectAll, handleChangeNewPurchase, // 함수 이름 변경
+  handleSubmitUpdate, handleCheckboxChange, handleSelectAll, handleChangeNewPurchase,
   handleChangeUpdateVendor, handleConfirmDelete, handleCancelForm, handleModalConfirmDelete, handleUpdateClickWrapper,
   handleChangeUpdatePurchase, handleCancelAdd, handleCancelUpdate, handleModalClose, handleDeleteClickWrapper,
-  handleSearch,
-} from './Functions'; // Functions.js에서 모든 필요한 함수들을 import합니다.
+  handleSearch, 
+} from './Functions';
 
 const PurchaseMgmt = () => {
-  const [purchases, setPurchases] = useState([]); // purchases로 변수명 변경
-  const [newPurchase, setNewPurchase] = useState({ // newPurchase로 변수명 변경
-    purchaseName: '', purchaseUnit: '', orderDate: '', orderQty: 0, price: 0, remark: '', // 필드명 변경
+  const [purchases, setPurchases] = useState([]);
+  const [newPurchase, setNewPurchase] = useState({
+    purchaseName: '', purchaseUnit: '', orderDate: '', orderQty: 0, price: 0, remark: '',
   });
-  const [updatePurchase, setUpdatePurchase] = useState(null); // updatePurchase로 변수명 변경
-  const [selectedPurchases, setSelectedPurchases] = useState([]); // selectedPurchases로 변수명 변경
+  const [updatePurchase, setUpdatePurchase] = useState(null);
+  const [selectedPurchases, setSelectedPurchases] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [isAddClicked, setIsAddClicked] = useState(false);
-  const [isUpdateClicked, setIsUpdateClicked] = useState(false); // isUpdateClicked 변수 추가
+  const [isUpdateClicked, setIsUpdateClicked] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [sortBy, setSortBy] = useState('purchaseCode'); //정렬 기준을 상태로 추가, 기본값은 'vendorCode'
-  const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 변수
+  const [sortBy, setSortBy] = useState('purchaseCode');
+  const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  //페이지 네이션 데이터
-  const [filteredData, setFilteredData] = useState(purchases);
-  const [pageData, setPageData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-
   useEffect(() => {
-    fetchPurchases(setPurchases); // fetchPurchases로 변경
+    fetchPurchases(setPurchases);
   }, []);
 
+  useEffect(() => {
+    console.log('Purchases updated:', purchases);
+  }, [purchases]); // purchases 상태가 업데이트될 때마다 콘솔에 출력
+
   const handleAddClickWrapper = () => {
-    handleAddClick(setIsAddClicked, setIsUpdateClicked); // handleAddClick로 변경
+    handleAddClick(setIsAddClicked, setIsUpdateClicked);
   };
 
-  // 검색어 변경 핸들러
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  // 날짜
   const handleDateChange = (start, end) => {
     setStartDate(start);
     setEndDate(end);
   };
-  //페이지네이션 데이터
-  const fetchPageData = async () => {
-    try {
-      const response_pageData = await instance.get(`/purchase/listPage?page=${currentPage - 1}&size=${rowsPerPage}`);
-      const page = response_pageData.data;
-      const formattedPageData = page.content.map(item => ({
-        ...item
-      }));
-      setFilteredData(formattedPageData);
-      setTotalItems(page.totalElements);
-    } catch (error) {
-      console.error('Error get PageData:', error);
-    }
-  }
-  useEffect(() => {
-    fetchPageData();
-  }, [currentPage, rowsPerPage]);
 
   const handleCancelForm = () => {
     setIsAddClicked(false);
     setIsUpdateClicked(false);
     setNewPurchase({
-      purchaseName: '', purchaseUnit: '', orderDate: '', orderQty: 0, price: 0, remark: '', // 필드명 변경
+      purchaseName: '', purchaseUnit: '', orderDate: '', orderQty: 0, price: 0, remark: '',
     });
-    setUpdatePurchase(null); // setUpdatePurchase로 변경
+    setUpdatePurchase(null);
   };
 
   return (
     <div>
       <div className='Middle classification'>
         <h3>발주 관리</h3>
-      </div><hr />
+      </div>
+      <hr />
 
-      {/* 경고창 */}
       {showAlert && <DangerAlert onClose={() => setShowAlert(false)} />}
 
       <div className='items-subTitle'>
@@ -108,7 +83,8 @@ const PurchaseMgmt = () => {
             <button onClick={handleCancelForm}>취소</button>
           )}
         </span>
-      </div><br />
+      </div>
+      <br />
 
       <div className="searcher">
         <div className="left">
@@ -119,11 +95,11 @@ const PurchaseMgmt = () => {
           <input type="text" placeholder='🔍 품목명으로 조회' value={searchTerm} onChange={handleSearchChange} />
           <button onClick={handleSearch}>조회 &gt;</button>
         </div>
-      </div><br />
+      </div>
+      <br />
 
-      {/* PurchaseList 컴포넌트에 필요한 props 모두 전달 */}
       <PurchaseList
-        purchases={filteredData}
+        purchases={purchases}
         selectedPurchases={selectedPurchases}
         selectAll={selectAll}
         sortBy={sortBy}
@@ -145,20 +121,13 @@ const PurchaseMgmt = () => {
         searchTerm={searchTerm}
         startDate={startDate}
         endDate={endDate}
-      /> <br />
-      {/* 페이지네이션 */}
-      <Pagination
-        totalItems={totalItems}
-        itemsPerPage={rowsPerPage}
-        currentPage={currentPage}
-        onPageChange={setCurrentPage}
       />
-      {/* 엑셀&인쇄 */}
+      <br />
+
       <div className="excel-print">
         <ExcelPrint purchases={purchases} />
       </div>
 
-      {/* 삭제 모달 */}
       <DeleteModal
         isOpen={showDeleteModal}
         onClose={() => handleModalClose(setShowDeleteModal)}
