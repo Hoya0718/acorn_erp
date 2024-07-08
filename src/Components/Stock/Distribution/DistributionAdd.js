@@ -15,15 +15,15 @@ const DistributionAdd = ({
 
     useEffect(() => {
         const initialDataList = purchaseData.map((purchase) => ({
-            distributionCode: purchase.purchaseCode || '',
-            distributionName: purchase.purchaseName || '',
+            materialsCode: purchase.purchaseCode || '',
+            materialsName: purchase.purchaseName || '',
             receiptDate: '',
             orderQty: purchase.orderQty || '',
             initialQty: '',
             receivedQty: '',
             releaseQty: '',
-            currentQty: '',
-            expectedReceiptDate: ''
+            quantity: '',
+            price: purchase.purchase.price || ''
         }));
         setDistributionDataList(initialDataList);
     }, [purchaseData]);
@@ -31,40 +31,36 @@ const DistributionAdd = ({
     const handleInputChange = (index, name, value) => {
         const updatedDataList = [...distributionDataList];
         updatedDataList[index] = { ...updatedDataList[index], [name]: value };
+        // 집계재고 계산
+        const quantity = calculatequantity(updatedDataList[index]);
+        updatedDataList[index] = { ...updatedDataList[index], quantity };
         setDistributionDataList(updatedDataList);
+    };
+
+    const calculatequantity = (data) => {
+        const initialQty = parseInt(data.initialQty) || 0;
+        const receivedQty = parseInt(data.receivedQty) || 0;
+        const releaseQty = parseInt(data.releaseQty) || 0;
+        const quantity = initialQty + receivedQty - releaseQty;
+        return quantity;
     };
 
     const handleAdd = async (index) => {
         try {
             const dataToSend = {
-                distributionCode: parseInt(distributionDataList[index].distributionCode),
-                distributionName: distributionDataList[index].distributionName,
+                materialsCode: parseInt(distributionDataList[index].materialsCode),
+                materialsName: distributionDataList[index].materialsName,
                 receiptDate: distributionDataList[index].receiptDate,
                 orderQty: parseInt(distributionDataList[index].orderQty),
                 initialQty: parseInt(distributionDataList[index].initialQty),
                 receivedQty: parseInt(distributionDataList[index].receivedQty),
                 releaseQty: parseInt(distributionDataList[index].releaseQty),
-                currentQty: parseInt(distributionDataList[index].currentQty),
-                expectedReceiptDate: distributionDataList[index].expectedReceiptDate
+                quantity: parseInt(distributionDataList[index].quantity),
+                price: parseInt(distributionDataList[index].price)
             };
 
             // Axios를 사용해 서버에 데이터 전송
-            const response = await axios.post('/distribution', dataToSend);
-
-            // 데이터 추가 후 초기화
-            const updatedList = [...distributionDataList];
-            updatedList[index] = {
-                distributionCode: purchaseData[index].purchaseCode || '',
-                distributionName: purchaseData[index].purchaseName || '',
-                receiptDate: '',
-                orderQty: purchaseData[index].orderQty || '',
-                initialQty: '',
-                receivedQty: '',
-                releaseQty: '',
-                currentQty: '',
-                expectedReceiptDate: ''
-            };
-            setDistributionDataList(updatedList);
+            const response = await axios.post('/materials', dataToSend);
 
             // 추가된 데이터를 상위 컴포넌트로 전달
             onAddDistribution(response.data);
@@ -103,12 +99,12 @@ const DistributionAdd = ({
                     <th>품목코드</th>
                     <th>품목이름</th>
                     <th>입고일자</th>
+                    <th>가격</th>
                     <th>발주수량</th>
                     <th>입고수량</th>
                     <th>기초재고</th>
                     <th>출고수량</th>
                     <th>집계재고</th>
-                    <th>입고예정일</th>
                     <th>동작</th>
                 </tr>
             </thead>
@@ -123,8 +119,8 @@ const DistributionAdd = ({
                                 style={{ border: 'none', textAlign: 'center' }}
                                 type='text'
                                 placeholder={purchase.purchaseCode}
-                                name='distributionCode'
-                                value={distributionDataList[index]?.distributionCode || ''}
+                                name='materialsCode'
+                                value={distributionDataList[index]?.materialsCode || ''}
                                 onChange={(e) =>
                                     handleInputChange(
                                         index, e.target.name, e.target.value
@@ -137,8 +133,8 @@ const DistributionAdd = ({
                                 style={{ border: 'none', textAlign: 'center' }}
                                 type='text'
                                 placeholder={purchase.purchaseName}
-                                name='distributionName'
-                                value={distributionDataList[index]?.distributionName || ''}
+                                name='materialsName'
+                                value={distributionDataList[index]?.materialsName || ''}
                                 onChange={(e) =>
                                     handleInputChange(
                                         index, e.target.name, e.target.value
@@ -148,10 +144,26 @@ const DistributionAdd = ({
                         </td>
                         <td>
                             <input
-                                type='date'
+                                type='number'
                                 placeholder='입고일자'
                                 name='receiptDate'
                                 value={distributionDataList[index]?.receiptDate || ''}
+                                onChange={(e) =>
+                                    handleInputChange(
+                                        index,
+                                        e.target.name,
+                                        e.target.value
+                                    )
+                                }
+                            />
+                        </td>
+                        <td>
+                            <input
+                                style={{ border: 'none', textAlign: 'center' }}
+                                type='number'
+                                placeholder={purchase.price}
+                                name='price'
+                                value={distributionDataList[index]?.price || ''}
                                 onChange={(e) =>
                                     handleInputChange(
                                         index,
@@ -226,23 +238,8 @@ const DistributionAdd = ({
                             <input
                                 type='number'
                                 placeholder='집계재고'
-                                name='currentQty'
-                                value={distributionDataList[index]?.currentQty || ''}
-                                onChange={(e) =>
-                                    handleInputChange(
-                                        index,
-                                        e.target.name,
-                                        e.target.value
-                                    )
-                                }
-                            />
-                        </td>
-                        <td>
-                            <input
-                                type='date'
-                                placeholder='입고예정일'
-                                name='expectedReceiptDate'
-                                value={distributionDataList[index]?.expectedReceiptDate || ''}
+                                name='quantity'
+                                value={distributionDataList[index]?.quantity}
                                 onChange={(e) =>
                                     handleInputChange(
                                         index,
@@ -254,7 +251,6 @@ const DistributionAdd = ({
                         </td>
                         <td>
                             <button onClick={() => handleAdd(index)}>추가</button>
-                            <button onClick={handleCancelClick}>취소</button>
                         </td>
                     </tr>
                 ))}

@@ -272,41 +272,8 @@ const DistributionMgmt = () => {
             </div>
             <hr />
 
-            {/* 상단 버튼 영역 */}
-            <div className="top-buttons">
-                <span><button onClick={toggleNewItemForm}>등록</button></span>
-                <span><button onClick={() => handleEditClick(selectedItems[0])} disabled={selectedItems.length === 0}>수정</button></span>
-                <span><DistributionDelete handleDeleteClick={handleDeleteClick} selectedItems={selectedItems} /></span>
-            </div>
             <br />
-
-            {/* 검색 및 정렬 영역 */}
-            <div className="searcher">
-                <div className="left">
-                    <div className="middle-buttons">
-                        {/* 날짜 검색 컴포넌트 */}
-                        <DistributionSearchDate
-                            startDate={startDate}
-                            endDate={endDate}
-                            handleStartDateChange={handleStartDateChange}
-                            handleEndDateChange={handleEndDateChange}
-                        />
-                        {/* 정렬 옵션 선택 */}
-                        <label>
-                            <select onChange={handleSortChange} value={sortOption}>
-                                <option value="품목코드">품목코드</option>
-                                <option value="품목이름">품목이름</option>
-                                <option value="입고일자">입고일자</option>
-                            </select>
-                        </label>
-                    </div>
-                </div>
-                {/* 검색 입력란 */}
-                <DistributionSearch
-                    handleSearchChange={handleSearchChange}
-                    handleSearchClick={handleSearchClick}
-                />
-            </div>
+        
 
             {/* 테이블 영역 */}
             <section className="distribution-table-container">
@@ -374,11 +341,6 @@ const DistributionMgmt = () => {
                 </table> */}
             </section>
             
-            {/* 하단 버튼 영역 */}
-            <div className="bottom-buttons">
-                <span><button onClick={handleExcelDownload}>엑셀다운</button></span>
-                <span><button onClick={handlePrintClick}>인쇄</button></span>
-            </div>
         </div>
     );
 };

@@ -20,7 +20,7 @@ const MaterialsMgmt = () => {
         receiptDate: '',
         price: '',
         quantity: '',
-        vendorCode: ''
+        // vendorCode: ''
     };
 
     // 상태 변수들
@@ -311,7 +311,7 @@ const MaterialsMgmt = () => {
                 
                             <th>가격</th>
                             <th>수량</th>
-                            <th>거래처코드</th>
+                            
                             {showNewItemForm && <th></th>}
                         </tr>
                     </thead>
@@ -343,7 +343,7 @@ const MaterialsMgmt = () => {
                                         <td>{item.receiptDate}</td>
                                         <td>{item.price}</td>
                                         <td>{item.quantity}</td>
-                                        <td>{item.vendorCode}</td>
+                                        {/* <td>{item.vendorCode}</td> */}
                                     </>
                                 )}
                             </tr>
