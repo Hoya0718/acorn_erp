@@ -1,17 +1,45 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from '../../api/axios';
-import './Board.css';
+
+import './Board.css'; // Assuming Board-specific styles are in Board.css
+import getUserInfo from '../../api/getUserInfo';
+
 
 const Board = () => {
   const [posts, setPosts] = useState([]);
+
   const [sortBy, setSortBy] = useState('views'); // 기본 정렬 기준은 인기순(HOT🔥)
   const [sortOrder, setSortOrder] = useState('desc'); // 정렬 순서: desc (내림차순) or asc (오름차순)
   const [searchKeyword, setSearchKeyword] = useState('');
 
+  const [userInfo, setUserInfo] = useState(null);
+
+
   useEffect(() => {
     fetchPosts();
+
   }, [sortBy, sortOrder]); // sortBy, sortOrder가 변경될 때마다 useEffect가 다시 실행됨
+
+
+    fetchUserInfo();
+  }, []);
+
+
+  // 사용자 정보를 가져오는 함수
+  const fetchUserInfo = async () => {
+    try {
+      const userInfo = await getUserInfo();
+      console.log('User Info:커뮤니티 ', userInfo);
+      console.log("아이디" + userInfo.id);
+      setUserInfo(userInfo);
+    } catch (error) {
+      console.error('Error fetching user info: 커뮤니티', error);
+    }
+  };
+  
+  // 게시물 데이터를 서버에서 가져오는 함수
 
   const fetchPosts = async () => {
     try {
