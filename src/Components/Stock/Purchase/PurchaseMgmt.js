@@ -3,7 +3,9 @@ import ExcelPrint from './ExcelPrint';
 import DangerAlert from './DangerAlert';
 import DeleteModal from './DeleteModal';
 import DateComponent from './DateComponent';
+import Pagination from '../../Customer/modules/PaginationModule';
 import PurchaseList from './PurchaseList';
+import instance from './../../../api/axios';
 import {
   fetchPurchases, handleAddClick, handleUpdateClick, handleDeleteClick, handleSubmitAdd,
   handleSubmitUpdate, handleCheckboxChange, handleSelectAll, handleChangeNewPurchase,
@@ -29,13 +31,24 @@ const PurchaseMgmt = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
+    //페이지 네이션 데이터
+    const [filteredData, setFilteredData] = useState(purchases);
+    const [pageData, setPageData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+
   useEffect(() => {
     fetchPurchases(setPurchases);
   }, []);
 
   useEffect(() => {
-    console.log('Purchases updated:', purchases);
-  }, [purchases]); // purchases 상태가 업데이트될 때마다 콘솔에 출력
+    fetchPageData();
+  }, [currentPage, rowsPerPage]);
+
+  useEffect(() => {
+    fetchPageData();
+  }, [purchases]);
 
   const handleAddClickWrapper = () => {
     handleAddClick(setIsAddClicked, setIsUpdateClicked);
@@ -50,6 +63,10 @@ const PurchaseMgmt = () => {
     setEndDate(end);
   };
 
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   const handleCancelForm = () => {
     setIsAddClicked(false);
     setIsUpdateClicked(false);
@@ -58,6 +75,24 @@ const PurchaseMgmt = () => {
     });
     setUpdatePurchase(null);
   };
+
+  //페이지네이션 데이터
+  const fetchPageData = async () => {
+    try {
+      const response_pageData = await instance.get(`/purchase/listPage?page=${currentPage - 1}&size=${rowsPerPage}`);
+      const page = response_pageData.data;
+      const formattedPageData = page.content.map(item => ({
+        ...item
+      }));
+      setFilteredData(formattedPageData);
+      setTotalItems(page.totalElements);
+    } catch (error) {
+      console.error('Error get PageData:', error);
+    }
+  }
+  useEffect(() => {
+    fetchPageData();
+  }, [currentPage, rowsPerPage]);
 
   return (
     <div>
@@ -99,7 +134,9 @@ const PurchaseMgmt = () => {
       <br />
 
       <PurchaseList
-        purchases={purchases}
+        purchases={filteredData}
+        filteredData={filteredData}
+        setFilteredData={setFilteredData}
         selectedPurchases={selectedPurchases}
         selectAll={selectAll}
         sortBy={sortBy}
@@ -123,6 +160,14 @@ const PurchaseMgmt = () => {
         endDate={endDate}
       />
       <br />
+
+      {/* 페이지네이션 */}
+      <Pagination
+        totalItems={totalItems}
+        itemsPerPage={rowsPerPage}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
 
       <div className="excel-print">
         <ExcelPrint purchases={purchases} />
