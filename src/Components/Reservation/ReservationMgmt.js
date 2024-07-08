@@ -45,11 +45,17 @@ const ReservationMgmt = () => {
     }
   };
 
-  const updateReservation = (updatedReservation) => {
-    const updatedReservations = reservations.map(reservation =>
-      reservation.id === updatedReservation.id ? updatedReservation : reservation
-    );
-    setReservations(updatedReservations);
+  const updateReservation = async (updatedReservation) => {
+    try {
+      const response = await axios.put(`/reservations/${updatedReservation.id}`, updatedReservation);
+      const updatedReservations = reservations.map(reservation =>
+        reservation.id === updatedReservation.id ? response.data : reservation
+      );
+      setReservations(updatedReservations);
+    } catch (error) {
+      console.error('Error updating reservation:', error);
+      throw error;
+    }
   };
 
   const renderCalendar = () => {
