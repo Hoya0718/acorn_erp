@@ -55,29 +55,26 @@
   color: red !important;
 }
 
-/* table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
 .table th,
 .table td {
-  border: 1px solid #ddd;
-  padding: 8px;
+  min-width: 30px; /* 최소 너비 */
+  max-width: 300px; /* 최대 너비 */
+  width: auto; /* 유동적 너비 */
+  word-wrap: break-word; /* 내용이 넘칠 경우 줄바꿈 */
+  text-align: center; /* 가운데 정렬 */
 }
 
 .table th {
-  background-color: #f2f2f2;
-  text-align: left;
+  background-color: #f8f9fa;
 }
 
-.table .table-row {
-  border-bottom: 1px solid #ddd;
+.table-centered {
+  text-align: center;
 }
 
-.table .table-row:last-child {
-  border-bottom: none;
-} */
+.table-righted {
+  text-align: right;
+}
 
 
 /* 페이지네이션 스타일 */

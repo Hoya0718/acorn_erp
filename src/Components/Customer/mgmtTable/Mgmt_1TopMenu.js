@@ -35,7 +35,7 @@ const Mgmtmenu = ({
         const newRowsPerPage = Number(option.replace('줄 보기', ''));
         setRowsPerPage(newRowsPerPage);
         localStorage.setItem('CusMgmtRowsPerPage', newRowsPerPage);
-    }
+    };
 
     const dropdownData = ['10줄 보기', '20줄 보기', '30줄 보기', '40줄 보기', '50줄 보기'];
 
@@ -58,7 +58,7 @@ const Mgmtmenu = ({
         }else {
             setShowModal_editRowsSelectAlert(true)
         }
-    }
+    };
 
     const handleAddModeClick = () => {
         setOnAddMode(true);
@@ -71,7 +71,7 @@ const Mgmtmenu = ({
     
     const handleSearchChange = (e) => {
         setSearchKeyword(e.target.value);
-      };
+    };
 
     return (
         <div>
@@ -79,27 +79,27 @@ const Mgmtmenu = ({
                 <span>
                     {!onUpdateMode && isAnyRowSelected ? (
                         <>
-                            <Button onClick={handleEditModeClick}>수정</Button>
-                            <Button onClick={handleDeletebuttonClick}>삭제</Button>
+                            <Button onClick={handleEditModeClick} className="righted">수정</Button>
+                            <Button onClick={handleDeletebuttonClick} className="righted">삭제</Button>
                         </>
                     ) : null}
                     {onUpdateMode && isAnyRowSelected ? (
                         <>
-                            <Button onClick={() => handleSaveClick(data.customerId)}>수정 확인</Button>
-                            <Button onClick={handleCloseClick}>취소</Button>
+                            <Button onClick={() => handleSaveClick(data.customerId)} className="righted">수정 확인</Button>
+                            <Button onClick={handleCloseClick} className="righted">취소</Button>
                         </>
                     ) :
                         null
                     }
                     {onAddMode && !isAnyRowSelected ? (
                         <>
-                            <Button onClick={handleAddClick}> 등록 확인</Button>
-                            <Button onClick={handleCloseClick}>취소</Button>
+                            <Button onClick={handleAddClick} className="righted"> 등록 확인</Button>
+                            <Button onClick={handleCloseClick} className="righted">취소</Button>
                         </>
                     ) : null
                     }
                     {!onAddMode && !onUpdateMode && !isAnyRowSelected ? (
-                        <Button onClick={handleAddModeClick}>등록</Button>
+                        <Button onClick={handleAddModeClick} className="righted">등록</Button>
                     ) : null}
                 </span>
             </div>
@@ -111,20 +111,21 @@ const Mgmtmenu = ({
             />
 
             <div className='row'>
-                <div className='col-1'>
+                <div className='col-2'>
                     <DropdownModule
                         selectedOption={selectedOption_dropdown}
                         handleSelect={handleSelect_dropdown}
                         options={dropdownData}
                     />
                 </div>
-                <div className='col-10 righted' style={{ margin: '0' }} >
+                <div className='col-10 righted uppered'
+                style={{ marginBottom: '-15px' }}
+                 >
                     <SearchModule
                        value={searchKeyword}
                        onChange={handleSearchChange}
                     />
-                </div>
-                <div className='col-1'>
+                    &nbsp;  &nbsp;
                     <SearchButtonModule 
                        value={searchKeyword}
                        onClick={onSearch}

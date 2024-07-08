@@ -112,7 +112,6 @@ const CusMgmt = () => {
         notesDate: new Date().toISOString().split('T')[0],
         notes: editingRowData.customerNotes || '', // 기본값 설정
       };
-      console.log('New Notes Data:', newNotesData);
 
       const responseNotes = await instance.post(`/customer/saveNotes`, newNotesData);
 
