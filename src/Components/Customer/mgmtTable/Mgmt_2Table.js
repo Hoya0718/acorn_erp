@@ -7,7 +7,7 @@ import { Button } from 'react-bootstrap';
 import AddressSearchModal from './Modal/SearchAddr';
 
 const MgmtTable = ({
-  data,
+  data,setData,
   rowsPerPage, currentPage, setCurrentPage,
   onAddMode, onUpdateMode,
   onCheckboxChange, selectedRows, setSelectedRows,
@@ -16,7 +16,8 @@ const MgmtTable = ({
   handleModalSave,
   modalData_viewDetail, setModalData_viewDetail,
   showModal_viewDetail, setShowModal_viewDetail,
-  searchKeyword, startDate, endDate
+  searchKeyword, startDate, endDate,
+  
 
 }) => {
   //테이블 데이터 
@@ -98,6 +99,7 @@ const MgmtTable = ({
 
   //체크박스: 전체 행 선택
   const handleSelectAll = () => {
+    if (onUpdateMode||onAddMode) return; 
     const newSelectAll = !selectAll;
     setSelectAll(newSelectAll);
 
@@ -114,6 +116,7 @@ const MgmtTable = ({
   };
   //체크박스: 선택한 행 선택
   const handleRowSelect = (customerId, isSelected) => {
+    if (onUpdateMode||onAddMode) return; 
     const newSelectedRows = { ...selectedRows };
 
     console.log("handleRowSelect 실행")
@@ -206,8 +209,8 @@ const MgmtTable = ({
   };
 
   return (
-    <div className="customer-status-table">
-      <table className="table table-hover" style={{ wordBreak: 'break-all' }}>
+    <div>
+      <table className="table">
         <thead>
           <tr>
             <th scope="col" className="table-centered">
@@ -415,6 +418,7 @@ const MgmtTable = ({
           onHide={() => setShowModal_viewDetail(false)}
           data={modalData_viewDetail}
           onSave={handleModalSave}
+          setData={setData}
         />)}
          <AddressSearchModal
         show={showAddressModal}

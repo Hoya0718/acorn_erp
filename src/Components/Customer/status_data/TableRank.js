@@ -24,6 +24,17 @@ const [columns, setColumns] = React.useState([]);
             const data = response_tableData.data; 
             setRows(data);
 
+            const response_notes = await instance.get('/customer/getNotes');
+            const data_notes = response_notes.data;
+            const mergedData = data.map(customer => {
+               const notes = data_notes.filter(note => note.customerId === customer.customerId);
+              return {
+                ...customer,
+                customerNotes: notes.length ? notes : [{ notes: '-' }],
+              };
+            });
+            setRows(mergedData);
+
             const response_pageData = await instance.post(`/customer/getListRankTable?page=${currentPage - 1}&size=${rowsPerPage}`);
             const page = response_pageData.data;
             setFilteredData(page.content);
@@ -31,7 +42,7 @@ const [columns, setColumns] = React.useState([]);
             handleTable(activeLabel, data);
         }catch (error) {
           console.error('Error get TableData_rank:', error);
-      }
+        }
       }
       fetchTableData();
     }, [activeLabel, currentPage, rowsPerPage]);
@@ -43,8 +54,6 @@ const [columns, setColumns] = React.useState([]);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const currentData = rows.slice(startIndex, endIndex);
-
-
 
   React.useEffect(() => {
     setFilename(filename);
@@ -59,7 +68,7 @@ const [columns, setColumns] = React.useState([]);
           { header: '최고매출 상품명', key: 'topSellingProduct', className: 'table-centered' },
           { header: '거래횟수', key: 'totalCountForCustomer', format: (value) => value.toLocaleString(), className: 'table-righted' },
           { header: '최다거래 상품명', key: 'mostPurchasedProduct', className: 'table-centered' },
-          { header: '특이사항', key: 'remarks', className: 'table-centered' },
+          { header: '특이사항', key: 'customerNotes', format: (notes) => notes && notes.length > 0 ? notes[0].notes : '-', className: 'table-centered' },
         ];
       case '최다거래고객':
         return [
@@ -68,7 +77,7 @@ const [columns, setColumns] = React.useState([]);
           { header: '최다거래 상품명', key: 'mostPurchasedProduct', className: 'table-centered' },
           { header: '거래금액', key: 'totalAmountForCustomer', format: (value) => value.toLocaleString(), className: 'table-righted' },
           { header: '최고매출 상품명', key: 'topSellingProduct', className: 'table-centered' },
-          { header: '특이사항', key: 'remarks', className: 'table-centered' },
+          { header: '특이사항', key: 'customerNotes', format: (notes) => notes && notes.length > 0 ? notes[0].notes : '-', className: 'table-centered' },
         ];
       default:
         return [
@@ -77,13 +86,14 @@ const [columns, setColumns] = React.useState([]);
           { header: '최다거래 상품명', key: 'mostPurchasedProduct', className: 'table-centered' },
           { header: '거래금액', key: 'totalAmountForCustomer', format: (value) => value.toLocaleString(), className: 'table-righted' },
           { header: '최고매출 상품명', key: 'topSellingProduct', className: 'table-centered' },
-           { header: '특이사항', key: 'remarks', className: 'table-centered' },
+           { header: '특이사항', key: 'customerNotes', format: (notes) => notes && notes.length > 0 ? notes[0].notes : '-', className: 'table-centered' },
         ];
     }
   };
 
   React.useEffect(() => {
     setColumns(getColumns(activeLabel));
+    console.log(columns)
   }, [activeLabel, setColumns]);
 
   const handleTable = (activeLabel, rows) => {

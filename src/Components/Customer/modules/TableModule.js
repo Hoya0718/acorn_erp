@@ -138,8 +138,8 @@ const TableModule = ({
     };
 
     return (
-        <div className="customer-status-table">
-            <table className="table table-hover" style={{ wordBreak: 'break-all' }}>
+        <div>
+            <table className="table" >
                 <thead>
                     <tr>
                         <th scope="col" className="table-centered">no.</th>

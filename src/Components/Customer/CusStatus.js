@@ -17,7 +17,7 @@ const Customer_status = () => {
           <span> 회원 현황 </span>
         </div>
         <div className="col-3  righted" >
-          <a href={"../StatusDataMain"}>
+          <a href={"/layout/customerMgmt/statusDataMain"}>
             <Button>
               데이터
             </Button>

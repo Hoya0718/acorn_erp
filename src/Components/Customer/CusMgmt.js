@@ -25,6 +25,7 @@ const CusMgmt = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [loading, setLoading] = useState(true);
   //테이블 데이터
   const [filename, setFilename] = useState('');
   const [columns, setColumns] = useState([]);
@@ -46,9 +47,12 @@ const CusMgmt = () => {
       try {
         const response = await instance.get('/customer/getAllList');
         setData(response.data);
-        setFilteredData(response.data);
+        setFilteredData(response.data); 
+        setTotalItems(response.data.length);
       } catch (error) {
         console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false); // 데이터 로드 완료 후 로딩 상태 false로 설정
       }
     };
 
@@ -57,8 +61,11 @@ const CusMgmt = () => {
   }, []);
 
   useEffect(() => {
-    setFilteredData(data);
-  }, [data]);
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    setFilteredData(data.slice(startIndex, endIndex));
+    setTotalItems(data.length); // 데이터 변경 시 totalItems 재설정
+  }, [data, currentPage, rowsPerPage]);
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -191,19 +198,6 @@ const CusMgmt = () => {
     }
   };
 
-  const handleModalSave = async (updatedData) => {
-    try {
-      await instance.put(`/customer/info/${updatedData.customerId}`, updatedData);
-      await instance.put(`/customer/grade/${updatedData.customerId}`, updatedData);
-      setShowModal_viewDetail(false);
-
-      window.location.reload();
-
-    } catch (error) {
-      console.error('Error updating customer:', error);
-    }
-  };
-
   const handleDeleteClick = async () => {
     try {
       const selectedCustomerIds = Object.keys(selectedRows).filter(customerId => selectedRows[customerId]);
@@ -273,12 +267,19 @@ const CusMgmt = () => {
     if (searchKeyword || startDate || endDate) {
       fetchSearchResults(searchKeyword, startDate, endDate);
     } else {
-      setFilteredData(data);
+      const startIndex = (currentPage - 1) * rowsPerPage;
+      const endIndex = startIndex + rowsPerPage;
+      setFilteredData(data.slice(startIndex, endIndex));
+      setTotalItems(data.length);
     }
   }, [searchKeyword, data, startDate, endDate]);
 
   const isAnyRowSelected = Object.values(selectedRows).some(checked => checked);
-
+  
+  if (loading) {
+    return <div>Loading...</div>; // 로딩 중 상태 표시
+  }
+  
   const handleSearch = () => {
     setCurrentPage(1);
     fetchSearchResults(searchKeyword, startDate, endDate);
@@ -322,6 +323,7 @@ const CusMgmt = () => {
 
       <MgmtTable
         data={filteredData}
+        setData={setData}
         currentPage={currentPage}
         rowsPerPage={rowsPerPage}
         onAddMode={onAddMode}
@@ -338,7 +340,7 @@ const CusMgmt = () => {
         formatDate={formatDate}
         setCurrentPage={setCurrentPage}
 
-        handleModalSave={handleModalSave}
+        // handleModalSave={handleModalSave}
         setModalData_viewDetail={setModalData_viewDetail}
         modalData_viewDetail={modalData_viewDetail}
         setShowModal_viewDetail={setShowModal_viewDetail}

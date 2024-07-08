@@ -5,15 +5,15 @@ import "../../../Main/Main.css";
 import { Modal, Button } from 'react-bootstrap';
 import instance from '../../../../api/axios';
 
-const ViewDetailsModal = ({ show, onHide, data }) => {
+const ViewDetailsModal = ({ show, onHide, data, setData }) => {
     const [formData, setFormData] = React.useState(data);
     const [customerNotes, setCustomerNotes] = React.useState('');
     const [editableFields, setEditableFields] = React.useState({});
+    const [editNoteIndex, setEditNoteIndex] = React.useState(null);
 
     React.useEffect(() => {
         setFormData(data);
     }, [data]);
-
     const formatDateForInput = (dateString) => {
         const date = new Date(dateString);
         const year = date.getFullYear();
@@ -28,11 +28,11 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
             customerBirthDate: new Date(formData.customerBirthDate),
             registerDate: new Date(formData.registerDate)
         };
-    
+
         try {
             const responsePut = await instance.put(`/customer/info/${formData.customerId}`, formattedData);
             const responseGrade = await instance.put(`/customer/grade/${formData.customerId}`, formattedData);
-            
+
             if (customerNotes) {
                 const responsePost = await instance.post('/customer/saveNotes', {
                     customerId: formData.customerId,
@@ -41,11 +41,77 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
             }
 
             onHide(); // 모달 닫기
-
+            window.location.reload();
         } catch (error) {
             console.error('Error saving changes:', error);
         }
     };
+
+    const handleSaveNotes = async () => {
+        try {
+            if (customerNotes) {
+                const responsePost = await instance.post('/customer/saveNotes', {
+                    customerId: formData.customerId,
+                    notes: customerNotes,
+                    notesDate: new Date().toISOString().split('T')[0]
+                });
+
+                const newNote = {
+                    notes: customerNotes,
+                    notesDate: new Date().toISOString().split('T')[0] 
+                };
+
+                // 상태 업데이트
+                setFormData(prevFormData => ({
+                    ...prevFormData,
+                    customerNotes: [...(prevFormData.customerNotes || []), newNote],
+                }));
+
+                setCustomerNotes('');
+            }
+        } catch (error) {
+            console.error('Error saving Notes:', error);
+        }
+    };
+
+    const handleEditNotes = async (index) => {
+        try {
+            const updatedNotes = {
+                ...formData.customerNotes[index],
+                notes: customerNotes,
+                notesDate: new Date().toISOString().split('T')[0]
+            };
+            await instance.put(`/customer/updateNotes/${formData.customerId}`, updatedNotes[index]);
+
+            setFormData(prevFormData => ({
+                ...prevFormData,
+                customerNotes: prevFormData.customerNotes.map((note, idx) => idx === index ? updatedNotes : note)
+            }));
+            setEditNoteIndex(null);
+            setCustomerNotes('');
+        } catch (error) {
+            console.error('Error updating note:', error);
+        }
+    };
+
+    const handleDeleteNote = async (index) => {
+    
+        try {
+            const notesId = formData.customerNotes[index].notesId;
+            const response = await instance.delete(`/customer/notes/${notesId}`);
+            if (response.status === 200) {
+                setFormData(prevFormData => ({
+                    ...prevFormData,
+                    customerNotes: prevFormData.customerNotes.filter((_, idx) => idx !== index)
+                }));
+            } else {
+                console.error('Failed to delete note:', response.data);
+            }
+        } catch (error) {
+            console.error('Error deleting note:', error);
+        }
+    };
+
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setFormData({
@@ -59,11 +125,23 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
             [field]: true
         });
     };
+    const handleDoubleEditModeNotesClick = (index) => {
+        setEditNoteIndex(index);
+        setCustomerNotes(formData.customerNotes[index].notes);
+    };
     const handleBlur = (field) => {
         setEditableFields({
             ...editableFields,
             [field]: false
         });
+    };
+    const handleBlurNotes = (index) => {
+        handleEditNotes(index);
+    };
+    const handleKeyDown = (event, index) => {
+        if (event.key === 'Enter') {
+            handleEditNotes(index);
+        }
     };
     return (
         <Modal show={show} onHide={onHide}>
@@ -200,11 +278,11 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
                                         <label>회원등급</label>
                                     </div>
                                     <div className="col-md-3">
-                                        <select 
+                                        <select
                                             value={formData.customerGrade || ''}
                                             name="customerGrade"
-                                            // onDoubleClick={() => handleDoubleEditModeClick('customerGrade')}
-                                            // onBlur={() => handleBlur('customerGrade')}
+                                            onDoubleClick={() => handleDoubleEditModeClick('customerGrade')}
+                                            onBlur={() => handleBlur('customerGrade')}
                                             onChange={handleInputChange}
                                         >
                                             <option>우수</option>
@@ -226,30 +304,55 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
                                             placeholder='특이사항을 입력하세요!'
                                             value={customerNotes}
                                             onChange={(e) => setCustomerNotes(e.target.value)}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleSaveNotes()}
                                         />
+                                        
                                         {Array.isArray(formData.customerNotes) && formData.customerNotes.map((note, idx) => (
+                                            formData.customerNotes[0].notes !== '-' ? (    
                                             <React.Fragment key={idx}>
                                                 <div className="row">
                                                     <div className="col-md-3  centered">
                                                         {formatDateForInput(note.notesDate)}
+                                                        
                                                     </div>
-                                                    <div className="col-md-9  centered">
-                                                        <input
-                                                            type="text"
-                                                            name="customerNotes"
-                                                            className="form-control"
-                                                            value={note.notes}
-                                                            style={{
-                                                                border: 'none',
-                                                                textAlign: 'lefted',
-                                                            }}
-                                                            onDoubleClick={() => handleDoubleEditModeClick('customerNotes')}
-                                                            onBlur={() => handleBlur('customerNotes')}
-                                                            onChange={handleInputChange}
-                                                        />
+                                                    <div className="col-md-7 centered">
+                                                        {editNoteIndex === idx ? (
+                                                            <input
+                                                                type="text"
+                                                                name="customerNotes"
+                                                                className="form-control"
+                                                                value={customerNotes}
+                                                                onChange={(e) => setCustomerNotes(e.target.value)}
+                                                                onBlur={() => handleBlurNotes(idx)}
+                                                                onKeyDown={(e) => handleKeyDown(e, idx)}
+                                                            />
+                                                        ) : (
+                                                            <input
+                                                                type="text"
+                                                                name="customerNotes"
+                                                                className="form-control"
+                                                                value={note.notes}
+                                                                readOnly
+                                                                style={{
+                                                                    border: 'none',
+                                                                    textAlign: 'lefted',
+                                                                }}
+                                                                onDoubleClick={() => handleDoubleEditModeNotesClick(idx)}
+                                                            />
+                                                        )}
+                                                    </div>
+                                                    <div className="col-md-2 centered">
+                                                        <Button 
+                                                            className="btn-sm secondary-outline" 
+                                                            variant="secondary-outline" 
+                                                            onClick={() => handleDeleteNote(idx)}
+                                                        >
+                                                            삭제
+                                                        </Button>
                                                     </div>
                                                 </div>
                                             </React.Fragment>
+                                             ) : null
                                         ))}
                                     </div>
                                 </div>
@@ -257,7 +360,7 @@ const ViewDetailsModal = ({ show, onHide, data }) => {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary-outline" onClick={onHide}>취소</Button>
+                        <Button  onClick={onHide}>취소</Button>
                         <Button variant="secondary" onClick={handleSaveChanges}>저장</Button>
                     </Modal.Footer>
                 </div>
