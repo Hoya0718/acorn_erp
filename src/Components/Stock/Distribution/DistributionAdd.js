@@ -7,22 +7,25 @@ const DistributionAdd = ({
     handleCancelClick,
     fetchPurchaseItems,
     purchaseData,
-    handleSelectAll
+    handleSelectAll,
+    onAddMaterials,
+    isConfirmed 
 }) => {
-    const [isChecked, setIsChecked] = useState(false);
+    const [isChecked, setIsChecked] = useState(false); // ✔ 표시 상태 관리
     const [distributionDataList, setDistributionDataList] = useState([]);
+    
 
     useEffect(() => {
         const initialDataList = purchaseData.map((purchase) => ({
-            distributionCode: purchase.purchaseCode || '',
-            distributionName: purchase.purchaseName || '',
+            materialsCode: purchase.purchaseCode || '',
+            materialsName: purchase.purchaseName || '',
             receiptDate: '',
             orderQty: purchase.orderQty || '',
             initialQty: '',
             receivedQty: '',
             releaseQty: '',
-            currentQty: '',
-            expectedReceiptDate: ''
+            quantity: '',
+            //price: purchase.purchase.price || ''
         }));
         setDistributionDataList(initialDataList);
     }, [purchaseData]);
@@ -30,51 +33,57 @@ const DistributionAdd = ({
     const handleInputChange = (index, name, value) => {
         const updatedDataList = [...distributionDataList];
         updatedDataList[index] = { ...updatedDataList[index], [name]: value };
+        // 집계재고 계산
+        const quantity = calculatequantity(updatedDataList[index]);
+        updatedDataList[index] = { ...updatedDataList[index], quantity };
         setDistributionDataList(updatedDataList);
     };
+
+    const calculatequantity = (data) => {
+        const initialQty = parseInt(data.initialQty) || 0;
+        const receivedQty = parseInt(data.receivedQty) || 0;
+        const releaseQty = parseInt(data.releaseQty) || 0;
+        const quantity = initialQty + receivedQty - releaseQty;
+        return quantity;
+    };
+
     const handleAdd = async (index) => {
         try {
             const dataToSend = {
-                distributionCode: parseInt(distributionDataList[index].distributionCode),
-                distributionName: distributionDataList[index].distributionName,
+                materialsCode: parseInt(distributionDataList[index].materialsCode),
+                materialsName: distributionDataList[index].materialsName,
                 receiptDate: distributionDataList[index].receiptDate,
                 orderQty: parseInt(distributionDataList[index].orderQty),
                 initialQty: parseInt(distributionDataList[index].initialQty),
                 receivedQty: parseInt(distributionDataList[index].receivedQty),
                 releaseQty: parseInt(distributionDataList[index].releaseQty),
-                currentQty: parseInt(distributionDataList[index].currentQty),
-                expectedReceiptDate: distributionDataList[index].expectedReceiptDate
+                quantity: parseInt(distributionDataList[index].quantity),
+                //price: parseInt(distributionDataList[index].price)
             };
-    
-            console.log('전송할 데이터:', dataToSend);
-            // axios를 사용해 서버에 데이터 전송
-            const response = await axios.post('/distribution', dataToSend);
-    
-            // 데이터 추가 후 초기화
-            const updatedList = [...distributionDataList];
-            updatedList[index] = {
-                distributionCode: purchaseData[index].purchaseCode || '',
-                distributionName: purchaseData[index].purchaseName || '',
-                receiptDate: '',
-                orderQty: purchaseData[index].orderQty || '',
-                initialQty: '',
-                receivedQty: '',
-                releaseQty: '',
-                currentQty: '',
-                expectedReceiptDate: ''
-            };
-            setDistributionDataList(updatedList);
-    
+
+            // Axios를 사용해 서버에 데이터 전송
+            const response = await axios.post('/materials', dataToSend);
+
             // 추가된 데이터를 상위 컴포넌트로 전달
             onAddDistribution(response.data);
-    
+            onAddMaterials(response.data);
+
             // 여기서 적절한 처리: 예를 들어 저장 성공 메시지 출력 등
-            console.log('Data added successfully:', response.data);
+            console.log('데이터 추가 성공:', response.data);
         } catch (error) {
-            console.error('Error adding data:', error);
+            console.error('데이터 추가 에러:', error);
             // 여기서 적절한 오류 처리
         }
     };
+
+    useEffect(() => {
+        setIsChecked(isConfirmed); // isConfirmed 상태에 따라 ✔ 표시 설정
+    }, [isConfirmed]);
+
+    const handleToggleConfirm = () => {
+        setIsChecked(!isChecked); // ✔ 표시를 토글하는 함수
+    };
+
     useEffect(() => {
         setIsChecked(checkAll);
     }, [checkAll]);
@@ -90,38 +99,40 @@ const DistributionAdd = ({
         <table className='table'>
             <thead>
                 <tr>
-                    <th>
-                        <input
-                            type='checkbox'
-                            onChange={handleSelectAll}
-                            checked={checkAll}
-                        />
-                    </th>
-                    <th>품목코드</th><th>품목이름</th><th>입고일자</th><th>발주수량</th><th>입고수량</th><th>기초재고</th><th>출고수량</th><th>집계재고</th><th>입고예정일</th> 
+                    <th>품목코드</th>
+                    <th>품목이름</th>
+                    <th>입고일자</th>
+                    <th>발주수량</th>
+                    <th>입고수량</th>
+                    <th>기초재고</th>
+                    <th>출고수량</th>
+                    <th>집계재고</th>
                 </tr>
             </thead>
             <tbody>
                 {purchaseData.map((purchase, index) => (
                     <tr key={index}>
                         <td>
-                            <input type='checkbox' checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
-                        </td>        
-                        <td>
-                            <input style={{border:'none', textAlign:'center'}}
-                                    type='text' placeholder={purchase.purchaseCode} name='distributionCode'
-                                    value={distributionDataList[index]?.distributionCode || ''} 
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            index, e.target.name, e.target.value
-                                        )}
-                                    readOnly
+                            <input
+                                style={{ border: 'none', textAlign: 'center' }}
+                                type='text'
+                                placeholder={purchase.purchaseCode}
+                                name='materialsCode'
+                                value={distributionDataList[index]?.materialsCode || ''}
+                                onChange={(e) =>
+                                    handleInputChange(
+                                        index, e.target.name, e.target.value
+                                    )}
+                                readOnly
                             />
                         </td>
                         <td>
-                            <input style={{border:'none', textAlign:'center'}}
+                            <input
+                                style={{ border: 'none', textAlign: 'center' }}
                                 type='text'
-                                placeholder={purchase.purchaseName} name='distributionName'
-                                value={distributionDataList[index]?.distributionName || ''}
+                                placeholder={purchase.purchaseName}
+                                name='materialsName'
+                                value={distributionDataList[index]?.materialsName || ''}
                                 onChange={(e) =>
                                     handleInputChange(
                                         index, e.target.name, e.target.value
@@ -145,7 +156,8 @@ const DistributionAdd = ({
                             />
                         </td>
                         <td>
-                            <input style={{border:'none', textAlign:'center'}}
+                            <input
+                                style={{ border: 'none', textAlign: 'center' }}
                                 type='number'
                                 placeholder={purchase.orderQty}
                                 name='orderQty'
@@ -205,11 +217,11 @@ const DistributionAdd = ({
                             />
                         </td>
                         <td>
-                            <input
+                            <input className="form-input"
                                 type='number'
                                 placeholder='집계재고'
-                                name='currentQty'
-                                value={distributionDataList[index]?.currentQty || ''}
+                                name='quantity'
+                                value={distributionDataList[index]?.quantity}
                                 onChange={(e) =>
                                     handleInputChange(
                                         index,
@@ -218,25 +230,10 @@ const DistributionAdd = ({
                                     )
                                 }
                             />
-                        </td>
-                        <td>
-                            <input
-                                type='date'
-                                placeholder='입고예정일'
-                                name='expectedReceiptDate'
-                                value={distributionDataList[index]?.expectedReceiptDate || ''}
-                                onChange={(e) =>
-                                    handleInputChange(
-                                        index,
-                                        e.target.name,
-                                        e.target.value
-                                    )
-                                }
-                            />
-                        </td>
-                        <td>
-                            <button onClick={() => handleAdd(index)}>추가</button>
-                            <button onClick={handleCancelClick}>취소</button>
+                            <button type="submit" className="items-subTitle-button" onClick={() => handleAdd(index)} 
+                            style={{ marginLeft: '10px', display: isChecked ? 'inline-block' : 'none' }}>
+                                ✔
+                            </button>
                         </td>
                     </tr>
                 ))}
