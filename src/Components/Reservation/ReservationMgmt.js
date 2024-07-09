@@ -107,7 +107,7 @@ const ReservationMgmt = () => {
             <span className="date-number">{date}</span>
             {isReserved && isCurrentMonth && <PiAcornDuotone className="acorn-icon" />}
           </div>
-        </div>
+        </div>                                                                                                                                                                                                                                                                                                                                                                                                       
       );
     });
   };
@@ -161,24 +161,29 @@ const ReservationMgmt = () => {
     for (let i = 1; i <= Math.ceil(reservations.length / itemsPerPage); i++) {
       pageNumbers.push(i);
     }
-
+  
+    const pageGroup = Math.ceil(currentPage / 5);
+    const lastPage = pageNumbers.length;
+    const startPage = (pageGroup - 1) * 5 + 1;
+    const endPage = Math.min(pageGroup * 5, lastPage);
+  
     return (
       <nav aria-label="Page navigation example" style={{ marginTop: '50px' }}>
         <ul className="pagination justify-content-center">
           <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-            <a className="page-link" href="#" onClick={() => paginate(currentPage - 1)} aria-label="Previous">
+            <a className="page-link" href="#" onClick={() => paginate(Math.max(1, startPage - 5))} aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
-          {pageNumbers.map(number => (
+          {pageNumbers.slice(startPage - 1, endPage).map(number => (
             <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
               <a onClick={() => paginate(number)} href="#" className="page-link">
                 {number}
               </a>
             </li>
           ))}
-          <li className={`page-item ${currentPage === Math.ceil(reservations.length / itemsPerPage) ? 'disabled' : ''}`}>
-            <a className="page-link" href="#" onClick={() => paginate(currentPage + 1)} aria-label="Next">
+          <li className={`page-item ${currentPage === lastPage ? 'disabled' : ''}`}>
+            <a className="page-link" href="#" onClick={() => paginate(Math.min(lastPage, endPage + 1))} aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
             </a>
           </li>
