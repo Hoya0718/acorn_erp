@@ -269,7 +269,7 @@ const DistributionMgmt = () => {
         <div>
             {/* 제목 영역 */}
             <div className="Middle classification">
-                <span><h2>물류관리</h2></span>
+                <h3>물류 관리</h3>
             </div>
             <hr />
 

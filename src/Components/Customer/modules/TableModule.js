@@ -6,21 +6,23 @@ import "../../Main/Main.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import instance from './../../../api/axios';
-import ViewDetailsModal from '../mgmtTable/Modal/viewDetailsModal';
+import ViewDetailsModal_viewDetail from '../mgmtTable/Modal/viewDetailsModal';
 
-const TableModule = ({ 
-    data = [], 
-    columns = [], 
-    onSort = () => { }, 
+const TableModule = ({
+    data = [], setData,
+    columns = [],
+    onSort = () => { },
     rowsPerPage, currentPage, totalData = [],
-    formatDate
+    searchKeyword, startDate, endDate, onsearch
+    
 }) => {
+    const [filteredData, setFilteredData] = useState(data);
     const [selectAll, setSelectAll] = useState(false);
     const [selectedRows, setSelectedRows] = useState({});
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'none' });
 
-    const [showModal, setShowModal] = React.useState(false);
-    const [modalData, setModalData] = React.useState({});
+    const [showModal_viewDetail, setShowModal_viewDetail] = React.useState(false);
+    const [modalData_viewDetail, setModalData_viewDetail] = React.useState({});
 
     const [rows, setRows] = React.useState([]);
 
@@ -30,7 +32,7 @@ const TableModule = ({
     }, [data]);
 
     useEffect(() => {
-        fetchTableData( );
+        fetchTableData();
     }, []);
 
     const handleSort = (key) => {
@@ -46,7 +48,38 @@ const TableModule = ({
         setSortConfig({ key, direction });
         onSort(key, direction);
     };
+    useEffect(() => {
+        let updatedData = rows;
+    
+        if (searchKeyword) {
+          updatedData = rows.filter(row =>
+            Object.values(row).some(value =>
+              value && value.toString().toLowerCase().includes(searchKeyword.toLowerCase())
+            )
+          );
+        }
+        if (startDate && endDate) {
+          updatedData = updatedData.filter(row => {
+            const registerDate = new Date(row.registerDate);
+            return registerDate >= new Date(startDate) && registerDate <= new Date(endDate);
+          });
+        }
+        if (sortConfig.key) {
+          updatedData = [...updatedData].sort((a, b) => {
+            if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'ascending' ? -1 : 1;
+            if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'ascending' ? 1 : -1;
+            return 0;
+          });
+        }
+    
+        setFilteredData(updatedData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+      }, [rows, currentPage, rowsPerPage, searchKeyword, sortConfig, startDate, endDate]);
 
+      
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+      };
     const fetchTableData = async () => {
         try {
             await fetchCustomerDetails();
@@ -87,7 +120,7 @@ const TableModule = ({
         }
         return acc;
     }, {});
-    
+
     const fetchCustomerDetails = async () => {
         try {
             //테이블 데이터 호출
@@ -113,33 +146,28 @@ const TableModule = ({
                 return {
                     ...customer,
                     customerGrade: gradeInfo ? gradeInfo.customerGrade : '-',
-                    // customerNotes: notesInfo ? notesInfo.notes : '-',
-                    // customerNotes: notes,
                     customerNotes: notes.length ? notes : [{ notes: '-' }],
                 }
             });
             setRows(mergedData);
-            console.log("rows", rows)
         } catch (error) {
             console.error('Error fetching customer details:', error);
             return null;
         }
     };
-
-    const handleNameClick = async (customer) => {
-        console.log("handleNameClick 실행")
-        console.log("customer ", customer)
-        const customerDetails = rows.find(row => row.customerId === customer.customerId);
-        console.log("customerDetails ", customerDetails)
+    useEffect(() => {
+        fetchCustomerDetails();
+    }, []);
+    const handleNameClick = (customerId) => {
+        const customerDetails = rows.find(row => row.customerId === customerId);
         if (customerDetails) {
-            setModalData(customerDetails);
-            setShowModal(true);
+            setModalData_viewDetail(customerDetails);
+            setShowModal_viewDetail(true);
         }
     };
-
     return (
-        <div className="customer-status-table">
-            <table className="table table-hover" style={{ wordBreak: 'break-all' }}>
+        <div>
+            <table className="table" >
                 <thead>
                     <tr>
                         <th scope="col" className="table-centered">no.</th>
@@ -151,10 +179,10 @@ const TableModule = ({
                                 onClick={() => handleSort(column.key)}
                             >
                                 {column.header}
-                                {sortConfig.key === column.key && (
+                                {/* {sortConfig.key === column.key && (
                                     sortConfig.direction === 'ascending' ? <FontAwesomeIcon icon={faCaretDown} /> :
                                         sortConfig.direction === 'descending' ? <FontAwesomeIcon icon={faCaretUp} /> : ''
-                                )}
+                                )} */}
                             </th>
                         ))}
                     </tr>
@@ -165,7 +193,7 @@ const TableModule = ({
                             <td className="table-centered">{(currentPage - 1) * rowsPerPage + index + 1}</td>
                             {columns.map((column) => (
                                 <td key={column.key} className={column.className || 'table-centered'}
-                                    onClick={column.isName ? () => handleNameClick(rows) : undefined}
+                                    onClick={column.isName ? () => handleNameClick(row.customerId) : undefined}
                                     style={column.isName ? { cursor: 'pointer', textDecoration: 'underline' } : undefined}>
                                     {column.format ? column.format(row[column.key]) : row[column.key]}
                                 </td>
@@ -188,11 +216,12 @@ const TableModule = ({
                     </tr>
                 </tbody>
             </table>
-            {showModal && (
-                <ViewDetailsModal
-                    show={showModal}
-                    onHide={() => setShowModal(false)}
-                    data={modalData}
+            {showModal_viewDetail && (
+                <ViewDetailsModal_viewDetail
+                    show={showModal_viewDetail}
+                    onHide={() => setShowModal_viewDetail(false)}
+                    data={modalData_viewDetail}
+                    setData={setData}
                 />)}
         </div>
     );

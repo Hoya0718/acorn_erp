@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-regular-svg-icons";
 
 
+
+
 const FindEmail = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -72,8 +74,8 @@ const FindEmail = () => {
           value={registrationNum}
           onChange={(e) => setRegistrationNum(e.target.value)}
         />
-  
-        <button className="btn btn-lg btn-primary btn-block" type="submit">
+ 
+        <button className="btn btn-lg btn-primary btn-block" type="submit" style={{ marginTop: '50px' }}>
           아이디 찾기
         </button>
       </form>

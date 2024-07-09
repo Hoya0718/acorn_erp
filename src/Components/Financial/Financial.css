@@ -66,8 +66,9 @@
   margin-left: 12px; /* 각 버튼 사이의 간격 설정 */
 }
 
-.modal {
-  z-index: 1000; /* 원하는 숫자로 설정 */
+/* .modal {
+  z-index: 1000; 
+
   position: fixed;
   top: 0;
   left: 0;
@@ -77,16 +78,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
-.modal-content {
+/* .modal-content {
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
   width: 50%;
   max-width: 600px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
+} */
 
 .modal-close {
   position: absolute;
@@ -111,16 +112,17 @@
 }
 
 .total-sales {
-  background-color: #e8eff4;
+  background-color: #CBDDE6;
   padding: 10px;
   margin-bottom: 20px;
-  border: 2px solid #96abbe;
+  /* border: 2px solid #45718d; */
+  border-radius: 5px;
   width: 300px;
 }
 
 .total-sales h4 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: #333;
 }
 

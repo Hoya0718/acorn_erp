@@ -3,30 +3,24 @@ import './Sales.css';
 
 const initialOrders = [
   {
-    orderNumber: '1001',
-    returnType: '환불',
+    orderNumber: '102',
+    returnStatus: '환불 완료',
     itemName: '단팥빵',
     customerName: '홍길동',
-    orderDate: '2023-06-15 10:30',
-    customerAddr: '서울시 강남구',
+    orderDate: '2024-05-15 10:30:00',
     customerTel: '010-1234-5678',
-    quantity: 100,
-    totalPrice: 100000,
-    returnReason: '',
-    returnStatus: '환불 완료'
+    itemQty: 100,
+    orderTotalPrice: 100000,
   },
   {
-    orderNumber: '1002',
-    returnType: '교환',
+    orderNumber: '101',
+    returnStatus: '교환 완료',
     itemName: '소보로빵',
     customerName: '이몽룡',
-    orderDate: '2023-06-16 12:00',
-    customerAddr: '서울시 서초구',
+    orderDate: '2024-06-16 12:00:00',
     customerTel: '010-5678-1234',
-    quantity: 50,
-    totalPrice: 50000,
-    returnReason: '불만족',
-    returnStatus: '교환 완료'
+    itemQty: 50,
+    orderTotalPrice: 50000,
   }
 ];
 
@@ -93,16 +87,16 @@ const ReturnTable = () => {
           <tr>
             <th><input type="checkbox" checked={selectAllCheckboxState} onChange={toggleSelectAll} /></th>
             <th onClick={() => handleSort('orderNumber')}>주문번호 {getSortDirection('orderNumber')}</th>
+            <th onClick={() => handleSort('returnStatus')}>처리상태 {getSortDirection('returnStatus')}</th>
             {/* <th onClick={() => handleSort('returnType')}>상태구분 {getSortDirection('returnType')}</th> */}
             <th onClick={() => handleSort('orderDate')}>판매일시 {getSortDirection('orderDate')}</th>
             <th onClick={() => handleSort('customerName')}>이름 {getSortDirection('customerName')}</th>
             <th onClick={() => handleSort('customerTel')}>연락처 {getSortDirection('customerTel')}</th>
             <th onClick={() => handleSort('itemName')}>상품명 {getSortDirection('itemName')}</th>
-            <th onClick={() => handleSort('quantity')}>수량 {getSortDirection('quantity')}</th>
-            <th onClick={() => handleSort('totalPrice')}>판매금액 {getSortDirection('totalPrice')}</th>
+            <th onClick={() => handleSort('itemQty')}>수량 {getSortDirection('itemQty')}</th>
+            <th onClick={() => handleSort('orderTotalPrice')}>판매금액 {getSortDirection('orderTotalPrice')}</th>
             {/* <th onClick={() => handleSort('customerAddr')}>주소 {getSortDirection('customerAddr')}</th> */}
             {/* <th onClick={() => handleSort('returnReason')}>사유 {getSortDirection('returnReason')}</th> */}
-            <th onClick={() => handleSort('returnStatus')}>처리상태 {getSortDirection('returnStatus')}</th>
           </tr>
         </thead>
         <tbody>
@@ -110,16 +104,16 @@ const ReturnTable = () => {
             <tr key={index}>
               <td><input type="checkbox" checked={selectedOrders.some(selectedOrder => selectedOrder.orderNumber === order.orderNumber)} onChange={() => toggleOrderSelection(order)} /></td>
               <td>{order.orderNumber}</td>
+              <td>{order.returnStatus}</td>
               {/* <td>{order.returnType}</td> */}
               <td>{order.orderDate}</td>
               <td>{order.customerName}</td>
               <td>{order.customerTel}</td>
               <td>{order.itemName}</td>
-              <td>{order.quantity}</td>
-              <td>{order.totalPrice.toLocaleString()} 원</td>
+              <td>{order.itemQty}</td>
+              <td>{order.orderTotalPrice.toLocaleString()} 원</td>
               {/* <td>{order.customerAddr}</td> */}
               {/* <td>{order.returnReason}</td> */}
-              <td>{order.returnStatus}</td>
             </tr>
           ))}
         </tbody>

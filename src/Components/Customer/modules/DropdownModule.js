@@ -6,8 +6,8 @@ import "../../Main/Main.css"
 
 const DropdownModule = ({ selectedOption, handleSelect, options }) => {
   return (
-    <Dropdown>
-      <Dropdown.Toggle variant="outline-secondary" size="sm">
+    <Dropdown style={{fontSize: '14px'}}>
+      <Dropdown.Toggle variant="outline-secondary" style={{fontSize: '14px'}}>
         {selectedOption}
       </Dropdown.Toggle>
       <Dropdown.Menu>

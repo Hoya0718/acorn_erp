@@ -1,45 +1,44 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from '../../api/axios';
-
-import './Board.css'; // Assuming Board-specific styles are in Board.css
+import axios from '../../api/axios'; // axios를 상대 경로가 아닌 기본 import로 수정
 import getUserInfo from '../../api/getUserInfo';
 
+import './Board.css'; // Assuming Board-specific styles are in Board.css
 
 const Board = () => {
   const [posts, setPosts] = useState([]);
-
   const [sortBy, setSortBy] = useState('views'); // 기본 정렬 기준은 인기순(HOT🔥)
   const [sortOrder, setSortOrder] = useState('desc'); // 정렬 순서: desc (내림차순) or asc (오름차순)
   const [searchKeyword, setSearchKeyword] = useState('');
-
   const [userInfo, setUserInfo] = useState(null);
 
 
   useEffect(() => {
-    fetchPosts();
+    // 사용자 정보를 먼저 가져온 후 게시물 데이터를 가져옴
+    const fetchUserInfoAndPosts = async () => {
+      await fetchUserInfo();
+      await fetchPosts();
+    };
 
+    fetchUserInfoAndPosts();
   }, [sortBy, sortOrder]); // sortBy, sortOrder가 변경될 때마다 useEffect가 다시 실행됨
 
+  // 사용자 정보를 가져오는 함수
+  const fetchUserInfo = async () => {
+    try {
+      const userInfo = await getUserInfo();
+      console.log('User Info:', userInfo);
+      setUserInfo(userInfo);
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  };
 
-  //   fetchUserInfo();
-  // }, []);
 
+   useEffect(() => {
+   fetchPosts();
 
-  // // 사용자 정보를 가져오는 함수
-  // const fetchUserInfo = async () => {
-  //   try {
-  //     const userInfo = await getUserInfo();
-  //     console.log('User Info:커뮤니티 ', userInfo);
-  //     console.log("아이디" + userInfo.id);
-  //     setUserInfo(userInfo);
-  //   } catch (error) {
-  //     console.error('Error fetching user info: 커뮤니티', error);
-  //   }
-  // };
-  
-  // 게시물 데이터를 서버에서 가져오는 함수
+   }, [sortBy, sortOrder]); // sortBy, sortOrder가 변경될 때마다 useEffect가 다시 실행됨
 
   const fetchPosts = async () => {
     try {
@@ -67,6 +66,17 @@ const Board = () => {
     fetchPosts(); // 검색 버튼 클릭 시 게시물을 다시 불러오도록 처리
   };
 
+   //조회수 추가
+   const handlePostClick = async (postId) => {
+    try {
+      await axios.post(`/board/incrementViews/${postId}`);
+      console.log(postId)
+      window.location.href = `/layout/detail/${postId}`;
+    } catch (error) {
+      console.error('Error incrementing views:', error);
+    }
+  };
+
   return (
     <div className="board-container">
       <div className="board-header">
@@ -92,8 +102,8 @@ const Board = () => {
         <Link to="/layout/post" className="board-button board-write-button" style={{textDecoration: 'none'}}>글쓰기</Link>
       </div>
 
-      <div className="board-table">
-        <table>
+      <div>
+        <table className="board-table">
           <thead>
             <tr>
               <th>번호</th>
@@ -102,16 +112,19 @@ const Board = () => {
               <th>작성일</th>
               <th>조회수</th>
               <th>댓글</th>
+            
             </tr>
           </thead>
-          <tbody>
+          <tbody className='board-tbody'>
             {posts.map(post => (
               <tr key={post.id}>
                 <td>{post.id}</td>
                 <td>
-                  <Link to={`/layout/detail/${post.id}`}>{post.title}</Link>
+                  {/*기존코드*/}
+                  {/*<Link to={`/layout/detail/${post.id}`}>{post.title}</Link>*/}
+                  <Link to="#" onClick={() => handlePostClick(post.id)}>{post.title}</Link>
                 </td>
-                <td>{post.author}</td>
+                <td>{post.userId}</td> {/* 가게 이름 표시 */}
                 <td>{post.postDate}</td>
                 <td>{post.views}</td>
                 <td>{post.comments}</td>

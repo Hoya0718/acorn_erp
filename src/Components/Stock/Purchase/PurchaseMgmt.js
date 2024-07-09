@@ -112,7 +112,7 @@ const PurchaseMgmt = () => {
           )}
         </span>
       </div>
-      
+
       <PurchaseList
         purchases={filteredData}
         filteredData={filteredData}
