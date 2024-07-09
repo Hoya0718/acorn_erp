@@ -121,7 +121,7 @@ const InventoryMgmt = () => {
   return (
     <div>
       <div className="Middle classification">
-        <h3>상품 재고 관리</h3>
+        <h4>상품 재고 관리</h4>
       </div>
       <hr />
       <div className="items-subTitle">
@@ -149,7 +149,7 @@ const InventoryMgmt = () => {
           <input type="text" placeholder='🔍 검색' /><button>조회</button>
         </div>
       </div>
-      {/* <br /> */}
+      <br />
       <div>
         <section>
           <InventoryTable
