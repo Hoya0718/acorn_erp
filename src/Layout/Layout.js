@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { useLocation, Outlet, Link } from 'react-router-dom';
 import { Slide, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Layout.css';
 import MemoPad from './MemoPad';
 import ThemeToggle from './ThemeToggle';
 import LogoutIcon from './LogoutIcon';
+
+
 
 const Layout = () => {
   const [expandedItem, setExpandedItem] = useState(null);
@@ -69,14 +71,14 @@ const Layout = () => {
           <Outlet />
         </main>
       </div>
-      <ToastContainer
-        position="top-center"
-        transition={Slide}
-        autoClose={2000}
-        hideProgressBar={true}
-        closeOnClick
-        rtl={false}
-        limit={1}
+       <ToastContainer
+      position="top-center"
+      transition={Slide}
+      autoClose={2000}
+      hideProgressBar={true}
+      closeOnClick
+      rtl={false}
+      limit={1}
       />
     </div>
   );

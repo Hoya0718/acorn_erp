@@ -48,7 +48,7 @@ const LoginForm = () => {
       }
     } catch (err) {
       console.error("에러 발생: ", err);
-      setError('로그인 실패: 아이디 또는 비밀번호를 확인하세요.');
+      window.alert('로그인 실패: 아이디 또는 비밀번호를 확인하세요.');
     } finally {
       setLoading(false);
     }

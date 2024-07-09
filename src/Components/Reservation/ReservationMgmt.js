@@ -192,9 +192,9 @@ const ReservationMgmt = () => {
           <div className="body_flow">
             <div className="row">
               <div className="col--12"></div>
-              <h4>예약 관리</h4>
-              <hr/>
-              <div className="col-md-7 col-xs-12">
+              <h3>예약 관리</h3>
+              <hr style={{    margin: "1rem 0"}}/>
+              <div className="col-md-7 col-xs-12" style={{paddingLeft:"60px", marginRight:"-80px"}}>
                 <div className="left">
                   <div className="Middle classification">
                   </div>
@@ -228,10 +228,10 @@ const ReservationMgmt = () => {
                 <div className="right">
                   <div className="right-up">
                     <Link to="mainReg">
-                      <button className="btn btn-primary btn-register">예약 등록</button>
+                      <button className="btn btn-register">예약 등록</button>
                     </Link>
                     <Link to="resTable">
-                      <button className="btn btn-primary btn-search">예약 조회</button>
+                      <button className="btn btn-search">예약 조회</button>
                     </Link>
                   </div>
                   <div className="right-mid">
@@ -243,16 +243,13 @@ const ReservationMgmt = () => {
                         updateReservation
                       }} />
                     </section>
-                    {renderPagination()}
+                    {/* {renderPagination()} */}
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div id="footer_Frame">
-        <footer></footer>
       </div>
       <ReservationModal
         show={showModal}

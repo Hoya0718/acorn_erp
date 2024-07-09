@@ -4,13 +4,24 @@ import './Reservation.css';
 import { useOutletContext, useNavigate, useParams } from 'react-router-dom';
 import axios from '../../api/axios';
 
-const buttonStyle = {
+const buttonStyle1 = {
   padding: '8px 16px',  // 패딩을 줄임
   fontSize: '13px',     // 폰트 크기를 줄임
   borderRadius: '6px',  // 모서리 반경을 약간 줄임
   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',  // 그림자를 약간 줄임
   transition: 'all 0.3s ease',
-  width: '100px'        // 버튼 너비를 줄임
+  width: '100px', // 버튼 너비를 줄임
+  backgroundColor: '#4D7F9D'        
+};
+
+const buttonStyle2 = {
+  padding: '8px 16px',  // 패딩을 줄임
+  fontSize: '13px',     // 폰트 크기를 줄임
+  borderRadius: '6px',  // 모서리 반경을 약간 줄임
+  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',  // 그림자를 약간 줄임
+  transition: 'all 0.3s ease',
+  width: '100px', // 버튼 너비를 줄임
+  backgroundColor: '#dc3545'        
 };
 
 const MainReg = () => {
@@ -78,29 +89,29 @@ const MainReg = () => {
 
   return (
     <div>
-      <h2 style={{ textAlign: 'center',
-    fontFamily: 'Arial, sans-serif',
+      <h2 style={{ textAlign: 'left',
+    fontFamily: 'Noto Sans KR, sans-serif',
     fontSize: '2rem',
     fontWeight: 'bold',
-    color: '#333333', // Dark gray 
-    backgroundColor: '#ADD8E6', // Light blue background
-    padding: '20px',
-    borderRadius: '10px',
+    color: '#333333',
+    borderBottom: '3px solid #9FBED2', // Dark gray 
+    // backgroundColor: '#9FBED2', // Light blue background
+    padding: '15px',
     margin: '20px 0',}}>{isEditMode ? '예약 수정' : '예약 등록'}</h2>
-      <br /><br />
+    
       <main>
         <div>
           <form onSubmit={handleSubmit}>
-            <table id="calculator_table" align="center" style={{ width: '100%', maxWidth: '500px', borderCollapse: 'separate', borderSpacing: '0', borderRadius: '10px', overflow: 'hidden', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+            <table id="calculator_table" align="center" style={{ marginTop: '30px', width: '100%', borderCollapse: 'separate', borderSpacing: '0', borderRadius: '10px', overflow: 'hidden', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
               <thead>
-                <tr style={{ backgroundColor: '#f8f9fa' }}>
+                <tr style={{ backgroundColor: '#f8f9fa'}}>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap', padding: '10px' }}>예약자 이름</th>
                   <td style={{ width: '30%', padding: '10px' }}>
-                    <input type="text" name="name" placeholder="예약자 이름" style={{ fontSize: '15px', width: '100%', borderRadius: '4px', padding: '5px' }} onChange={handleChange} value={formData.name} />
+                    <input type="text" name="name" placeholder="예약자 이름" style={{ fontSize: '15px', width: '100%', borderRadius: '4px', padding: '5px', marginBottom: '0px' }} onChange={handleChange} value={formData.name} />
                   </td>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap', padding: '10px' }}>휴대전화</th>
                   <td style={{ width: '30%', padding: '10px' }}>
-                    <input type="text" name="phone" placeholder="010-0000-0000" style={{ fontSize: '15px', width: '100%', borderRadius: '4px', padding: '5px' }} onChange={handleChange} value={formData.phone} />
+                    <input type="text" name="phone" placeholder="010-0000-0000" style={{ fontSize: '15px', width: '100%', borderRadius: '4px', padding: '5px', marginBottom: '0px'  }} onChange={handleChange} value={formData.phone} />
                   </td>
                 </tr>
                 <tr>
@@ -120,7 +131,7 @@ const MainReg = () => {
                   </td>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap', padding: '10px' }}>추가 요청사항</th>
                   <td style={{ width: '30%', padding: '10px' }}>
-                    <input type="text" name="requests" placeholder="추가 요청사항" style={{ fontSize: '15px', width: '100%', borderRadius: '4px', padding: '5px' }} onChange={handleChange} value={formData.requests} />
+                    <input type="text" name="requests" placeholder="추가 요청사항" style={{ fontSize: '15px', width: '100%', borderRadius: '4px', padding: '5px', marginBottom: '0px'  }} onChange={handleChange} value={formData.requests} />
                   </td>
                 </tr>
                 <tr style={{ backgroundColor: '#f8f9fa' }}>
@@ -145,16 +156,16 @@ const MainReg = () => {
                 <tr>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap', padding: '10px' }}>예약 번호</th>
                   <td style={{ width: '30%', padding: '10px' }}>
-                    <input type="text" name="id" placeholder="예약 번호" style={{ fontSize: '15px', width: '100%', borderRadius: '4px', padding: '5px' }} onChange={handleChange} value={formData.id} readOnly={!isEditMode} />
+                    <input type="text" name="id" placeholder="예약 번호" style={{ fontSize: '15px', width: '100%', borderRadius: '4px', padding: '5px', marginBottom: '0px' }} onChange={handleChange} value={formData.id} readOnly={!isEditMode} />
                   </td>
                   <th scope="col" style={{ width: '20%', fontSize: '16px', whiteSpace: 'nowrap', padding: '10px' }}>인원 수</th>
                   <td style={{ width: '30%', padding: '10px' }}>
-                    <input type="text" name="rsCount" placeholder="인원 수" style={{ fontSize: '15px', width: '100%', borderRadius: '4px', padding: '5px' }} onChange={handleChange} value={formData.rsCount} />
+                    <input type="text" name="rsCount" placeholder="인원 수" style={{ fontSize: '15px', width: '100%', borderRadius: '4px', padding: '5px', marginBottom: '0px' }} onChange={handleChange} value={formData.rsCount} />
                   </td>
                 </tr>
               </thead>
             </table>
-            {errorMessage && <p style={{ color: 'red', textAlign: 'center' }}>{errorMessage}</p>}
+            {errorMessage && <p style={{ color: 'red', textAlign: 'center', marginTop: '12px', marginBottom: '-5px'}}>{errorMessage}</p>}
             <br/><br/>
             <section id="calculator" align="center">
               <div id="calculator_addBtn">
@@ -162,7 +173,7 @@ const MainReg = () => {
                   type="submit" 
                   id="add_reg" 
                   className="btn btn-primary btn-lg m-2"
-                  style={buttonStyle}
+                  style={buttonStyle1}
                 >
                   {isEditMode ? '수정' : '등록'}
                 </button>
@@ -171,7 +182,7 @@ const MainReg = () => {
                   id="add_cancel" 
                   className="btn btn-danger btn-lg m-2"
                   onClick={() => navigate('/layout/reservationMgmt')}
-                  style={buttonStyle}
+                  style={buttonStyle2}
                 >
                   취소
                 </button>

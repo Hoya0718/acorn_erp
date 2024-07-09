@@ -120,10 +120,6 @@ li.submenu1.active {
   opacity: 1;
 }
 
-/* 문호야 lastClick.. 같은 변수 만들어서 css 적용하는거 해볼끼? */
-
-
-
 footer{
   border: 1px solid green;
   width: 100%;
@@ -143,4 +139,8 @@ footer{
   display: flex;
   align-items: center;
   gap: 30px;
+}
+
+.Toastify__toast-body {
+  font-size: 16px; /* 원하는 폰트 크기로 변경 */
 }

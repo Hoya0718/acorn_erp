@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Righteous&display=swap');
 
 body {
   background: #eee !important;  
@@ -13,13 +14,17 @@ body {
 
 .form-signin {
   max-width: 380px;
-  padding: 15px 30px 20px;
+  padding: 15px 30px 15px;
   margin: 0 auto;
   background-color: #fff;
 
   .form-signin-heading {
-    font-size: 40px;
-    margin-bottom: 20px;
+    /* font-family: ; */
+    font-family: "Audiowide", sans-serif;
+    font-weight: 550;
+    font-style: normal;
+    font-size: 35px;
+    margin-bottom: 10px;
   }
   .form-signin-heading2 {
     width: 243px;
@@ -174,7 +179,7 @@ body {
 
  
 .space {
-padding-right: 30px;
+padding-right: 53px;
 } 
 
 

@@ -138,6 +138,10 @@ export const RouterInfo = createBrowserRouter([
       },
       // 게시판 관련 경로
       {
+        index : true,
+        element: <Board />,
+      },    
+      {
         path: "board",
         element: <Board />,
       },    
@@ -153,8 +157,7 @@ export const RouterInfo = createBrowserRouter([
       {
         path: "customerMgmt/cusStatus",
         element: <CusStatus />
-      },
-  
+      }
     ]
   },
   {

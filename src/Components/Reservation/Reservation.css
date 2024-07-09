@@ -1,12 +1,14 @@
-#Frame {
+ /* #Frame {
   display: flex;
   justify-content: column;
-}
+} */
 
 #add_reg:hover, #add_cancel:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
+
+
 
 .calendar {
   width: 650px;
@@ -15,7 +17,7 @@
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  font-family: 'Arial', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
 }
 
 .flex-shrink-0 {
@@ -26,7 +28,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #4a90e2;
+  background-color: #9FBED2;
   color: #fff;
   padding: 20px;
   border-top-left-radius: 10px;
@@ -34,11 +36,14 @@
 }
 
 .year-month {
-  font-size: 30px;
-  font-weight: bold;
+  font-size: 20px;
+  font-family: "Noto Sans KR", sans-serif;
+  font-weight: 500;
+  font-style: normal;
 }
 
 .nav {
+  font-family: "Noto Sans KR", sans-serif;
   display: flex;
   border: 1px solid #ffffff;
   border-radius: 5px;
@@ -48,8 +53,7 @@
   width: 28px;
   height: 30px;
   border: none;
-  font-size: 16px;
-  line-height: 34px;
+  font-size: 15px;
   background-color: transparent;
   cursor: pointer;
   color: #fff;
@@ -68,8 +72,7 @@
 
 .days {
   display: flex;
-  margin: 25px 0 10px;
-  background-color: #f8f9fa;
+  margin: 15px 0 10px;
   padding: 10px 0;
 }
 
@@ -78,7 +81,7 @@
   text-align: center;
   font-size: 1.5rem;
   font-weight: bold;
-  color: #4a90e2;
+  color: #45718d;
 }
 
 .dates {
@@ -96,7 +99,7 @@
   border-left: 1px solid #e0e0e0;
   font-size: 1.5rem;
   font-weight: bold;
-  position: relative;
+  /* position: relative; */
   transition: background-color 0.3s;
 }
 
@@ -125,13 +128,13 @@
 }
 
 .today:not(.other) {
-  position: relative;
+  /* position: relative; */
   color: #fff;
   background-color: #FFD5D2
 }
 
 .custom-right-column {
-  margin-top: 7rem;
+  margin-top: 2rem;
 }
 
 .table {
@@ -140,7 +143,7 @@
   border-spacing: 0;
   font-size: 14px;
   text-align: center;
-  margin-top: 20px;
+  /* margin-top: 20px; */
 }
 
 .table th,
@@ -172,7 +175,7 @@
   padding: 8px;
   border-radius: 4px;
   width: 300px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .searcher .right button {
@@ -192,8 +195,7 @@
 .items-subTitle {
   display: flex;
   justify-content: flex-end;
-  margin-top: 20px;
-  gap: 10px;
+  /* margin-top: 8px; */
   margin-bottom: 10px;
 }
 
@@ -204,7 +206,8 @@
   padding: 8px 16px;
   cursor: pointer;
   border-radius: 4px;
-  margin-right: 10px;
+  margin: 2px !important;
+  /* margin-right: 10px; */
 }
 
 .items-subTitle button:hover {
@@ -212,10 +215,10 @@
 }
 
 .btn-register, .btn-search {
-  background-color: #396EE2;
+  background-color: black;
   color: #fff;
   border: none;
-  padding: 14px 24px;
+  padding: 10px 20px;
   font-size: 14px;
   cursor: pointer;
   border-radius: 4px;
@@ -224,7 +227,8 @@
 
 .btn-register:hover, .btn-search:hover {
   background-color: #333;
-  transform: translateY(-2px);
+  color: white;
+  /* transform: translateY(-2px); */
 }
 
 .reserved {
@@ -245,7 +249,7 @@
 }
 
 .date-content {
-  position: relative;
+  /* position: relative; */
   height: 100%;
 }
 
@@ -263,4 +267,17 @@
   width: 30px;
   height: 30px;
   color: #4a90e2;
+}
+
+.btn-register {
+  margin-right: 5px; /* 오른쪽에 10px의 여백 추가 */
+}
+
+.btn-search {
+  margin-left: 10px; /* 왼쪽에 10px의 여백 추가 */
+}
+
+.btn:first-child:active {
+  color: white;
+  background-color: black;
 }

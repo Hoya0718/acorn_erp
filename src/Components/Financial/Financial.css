@@ -66,8 +66,8 @@
   margin-left: 12px; /* 각 버튼 사이의 간격 설정 */
 }
 
-.modal {
-  z-index: 1000; /* 원하는 숫자로 설정 */
+/* .modal {
+  z-index: 1000;
   position: fixed;
   top: 0;
   left: 0;
@@ -77,7 +77,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
 .modal-content {
   background-color: #fff;
