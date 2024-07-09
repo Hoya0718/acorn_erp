@@ -70,7 +70,8 @@ const SettingModal_Period = () => {
         <div>
             <h4>기간선택</h4>
             <div className="customer-status-period-serchbox">
-                <div className="radio centered">
+                <div className="radio centered"
+                 style={{marginBottom: '10px'}}>
                     {datas.map((data) => (
                         <label key={data}>
                             <input
@@ -85,8 +86,14 @@ const SettingModal_Period = () => {
                 </div>
                 <div className="dateSearch centered">
                     {/* 사용자 지정 체크 여부에 따라 활성화 */}
-                    <input type="date" id="startDate" disabled={!isAbled} value={startDate} required onChange={handleStartDateChange}/>&nbsp;~&nbsp;
-                    <input type="date" id="endDate" disabled={!isAbled} value={endDate} required onChange={handleEndDateChange} />&nbsp;
+                    <input type="date" id="startDate" disabled={!isAbled} value={startDate} required onChange={handleStartDateChange}
+                    style={{fontSize:'11px'}}
+                    className='table-centered'
+                    />&nbsp;~&nbsp;
+                    <input type="date" id="endDate" disabled={!isAbled} value={endDate} required onChange={handleEndDateChange}
+                    style={{fontSize:'11px'}}
+                    className='table-centered'
+                     />&nbsp;
                 </div>
             </div>
             <hr></hr>

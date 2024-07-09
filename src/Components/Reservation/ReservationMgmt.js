@@ -194,6 +194,7 @@ const ReservationMgmt = () => {
               <div className="col--12"></div>
               <h3>예약 관리</h3>
               <hr style={{    margin: "1rem 0"}}/>
+
               <div className="col-md-7 col-xs-12" style={{paddingLeft:"60px", marginRight:"-80px"}}>
                 <div className="left">
                   <div className="Middle classification">

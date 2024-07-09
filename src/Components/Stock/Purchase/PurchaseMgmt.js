@@ -11,7 +11,7 @@ import {
   handleSubmitUpdate, handleCheckboxChange, handleSelectAll, handleChangeNewPurchase,
   handleChangeUpdateVendor, handleConfirmDelete, handleCancelForm, handleModalConfirmDelete, handleUpdateClickWrapper,
   handleChangeUpdatePurchase, handleCancelAdd, handleCancelUpdate, handleModalClose, handleDeleteClickWrapper,
-  handleSearch, 
+  handleSearch, fetchPageData 
 } from './Functions';
 
 const PurchaseMgmt = () => {
@@ -43,11 +43,11 @@ const PurchaseMgmt = () => {
   }, []);
 
   useEffect(() => {
-    fetchPageData();
+    fetchPageData(currentPage, rowsPerPage, setFilteredData, setTotalItems); 
   }, [currentPage, rowsPerPage]);
 
   useEffect(() => {
-    fetchPageData();
+    fetchPageData(currentPage, rowsPerPage, setFilteredData, setTotalItems); 
   }, [purchases]);
 
   const handleAddClickWrapper = () => {
@@ -76,24 +76,6 @@ const PurchaseMgmt = () => {
     setUpdatePurchase(null);
   };
 
-  //페이지네이션 데이터
-  const fetchPageData = async () => {
-    try {
-      const response_pageData = await instance.get(`/purchase/listPage?page=${currentPage - 1}&size=${rowsPerPage}`);
-      const page = response_pageData.data;
-      const formattedPageData = page.content.map(item => ({
-        ...item
-      }));
-      setFilteredData(formattedPageData);
-      setTotalItems(page.totalElements);
-    } catch (error) {
-      console.error('Error get PageData:', error);
-    }
-  }
-  useEffect(() => {
-    fetchPageData();
-  }, [currentPage, rowsPerPage]);
-
   return (
     <div>
       <div className='Middle classification'>
@@ -119,7 +101,7 @@ const PurchaseMgmt = () => {
           )}
         </span>
       </div>
-      <br />
+      {/* <br /> */}
 
       <div className="searcher">
         <div className="left">
@@ -128,10 +110,9 @@ const PurchaseMgmt = () => {
 
         <div className="right">
           <input type="text" placeholder='🔍 품목명으로 조회' value={searchTerm} onChange={handleSearchChange} />
-          <button onClick={handleSearch}>조회 &gt;</button>
+          <button onClick={handleSearch}>조회</button>
         </div>
       </div>
-      <br />
 
       <PurchaseList
         purchases={filteredData}

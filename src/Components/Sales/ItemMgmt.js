@@ -123,7 +123,7 @@ const ItemMgmt = () => {
   return (
     <div>
       <div className="Middle classification">
-        <h4>상품 관리</h4>
+        <h3>상품 관리</h3>
       </div>
       <hr />
       <div className="items-subTitle">
@@ -151,7 +151,7 @@ const ItemMgmt = () => {
           <input type="text" placeholder='🔍 검색' /><button>조회</button>
         </div>
       </div>
-      <br />
+      {/* <br /> */}
       <div>
         <section>
           <ItemTable

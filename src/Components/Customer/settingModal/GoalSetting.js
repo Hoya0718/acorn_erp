@@ -62,52 +62,70 @@ const SettingModal_Goal = () => {
     return (
         <div>
             <h4>목표선택</h4>
+            <br></br>
             {isEditMode ? (
-                <div>
-                    <strong>{targetLabel}</strong>&nbsp;&nbsp;
-                    <input type='number'
-                        style={{
-                            border: 'none',
-                            width: '250px',
-                            textAlign: 'center'
-                        }}
-                        placeholder='목표 인원을 작성해주세요'
-                        value={customerTarget}
-                        onChange={handleInputChange} />
-                    <button type="button" className="btn btn-outline-dark btn-sm" onClick={handleGoalEditmodeClick}>저장</button>
+                <div className='row'
+                style={{marginBottom: '8px'}}>
+                    <div className='col-4'>
+                        <strong>{targetLabel}</strong>&nbsp;&nbsp;
+                    </div>
+                    <div className='col-8'>
+                        <input type='number'
+                            style={{
+                                border: 'none',
+                                width: '200px',
+                                textAlign: 'center',
+                                fontSize:"11px"
+                            }}
+                            placeholder='목표 인원을 작성해주세요'
+                            value={customerTarget}
+                            onChange={handleInputChange} />
+                        <button type="button" className="btn btn-outline-dark btn-sm" onClick={handleGoalEditmodeClick}>저장</button>
+                    </div>
                 </div>
             ) : (
-                <div>
-                    <strong>{targetLabel}</strong>&nbsp;&nbsp;
-                    <input type='text'
-                        className="btn btn-lg btn-danger" 
-                        data-bs-toggle="popover" 
-                        data-bs-placement="top" 
-                        data-bs-content=
-                        "[전체 고객수] 전체 고객수로 보여집니다.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [당해연도 목표 고객수] 올해 증원 목표만 보여집니다."
-                        style={{
-                            border: 'none',
-                            width: '230px',
-                            textAlign: 'right',
-                            backgroundColor: 'transparent',
-                            color: 'black',
-                        }}
-                        value={targetValue}
-                        readOnly
-                        onDoubleClick={handleDoubleEditmodeClick} />명
+                <div className='row'
+                style={{marginBottom: '8px'}}>
+                    <div className='col-4'>
+                        <strong>{targetLabel}</strong>
+                    </div>
+                    <div className='col-8'>
+                        <input type='text'
+                            data-bs-toggle="popover"
+                            data-bs-placement="top"
+                            data-bs-content=
+                            "[당해연도 목표 고객수] 목표 인원에서 전년도 실제인원을 제외하고 보여집니다."
+                            style={{
+                                border: 'none',
+                                width: '200px',
+                                textAlign: 'right',
+                                backgroundColor: 'transparent',
+                                color: 'black',
+                                fontSize:"11px"
+                            }}
+                            value={targetValue}
+                            readOnly
+                            onDoubleClick={handleDoubleEditmodeClick} />명
+                    </div>
                 </div>
             )}
-            <div>
-                <strong>{currentLabel}</strong>&nbsp;&nbsp;{ }
-                <input type=''
-                    style={{
-                        border: 'none',
-                        width: '230px',
-                        textAlign: 'right',
-                    }}
-                    
-                    value={currentValue}
-                />명
+
+            <div className='row'>
+                <div className='col-4'>
+                    <strong>{currentLabel}</strong>
+                </div>
+                <div className='col-8'>
+                    <input type=''
+                        style={{
+                            border: 'none',
+                            width: '200px',
+                            textAlign: 'right',
+                                fontSize:"11px"
+                        }}
+
+                        value={currentValue}
+                    />명
+                </div>
             </div>
             <br />
             <div className='centered'>

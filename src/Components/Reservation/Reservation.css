@@ -196,6 +196,7 @@
   display: flex;
   justify-content: flex-end;
   /* margin-top: 8px; */
+  gap: 10px;
   margin-bottom: 10px;
 }
 
@@ -207,7 +208,7 @@
   cursor: pointer;
   border-radius: 4px;
   margin: 2px !important;
-  /* margin-right: 10px; */
+
 }
 
 .items-subTitle button:hover {
@@ -227,8 +228,9 @@
 
 .btn-register:hover, .btn-search:hover {
   background-color: #333;
+
   color: white;
-  /* transform: translateY(-2px); */
+
 }
 
 .reserved {
@@ -270,12 +272,13 @@
 }
 
 .btn-register {
-  margin-right: 5px; /* 오른쪽에 10px의 여백 추가 */
+  margin-right: 10px; /* 오른쪽에 10px의 여백 추가 */
 }
 
 .btn-search {
   margin-left: 10px; /* 왼쪽에 10px의 여백 추가 */
 }
+
 
 .btn:first-child:active {
   color: white;

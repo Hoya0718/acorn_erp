@@ -40,7 +40,7 @@ const CustomerStatusSettingModal = () => {
     return (
         <div>
             <h4>보여질 메뉴 선택</h4>
-            <h6><strong>고객분포도</strong></h6>
+            <h5><strong>고객분포도</strong></h5>
             <div>
                 <label>
                     <input 
@@ -48,24 +48,24 @@ const CustomerStatusSettingModal = () => {
                         name="gender" 
                         checked={checkboxes_dist.gender} 
                         onChange={handleCheckboxChangeDist}/> 성별
-                </label>&nbsp;
+                </label>&nbsp;&nbsp;&nbsp;&nbsp;
                 <label>
                     <input 
                         type='checkbox' 
                         name="age" 
                         checked={checkboxes_dist.age}  
                         onChange={handleCheckboxChangeDist}/> 연령별
-                </label>&nbsp;
+                </label>&nbsp;&nbsp;&nbsp;&nbsp;
                 <label>
                     <input 
                         type='checkbox' 
                         name="region" 
                         checked={checkboxes_dist.region} 
                         onChange={handleCheckboxChangeDist}/> 지역별
-                </label>&nbsp;
+                </label>&nbsp;&nbsp;&nbsp;&nbsp;
             </div>
             <br/>
-            <h6><strong>상품별 고객선호도</strong></h6>
+            <h5><strong>상품별 고객선호도</strong></h5>
             <div>
                 <label>
                     <input 
@@ -73,30 +73,31 @@ const CustomerStatusSettingModal = () => {
                         name="amount"
                         checked={checkboxes_prod.amount} 
                         onChange={handleCheckboxChangeProd} /> 최고매출상품
-                </label>&nbsp;
+                </label>&nbsp;&nbsp;&nbsp;&nbsp;
                 <label>
                     <input 
                         type='checkbox' 
                         name="count" 
                         checked={checkboxes_prod.count} 
                         onChange={handleCheckboxChangeProd}/> 최다거래상품
-                </label>&nbsp;
+                </label>&nbsp;&nbsp;&nbsp;&nbsp;
                 <label>
                     <input 
                         type='checkbox' 
                         name="reaction"
                         checked={checkboxes_prod.reaction} 
-                        onChange={handleCheckboxChangeProd} /> 반응좋은상품
+                        onChange={handleCheckboxChangeProd}
+                        /> 반응좋은상품
                 </label>
             </div>
             <br/>
             <div>
                 <div className='row'>
                     <div className='col'>
-                        <h6><strong>고객랭킹</strong></h6>
+                        <h5><strong>고객랭킹</strong></h5>
                     </div>
                     <div className='col'>
-                        {rangeValue}위 까지 보입니다.
+                    <h5>{rangeValue}위 까지 보입니다.</h5>
                     </div>
                 </div>
                 <input type="range" className="form-range" min="5" max="20" id="customRange2"

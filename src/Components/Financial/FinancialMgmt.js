@@ -59,7 +59,7 @@ const FinancialMgmt = () => {
 
             {/* 총매출 표시 */}
             <div className="total-sales">
-                <h4><PiCurrencyDollarBold size={16}/>현재 총매출: {totalSales.toLocaleString()} 원</h4>
+                <h4>💸 현재 총매출 : {totalSales.toLocaleString()} 원</h4>
             </div>
 
             <br />

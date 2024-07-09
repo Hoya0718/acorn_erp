@@ -12,6 +12,7 @@ const Board = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [userInfo, setUserInfo] = useState(null);
 
+
   useEffect(() => {
     // 사용자 정보를 먼저 가져온 후 게시물 데이터를 가져옴
     const fetchUserInfoAndPosts = async () => {
@@ -33,7 +34,12 @@ const Board = () => {
     }
   };
 
-  // 게시물 데이터를 서버에서 가져오는 함수
+
+   useEffect(() => {
+   fetchPosts();
+
+   }, [sortBy, sortOrder]); // sortBy, sortOrder가 변경될 때마다 useEffect가 다시 실행됨
+
   const fetchPosts = async () => {
     try {
       const encodedKeyword = encodeURIComponent(searchKeyword);
@@ -96,8 +102,8 @@ const Board = () => {
         <Link to="/layout/post" className="board-button board-write-button" style={{textDecoration: 'none'}}>글쓰기</Link>
       </div>
 
-      <div className="board-table">
-        <table>
+      <div>
+        <table className="board-table">
           <thead>
             <tr>
               <th>번호</th>
@@ -109,7 +115,7 @@ const Board = () => {
             
             </tr>
           </thead>
-          <tbody>
+          <tbody className='board-tbody'>
             {posts.map(post => (
               <tr key={post.id}>
                 <td>{post.id}</td>

@@ -59,7 +59,7 @@ const CustomerTableTabButton = ({ activeTab, setActiveTab, setActiveLabel }) => 
             onClick={handleDistributionClick}
             style={{ color: `${activeTab === 'distribution' ? '#71AAB2' : 'gray'}` }}
             href="#">
-            {distributionLabel}
+            <h4>{distributionLabel}</h4>
           </a>
         </li>
         <li className="nav-item">
@@ -68,7 +68,7 @@ const CustomerTableTabButton = ({ activeTab, setActiveTab, setActiveLabel }) => 
             onClick={handleProductClick}
             style={{ color: `${activeTab === 'product' ? '#71AAB2' : 'gray'}` }}
             href="#">
-            {productLabel}
+            <h4>{productLabel}</h4>
           </a>
         </li>
         <li className="nav-item">
@@ -77,7 +77,7 @@ const CustomerTableTabButton = ({ activeTab, setActiveTab, setActiveLabel }) => 
             onClick={handleRankingClick}
             style={{ color: `${activeTab === 'ranking' ? '#71AAB2' : 'gray'}` }}
             href="#">
-            {rankingLabel}
+            <h4>{rankingLabel}</h4>
           </a>
         </li>
       </ul>

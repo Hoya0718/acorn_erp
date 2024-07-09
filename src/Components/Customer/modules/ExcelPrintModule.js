@@ -21,18 +21,26 @@ const ExcelPrint = ({printData, columns, filename}) => {
       };
 
   return (
-    <div style={{margin: "10px"}}>
+    <div className="righted uppered">
         <CSVLink
             data={csvData}
             filename={`${filename}.csv`}
             className="excel-button"
             target="_blank"> 
-          <Button>
+          <Button 
+          // style={{paddingTop: '8px', paddingBottom: '8px', paddingLeft: '15px', paddingRight: '15px'}}
+          // variant="secondary" 
+          >
             <GrDocumentUpload size={16}/> 엑셀 다운
           </Button>
         </CSVLink>
         &nbsp;&nbsp;&nbsp;
-        <Button onClick={handlePrint}><HiPrinter size={16}/> 
+        <Button 
+          onClick={handlePrint} 
+          // style={{paddingTop: '8px', paddingBottom: '8px', paddingLeft: '15px', paddingRight: '15px'}}
+          // variant="secondary" 
+        >
+          <HiPrinter size={16}/> 
           인쇄
         </Button>
     </div>
