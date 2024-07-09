@@ -39,6 +39,7 @@ const LoginForm = () => {
 
           // sessionStorage에 사용자 정보 저장
           sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+          sessionStorage.setItem('isNewLogin', 'true');
 
           // 사용자 정보 확인 후 페이지 이동
           navigate('/layout');
