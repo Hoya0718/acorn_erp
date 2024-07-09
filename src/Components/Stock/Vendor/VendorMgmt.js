@@ -86,8 +86,8 @@ const VendorMgmt = () => {
            <button onClick={() => handleCancelForm(setIsAddClicked, setIsUpdateClicked, setNewVendor, setUpdateVendor)}>취소</button>
           )}
         </span>
-       </
-      
+       
+      </div>
       {/* VendorList 컴포넌트에 필요한 props 모두 전달 */}
       <VendorList
         vendors={filteredData}
@@ -134,7 +134,7 @@ const VendorMgmt = () => {
         onConfirm={() => handleModalConfirmDelete(selectedVendors, vendors, setVendors, setSelectedVendors, setShowDeleteModal)}
       />
     </div>
-  );
-};
+  )
+}
 
 export default VendorMgmt;
