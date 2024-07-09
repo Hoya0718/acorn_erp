@@ -1,0 +1,68 @@
+import React, { useState, useEffect } from 'react';
+import './Sales.css';
+
+const DateComponent = ({ onChange }) => {
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  useEffect(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    let month = today.getMonth() + 1;
+    let day = today.getDate();
+
+    if (month < 10) {
+      month = `0${month}`;
+    }
+    if (day < 10) {
+      day = `0${day}`;
+    }
+
+    const formattedDate = `${year}-${month}-${day}`;
+    setStartDate(formattedDate);
+    setEndDate(formattedDate);
+    onChange(formattedDate, formattedDate); // 초기 날짜 설정 시에도 onChange 호출
+  }, [onChange]);
+
+  const handleStartDateChange = (event) => {
+    const value = event.target.value;
+    setStartDate(value);
+    onChange(value, endDate); // onChange를 호출할 때 올바른 값 전달
+  };
+
+  const handleEndDateChange = (event) => {
+    const value = event.target.value;
+    setEndDate(value);
+    onChange(startDate, value); // onChange를 호출할 때 올바른 값 전달
+  };
+
+  return (
+    <div className="left">
+      <div className="date-component">
+        <label htmlFor="startDate">
+          <input
+            type="date"
+            id="startDate"
+            max="2077-06-20"
+            min="1900-06-05"
+            value={startDate}
+            onChange={handleStartDateChange}
+          />
+        </label>
+        ~
+        <label htmlFor="endDate">
+          <input
+            type="date"
+            id="endDate"
+            max="2077-06-20"
+            min="1900-06-05"
+            value={endDate}
+            onChange={handleEndDateChange}
+          />
+        </label>
+      </div>
+    </div>
+  );
+};
+
+export default DateComponent;
