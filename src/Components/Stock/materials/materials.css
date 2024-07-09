@@ -1,0 +1,89 @@
+.materials-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+.materials-table th, .materials-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    background-color: white !important; /* 배경색 설정 */
+}
+
+.materials-table th {
+    background-color: #f2f2f2;
+}
+
+.materials-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.top-buttons {
+    display: flex;
+    justify-content: flex-end; /* 버튼들을 오른쪽으로 배치 */
+    gap: 7px; /* 버튼 사이 간격 */
+}
+
+.top-buttons span {
+    display: inline-block;
+}
+
+.middle-buttons {
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    gap: 10px; /* 요소 간의 간격 설정 */
+    margin-bottom: 13px; /* 아래쪽 간격 추가 */
+}
+
+.bottom-buttons {
+    display: flex;
+    justify-content: flex-end; /* 버튼들을 오른쪽으로 배치 */
+    gap: 7px; /* 버튼 사이 간격 */
+    margin-top: 15px; /* 테이블과의 간격 설정 */
+}
+
+.new-item-form td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd; /* 입력 폼 셀 경계선 설정 */
+}
+
+.new-item-form input[type="text"],
+.new-item-form button {
+    width: 100%; /* 입력 필드와 버튼 너비를 100%로 설정 */
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+.new-item-form button {
+    max-width: 50px; /* 버튼의 최대 너비 설정 */
+    margin-top: 4px; /* 버튼과 입력 필드 사이 간격 추가 */
+    padding: 6px;
+}
+
+.new-item-form .btn1 {
+    width: 100px;
+    height: 30px;
+    padding: 6px;
+    margin-top: 4px;
+}
+
+.new-item-form input[type="text"] {
+    height: 24px; /* 인풋 필드 높이 설정 */ 
+}
+
+/* input[type="date"] 기본 스타일링 */
+input[type="date"] {
+    font-family: 'Arial', sans-serif;
+    font-size: 7px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* input[type="date"]에 포커스 시 스타일링 */
+input[type="date"]:focus {
+    border-color: #5b9bd5;
+    box-shadow: 0 0 8px rgba(91, 155, 213, 0.5);
+    outline: none;
+}
