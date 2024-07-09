@@ -59,10 +59,17 @@ const VendorMgmt = () => {
       <div className='Middle classification'>
         <h3>거래처 관리</h3>
       </div>
-      <hr />
+      <hr /><br/><br/>
 
       {/* 경고창 */}
       {showAlert && <DangerAlert onClose={() => setShowAlert(false)} />}
+
+      <div className="searcher">
+        <div className="right">
+          <input type="text" placeholder='🔍 거래처명으로 조회' value={searchTerm} onChange={handleSearchChange} />
+          <button onClick={handleSearch}>조회 &gt;</button>
+        </div>
+      </div><br/>
 
       <div className='items-subTitle'>
         <span>
@@ -79,14 +86,7 @@ const VendorMgmt = () => {
            <button onClick={() => handleCancelForm(setIsAddClicked, setIsUpdateClicked, setNewVendor, setUpdateVendor)}>취소</button>
           )}
         </span>
-      </div> <br />
-     
-      <div className="searcher">
-        <div className="right">
-          <input type="text" placeholder='🔍 거래처명으로 조회' value={searchTerm} onChange={handleSearchChange} />
-          <button onClick={handleSearch}>조회 &gt;</button>
-        </div>
-      </div><br />
+      </div> 
       
       {/* VendorList 컴포넌트에 필요한 props 모두 전달 */}
       <VendorList

@@ -81,10 +81,21 @@ const PurchaseMgmt = () => {
       <div className='Middle classification'>
         <h3>발주 관리</h3>
       </div>
-      <hr />
+      <hr /><br /><br />
 
-      {showAlert && <DangerAlert onClose={() => setShowAlert(false)} />}
+      {showAlert && <DangerAlert onClose={() => setShowAlert(false)} />}    
 
+      <div className="searcher">
+        <div className="left">
+          <DateComponent onChange={handleDateChange} />
+        </div>
+
+        <div className="right">
+          <input type="text" placeholder='🔍 품목명으로 조회' value={searchTerm} onChange={handleSearchChange} />
+          <button onClick={handleSearch}>조회 &gt;</button>
+        </div>
+      </div>    
+      
       <div className='items-subTitle'>
         <span>
           {!isAddClicked && !isUpdateClicked && (
@@ -101,20 +112,7 @@ const PurchaseMgmt = () => {
           )}
         </span>
       </div>
-      <br />
-
-      <div className="searcher">
-        <div className="left">
-          <DateComponent onChange={handleDateChange} />
-        </div>
-
-        <div className="right">
-          <input type="text" placeholder='🔍 품목명으로 조회' value={searchTerm} onChange={handleSearchChange} />
-          <button onClick={handleSearch}>조회 &gt;</button>
-        </div>
-      </div>
-      <br />
-
+      
       <PurchaseList
         purchases={filteredData}
         filteredData={filteredData}
