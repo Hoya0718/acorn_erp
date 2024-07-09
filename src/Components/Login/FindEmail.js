@@ -12,7 +12,6 @@ const FindEmail = () => {
   const [activeLink, setActiveLink] = useState(location.pathname);
   const [registrationNum, setRegistrationNum] = useState('');
   const [email,setEmail] = useState('');
-
   const handleLinkClick = (path) => {
     setActiveLink(path);
   };
@@ -48,7 +47,6 @@ const FindEmail = () => {
             to="/findEmail"
             className={`link-heading ${activeLink === '/findEmail' ? 'active' : ''}`}
             onClick={() => handleLinkClick('/findEmail')}
-            style={{paddingLeft:"13px", paddingRight:"13px"}}
           >
             아이디 찾기
           </Link>
@@ -66,13 +64,16 @@ const FindEmail = () => {
           className="form-control"
           name="storenum"
           placeholder="사업자번호(10자)"
+          maxLength="10"
+          pattern="\d{10}"
           required
           autoFocus
           style={{ marginBottom: '70px' }}
           value={registrationNum}
           onChange={(e) => setRegistrationNum(e.target.value)}
         />
-        <button className="btn btn-lg btn-primary btn-block" type="submit" style={{marginTop:'50px'}}>
+  
+        <button className="btn btn-lg btn-primary btn-block" type="submit">
           아이디 찾기
         </button>
       </form>

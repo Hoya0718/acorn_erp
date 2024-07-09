@@ -7,7 +7,10 @@ import "../Customer.css"
 import { GoTriangleDown } from "react-icons/go";
 import { GoTriangleUp } from "react-icons/go";
 import instance from './../../../api/axios';
-import ViewDetailsModal from '../mgmtTable/viewDetailsModal/viewDetailsModal';
+import ViewDetailsModal from '../mgmtTable/Modal/viewDetailsModal';
+
+
+
 
 const Rank = () => {
     const [rangeValue, setRangeValue] = React.useState(10);
@@ -120,10 +123,13 @@ const Rank = () => {
         //테이블데이터+고객등급데이터+특이사항데이터 병합
         const mergedData = data.map(customer => {
           const gradeInfo = data_grade.find(grade => grade.customerId === customer.customerId);
+          // const notesInfo = data_notes.find(CustomerNotes => CustomerNotes.customerId === customer.customerId);
           const notes = data_notes.filter(note => note.customerId === customer.customerId);
           return {
             ...customer,
             customerGrade: gradeInfo ? gradeInfo.customerGrade : '-',
+            // customerNotes: notesInfo ? notesInfo.notes : '-',
+            // customerNotes: notes,
             customerNotes: notes.length ? notes : [{ notes: '-' }],
           }});
         setRows(mergedData);
@@ -169,7 +175,7 @@ const Rank = () => {
                 <div className="row" style={{ margin: "auto" }}>
                     {/* 최다 거래 고객 랭킹 */}
                     <div className="col-md-6 col-lg-6" style={{ marginTop: "10px" }}>
-                        <div className="app-card app-card-stats-table h-100 shadow-sm" style={{ backgroundColor: 'white', marginTop: '30px' }}>
+                        <div className="app-card app-card-stats-table h-100 shadow-sm" style={{marginTop: '30px' }}>
                             <div className="app-card-header p-3 title" style={{ marginBottom: "-20px" }}>
                                 <h3 className="app-card-title">최고 매출 고객 랭킹</h3>
                             </div>
@@ -192,7 +198,7 @@ const Rank = () => {
                     </div>
                     {/* 최고 매출 고객 랭킹 */}
                     <div className="col-md-6 col-lg-6" style={{ marginTop: "10px" }}>
-                        <div className="app-card app-card-stats-table h-100 shadow-sm" style={{ backgroundColor: 'white', marginTop: '30px' }}>
+                        <div className="app-card app-card-stats-table h-100 shadow-sm" style={{ marginTop: '30px' }}>
                             <div className="app-card-header p-3 title" style={{ marginBottom: "-20px" }}>
                                 <h3 className="app-card-title">최다 거래 고객 랭킹</h3>
                             </div>

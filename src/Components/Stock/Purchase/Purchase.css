@@ -66,3 +66,30 @@
     margin-left: 12px; /* 각 버튼 사이의 간격 설정 */
   }
   
+  /* 달력 */
+  .date-component {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+    margin-bottom: 10px;
+    font-size: 1.7em; 
+  }
+  
+  .date-component label {
+    margin-right: 10px;
+    margin-left: 10px;
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+  
+  .date-separator {
+    font-weight: bold;
+    font-size: 1.5em;
+    margin: 0 10px;
+  }
+
+  .date-component input[type="date"] {
+    font-size: 10px; /* input 요소의 폰트 크기 설정 */
+    padding: 8px; /* input 요소의 내부 여백 설정 */
+    width: 90px; /* input 요소의 너비 설정 */
+  }

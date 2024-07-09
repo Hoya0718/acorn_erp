@@ -1,6 +1,9 @@
 import { CSVLink } from 'react-csv';
+import { GrDocumentUpload } from "react-icons/gr";
+import { HiPrinter } from "react-icons/hi2";
 
 const ExcelPrint = ({vendors}) => {
+  
     // vendors 객체를 prop으로 전달받아 배열로 변환 
     const csvData = vendors.map(vendor => ({
         vendorName: vendor.vendorName,
@@ -22,9 +25,9 @@ const ExcelPrint = ({vendors}) => {
             filename={"vendors.csv"}
             className="excel-button"
             target="_blank"> 
-        <button>엑셀 다운</button>
+        <button><GrDocumentUpload size={16}/> 엑셀 다운</button>
         </CSVLink>
-        <button onClick={handlePrint}>인쇄</button>
+        <button onClick={handlePrint}><HiPrinter size={16}/> 인쇄</button>
     </>
   )
 

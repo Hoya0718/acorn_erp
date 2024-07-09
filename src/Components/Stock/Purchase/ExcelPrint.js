@@ -1,5 +1,7 @@
 import React from 'react';
 import { CSVLink } from 'react-csv';
+import { GrDocumentUpload } from "react-icons/gr";
+import { HiPrinter } from "react-icons/hi2";
 
 const ExcelPrint = ({ purchases }) => {
   // purchases 객체를 prop으로 전달받아 배열로 변환하여 CSV 데이터 준비
@@ -26,9 +28,9 @@ const ExcelPrint = ({ purchases }) => {
         className="excel-button"
         target="_blank"
       >
-       <button>엑셀 다운</button>
+       <button><GrDocumentUpload size={16}/> 엑셀 다운</button>
       </CSVLink>
-      <button onClick={handlePrint}>인쇄</button>
+      <button onClick={handlePrint}><HiPrinter size={16}/> 인쇄</button>
     </div>
   );
 };

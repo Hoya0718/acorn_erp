@@ -18,7 +18,7 @@ const Return = () => {
   return (
     <div className="Return">
       <div className="Middle classification">
-        <h4> 주문 관리 </h4>
+        <h3> 주문 관리 </h3>
       </div>
       <hr />
 
@@ -46,10 +46,10 @@ const Return = () => {
         </div>
 
         <div className="right">
-          <input type="text" placeholder='🔍 검색' /><button>조회 &gt;</button>
+          <input type="text" placeholder='🔍 검색' /><button>조회</button>
         </div>
       </div>
-      <br />
+      {/* <br /> */}
       <div>
         <section>
           <ReturnTable />

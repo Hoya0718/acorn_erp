@@ -32,7 +32,7 @@ const Goal = () => {
                 <div className='title'>
                     <h3>고객 유치 목표 달성도</h3>
                 </div>
-                <div className="app-card app-card-stat shadow-sm h-100 content" style={{ backgroundColor: 'white' }}>
+                <div className="app-card app-card-stat shadow-sm h-100 content">
                     <div className="app-card-body p-3 p-lg-4">
                         {/* <!-- 달성도 바 -->*/}
                         <div className="progress" style={{ height: '30px', position: 'relative' }}>

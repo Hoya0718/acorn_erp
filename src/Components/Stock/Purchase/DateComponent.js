@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './Purchase.css';
 
 const DateComponent = ({ onChange }) => {
   const [startDate, setStartDate] = useState('');
@@ -36,27 +37,29 @@ const DateComponent = ({ onChange }) => {
 
   return (
     <div className="left">
-      <label htmlFor="startDate">
-        <input
-          type="date"
-          id="startDate"
-          max="2077-06-20"
-          min="1900-06-05"
-          value={startDate}
-          onChange={handleStartDateChange}
-        />
-      </label>
-      ~
-      <label htmlFor="endDate">
-        <input
-          type="date"
-          id="endDate"
-          max="2077-06-20"
-          min="1900-06-05"
-          value={endDate}
-          onChange={handleEndDateChange}
-        />
-      </label>
+      <div className="date-component">
+        <label htmlFor="startDate">
+          <input
+            type="date"
+            id="startDate"
+            max="2077-06-20"
+            min="1900-06-05"
+            value={startDate}
+            onChange={handleStartDateChange}
+          />
+        </label>
+        ~
+        <label htmlFor="endDate">
+          <input
+            type="date"
+            id="endDate"
+            max="2077-06-20"
+            min="1900-06-05"
+            value={endDate}
+            onChange={handleEndDateChange}
+          />
+        </label>
+      </div>
     </div>
   );
 };

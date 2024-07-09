@@ -6,7 +6,14 @@ import "../../Main/Main.css"
 import instance from './../../../api/axios';
 import { useCustomerStatus } from '../settingModal/CustomerStatusSettingContext';
 
-const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
+const CustomerStatusTable_Dist = ({ activeLabel, onSort, setColumns, setFilename, 
+    // searchKeyword,
+    // setSearchKeyword,
+    // startDate,
+    // setStartDate,
+    // endDate,
+    // setEndDate,
+     }) => {
     const { selectedRegion } = useCustomerStatus();
     const [data_grade_soso, setData_grade_soso] = React.useState([]); //일반고객인원
     const [data_grade_good, setData_grade_good] = React.useState([]); //우수고객인원
@@ -192,6 +199,13 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort }) => {
     const formatNumber = (num) => {
         return num.toLocaleString();
     };
+
+    // const handleSearch = () => {
+    //     setCurrentPage(1);
+    //     fetchSearchResults(searchKeyword, startDate, endDate);
+    //   };
+
+
     return (
         <div>
             <div className="customer-status-table">

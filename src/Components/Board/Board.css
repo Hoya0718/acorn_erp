@@ -1,7 +1,8 @@
 .board-container {
   width: 100%;
+  height: 90%;
   margin: auto;
-  padding: 20px;
+  padding: 30px;
   background-color: #f9f9f9;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -12,7 +13,7 @@
   .board-header {
     text-align: center;
     margin-bottom: 10px;
-    color: #333;
+    color: #5d5c5c;
   }
   
   .board-divider {
@@ -57,7 +58,8 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-right: 10px;
-    flex: 2; /* 입력 필드를 더 길게 설정 */
+    flex: 2; 
+    width: 500px;
   }
   
   .board-search-button {
@@ -97,16 +99,21 @@
     background-color: #9FBED2;
     color: white;
     padding: 10px;
+    font-size: 10px;
     text-align: center;
     border-bottom: 4px solid #9FBED2; /* 굵은 아래 선 */
     cursor: pointer; /* 제목을 클릭할 때 마우스 커서를 포인터로 변경 */
   }
   
   .board-table td {
-    padding: 10px;
+    padding: 15px;
     text-align: center;
     border: none;
-    border-bottom: 1px solid #000; /* 검은색 선 추가 */
+    border-bottom: 1.5px solid #b9b9b9; /* 검은색 선 추가 */
+  }
+
+  .board-table tbody tr:hover {
+    background-color: #f0f0f0; /* 마우스를 올렸을 때 약간 진하게 표시 */
   }
   
   .board-table tr:last-child td {
@@ -124,6 +131,33 @@
   
   .board-write-button:hover {
     background-color: #85A9C7;
+  }
 
+  .board-table a {
+    text-decoration: none; 
+    color: inherit; 
   }
   
+  .board-table a:hover {
+    text-decoration: underline; 
+  }
+  
+  .board-sort-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .board-sort-select {
+    padding: 8px;
+    margin-right: 16px; /* 정렬 기준(select 요소)를 오른쪽으로 밀어냄 */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+.board-sort-button:hover {
+  background-color: #f0f0f0;
+}
+  
+.board-tbody {
+  font-size: 14px;
+}

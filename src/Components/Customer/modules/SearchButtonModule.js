@@ -2,14 +2,17 @@
 // 고객현황 데이터 페이지 기간선택 및 검색버튼 컴포넌트
 import * as React from 'react'
 import "../../Main/Main.css"
+import {Button} from 'react-bootstrap';
 
-const CustomerStatusSearchButton = ({ onSearch }) => {
-
+const SearchButtonModule = ({ onSearch }) => {
+  
   return (
-      <div className="righted searchBox">
-        <input type="submit" value="조회" className="btn btn-dark" onClick={ onSearch } />
-      </div>
+      <span>
+        <Button type="submit" value="조회" className="btn righted" onClick={ onSearch } 
+        style={{paddingTop: '8px', paddingBottom: '8px', paddingLeft: '15px', paddingRight: '15px'}}>
+          조회</Button>
+      </span>
   );
 }
 
-export default CustomerStatusSearchButton;
+export default SearchButtonModule;

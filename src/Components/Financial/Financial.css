@@ -1,94 +1,143 @@
-.right-mid {
-    padding: 20px;
-  }
-  
-  .nav-underline .nav-link {
-    cursor: pointer;
-  }
-  
-  .table-hover tbody tr:hover {
-    background-color: #f5f5f5;
-  }
-  
-  .righted {
-    margin-bottom: 20px; /* Add some space between the buttons and the underline */
-  }
-  
-  nav + .righted {
-    margin-top: 10px;
-  }
-  
-  .table th {
-    cursor: pointer;
-  }
-  
-  .input-group-text {
-    background-color: #e9ecef;
-  }
-  
-  .btn-dark {
-    background-color: #343a40;
-    color: #fff;
-  }
-  
-  #search_box {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
+/* Financial.css 파일에 적용될 CSS */
 
-  .bold-and-large {
-    font-size: 1.5em; /* 원하는 크기로 조정 */
-    font-weight: bold;
-  }
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-  .date input[type="date"] {
-    padding: 8px;
-    font-size: 16px; /* 원하는 크기로 조정 */
-  }
+.table th {
+  text-align: center;
+}
 
-  #search_box .date label {
-    margin-right: 10px;
-  }
-  
-  .input-group-text {
-    padding: 0.375rem 0.75rem;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-    background-color: #e9ecef;
-    display: flex;
-    align-items: center;
-  }
-  
-  .form-control {
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-    padding: 0.375rem 0.75rem;
-  }
-  
-  .btn {
-    margin-right: 10px;
-  }
-  
-  .btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-    color: white;
-  }
-  
-  .btn-secondary .fa-file-excel, .btn-secondary .fa-print {
-    margin-right: 5px;
-  }
-  
-  .mt-3 {
-    margin-top: 1rem;
-  }
+.financial-table {
+  border: 1px solid #ddd; /* 테이블 테두리 설정 */
+  border-spacing: 0; /* 셀 사이 간격 제거 */
+}
 
-  .modal-wide .modal-dialog {
-    max-width: 80%;
-  }
+.financial-table-header {
+  padding: 8px; /* 헤더 셀 내부 여백 */
+  background-color: #f2f2f2; /* 헤더 배경색 */
+  font-weight: bold; /* 헤더 글꼴 굵기 */
+  text-align: center; /* 헤더 텍스트 가운데 정렬 */
+  border: 1px solid #ddd; /* 헤더 셀 테두리 설정 */
+}
 
-  .sort-arrow {
-    color: black;
-  }
-  
+.financial-table-cell {
+  padding: 8px; /* 셀 내부 여백 */
+  border: 1px solid #ddd; /* 셀 테두리 설정 */
+}
+
+.form-input {
+  width: 100%; /* 입력 필드 너비 100%로 설정 */
+  padding: 8px; /* 입력 필드 내부 여백 */
+  border: 1px solid #333; /* 입력 필드 테두리 설정 */
+  border-radius: 4px; /* 필요시 입력 필드 둥글게 설정 */
+  box-sizing: border-box; /* 입력 필드 박스 크기를 테두리를 포함한 크기로 설정 */
+}
+
+.checkbox-label {
+  display: block;
+  position: relative;
+  padding-left: 24px; /* 체크박스 왼쪽 여백 */
+  cursor: pointer;
+  font-size: 14px; /* 폰트 사이즈 (필요시) */
+}
+
+.checkbox-label input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkbox-custom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 16px; /* 체크박스 높이 */
+}
+
+.items-subTitle-button {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 2px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-left: 12px; /* 각 버튼 사이의 간격 설정 */
+}
+
+/* .modal {
+  z-index: 1000; 
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 50%;
+  max-width: 600px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.search {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px; /* 가운데 정렬 후 아래 여백 추가 */
+}
+
+.search input[type="text"] {
+  width: 600px; /* 입력 필드 길이 설정 */
+  padding: 10px;
+  border: 1.5px solid #aeadad;
+  border-radius: 5px;
+  color: rgb(53, 53, 56); 
+  font-size: 14px;
+}
+
+.total-sales {
+  background-color: #CBDDE6;
+  padding: 10px;
+  margin-bottom: 20px;
+  /* border: 2px solid #45718d; */
+  border-radius: 5px;
+  width: 300px;
+}
+
+.total-sales h4 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+.summary-type {
+  margin-bottom: 20px;
+}
+
+.summary-type select {
+  width: 90px;
+  padding: 8px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.summary-type select:last-child {
+  margin-right: 0;
+}

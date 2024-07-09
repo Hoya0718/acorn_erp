@@ -4,12 +4,18 @@
 import * as React from 'react'
 import "../../Main/Main.css"
 import TableModule from "../modules/TableModule"
+import ExcelPrint from "../modules/ExcelPrintModule"
 import CustomerStatusPagination from '../modules/PaginationModule';
 import instance from './../../../api/axios';
 import { useCustomerStatus } from '../settingModal/CustomerStatusSettingContext';
 
 
-const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsPerPage}) => {
+const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsPerPage, searchKeyword,
+  setSearchKeyword,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,}) => {
   
   const { selectedRegion } = useCustomerStatus();
   
@@ -18,6 +24,8 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
   const [totalItems, setTotalItems] = React.useState(0);
   // const [itemsPerPage, setItemsPerPage] = React.useState(10); 
   const [filteredData, setFilteredData] = React.useState([]);
+  const [filename, setFilename] = React.useState("상품별 고객선호도 테이블");
+  const [columns, setColumns] = React.useState([]);
 
   React.useEffect(() => {
     const fetchTableData = async () => {
@@ -42,7 +50,9 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
   React.useEffect(() => {
     handleTable(activeLabel, rows);
   }, [activeLabel, currentPage, rowsPerPage, rows]);
-
+  React.useEffect(() => {
+    setFilename(filename);
+  }, [filename])
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const currentData = rows.slice(startIndex, endIndex);
@@ -117,8 +127,9 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
     }
   }
 
-  // React.useEffect(() => {
-  // }, [activeLabel]);
+  React.useEffect(() => {
+    setColumns(getColumns(activeLabel));
+  }, [activeLabel, setColumns]);
 
   const handleTable = (activeLabel, rows) => {
     let sortedRows = [...rows];
@@ -147,6 +158,67 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
     setRows(sortedData);
     setFilteredData(sortedData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
   };
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+  const fetchSearchResults = async (keyword, startDate, endDate) => {
+    try {
+      let searchResults = [];
+      let periodResults = [];
+
+    // 키워드 검색 요청
+    if (keyword) {
+      const response_keyword = await instance.get(`/customer/searchKeywordPreferenceData?keyword=${keyword}`);
+      searchResults = response_keyword.data.map(item => ({
+        ...item,
+        registerDate: formatDate(item.registerDate),
+        customerBirthDate: formatDate(item.customerBirthDate)
+      }));
+    }
+
+    // 기간 검색 요청
+    if (startDate && endDate) {
+      const response_period = await instance.get(`/customer/searchPeriodPreferenceData?startDate=${startDate}&endDate=${endDate}`);
+      periodResults = response_period.data.map(item => ({
+        ...item,
+        registerDate: formatDate(item.registerDate),
+        customerBirthDate: formatDate(item.customerBirthDate)
+      }));
+    }
+
+      // 검색 결과 결합
+    let combinedResults = searchResults;
+    if (startDate && endDate) {
+      const periodIds = new Set(periodResults.map(item => item.customerId));
+      combinedResults = searchResults.filter(item => periodIds.has(item.customerId));
+    }
+
+    setFilteredData(combinedResults.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage));
+    setTotalItems(combinedResults.length);
+    setCurrentPage(1);
+    
+    } catch (error) {
+      console.error('Error fetchSearchResults:', error);
+    }
+  };
+
+  React.useEffect(() => {
+    if (searchKeyword || startDate || endDate) {
+      fetchSearchResults(searchKeyword, startDate, endDate);
+    } else {
+      const startIndex = (currentPage - 1) * rowsPerPage;
+      const endIndex = startIndex + rowsPerPage;
+      setFilteredData(rows.slice(startIndex, endIndex));
+      setTotalItems(rows.length);
+    }
+  }, [searchKeyword, rows, startDate, endDate]);
+
+
+  const handleSearch = () => {
+    setCurrentPage(1);
+    fetchSearchResults(searchKeyword, startDate, endDate);
+  };
 
   return (
     <div>
@@ -156,13 +228,21 @@ const CustomerStatusTable_TopProd = ({ activeLabel, onSort,  onPageChange, rowsP
           onSort={handleSort} 
           currentPage={currentPage}
           rowsPerPage={rowsPerPage}
-          totalData={rows}/>
+          totalData={rows}
+          searchKeyword={searchKeyword}
+          startDate={startDate}
+          endDate={endDate} 
+          onSearch={handleSearch}
+          />
       <CustomerStatusPagination
           totalItems={totalItems}
           itemsPerPage={rowsPerPage}
           currentPage={currentPage}
           onPageChange={setCurrentPage}
         />
+        <div className="excel-print">
+          <ExcelPrint printData={filteredData} columns={columns} filename={filename}/>
+      </div>
         <br></br>
         <br></br>
         <br></br>

@@ -43,8 +43,9 @@ const CustomerStatusPeriodSerch = ({ setPeriod }) => {
   }, [selectedOption]);
 
   React.useEffect(() => {
-    setPeriod({ selectedOption, startDate, endDate });
-  }, [startDate, endDate, setPeriod]);
+    const formattedEndDate = selectedOption === '사용자 지정' ? formatDateWithTime(endDate) : endDate;
+    setPeriod({ selectedOption, startDate,  endDate: formattedEndDate });
+  }, [selectedOption, startDate, endDate, setPeriod]);
 
   // React.useEffect(() => {
   //   setSelectedOption('1년');
@@ -56,14 +57,24 @@ const CustomerStatusPeriodSerch = ({ setPeriod }) => {
   }
   const handleStartDateChange = (event) => {
     setStartDate(event.target.value);
+    const formattedEndDate = formatDateWithTime(endDate);
+    setPeriod({ selectedOption, startDate: event.target.value, endDate: formattedEndDate });
   }
   const handleEndDateChange = (event) => {
-    setEndDate(event.target.value);
+    const value = event.target.value;
+    const formattedEndDate = formatDateWithTime(value);
+    setEndDate(value);
+    setPeriod({ selectedOption, startDate, endDate: formattedEndDate });
   }
-
+  const formatDateWithTime = (dateString) => {
+    const date = new Date(dateString);
+    date.setHours(23, 59, 59, 999); // 끝날을 23:59:59로 설정
+    return date.toISOString();
+  }
   return (
-    <div className="customer-status-period-serchbox">
-      <div className="radio righted">
+    <div className="customer-status-period-serchbox row ">
+      <div className="radio righted col-12"
+        style={{ fontSize: '14px' }} >
         {datas.map((data) => (
           <label key={data}>
             <input
@@ -72,21 +83,22 @@ const CustomerStatusPeriodSerch = ({ setPeriod }) => {
               value={data}
               checked={selectedOption === data}
               onChange={handleSelectedOptionChange}
-            />&nbsp;{data}&nbsp;
+            />&nbsp;{data}&nbsp;&nbsp;
           </label>
         ))}
-      </div>
-      <div className="dateSerchBox righted">
+        &nbsp;&nbsp;
         <input type="date" id="startDate"
           disabled={selectedOption !== '사용자 지정'}
           value={startDate}
-          style={{ minWidth: '130px' }}
+          style={{ minWidth: '100px', fontSize: '14px', textAlign: 'center' }}
           onChange={handleStartDateChange}
-          required />&nbsp;~&nbsp;
+          required
+        />
+          &nbsp;&nbsp;~&nbsp;&nbsp;
         <input type="date" id="endDate"
           disabled={selectedOption !== '사용자 지정'}
-          value={endDate}
-          style={{ minWidth: '130px' }}
+          value={endDate.split('T')[0]}
+          style={{ minWidth: '100px', fontSize: '14px', textAlign: 'center', marginRight: '8px' }}
           onChange={handleEndDateChange}
           required />
       </div>

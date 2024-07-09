@@ -7,6 +7,8 @@ import DistributionAdd from './DistributionAdd';
 import DistributionUpdate from './DistributionUpdate';
 import DistributionSearch from './DistributionSearch';
 import DistributionSearchDate from './DistributionSearchDate';
+import Pagination from '../../Customer/modules/PaginationModule';
+import instance from './../../../api/axios';
 
 import "../../Main/Main.css";
 import "./Distribution.css";
@@ -268,7 +270,7 @@ const DistributionMgmt = () => {
         <div>
             {/* 제목 영역 */}
             <div className="Middle classification">
-                <span><h2>물류관리</h2></span>
+                <h3>물류 관리</h3>
             </div>
             <hr />
 

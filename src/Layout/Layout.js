@@ -1,19 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { Slide, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Layout.css';
 import MemoPad from './MemoPad';
 import ThemeToggle from './ThemeToggle';
 import LogoutIcon from './LogoutIcon';
-import 'react-toastify/dist/ReactToastify.css';
 
 const Layout = () => {
   const [expandedItem, setExpandedItem] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
 
-  //글꼴
   useEffect(() => {
-    toast.success('${shopName}님, 안녕하세요');
+    // 세션 스토리지에서 사용자 정보 가져오기
+    const userInfoFromStorage = sessionStorage.getItem('userInfo');
+    
+    if (userInfoFromStorage) {
+      const user = JSON.parse(userInfoFromStorage);
+      setUserInfo(user);
+
+      // 환영 메시지가 이미 표시되었는지 확인
+      const hasWelcomed = sessionStorage.getItem('hasWelcomed');
+      if (!hasWelcomed) {
+        // 환영 메시지 표시
+        toast.success(`${user.shopName} 님, 안녕하세요!`);
+        // 메시지를 표시한 후 상태 저장
+        sessionStorage.setItem('hasWelcomed', 'true');
+      }
+    }
   }, []);
 
   const handleItemClick = (item) => {
@@ -27,7 +41,7 @@ const Layout = () => {
   return (
     <div className="layout1">
       <header className='header1'>
-        <Link to="/layout" className="erp-title" onClick={handleLogoClick}>ACORN ERP🐿️</Link>
+        <Link to="/layout" className="erp-title" onClick={handleLogoClick}>Acorn ERP🐿️</Link>
         <MemoPad />
       </header>
       <div className="container1">
@@ -56,20 +70,17 @@ const Layout = () => {
         </main>
       </div>
       <ToastContainer
-      position="top-center"
-      transition={Slide}
-      autoClose={1000}
-      hideProgressBar={true}
-      closeOnClick
-      rtl={false}
-      limit={1}
+        position="top-center"
+        transition={Slide}
+        autoClose={2000}
+        hideProgressBar={true}
+        closeOnClick
+        rtl={false}
+        limit={1}
       />
     </div>
   );
 };
-
-
-
 
 const MenuItem = ({ title, subMenuItems, expanded, onClick, path }) => {
   return (
@@ -117,20 +128,16 @@ const menuItems = [
   },
   {
     title: "💰 재무 관리",
-    subMenuItems: [
-      { title: "매입 관리", path: "/layout/financialMgmt/incomeMgmt" },
-      { title: "매출 관리", path: "/layout/financialMgmt/exportMgmt" }
-    ]
+    path: "/layout/financialMgmt"
   },
   {
     title: "📆 예약 관리",
     path: "/layout/reservationMgmt", 
   },
   {
-    title: "커뮤니티",
+    title: "💭 커뮤니티",
     path: "/layout/board",
   },
-
 ];
 
 export default Layout;
