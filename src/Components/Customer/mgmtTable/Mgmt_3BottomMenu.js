@@ -19,11 +19,13 @@ const MgmtBottomMenu = ({
             />
             </div>
             <div className='col'>
-            <ExcelPrint
-                printData={filteredData}
-                columns={columns}
-                filename={filename}
-            />
+                <div className="excel-print">
+                    <ExcelPrint
+                        printData={filteredData}
+                        columns={columns}
+                        filename={filename}
+                    />
+                </div>
             </div>
         </div>
     );

@@ -23,16 +23,10 @@ const Board = () => {
    }, [sortBy, sortOrder]); // sortBy, sortOrder가 변경될 때마다 useEffect가 다시 실행됨
 
 
-<<<<<<< HEAD
    useEffect(() => {
     // 컴포넌트가 마운트될 때 한 번만 실행되어야 하는 fetchUserInfo 함수 호출
     // fetchUserInfo();
   }, []);
-  
-=======
-  //   fetchUserInfo();
-  // }, []);
->>>>>>> 7f7cf7ab657757635fa6e0885d00b60a13d1dfd5
 
 
   // // 사용자 정보를 가져오는 함수

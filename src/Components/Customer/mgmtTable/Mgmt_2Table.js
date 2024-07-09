@@ -394,6 +394,7 @@ const MgmtTable = ({
                 >
                   <input
                     type="text"
+                    className={'table-centered'}
                     style={{ border: 'none' }}
                     // onDoubleClick={handleDoubleEditmodeClick}
                     value={column.accessor === 'customerNotes' ? (

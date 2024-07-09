@@ -28,7 +28,8 @@ const ExcelPrint = ({printData, columns, filename}) => {
             className="excel-button"
             target="_blank"> 
           <Button 
-          style={{paddingTop: '8px', paddingBottom: '8px', paddingLeft: '15px', paddingRight: '15px'}}
+          // style={{paddingTop: '8px', paddingBottom: '8px', paddingLeft: '15px', paddingRight: '15px'}}
+          // variant="secondary" 
           >
             <GrDocumentUpload size={16}/> 엑셀 다운
           </Button>
@@ -36,7 +37,8 @@ const ExcelPrint = ({printData, columns, filename}) => {
         &nbsp;&nbsp;&nbsp;
         <Button 
           onClick={handlePrint} 
-          style={{paddingTop: '8px', paddingBottom: '8px', paddingLeft: '15px', paddingRight: '15px'}}
+          // style={{paddingTop: '8px', paddingBottom: '8px', paddingLeft: '15px', paddingRight: '15px'}}
+          // variant="secondary" 
         >
           <HiPrinter size={16}/> 
           인쇄
