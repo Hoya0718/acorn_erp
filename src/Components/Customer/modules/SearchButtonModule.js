@@ -9,7 +9,7 @@ const SearchButtonModule = ({ onSearch }) => {
   return (
       <span>
         <Button type="submit" value="조회" className="btn righted" onClick={ onSearch } 
-        style={{paddingTop: '8px', paddingBottom: '8px', paddingLeft: '15px', paddingRight: '15px'}}>
+        style={{paddingTop: '8px', paddingBottom: '8px', paddingLeft: '15px', paddingRight: '15px', backgroundColor:'black', borderColor:'black'}}>
           조회</Button>
       </span>
   );

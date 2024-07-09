@@ -224,10 +224,10 @@ const ResTable = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleModalClose}>
+          {/* <Button variant="secondary" onClick={handleModalClose}>
             닫기
-          </Button>
-          <Button variant="primary" onClick={handleSaveChanges}>
+          </Button> */}
+          <Button variant="primary" onClick={handleSaveChanges} style={{ fontSize:'13px', padding:'6px 12px'}}>
             저장
           </Button>
         </Modal.Footer>

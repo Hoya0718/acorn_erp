@@ -99,7 +99,7 @@
   border-left: 1px solid #e0e0e0;
   font-size: 1.5rem;
   font-weight: bold;
-  /* position: relative; */
+  position: relative;
   transition: background-color 0.3s;
 }
 
@@ -228,7 +228,6 @@
 
 .btn-register:hover, .btn-search:hover {
   background-color: #333;
-
   color: white;
 
 }
@@ -251,7 +250,7 @@
 }
 
 .date-content {
-  /* position: relative; */
+  position: relative;
   height: 100%;
 }
 
@@ -268,7 +267,7 @@
   left: -5px;
   width: 30px;
   height: 30px;
-  color: #4a90e2;
+  color: #45718d; 
 }
 
 .btn-register {
@@ -281,6 +280,11 @@
 
 
 .btn:first-child:active {
+  color: white;
+  background-color: black;
+}
+
+:not(.btn-check)+.btn:active {
   color: white;
   background-color: black;
 }
