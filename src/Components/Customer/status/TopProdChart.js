@@ -81,19 +81,19 @@ const TopProd = () => {
             <div className="col-12 col-lg-4" style={{ marginTop: '10px' }} key={index}>
                 <div className="app-card app-card-chart h-100 shadow-sm">
                     <div className="app-card-header p-3 border-0" style={{ marginBottom: '-20px' }}>
-                        <h4 className="app-card-title">TOP {index + 1}</h4>
+                        <h2 className="app-card-title">TOP {index + 1}</h2>
                     </div>
                     <div className="app-card-body p-4">
                         <div className="section row">
                             {/* 상품명 */}
                             <div className="name col-7">
-                                <div className="prod_name"><h2>{product.prod}</h2></div>
+                                <div className="prod_name"><h1>{product.prod}</h1></div>
                             </div>
                             <div className="preference col-5">
                                 {/* 선호 성별, 연령, 지역 */}
-                                <div className="gender_preference righted"><h5>{product.gender === "여성" ? '👩' : '👨'} {product.g_num}</h5></div>
-                                <div className="age_preference righted"><h5>{product.ageGroup}</h5></div>
-                                <div className="region_preference righted"><h5>{product.region}</h5></div>
+                                <div className="gender_preference righted"><h2>{product.gender === "여성" ? '👩' : '👨'} {product.g_num}</h2></div>
+                                <div className="age_preference righted"><h2>{product.ageGroup}</h2></div>
+                                <div className="region_preference righted"><h2>{product.region}</h2></div>
                             </div>
                         </div>
                     </div>
@@ -126,21 +126,21 @@ const TopProd = () => {
                                 <li className="nav-item">
                                     <button className={`nav-link ${prod === 'most' ? 'active' : ''}`}
                                         onClick={() => handleTabClick('most')}>
-                                        최다거래상품 TOP3</button>
+                                        <h4>최다거래상품 TOP3</h4></button>
                                 </li>
                             )}
                             {chartNames.includes('top') && (
                                 <li className="nav-item">
                                     <button className={`nav-link ${prod === 'top' ? 'active' : ''}`}
                                         onClick={() => handleTabClick('top')}>
-                                        최고매출상품 TOP3</button>
+                                        <h4>최고매출상품 TOP3</h4></button>
                                 </li>
                             )}
                             {chartNames.includes('favo') && (
                                 <li className="nav-item">
                                     <button className={`nav-link ${prod === 'favo' ? 'active' : ''}`}
                                         onClick={() => handleTabClick('favo')}>
-                                        인기상품 TOP3</button>
+                                        <h4>인기상품 TOP3</h4></button>
                                 </li>
                             )}
                         </ul>
