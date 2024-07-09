@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import "../Main/Main.css";
 import { Link, useLocation } from 'react-router-dom';
 import ReturnTable from './ReturnTable';
+import SalesDateComponent from './SalesDateComponent';
 import * as XLSX from 'xlsx';
 import { GrDocumentUpload } from "react-icons/gr";
 import { HiPrinter } from "react-icons/hi2";
@@ -10,6 +11,8 @@ const Return = () => {
   const location = useLocation();
   const [selectedLink, setSelectedLink] = useState(location.pathname);
   const [tableData, setTableData] = useState([]);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
     setSelectedLink(location.pathname);
@@ -32,15 +35,21 @@ const Return = () => {
     setSelectedLink(path);
   };
 
+  //엑셀 인쇄 기능
   const handleExcelDownload = () => {
     const worksheet = XLSX.utils.json_to_sheet(tableData); // Pass tableData here
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1"); // Name your sheet
     XLSX.writeFile(workbook, "filename.xlsx"); // Specify filename
   };
-
   const handlePrint = () => {
     window.print();
+  };
+
+  // 달력 기능
+  const handleDateChange = (start, end) => {
+    setStartDate(start);
+    setEndDate(end);
   };
 
   return (
@@ -68,9 +77,7 @@ const Return = () => {
 
       <div className="searcher">
         <div className="left">
-          <label htmlFor="date">날짜를 선택하세요 :
-            <input type="date" id="date" max="2077-06-20" min="2077-06-05" value="2024-07-18" />
-          </label>
+          <SalesDateComponent onChange={handleDateChange} />
         </div>
 
         <div className="right">
@@ -80,7 +87,11 @@ const Return = () => {
       <br />
       <div>
         <section>
-          <ReturnTable setData={setTableData} />
+          <ReturnTable 
+            setData={setTableData}
+            startDate={startDate}
+            endDate={endDate}
+          />
         </section>
       </div>
       <div className="excel-print">

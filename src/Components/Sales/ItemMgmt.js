@@ -197,7 +197,7 @@ const ItemMgmt = () => {
             value={searchTerm} 
             onChange={handleSearchInputChange} // 검색어 입력 필드
           />
-          <button onClick={fetchItems}>조회</button>
+          <button onClick={fetchItems}>조회 &gt;</button>
         </div>
       </div>
       <br />

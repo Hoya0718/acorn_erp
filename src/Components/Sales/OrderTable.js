@@ -174,7 +174,7 @@ const OrderTable = ({
                   name="customerTel"
                   value={formData.customerTel}
                   onChange={handleInputChange}
-                  placeholder="연락처"
+                  placeholder="010-0000-0000"
                   style={{ borderColor: errors.customerTel ? 'red' : undefined }}
                 />
                 {errors.customerTel && <div style={{ color: 'red' }}>{errors.customerTel}</div>}
@@ -272,7 +272,7 @@ const OrderTable = ({
                     name="customerTel"
                     value={formData.customerTel}
                     onChange={handleInputChange}
-                    placeholder="연락처"
+                    placeholder="010-0000-0000"
                     style={{ borderColor: errors.customerTel ? 'red' : undefined }}
                   />
                   {errors.customerTel && <div style={{ color: 'red' }}>{errors.customerTel}</div>}

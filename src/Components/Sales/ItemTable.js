@@ -92,7 +92,7 @@ const ItemTable = ({
     const newErrors = {};
     
     if (!formData.itemType) newErrors.itemType = '구분을 선택하세요.';
-    if (!formData.itemStatus) newErrors.itemStatus = '판매상태를 선택하세요.';
+    // if (!formData.itemStatus) newErrors.itemStatus = '판매상태를 선택하세요.';
     if (!formData.itemName) newErrors.itemName = '상품명을 입력하세요.';
     if (!formData.itemQty || isNaN(formData.itemQty) || parseInt(formData.itemQty) <= 0) newErrors.itemQty = '수량을 입력하세요.';
     if (!formData.itemPrice || isNaN(formData.itemPrice) || parseFloat(formData.itemPrice) <= 0) newErrors.itemPrice = '단가를 입력하세요.';
@@ -134,7 +134,7 @@ const ItemTable = ({
             {/* 테이블 열 클릭 시 정렬 처리 */}
             <th onClick={() => handleSort('itemCode')}>상품번호 {getSortDirection('itemCode')}</th>
             <th onClick={() => handleSort('itemType')}>구분 {getSortDirection('itemType')}</th>
-            <th onClick={() => handleSort('itemStatus')}>판매상태 {getSortDirection('itemStatus')}</th>
+            {/* <th onClick={() => handleSort('itemStatus')}>판매상태 {getSortDirection('itemStatus')}</th> */}
             <th onClick={() => handleSort('itemName')}>상품명 {getSortDirection('itemName')}</th>
             <th onClick={() => handleSort('itemPrice')}>단가 {getSortDirection('itemPrice')}</th>
             <th onClick={() => handleSort('itemQty')}>입고수량 {getSortDirection('itemQty')}</th>
@@ -174,7 +174,7 @@ const ItemTable = ({
                 </select>
                 {errors.itemType && <div style={{ color: 'red' }}>{errors.itemType}</div>}
               </td>
-              <td>
+              {/* <td>
                 <select
                   name="itemStatus"
                   value={formData.itemStatus}
@@ -187,7 +187,7 @@ const ItemTable = ({
                   <option value="판매 중단">판매 중단</option>
                 </select>
                 {errors.itemStatus && <div style={{ color: 'red' }}>{errors.itemStatus}</div>}
-              </td>
+              </td> */}
               <td>
                 <input
                   type="text"
@@ -343,7 +343,7 @@ const ItemTable = ({
                 {/* 상품 정보 표시 */}
                 <td>{item.itemCode}</td>
                 <td>{item.itemType}</td>
-                <td>{item.itemStatus}</td>
+                {/* <td>{item.itemStatus}</td> */}
                 <td>{item.itemName}</td>
                 <td>{item.itemPrice.toLocaleString()} 원</td>
                 <td>{item.itemQty.toLocaleString()} 개</td>
