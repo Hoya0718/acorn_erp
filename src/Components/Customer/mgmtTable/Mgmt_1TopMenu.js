@@ -75,35 +75,6 @@ const Mgmtmenu = ({
 
     return (
         <div>
-            <div className='items-subTitle righted'>
-                <span>
-                    {!onUpdateMode && isAnyRowSelected ? (
-                        <>
-                            <Button onClick={handleEditModeClick} className="righted">수정</Button>
-                            <Button onClick={handleDeletebuttonClick} className="righted">삭제</Button>
-                        </>
-                    ) : null}
-                    {onUpdateMode && isAnyRowSelected ? (
-                        <>
-                            <Button onClick={() => handleSaveClick(data.customerId)} className="righted">수정 확인</Button>
-                            <Button onClick={handleCloseClick} className="righted">취소</Button>
-                        </>
-                    ) :
-                        null
-                    }
-                    {onAddMode && !isAnyRowSelected ? (
-                        <>
-                            <Button onClick={handleAddClick} className="righted"> 등록 확인</Button>
-                            <Button onClick={handleCloseClick} className="righted">취소</Button>
-                        </>
-                    ) : null
-                    }
-                    {!onAddMode && !onUpdateMode && !isAnyRowSelected ? (
-                        <Button onClick={handleAddModeClick} className="righted">등록</Button>
-                    ) : null}
-                </span>
-            </div>
- 
 
             <div className='row'>
                 <div className='col-2'>
@@ -133,7 +104,36 @@ const Mgmtmenu = ({
                     />
                 </div>
             </div>
-
+            
+            <div className='items-subTitle righted'>
+                <span>
+                    {!onUpdateMode && isAnyRowSelected ? (
+                        <>
+                            <Button onClick={handleEditModeClick} className="righted">수정</Button>
+                            <Button onClick={handleDeletebuttonClick} className="righted">삭제</Button>
+                        </>
+                    ) : null}
+                    {onUpdateMode && isAnyRowSelected ? (
+                        <>
+                            <Button onClick={() => handleSaveClick(data.customerId)} className="righted">수정 확인</Button>
+                            <Button onClick={handleCloseClick} className="righted">취소</Button>
+                        </>
+                    ) :
+                        null
+                    }
+                    {onAddMode && !isAnyRowSelected ? (
+                        <>
+                            <Button onClick={handleAddClick} className="righted"> 등록 확인</Button>
+                            <Button onClick={handleCloseClick} className="righted">취소</Button>
+                        </>
+                    ) : null
+                    }
+                    {!onAddMode && !onUpdateMode && !isAnyRowSelected ? (
+                        <Button onClick={handleAddModeClick} className="righted">등록</Button>
+                    ) : null}
+                </span>
+            </div>
+            
             {showModal_deleteCheck && (
                 <DeleteModalModule
                     show={showModal_deleteCheck}
