@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useLocation } from 'react-router-dom';
 import "../Main/Main.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Reservation.css';
@@ -8,6 +8,8 @@ import { PiAcornDuotone } from "react-icons/pi";  // react-icons 임포트
 import ReservationModal from './ReservationModal';
 
 const ReservationMgmt = () => {
+  const location = useLocation(); // 현재 경로를 가져옴
+
   const [date, setDate] = useState(new Date());
   const [reservations, setReservations] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,7 +19,7 @@ const ReservationMgmt = () => {
   const [selectedReservations, setSelectedReservations] = useState([]);
 
   useEffect(() => {
-    const fetchReservations = async () => {
+    const fetchReservations = async () => {  
       try {
         const response = await axios.get('/reservations');
         setReservations(response.data);
@@ -193,9 +195,9 @@ const ReservationMgmt = () => {
             <div className="row">
               <div className="col--12"></div>
               <h3>예약 관리</h3>
-              <hr style={{    margin: "1rem 0"}}/>
+              <hr style={{ margin: "1rem 0" }} />
 
-              <div className="col-md-7 col-xs-12" style={{paddingLeft:"60px", marginRight:"-80px"}}>
+              <div className="col-md-7 col-xs-12" style={{ paddingLeft: "60px", marginRight: "-80px" }}>
                 <div className="left">
                   <div className="Middle classification">
                   </div>
@@ -244,6 +246,7 @@ const ReservationMgmt = () => {
                         updateReservation
                       }} />
                     </section>
+                    {location.pathname.endsWith('resTable') && renderPagination()}
                     {/* {renderPagination()} */}
                   </div>
                 </div>
