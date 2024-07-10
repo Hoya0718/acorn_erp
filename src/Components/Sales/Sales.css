@@ -196,3 +196,22 @@
     padding: 8px; /* input 요소의 내부 여백 설정 */
     width: 90px; /* input 요소의 너비 설정 */
   }
+
+
+
+  /* 테이블 필드 너비 */
+  .table th.orderNum, .table td.orderNum {
+    width: 100px; /* 원하는 너비로 설정 */
+  }
+  .table th.orderStatus, .table td.orderStatus {
+    width: 110px; /* 원하는 너비로 설정 */
+  }
+  .table th.customerName, .table td.customerName {
+    width: 100px; /* 원하는 너비로 설정 */
+  }
+  .table th.customerTel, .table td.customerTel {
+    width: 150px; /* 원하는 너비로 설정 */
+  }
+  .table th.orderDate, .table td.orderDate {
+    width: 200px; /* 원하는 너비로 설정 */
+  }

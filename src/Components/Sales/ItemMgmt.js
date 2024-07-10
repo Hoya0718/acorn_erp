@@ -7,9 +7,8 @@ import { GrDocumentUpload } from "react-icons/gr";
 import { HiPrinter } from "react-icons/hi2";
 
 const ItemMgmt = () => {
-  // 상태 관리
-  const [isFormVisible, setIsFormVisible] = useState(false); // 폼의 가시성 상태를 관리하는 상태
-  const [formData, setFormData] = useState({ // 폼 데이터를 관리하는 상태
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [formData, setFormData] = useState({
     itemCode: '',
     itemType: '',
     itemName: '',
@@ -17,69 +16,71 @@ const ItemMgmt = () => {
     itemPrice: '',
     itemQty: '',
     stockOut: 0,
-    stockQty: '' // stockQty로 수정
+    stockQty: ''
   });
 
-  const [items, setItems] = useState([]); // 상품 목록을 관리하는 상태
-  const [selectedItems, setSelectedItems] = useState([]); // 선택된 상품 목록을 관리하는 상태
-  const [selectedItem, setSelectedItem] = useState(null); // 선택된 단일 상품을 관리하는 상태
-  const [loading, setLoading] = useState(false); // 데이터 로딩 상태를 관리하는 상태
-  const [errors, setErrors] = useState({}); // 유효성 검사 오류를 관리하는 상태
-  const [searchTerm, setSearchTerm] = useState(''); // 검색어를 관리하는 상태
+  const [items, setItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // 페이지네이션 상태 추가
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10; // 한 페이지에 표시할 항목 수
 
   useEffect(() => {
-    fetchItems(); // 컴포넌트가 마운트될 때 상품 목록을 가져오는 함수 호출
-  }, []);
+    fetchItems(currentPage);
+  }, [currentPage]);
 
-  // 상품 목록을 가져오는 함수
-  const fetchItems = async () => {
-    setLoading(true); // 로딩 상태 설정
+  const fetchItems = async (page = 1) => {
+    setLoading(true);
     try {
-      const response = await axios.get('/items'); // 상품 목록 요청
-      setItems(response.data); // 상품 목록 설정
+      const response = await axios.get(`/items/paged?page=${page - 1}&size=${itemsPerPage}`);
+      setItems(response.data.content); // 'content'로 수정
+      setTotalPages(response.data.totalPages); // 전체 페이지 수 설정
     } catch (error) {
-      console.error('Error fetching items:', error); // 오류 처리
+      console.error('Error fetching items:', error);
     } finally {
-      setLoading(false); // 로딩 상태 해제
+      setLoading(false);
     }
   };
 
-  // 등록 버튼 클릭 시 폼을 표시하는 함수
   const handleAddButtonClick = () => {
-    setIsFormVisible(true); // 폼 표시 상태 설정
-    setSelectedItem(null); // 선택된 상품 초기화
-    clearFormData(); // 폼 데이터 초기화 함수 호출
+    setIsFormVisible(true);
+    setSelectedItem(null);
+    clearFormData();
   };
 
-  // 폼 데이터 저장 함수
   const handleSave = async () => {
-    if (!validateForm()) return; // 폼 유효성 검사
+    if (!validateForm()) return;
 
     try {
       let response;
       if (selectedItem) {
-        response = await axios.put(`/items/${selectedItem.itemCode}`, formData); // 선택된 상품 수정 요청
+        response = await axios.put(`/items/${selectedItem.itemCode}`, formData);
       } else {
-        response = await axios.post('/items', formData); // 새 상품 등록 요청
+        response = await axios.post('/items', formData);
       }
 
-      const updatedItem = response.data; // 응답에서 업데이트된 상품 데이터
+      const updatedItem = response.data;
       if (selectedItem) {
         const updatedItems = items.map(item => 
           item.itemCode === updatedItem.itemCode ? updatedItem : item
         );
-        setItems(updatedItems); // 수정된 상품 목록 업데이트
+        setItems(updatedItems);
       } else {
-        setItems([updatedItem, ...items]); // 새 상품을 포함한 상품 목록 업데이트
+        setItems([updatedItem, ...items]);
       }
 
-      handleSaveSuccess(); // 저장 성공 처리 함수 호출
+      handleSaveSuccess();
     } catch (error) {
-      console.error('Error saving data:', error); // 오류 처리
+      console.error('Error saving data:', error);
     }
   };
 
-  // 폼 입력 필드 유효성 검사 함수
   const validateForm = () => {
     const newErrors = {};
     if (!formData.itemType) newErrors.itemType = '구분을 선택하세요.';
@@ -88,23 +89,21 @@ const ItemMgmt = () => {
     if (!formData.itemQty || isNaN(formData.itemQty) || parseInt(formData.itemQty) <= 0) newErrors.itemQty = '수량을 입력하세요.';
     if (!formData.itemPrice || isNaN(formData.itemPrice) || parseFloat(formData.itemPrice) <= 0) newErrors.itemPrice = '단가를 입력하세요.';
     
-    // 수정하는 경우에만 stockOut을 검증
     if (selectedItem && (!formData.stockOut || isNaN(formData.stockOut) || parseFloat(formData.stockOut) < 0)) {
       newErrors.stockOut = '출고 수량을 입력하세요.';
     }
     
-    setErrors(newErrors); // 오류 상태 업데이트
-    return Object.keys(newErrors).length === 0; // 오류가 없는지 여부 반환
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  // 저장 성공 시 처리 함수
   const handleSaveSuccess = () => {
-    setIsFormVisible(false); // 폼 가시성 상태 초기화
-    clearFormData(); // 폼 데이터 초기화 함수 호출
-    setSelectedItems([]); // 선택된 상품 목록 초기화
+    setIsFormVisible(false);
+    clearFormData();
+    setSelectedItems([]);
+    fetchItems(currentPage);
   };
 
-  // 폼 데이터 초기화 함수
   const clearFormData = () => {
     setFormData({
       itemCode: '',
@@ -114,12 +113,11 @@ const ItemMgmt = () => {
       itemPrice: '',
       itemQty: '',
       stockOut: '',
-      stockQty: '' // stockQty로 수정
+      stockQty: ''
     });
-    setSelectedItem(null); // 선택된 상품 초기화
+    setSelectedItem(null);
   };
 
-  // 입력 필드 변경 핸들러
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -128,60 +126,89 @@ const ItemMgmt = () => {
     });
   };
 
-  // 선택된 상품 삭제 함수
   const handleDeleteClick = async () => {
     if (window.confirm('선택한 항목을 삭제하시겠습니까?')) {
       try {
-        const itemCodes = selectedItems.map(item => item.itemCode); // 선택된 상품 코드 배열
-        await Promise.all(itemCodes.map(itemCode => axios.delete(`/items/${itemCode}`))); // 모든 선택된 상품 삭제 요청
-        fetchItems(); // 상품 목록 다시 가져오기
-        setSelectedItems([]); // 선택된 상품 목록 초기화
+        const itemCodes = selectedItems.map(item => item.itemCode);
+        await Promise.all(itemCodes.map(itemCode => axios.delete(`/items/${itemCode}`)));
+        fetchItems(currentPage);
+        setSelectedItems([]);
       } catch (error) {
-        console.error('삭제 중 오류 발생:', error); // 오류 처리
+        console.error('삭제 중 오류 발생:', error);
       }
     }
   };
 
-  // 수정 버튼 클릭 시 처리 함수
   const handleUpdateButtonClick = () => {
     if (selectedItems.length === 1) {
-      setIsFormVisible(true); // 폼 표시 상태 설정
-      setSelectedItem(selectedItems[0]); // 첫 번째 선택된 상품 설정
-      setFormData(selectedItems[0]); // 폼 데이터 설정
+      setIsFormVisible(true);
+      setSelectedItem(selectedItems[0]);
+      setFormData(selectedItems[0]);
     } else {
-      alert("하나의 항목만 선택하세요."); // 한 개 이상의 항목을 선택한 경우 경고 메시지 표시
+      alert("하나의 항목만 선택하세요.");
     }
   };
 
-  // 취소 버튼 클릭 시 처리 함수
   const handleCancelButtonClick = () => {
-    setIsFormVisible(false); // 폼 가시성 상태 초기화
-    clearFormData(); // 폼 데이터 초기화 함수 호출
-    setSelectedItems([]); // 선택된 상품 목록 초기화
+    setIsFormVisible(false);
+    clearFormData();
+    setSelectedItems([]);
   };
 
-  // 엑셀 다운로드 처리 함수
   const handleExcelDownload = () => {
-    const worksheet = XLSX.utils.json_to_sheet(items); // 상품 목록을 시트로 변환
-    const workbook = XLSX.utils.book_new(); // 새로운 워크북 생성
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Items"); // 시트를 워크북에 추가
-    XLSX.writeFile(workbook, "items.xlsx"); // 엑셀 파일 다운로드
+    const worksheet = XLSX.utils.json_to_sheet(items);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Items");
+    XLSX.writeFile(workbook, "items.xlsx");
   };
 
-  // 인쇄 처리 함수
   const handlePrint = () => {
-    window.print(); // 브라우저 인쇄 기능 호출
+    window.print();
   };
 
-  // 실시간 검색 입력 핸들러
   const handleSearchInputChange = (e) => {
-    setSearchTerm(e.target.value); // 검색어 상태 업데이트
+    setSearchTerm(e.target.value);
   };
 
-  // 실시간 검색 필터링
   const filteredItems = items.filter(item => 
     item.itemName.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const renderPagination = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(i);
+    }
+
+    const pageGroup = Math.ceil(currentPage / 5);
+    const lastPage = pageNumbers.length;
+    const startPage = (pageGroup - 1) * 5 + 1;
+    const endPage = Math.min(pageGroup * 5, lastPage);
+
+    return (
+      <nav aria-label="Page navigation example" style={{ marginTop: '50px' }}>
+        <ul className="pagination justify-content-center">
+          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+            <a className="page-link" href="#" onClick={() => setCurrentPage(Math.max(1, startPage - 5))} aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          {pageNumbers.slice(startPage - 1, endPage).map(number => (
+            <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
+              <a onClick={() => setCurrentPage(number)} href="#" className="page-link">
+                {number}
+              </a>
+            </li>
+          ))}
+          <li className={`page-item ${currentPage === lastPage ? 'disabled' : ''}`}>
+            <a className="page-link" href="#" onClick={() => setCurrentPage(Math.min(lastPage, endPage + 1))} aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    );
+  };
 
   return (
     <div>
@@ -195,9 +222,9 @@ const ItemMgmt = () => {
             type="text" 
             placeholder='🔍 상품명 검색' 
             value={searchTerm} 
-            onChange={handleSearchInputChange} // 검색어 입력 필드
+            onChange={handleSearchInputChange} 
           />
-          <button onClick={fetchItems}>조회 &gt;</button>
+          <button onClick={() => fetchItems(currentPage)}>조회 &gt;</button>
         </div>
       </div>
       <br />
@@ -226,14 +253,15 @@ const ItemMgmt = () => {
             formData={formData}
             handleInputChange={handleInputChange}
             handleFormSubmit={handleSave}
-            items={filteredItems} // 필터링된 아이템 목록 전달
+            items={filteredItems} 
             selectedItem={selectedItem}
             selectedItems={selectedItems}
             setSelectedItems={setSelectedItems}
             setIsFormVisible={setIsFormVisible}
           />
-          </section>
-        </div>
+        </section>
+      </div>
+      {renderPagination()}
       <div className="excel-print">
         <button onClick={handleExcelDownload}><GrDocumentUpload size={16}/> 엑셀 다운</button>
         <button onClick={handlePrint}><HiPrinter size={16}/> 인쇄</button>

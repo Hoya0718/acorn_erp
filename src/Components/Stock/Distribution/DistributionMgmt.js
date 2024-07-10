@@ -7,6 +7,7 @@ import DistributionAdd from './DistributionAdd';
 import DistributionUpdate from './DistributionUpdate';
 import DistributionSearch from './DistributionSearch';
 import DistributionSearchDate from './DistributionSearchDate';
+//페이지네이션
 import Pagination from '../../Customer/modules/PaginationModule';
 import instance from './../../../api/axios';
 
@@ -45,9 +46,45 @@ const DistributionMgmt = () => {
     const [purchaseData, setPurchaseData] = useState([]); // 구매 데이터 추가
     const [isConfirmed, setIsConfirmed] = useState(false); // 확정 상태 관리
 
+    //페이지 네이션 데이터
+    const [distribution, setDistribution] = useState([]);
+    const [filteredData, setFilteredData] = useState(distribution);
+    const [pageData, setPageData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+
     useEffect(() => {
         fetchItems();
     }, []);
+
+    useEffect(() => {
+        fetchPageData(currentPage, rowsPerPage, setFilteredData, setTotalItems); 
+      }, [currentPage, rowsPerPage]);
+    
+      useEffect(() => {
+        fetchPageData(currentPage, rowsPerPage, setFilteredData, setTotalItems); 
+      }, [distribution]);
+
+      useEffect(() => {
+        // 페이지 데이터 업데이트 함수 호출
+        updatePageData();
+      }, [currentPage, rowsPerPage]); // currentPage 또는 rowsPerPage가 변경될 때마다 실행
+
+    // 페이지네이션
+    const fetchPageData = async (currentPage, rowsPerPage, setFilteredData, setTotalItems) => {
+        try {
+          const response_pageData = await instance.get(`/purchase/listPage?page=${currentPage - 1}&size=${rowsPerPage}`);
+          const page = response_pageData.data;
+          const formattedPageData = page.content.map(item => ({
+            ...item
+          }));
+          setFilteredData(formattedPageData); // filteredData 업데이트
+          setTotalItems(page.totalElements); // totalItems 업데이트
+        } catch (error) {
+          console.error('페이지 데이터를 가져오는 중 오류 발생:', error);
+        }
+      };
 
     //백엔드 API에서 배포 항목을 가져와 items 상태를 업데이트, 오류가 발생하면 콘솔에 출력
     const fetchItems = async () => {
@@ -155,6 +192,7 @@ const DistributionMgmt = () => {
         try {
             const response = await axios.post('/materials', newDistribution);
             setItems([...items, response.data]);
+            alert("확정 완료했습니다.");
         } catch (error) {
             console.error("Error adding distribution:", error);
         }
@@ -268,6 +306,17 @@ const DistributionMgmt = () => {
         setIsConfirmed(!isConfirmed); // 확정 상태를 토글하는 함수
     };
     
+    // 페이지 변경 처리 함수
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // 페이지 데이터 업데이트 함수
+  const updatePageData = () => {
+    // 예를 들어, 페이지 번호(currentPage)와 페이지당 항목 수(rowsPerPage)를 기반으로 필요한 데이터를 업데이트할 수 있습니다.
+    // fetchPageData(currentPage, rowsPerPage, setFilteredData, setTotalItems); // fetchPageData는 예시로 제공된 함수입니다.
+    // 위와 같이 실제 데이터 업데이트 로직을 작성해야 합니다.
+  };
 
     // 렌더링할 아이템 배열 선택
     const itemsToRender = filteredItems.length > 0 ? filteredItems : filteredByDateItems.length > 0 ? filteredByDateItems : items;
@@ -351,6 +400,14 @@ const DistributionMgmt = () => {
                                     purchaseData={purchaseData} 
                                     checkAll={checkAll} 
                                     handleSelectAll={handleSelectAll}
+                                    />
+
+                                    {/* 페이지네이션 */}
+                                    <Pagination
+                                        totalItems={totalItems}
+                                        itemsPerPage={rowsPerPage}
+                                        currentPage={currentPage}
+                                        onPageChange={handlePageChange}
                                     />
                     {/* </tbody>
                 </table> */}

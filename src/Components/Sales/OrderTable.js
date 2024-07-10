@@ -12,8 +12,8 @@ const OrderTable = ({
   setSelectedOrders,
   setIsFormVisible
 }) => {
-  const [selectAll, setSelectAll] = useState(false); // 모두 선택 체크 상태를 관리하는 상태
-  const [errors, setErrors] = useState({ // 입력 필드의 유효성 검사 오류를 관리하는 상태
+  const [selectAll, setSelectAll] = useState(false);
+  const [errors, setErrors] = useState({
     orderStatus: '',
     orderDate: '',
     customerName: '',
@@ -22,9 +22,8 @@ const OrderTable = ({
     itemQty: '',
     orderPrice: ''
   });
-  const [sortConfig, setSortConfig] = useState({ key: 'orderNum', direction: 'descending' }); // 테이블 정렬 설정을 관리하는 상태
+  const [sortConfig, setSortConfig] = useState({ key: 'orderNum', direction: 'descending' });
 
-  // 모두 선택 체크 상태를 토글하는 함수
   const toggleSelectAll = () => {
     setSelectAll(!selectAll);
     if (!selectAll) {
@@ -34,7 +33,6 @@ const OrderTable = ({
     }
   };
 
-  // 주문 선택을 토글하는 함수
   const toggleOrderSelection = (order) => {
     const selectedIndex = selectedOrders.findIndex((selectedOrder) => selectedOrder.orderNum === order.orderNum);
     if (selectedIndex === -1) {
@@ -46,7 +44,6 @@ const OrderTable = ({
     }
   };
 
-  // 테이블 열 클릭 시 정렬 방향을 설정하는 함수
   const handleSort = (key) => {
     let direction = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
@@ -55,7 +52,6 @@ const OrderTable = ({
     setSortConfig({ key, direction });
   };
 
-  // 정렬 방향에 따라 화살표 표시를 반환하는 함수
   const getSortDirection = (key) => {
     if (sortConfig.key === key) {
       return sortConfig.direction === 'ascending' ? '▲' : '▼';
@@ -63,7 +59,6 @@ const OrderTable = ({
     return '▼';
   };
 
-  // 입력 폼 유효성 검사 함수
   const validateForm = () => {
     const newErrors = {};
     if (!formData.orderStatus) newErrors.orderStatus = '주문상태를 입력하세요.';
@@ -78,7 +73,6 @@ const OrderTable = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  // 폼 제출 처리 함수
   const handleFormSubmitInternal = (event) => {
     event.preventDefault();
     if (validateForm()) {
@@ -87,7 +81,6 @@ const OrderTable = ({
     }
   };
 
-  // 정렬된 주문 목록을 반환하는 변수
   const sortedOrders = [...orders].sort((a, b) => {
     const direction = sortConfig.direction === 'ascending' ? 1 : -1;
     if (a[sortConfig.key] < b[sortConfig.key]) {
@@ -99,7 +92,6 @@ const OrderTable = ({
     return 0;
   });
 
-  // 모든 주문을 선택하는 체크박스 상태
   const selectAllCheckboxState = selectAll || (selectedOrders.length === orders.length && orders.length > 0);
 
   return (
@@ -108,11 +100,11 @@ const OrderTable = ({
         <thead>
           <tr>
             <th><input type="checkbox" checked={selectAllCheckboxState} onChange={toggleSelectAll} /></th>
-            <th onClick={() => handleSort('orderNum')}>주문번호 {getSortDirection('orderNum')}</th>
-            <th onClick={() => handleSort('orderStatus')}>주문상태 {getSortDirection('orderStatus')}</th>
-            <th onClick={() => handleSort('orderDate')}>판매일시 {getSortDirection('orderDate')}</th>
-            <th onClick={() => handleSort('customerName')}>이름 {getSortDirection('customerName')}</th>
-            <th onClick={() => handleSort('customerTel')}>연락처 {getSortDirection('customerTel')}</th>
+            <th className="orderNum" onClick={() => handleSort('orderNum')}>주문번호 {getSortDirection('orderNum')}</th>
+            <th className="orderStatus" onClick={() => handleSort('orderStatus')}>주문상태 {getSortDirection('orderStatus')}</th>
+            <th className="orderDate" onClick={() => handleSort('orderDate')}>판매일시 {getSortDirection('orderDate')}</th>
+            <th className="customerName" onClick={() => handleSort('customerName')}>이름 {getSortDirection('customerName')}</th>
+            <th className="customerTel" onClick={() => handleSort('customerTel')}>연락처 {getSortDirection('customerTel')}</th>
             <th onClick={() => handleSort('itemName')}>상품명 {getSortDirection('itemName')}</th>
             <th onClick={() => handleSort('itemQty')}>수량 {getSortDirection('itemQty')}</th>
             <th onClick={() => handleSort('orderPrice')}>단가 {getSortDirection('orderPrice')}</th>
@@ -123,7 +115,7 @@ const OrderTable = ({
           {isFormVisible && !selectedOrder && (
             <tr>
               <td></td>
-              <td>
+              <td className="orderNum">
                 <input
                   type="text"
                   name="orderNum"
@@ -196,7 +188,7 @@ const OrderTable = ({
                   name="itemQty"
                   value={formData.itemQty}
                   onChange={handleInputChange}
-                  placeholder="수량"
+                  placeholder="수량(개)"
                   style={{ borderColor: errors.itemQty ? 'red' : undefined }}
                 />
                 {errors.itemQty && <div style={{ color: 'red' }}>{errors.itemQty}</div>}
@@ -207,7 +199,7 @@ const OrderTable = ({
                   name="orderPrice"
                   value={formData.orderPrice}
                   onChange={handleInputChange}
-                  placeholder="단가"
+                  placeholder="단가(원)"
                   style={{ borderColor: errors.orderPrice ? 'red' : undefined }}
                 />
                 {errors.orderPrice && <div style={{ color: 'red' }}>{errors.orderPrice}</div>}
@@ -221,7 +213,7 @@ const OrderTable = ({
             selectedOrder && selectedOrder.orderNum === order.orderNum ? (
               <tr key={index}>
                 <td></td>
-                <td>
+                <td className="orderNum">
                   <input
                     type="text"
                     name="orderNum"
@@ -294,7 +286,7 @@ const OrderTable = ({
                     name="itemQty"
                     value={formData.itemQty}
                     onChange={handleInputChange}
-                    placeholder="수량"
+                    placeholder="수량(개)"
                     style={{ borderColor: errors.itemQty ? 'red' : undefined }}
                   />
                   {errors.itemQty && <div style={{ color: 'red' }}>{errors.itemQty}</div>}
@@ -305,7 +297,7 @@ const OrderTable = ({
                     name="orderPrice"
                     value={formData.orderPrice}
                     onChange={handleInputChange}
-                    placeholder="단가"
+                    placeholder="단가(원)"
                     style={{ borderColor: errors.orderPrice ? 'red' : undefined }}
                   />
                   {errors.orderPrice && <div style={{ color: 'red' }}>{errors.orderPrice}</div>}
@@ -317,7 +309,7 @@ const OrderTable = ({
             ) : (
               <tr key={index} onClick={() => toggleOrderSelection(order)}>
                 <td><input type="checkbox" checked={selectedOrders.some(selectedOrder => selectedOrder.orderNum === order.orderNum)} onChange={() => toggleOrderSelection(order)} /></td>
-                <td>{order.orderNum}</td>
+                <td className="orderNum">{order.orderNum}</td>
                 <td>{order.orderStatus}</td>
                 <td>{order.orderDate}</td>
                 <td>{order.customerName}</td>
