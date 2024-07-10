@@ -13,7 +13,7 @@ const Login = () => {
           {/* 이미지 처리 */}
           <div className="col-lg-8 col-70 m-0 p-0">
             <div className="accounts_image w-100 h-100">
-              <img src="/bread10.jpg" alt="accounts_image" className="img-fluid w-100 h-100" />
+              <img src="/소상공인2.jpg" alt="accounts_image" className="img-fluid w-100 h-100" />
             </div>
           </div>
           <div className="col-lg-4 col-30 m-0 p-0">
