@@ -8,8 +8,10 @@ const DistributionAdd = ({
     fetchPurchaseItems,
     purchaseData,
     handleSelectAll,
+
     onAddMaterials,
     isConfirmed 
+
 }) => {
     const [isChecked, setIsChecked] = useState(false); // ✔ 표시 상태 관리
     const [distributionDataList, setDistributionDataList] = useState([]);
@@ -25,7 +27,9 @@ const DistributionAdd = ({
             receivedQty: '',
             releaseQty: '',
             quantity: '',
+
             //price: purchase.purchase.price || ''
+
         }));
         setDistributionDataList(initialDataList);
     }, [purchaseData]);
@@ -58,7 +62,9 @@ const DistributionAdd = ({
                 receivedQty: parseInt(distributionDataList[index].receivedQty),
                 releaseQty: parseInt(distributionDataList[index].releaseQty),
                 quantity: parseInt(distributionDataList[index].quantity),
+
                 //price: parseInt(distributionDataList[index].price)
+
             };
 
             // Axios를 사용해 서버에 데이터 전송
@@ -76,6 +82,7 @@ const DistributionAdd = ({
         }
     };
 
+
     useEffect(() => {
         setIsChecked(isConfirmed); // isConfirmed 상태에 따라 ✔ 표시 설정
     }, [isConfirmed]);
@@ -83,7 +90,6 @@ const DistributionAdd = ({
     const handleToggleConfirm = () => {
         setIsChecked(!isChecked); // ✔ 표시를 토글하는 함수
     };
-
     useEffect(() => {
         setIsChecked(checkAll);
     }, [checkAll]);
@@ -99,14 +105,18 @@ const DistributionAdd = ({
         <table className='table'>
             <thead>
                 <tr>
+
                     <th>품목코드</th>
                     <th>품목이름</th>
                     <th>입고일자</th>
+
                     <th>발주수량</th>
                     <th>입고수량</th>
                     <th>기초재고</th>
                     <th>출고수량</th>
                     <th>집계재고</th>
+
+
                 </tr>
             </thead>
             <tbody>
@@ -142,7 +152,7 @@ const DistributionAdd = ({
                         </td>
                         <td>
                             <input
-                                type='date'
+                                type='number'
                                 placeholder='입고일자'
                                 name='receiptDate'
                                 value={distributionDataList[index]?.receiptDate || ''}
@@ -158,6 +168,7 @@ const DistributionAdd = ({
                         <td>
                             <input
                                 style={{ border: 'none', textAlign: 'center' }}
+
                                 type='number'
                                 placeholder={purchase.orderQty}
                                 name='orderQty'
@@ -230,6 +241,7 @@ const DistributionAdd = ({
                                     )
                                 }
                             />
+
                             <button type="submit" className="items-subTitle-button" onClick={() => handleAdd(index)} 
                             style={{ marginLeft: '10px', display: isChecked ? 'inline-block' : 'none' }}>
                                 ✔
