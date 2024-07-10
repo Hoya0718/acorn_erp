@@ -41,6 +41,7 @@
 }
 
 .board-write-form .form-group {
+  font-size: 15px;
   margin-bottom: 20px;
 }
 
@@ -99,9 +100,4 @@
 
 .board-write-form .btn-secondary:hover {
   background-color: #5a6268;
-}
-
-
-.form-group label {
-  font-size: 1.2rem; 
 }

@@ -8,10 +8,14 @@ const DistributionAdd = ({
     fetchPurchaseItems,
     purchaseData,
     handleSelectAll,
-    onAddMaterials
+
+    onAddMaterials,
+    isConfirmed 
+
 }) => {
-    const [isChecked, setIsChecked] = useState(false);
+    const [isChecked, setIsChecked] = useState(false); // ✔ 표시 상태 관리
     const [distributionDataList, setDistributionDataList] = useState([]);
+    
 
     useEffect(() => {
         const initialDataList = purchaseData.map((purchase) => ({
@@ -23,7 +27,9 @@ const DistributionAdd = ({
             receivedQty: '',
             releaseQty: '',
             quantity: '',
-            price: purchase.purchase.price || ''
+
+            //price: purchase.purchase.price || ''
+
         }));
         setDistributionDataList(initialDataList);
     }, [purchaseData]);
@@ -56,7 +62,9 @@ const DistributionAdd = ({
                 receivedQty: parseInt(distributionDataList[index].receivedQty),
                 releaseQty: parseInt(distributionDataList[index].releaseQty),
                 quantity: parseInt(distributionDataList[index].quantity),
-                price: parseInt(distributionDataList[index].price)
+
+                //price: parseInt(distributionDataList[index].price)
+
             };
 
             // Axios를 사용해 서버에 데이터 전송
@@ -74,6 +82,14 @@ const DistributionAdd = ({
         }
     };
 
+
+    useEffect(() => {
+        setIsChecked(isConfirmed); // isConfirmed 상태에 따라 ✔ 표시 설정
+    }, [isConfirmed]);
+
+    const handleToggleConfirm = () => {
+        setIsChecked(!isChecked); // ✔ 표시를 토글하는 함수
+    };
     useEffect(() => {
         setIsChecked(checkAll);
     }, [checkAll]);
@@ -89,31 +105,23 @@ const DistributionAdd = ({
         <table className='table'>
             <thead>
                 <tr>
-                    <th>
-                        <input
-                            type='checkbox'
-                            onChange={handleSelectAll}
-                            checked={checkAll}
-                        />
-                    </th>
+
                     <th>품목코드</th>
                     <th>품목이름</th>
                     <th>입고일자</th>
-                    <th>가격</th>
+
                     <th>발주수량</th>
                     <th>입고수량</th>
                     <th>기초재고</th>
                     <th>출고수량</th>
                     <th>집계재고</th>
-                    <th>동작</th>
+
+
                 </tr>
             </thead>
             <tbody>
                 {purchaseData.map((purchase, index) => (
                     <tr key={index}>
-                        <td>
-                            <input type='checkbox' checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
-                        </td>
                         <td>
                             <input
                                 style={{ border: 'none', textAlign: 'center' }}
@@ -160,22 +168,7 @@ const DistributionAdd = ({
                         <td>
                             <input
                                 style={{ border: 'none', textAlign: 'center' }}
-                                type='number'
-                                placeholder={purchase.price}
-                                name='price'
-                                value={distributionDataList[index]?.price || ''}
-                                onChange={(e) =>
-                                    handleInputChange(
-                                        index,
-                                        e.target.name,
-                                        e.target.value
-                                    )
-                                }
-                            />
-                        </td>
-                        <td>
-                            <input
-                                style={{ border: 'none', textAlign: 'center' }}
+
                                 type='number'
                                 placeholder={purchase.orderQty}
                                 name='orderQty'
@@ -235,7 +228,7 @@ const DistributionAdd = ({
                             />
                         </td>
                         <td>
-                            <input
+                            <input className="form-input"
                                 type='number'
                                 placeholder='집계재고'
                                 name='quantity'
@@ -248,9 +241,11 @@ const DistributionAdd = ({
                                     )
                                 }
                             />
-                        </td>
-                        <td>
-                            <button onClick={() => handleAdd(index)}>추가</button>
+
+                            <button type="submit" className="items-subTitle-button" onClick={() => handleAdd(index)} 
+                            style={{ marginLeft: '10px', display: isChecked ? 'inline-block' : 'none' }}>
+                                ✔
+                            </button>
                         </td>
                     </tr>
                 ))}

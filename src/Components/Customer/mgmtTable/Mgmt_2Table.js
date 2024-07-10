@@ -292,15 +292,17 @@ const MgmtTable = ({
                         type="text"
                         placeholder={column.header}
                         className="form-control"
+                        style={{margin:'0px'}}
                         name={column.accessor}
                         value={editingRowData[column.accessor] || ''}
                         onChange={(e) => handleInputChange(e, column.accessor)}
                       />
                       {column.isAddr && (
                         <Button
-                          className="btn btn-secondary"
+                          // className="btn btn-secondary"
                           type="button"
                           onClick={handleAddressSearch}
+                          style={{fontSize:'10px', padding:'0px 5px'}}
                         >
                           주소검색
                         </Button>
@@ -394,6 +396,7 @@ const MgmtTable = ({
                 >
                   <input
                     type="text"
+                    className={'table-centered'}
                     style={{ border: 'none' }}
                     // onDoubleClick={handleDoubleEditmodeClick}
                     value={column.accessor === 'customerNotes' ? (

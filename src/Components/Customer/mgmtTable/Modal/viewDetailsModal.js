@@ -2,6 +2,7 @@
 // 고객관리 세부사항보기 모달 페이지
 import * as React from 'react';
 import "../../../Main/Main.css";
+import "../../Customer.css";
 import { Modal, Button } from 'react-bootstrap';
 import instance from '../../../../api/axios';
 
@@ -144,9 +145,12 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
         }
     };
     return (
-        <Modal show={show} onHide={onHide}>
+        <Modal
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={show} onHide={onHide}>
             <form>
-                <div className="modal-content">
+                <div className="modal-content viewDetailsModal viewDetailsModal-content">
                     <Modal.Header closeButton>
                         <Modal.Title>고객 현황</Modal.Title>
                     </Modal.Header>
@@ -193,6 +197,7 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
                                         />
                                     </div>
                                 </div>
+                                <br></br>
                                 <div className="row">
                                     <div className="col-md-3 centered">
                                         <label>생년월일</label>
@@ -206,6 +211,7 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
                                             style={{
                                                 border: 'none',
                                                 textAlign: 'lefted',
+                                                fontSize: '14px'
                                             }}
                                             // readOnly={!editableFields.customerBirthDate}
                                             onDoubleClick={() => handleDoubleEditModeClick('customerBirthDate')}
@@ -233,6 +239,7 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
                                         />
                                     </div>
                                 </div>
+                                <br></br>
                                 <div className="row">
                                     <div className="col-md-3 centered">
                                         <label>주소</label>
@@ -254,6 +261,7 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
                                         />
                                     </div>
                                 </div>
+                                <br></br>
                                 <div className="row">
                                     <div className="col-md-3 centered">
                                         <label>가입일</label>
@@ -267,6 +275,7 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
                                             style={{
                                                 border: 'none',
                                                 textAlign: 'lefted',
+                                                fontSize: '14px'
                                             }}
                                             // readOnly={!editableFields.resisterDate}
                                             onDoubleClick={() => handleDoubleEditModeClick('registerDate')}
@@ -291,6 +300,7 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
                                         </select>
                                     </div>
                                 </div>
+                                <br></br>
                             </div>
                             <div className="form-group">
                                 <div className="row">
@@ -341,9 +351,9 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
                                                             />
                                                         )}
                                                     </div>
-                                                    <div className="col-md-2 centered">
+                                                    <div className="col-md-2 centered viewDetailsModalButton">
                                                         <Button 
-                                                            className="btn-sm secondary-outline" 
+                                                            className="btn-sm secondary-outline  " 
                                                             variant="secondary-outline" 
                                                             onClick={() => handleDeleteNote(idx)}
                                                         >
@@ -360,8 +370,8 @@ const ViewDetailsModal = ({ show, onHide, data, setData }) => {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button  onClick={onHide}>취소</Button>
-                        <Button variant="secondary" onClick={handleSaveChanges}>저장</Button>
+                        <Button style={{paddingTop: '8px', paddingBottom: '8px', paddingLeft: '15px', paddingRight: '15px', fontSize: '10px'}} variant="secondary" onClick={onHide}>취소</Button>
+                        <Button style={{paddingTop: '8px', paddingBottom: '8px', paddingLeft: '15px', paddingRight: '15px'}} onClick={handleSaveChanges}>저장</Button>
                     </Modal.Footer>
                 </div>
             </form>

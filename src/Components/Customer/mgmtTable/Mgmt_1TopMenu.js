@@ -75,6 +75,36 @@ const Mgmtmenu = ({
 
     return (
         <div>
+
+            <div className='row'>
+                <div className='col-2'>
+                    <DropdownModule
+                        selectedOption={selectedOption_dropdown}
+                        handleSelect={handleSelect_dropdown}
+                        options={dropdownData}
+                    />
+                </div>
+                <div className='col-10 righted uppered'
+                style={{ marginBottom: '3px' }}
+                >
+                <PeriodSearchButtonModule
+                setPeriod={({ startDate, endDate }) => {
+                    setStartDate(startDate);
+                    setEndDate(endDate);
+                  }}
+            />
+                    <SearchModule
+                       value={searchKeyword}
+                       onChange={handleSearchChange}
+                    />
+                    &nbsp;  &nbsp;
+                    <SearchButtonModule 
+                       value={searchKeyword}
+                       onClick={onSearch}
+                    />
+                </div>
+            </div>
+            
             <div className='items-subTitle righted'>
                 <span>
                     {!onUpdateMode && isAnyRowSelected ? (
@@ -103,37 +133,7 @@ const Mgmtmenu = ({
                     ) : null}
                 </span>
             </div>
-            <PeriodSearchButtonModule
-                setPeriod={({ startDate, endDate }) => {
-                    setStartDate(startDate);
-                    setEndDate(endDate);
-                  }}
-            />
-
-            <div className='row'>
-                <div className='col-2'>
-                    <DropdownModule
-                        selectedOption={selectedOption_dropdown}
-                        handleSelect={handleSelect_dropdown}
-                        options={dropdownData}
-                    />
-                </div>
-                <div 
-                    className='col-10 righted uppered'
-                    style={{ marginBottom: '-15px' }}
-                 >
-                    <SearchModule
-                       value={searchKeyword}
-                       onChange={handleSearchChange}
-                    />
-                    &nbsp;  &nbsp;
-                    <SearchButtonModule 
-                       value={searchKeyword}
-                       onClick={onSearch}
-                    />
-                </div>
-            </div>
-
+            
             {showModal_deleteCheck && (
                 <DeleteModalModule
                     show={showModal_deleteCheck}

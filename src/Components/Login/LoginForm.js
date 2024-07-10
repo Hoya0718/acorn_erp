@@ -39,6 +39,7 @@ const LoginForm = () => {
 
           // sessionStorage에 사용자 정보 저장
           sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
+          sessionStorage.setItem('isNewLogin', 'true');
 
           // 사용자 정보 확인 후 페이지 이동
           navigate('/layout');
@@ -48,7 +49,7 @@ const LoginForm = () => {
       }
     } catch (err) {
       console.error("에러 발생: ", err);
-      setError('로그인 실패: 아이디 또는 비밀번호를 확인하세요.');
+      window.alert('로그인 실패: 아이디 또는 비밀번호를 확인하세요.');
     } finally {
       setLoading(false);
     }

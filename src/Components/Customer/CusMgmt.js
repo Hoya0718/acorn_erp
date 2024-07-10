@@ -359,14 +359,14 @@ const CusMgmt = () => {
           />
         </div>
         <div className='col-2 col-md-4'>
-          <ExcelPrint
-            printData={filteredData}
-            columns={columns}
-            filename={filename}
-          />
+        <div className="excel-print">
+          <ExcelPrint 
+            printData={filteredData} 
+            columns={columns} 
+            filename={filename} />
         </div>
       </div>
-      
+    </div>
     </div>
   );
 };

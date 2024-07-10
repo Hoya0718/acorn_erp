@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useLocation } from 'react-router-dom';
 import "../Main/Main.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Reservation.css';
@@ -8,6 +8,8 @@ import { PiAcornDuotone } from "react-icons/pi";  // react-icons 임포트
 import ReservationModal from './ReservationModal';
 
 const ReservationMgmt = () => {
+  const location = useLocation(); // 현재 경로를 가져옴
+
   const [date, setDate] = useState(new Date());
   const [reservations, setReservations] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,7 +19,7 @@ const ReservationMgmt = () => {
   const [selectedReservations, setSelectedReservations] = useState([]);
 
   useEffect(() => {
-    const fetchReservations = async () => {
+    const fetchReservations = async () => {  
       try {
         const response = await axios.get('/reservations');
         setReservations(response.data);
@@ -105,7 +107,7 @@ const ReservationMgmt = () => {
             <span className="date-number">{date}</span>
             {isReserved && isCurrentMonth && <PiAcornDuotone className="acorn-icon" />}
           </div>
-        </div>
+        </div>                                                                                                                                                                                                                                                                                                                                                                                                       
       );
     });
   };
@@ -159,24 +161,29 @@ const ReservationMgmt = () => {
     for (let i = 1; i <= Math.ceil(reservations.length / itemsPerPage); i++) {
       pageNumbers.push(i);
     }
-
+  
+    const pageGroup = Math.ceil(currentPage / 5);
+    const lastPage = pageNumbers.length;
+    const startPage = (pageGroup - 1) * 5 + 1;
+    const endPage = Math.min(pageGroup * 5, lastPage);
+  
     return (
       <nav aria-label="Page navigation example" style={{ marginTop: '50px' }}>
         <ul className="pagination justify-content-center">
           <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-            <a className="page-link" href="#" onClick={() => paginate(currentPage - 1)} aria-label="Previous">
+            <a className="page-link" href="#" onClick={() => paginate(Math.max(1, startPage - 5))} aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
-          {pageNumbers.map(number => (
+          {pageNumbers.slice(startPage - 1, endPage).map(number => (
             <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
               <a onClick={() => paginate(number)} href="#" className="page-link">
                 {number}
               </a>
             </li>
           ))}
-          <li className={`page-item ${currentPage === Math.ceil(reservations.length / itemsPerPage) ? 'disabled' : ''}`}>
-            <a className="page-link" href="#" onClick={() => paginate(currentPage + 1)} aria-label="Next">
+          <li className={`page-item ${currentPage === lastPage ? 'disabled' : ''}`}>
+            <a className="page-link" href="#" onClick={() => paginate(Math.min(lastPage, endPage + 1))} aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
             </a>
           </li>
@@ -193,8 +200,9 @@ const ReservationMgmt = () => {
             <div className="row">
               <div className="col--12"></div>
               <h3>예약 관리</h3>
-              <hr style={{    margin: "1rem 0"}}/>
-              <div className="col-md-7 col-xs-12">
+              <hr style={{ margin: "1rem 0" }} />
+
+              <div className="col-md-7 col-xs-12" style={{ paddingLeft: "60px", marginRight: "-80px" }}>
                 <div className="left">
                   <div className="Middle classification">
                   </div>
@@ -228,10 +236,10 @@ const ReservationMgmt = () => {
                 <div className="right">
                   <div className="right-up">
                     <Link to="mainReg">
-                      <button className="btn btn-primary btn-register">예약 등록</button>
+                      <button className="btn btn-register">예약 등록</button>
                     </Link>
                     <Link to="resTable">
-                      <button className="btn btn-primary btn-search">예약 조회</button>
+                      <button className="btn btn-search">예약 조회</button>
                     </Link>
                   </div>
                   <div className="right-mid">
@@ -243,7 +251,8 @@ const ReservationMgmt = () => {
                         updateReservation
                       }} />
                     </section>
-                    {renderPagination()}
+                    {location.pathname.endsWith('resTable') && renderPagination()}
+                    {/* {renderPagination()} */}
                   </div>
                 </div>
               </div>

@@ -66,6 +66,8 @@ const FindPw = () => {
           name="storenum"
           onChange={(e) => setRegistrationNum(e.target.value)}
           placeholder="사업자번호(10자)"
+          pattern="\d{10}"
+          maxLength="10"
           required
           autoFocus
           style={{ marginTop: '20px' }}
@@ -77,6 +79,8 @@ const FindPw = () => {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="아이디(이메일)"
           required
+          minLength="3" // 최소 3글자 설정
+          maxLength="30" // 최대 16글자 설정
           style={{ marginTop: '1px', marginBottom: '20px' }}
         />
         <button

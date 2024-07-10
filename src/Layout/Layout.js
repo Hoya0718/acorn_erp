@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import { Slide, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Layout.css';
@@ -14,21 +14,25 @@ const Layout = () => {
   useEffect(() => {
     // 세션 스토리지에서 사용자 정보 가져오기
     const userInfoFromStorage = sessionStorage.getItem('userInfo');
-    
+    const isNewLogin = sessionStorage.getItem('isNewLogin');
     if (userInfoFromStorage) {
       const user = JSON.parse(userInfoFromStorage);
       setUserInfo(user);
 
-      // 환영 메시지가 이미 표시되었는지 확인
-      const hasWelcomed = sessionStorage.getItem('hasWelcomed');
-      if (!hasWelcomed) {
-        // 환영 메시지 표시
+      // 로그인 상태 확인
+      
+      if (isNewLogin === 'true') {
+        // 새로운 로그인인 경우에만 toast 메시지 표시
         toast.success(`${user.shopName} 님, 안녕하세요!`);
-        // 메시지를 표시한 후 상태 저장
-        sessionStorage.setItem('hasWelcomed', 'true');
+        
+        // toast 표시 후 로그인 상태 갱신
+        // setTimeout의 호출 방법 수정
+        setTimeout(() => {
+          sessionStorage.setItem('isNewLogin', 'false');
+        }, 1000); // 1초 후 상태를 false로 업데이트
       }
     }
-  }, []);
+  }, []); // 빈 배열로 종속성 설정
 
   const handleItemClick = (item) => {
     setExpandedItem(item === expandedItem ? null : item);
@@ -47,7 +51,7 @@ const Layout = () => {
       <div className="container1">
         <div className="sidebar1">
           <nav>
-            <ul style={{paddingLeft:"0"}}>
+            <ul style={{ paddingLeft: "0" }}>
               {menuItems.map((menuItem, index) => (
                 <MenuItem
                   key={index}
@@ -84,12 +88,12 @@ const Layout = () => {
 
 const MenuItem = ({ title, subMenuItems, expanded, onClick, path }) => {
   return (
-    <li style={{marginBottom:"7px"}}>
+    <li style={{ marginBottom: "7px" }}>
       <div className={`menu-item ${subMenuItems ? 'with-submenu' : 'no-submenu'}`} onClick={onClick}>
         <Link to={subMenuItems ? subMenuItems[0].path : path}>{title}</Link>
       </div>
       {subMenuItems && (
-        <ul style={{paddingLeft:"50px"}}>
+        <ul style={{ paddingLeft: "50px" }}>
           {subMenuItems.map((subMenuItem, index) => (
             <li key={index} className={`submenu1 ${expanded ? 'active' : ''}`}>
               <Link to={subMenuItem.path}>{subMenuItem.title}</Link>
@@ -114,13 +118,13 @@ const menuItems = [
     subMenuItems: [
       { title: "주문 관리", path: "/layout/salesMgmt/orderMgmt" },
       { title: "상품 관리", path: "/layout/salesMgmt/itemMgmt" },
-      { title: "상품 재고 관리", path: "/layout/salesMgmt/inventoryMgmt" }
     ]
   },
   {
     title: "📦 재고 관리",
     subMenuItems: [
-      { title: "자재 관리", path: "/layout/stockMgmt/materialsMgmt" },
+
+      { title: "자재 관리", path: "/layout/stockMgmt/materialMgmt" },
       { title: "물류 관리", path: "/layout/stockMgmt/distributionMgmt" },
       { title: "발주 관리", path: "/layout/stockMgmt/purchaseMgmt" },
       { title: "거래처 관리", path: "/layout/stockMgmt/vendorMgmt" }

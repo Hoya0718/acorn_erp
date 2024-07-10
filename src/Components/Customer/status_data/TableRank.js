@@ -201,14 +201,20 @@ const CustomerStatusTable_Rank = ({ activeLabel, onSort, onPageChange, rowsPerPa
         endDate={endDate} 
         onSearch={handleSearch}
       />
+      <div className='row'>
+      <div className='col-10 col-md-8'>
       <CustomerStatusPagination
         totalItems={totalItems}
         itemsPerPage={rowsPerPage}
         currentPage={currentPage}
         onPageChange={setCurrentPage}
       />
+      </div>
+      <div className='col-2 col-md-4'>
       <div className="excel-print">
         <ExcelPrint printData={filteredData} columns={columns} filename={filename} />
+        </div>
+        </div>
       </div>
       <br></br>
       <br></br>

@@ -152,3 +152,20 @@
 .carousel-control-next {
   transform: translateX(80%);
 }
+
+.viewDetailsModal, .viewDetailsModal input {
+  font-size: 14px;
+}
+.viewDetailsModalButton{
+  font-size: 14px;
+}
+.customerSettingMadal-content{
+  width: 100%;
+  max-width: 1000px;
+  min-width: 500px;
+}
+.viewDetailsModal-content{
+  width: 100%;
+  max-width: 1000px;
+  min-width: 600px;
+}

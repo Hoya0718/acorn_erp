@@ -10,7 +10,11 @@ import StatusDataMain from '../Components/Customer/status_data/StatusDataMain.js
 // 재고 관리
 import StockMgmt from '../Components/Stock/StockMgmt.js';
 import DistributionMgmt from '../Components/Stock/Distribution/DistributionMgmt.js';
+<<<<<<< ej
 import MaterialsMgmt from '../Components/Stock/Materials/MaterialsMgmt.js';
+=======
+import MaterialMgmt from '../Components/Stock/materials/MaterialMgmt.js';
+>>>>>>> master
 import PurchaseMgmt from '../Components/Stock/Purchase/PurchaseMgmt.js';
 import VendorMgmt from '../Components/Stock/Vendor/VendorMgmt.js';
 
@@ -75,8 +79,10 @@ export const RouterInfo = createBrowserRouter([
         element: <StockMgmt />,
         children: [
           {
-            path: "MaterialsMgmt",
-            element: <MaterialsMgmt />
+
+            path: "materialMgmt",
+            element: <MaterialMgmt />
+
           },
           {
             path: "DistributionMgmt",
@@ -138,6 +144,10 @@ export const RouterInfo = createBrowserRouter([
       },
       // 게시판 관련 경로
       {
+        index : true,
+        element: <Board />,
+      },    
+      {
         path: "board",
         element: <Board />,
       },    
@@ -153,8 +163,7 @@ export const RouterInfo = createBrowserRouter([
       {
         path: "customerMgmt/cusStatus",
         element: <CusStatus />
-      },
-  
+      }
     ]
   },
   {

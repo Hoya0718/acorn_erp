@@ -138,8 +138,9 @@ const Customer_status = ({
       <div className="content">
         <section>
         <TabButton activeTab={activeTab} setActiveTab={setActiveTab} setActiveLabel={setActiveLabel} />           
-                <PeriodSearch setPeriod={setPeriod} />
-            <div className='row'>
+                
+            <div className='row'
+            style={{ marginBottom: '5px',  marginTop: '10px' }}>
               <div className='col-2'>
                 {activeTab !== 'distribution' && (
                   <DropdownModule
@@ -150,8 +151,9 @@ const Customer_status = ({
                 )}
               </div>
                 <div className='col-10 righted uppered'
-                  style={{ marginBottom: '-15px' }}
+                  
                 >
+                  <PeriodSearch setPeriod={setPeriod} />
                   <KeywordSearch
                     value={searchKeyword}
                     onChange={handleSearchChange} />

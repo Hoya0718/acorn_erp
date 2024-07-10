@@ -1,12 +1,14 @@
-#Frame {
+ /* #Frame {
   display: flex;
   justify-content: column;
-}
+} */
 
 #add_reg:hover, #add_cancel:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
+
+
 
 .calendar {
   width: 650px;
@@ -15,7 +17,7 @@
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  font-family: 'Arial', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
 }
 
 .flex-shrink-0 {
@@ -70,8 +72,7 @@
 
 .days {
   display: flex;
-  margin: 25px 0 10px;
-  background-color: #f8f9fa;
+  margin: 15px 0 10px;
   padding: 10px 0;
 }
 
@@ -80,7 +81,7 @@
   text-align: center;
   font-size: 1.5rem;
   font-weight: bold;
-  color: #4a90e2;
+  color: #45718d;
 }
 
 .dates {
@@ -127,7 +128,7 @@
 }
 
 .today:not(.other) {
-  position: relative;
+  /* position: relative; */
   color: #fff;
   background-color: #FFD5D2
 }
@@ -206,7 +207,8 @@
   padding: 8px 16px;
   cursor: pointer;
   border-radius: 4px;
-  /* margin-right: 10px; */
+  margin: 2px !important;
+
 }
 
 .items-subTitle button:hover {
@@ -226,7 +228,8 @@
 
 .btn-register:hover, .btn-search:hover {
   background-color: #333;
-  /* transform: translateY(-2px); */
+  color: white;
+
 }
 
 .reserved {
@@ -264,7 +267,7 @@
   left: -5px;
   width: 30px;
   height: 30px;
-  color: #4a90e2;
+  color: #45718d; 
 }
 
 .btn-register {
@@ -273,4 +276,15 @@
 
 .btn-search {
   margin-left: 10px; /* 왼쪽에 10px의 여백 추가 */
+}
+
+
+.btn:first-child:active {
+  color: white;
+  background-color: black;
+}
+
+:not(.btn-check)+.btn:active {
+  color: white;
+  background-color: black;
 }
