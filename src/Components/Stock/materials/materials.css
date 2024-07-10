@@ -2,7 +2,6 @@
     border-collapse: collapse;
     width: 100%;
 }
-
 .materials-table th, .materials-table td {
     border: 1px solid #ddd;
     padding: 8px;
@@ -41,6 +40,7 @@
     gap: 7px; /* 버튼 사이 간격 */
     margin-top: 15px; /* 테이블과의 간격 설정 */
 }
+
 
   /* 등록 수정 삭제 */
   .items-subTitle {
@@ -123,3 +123,4 @@
     padding: 8px; /* input 요소의 내부 여백 설정 */
     width: 90px; /* input 요소의 너비 설정 */
   }
+

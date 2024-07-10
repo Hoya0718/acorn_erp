@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acorn.erp.domain.Reservation.Repository.ResMapper">
+    <resultMap id="ReservationResultMap" type="com.acorn.erp.domain.Reservation.Entity.Reservation">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="reservationDate" column="reservation_date"/>
+        <result property="requests" column="requests"/>
+        <result property="payment" column="payment"/>
+        <result property="phone" column="phone"/>
+        <result property="gender" column="gender"/>
+        <result property="rsCount" column="rs_count"/>
+    </resultMap>
+
+    <select id="getAllReservations" resultMap="ReservationResultMap">
+        SELECT * FROM reservation
+    </select>
+
+    <select id="getReservation" parameterType="string" resultMap="ReservationResultMap">
+        SELECT * FROM reservation WHERE id = #{id}
+    </select>
+
+    <insert id="insertReservation" parameterType="com.acorn.erp.domain.Reservation.Entity.Reservation">
+        INSERT INTO reservation (name, reservation_date, requests, payment, phone, gender, rs_count)
+        VALUES (#{name}, #{reservationDate}, #{requests}, #{payment}, #{phone}, #{gender}, #{rsCount})
+    </insert>
+
+    <delete id="deleteReservation" parameterType="string">
+        DELETE FROM reservation WHERE id = #{id}
+    </delete>
+
+    <update id="updateReservation" parameterType="com.acorn.erp.domain.Reservation.Entity.Reservation">
+        UPDATE reservation
+        SET name = #{name}, reservation_date = #{reservationDate}, requests = #{requests}, payment = #{payment}, phone = #{phone}, gender = #{gender}, rs_count = #{rsCount}
+        WHERE id = #{id}
+    </update>
+</mapper>
