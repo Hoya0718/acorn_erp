@@ -118,13 +118,13 @@ const menuItems = [
     subMenuItems: [
       { title: "주문 관리", path: "/layout/salesMgmt/orderMgmt" },
       { title: "상품 관리", path: "/layout/salesMgmt/itemMgmt" },
-      { title: "상품 재고 관리", path: "/layout/salesMgmt/inventoryMgmt" }
     ]
   },
   {
     title: "📦 재고 관리",
     subMenuItems: [
-      { title: "자재 관리", path: "/layout/stockMgmt/meterialMgmt" },
+
+      { title: "자재 관리", path: "/layout/stockMgmt/materialMgmt" },
       { title: "물류 관리", path: "/layout/stockMgmt/distributionMgmt" },
       { title: "발주 관리", path: "/layout/stockMgmt/purchaseMgmt" },
       { title: "거래처 관리", path: "/layout/stockMgmt/vendorMgmt" }
