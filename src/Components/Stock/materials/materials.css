@@ -1,96 +1,93 @@
-<<<<<<< HEAD
-=======
 .materials-table {
-    border-collapse: collapse;
-    width: 100%;
+  border-collapse: collapse;
+  width: 100%;
 }
 .materials-table th, .materials-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-    background-color: white !important; /* 배경색 설정 */
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  background-color: white !important; /* 배경색 설정 */
 }
 
 .materials-table th {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
 .materials-table tr:nth-child(even) {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
 .top-buttons {
-    display: flex;
-    justify-content: flex-end; /* 버튼들을 오른쪽으로 배치 */
-    gap: 7px; /* 버튼 사이 간격 */
+  display: flex;
+  justify-content: flex-end; /* 버튼들을 오른쪽으로 배치 */
+  gap: 7px; /* 버튼 사이 간격 */
 }
 
 .top-buttons span {
-    display: inline-block;
+  display: inline-block;
 }
 
 .middle-buttons {
-    display: flex;
-    align-items: center; /* 수직 가운데 정렬 */
-    gap: 10px; /* 요소 간의 간격 설정 */
-    margin-bottom: 13px; /* 아래쪽 간격 추가 */
+  display: flex;
+  align-items: center; /* 수직 가운데 정렬 */
+  gap: 10px; /* 요소 간의 간격 설정 */
+  margin-bottom: 13px; /* 아래쪽 간격 추가 */
 }
 
 .bottom-buttons {
-    display: flex;
-    justify-content: flex-end; /* 버튼들을 오른쪽으로 배치 */
-    gap: 7px; /* 버튼 사이 간격 */
-    margin-top: 15px; /* 테이블과의 간격 설정 */
+  display: flex;
+  justify-content: flex-end; /* 버튼들을 오른쪽으로 배치 */
+  gap: 7px; /* 버튼 사이 간격 */
+  margin-top: 15px; /* 테이블과의 간격 설정 */
 }
 
 
->>>>>>> 9cc51d92444543c834abe938394fb78a37173187
-  /* 등록 수정 삭제 */
-  .items-subTitle {
-    display: flex;
-    justify-content: flex-end;
+/* 등록 수정 삭제 */
+.items-subTitle {
+  display: flex;
+  justify-content: flex-end;
 }
 .items-subTitle button {
-  background-color: #000;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  cursor: pointer;
-  border-radius: 4px;
-  /*margin-right: 10px; 예시로 오른쪽으로 이동할 크기를 설정합니다 */
+background-color: #000;
+color: #fff;
+border: none;
+padding: 8px 16px;
+cursor: pointer;
+border-radius: 4px;
+/*margin-right: 10px; 예시로 오른쪽으로 이동할 크기를 설정합니다 */
 }
 
 .items-subTitle button:hover {
-  background-color: #333;
+background-color: #333;
 }
 
 
 
-  /* 엑셀, 인쇄버튼 */
-  .excel-print {
-    display: flex;
-    justify-content: flex-end;
-  }
-  .excel-print button {
-    background-color: #C0C0C0;
-    color: #fff;
-    border: none;
-    padding: 5px 20px;
-    cursor: pointer;
-    border-radius: 4px;
-    margin-right: 8px; /* 각 버튼 사이의 간격 설정 */
-  }
+/* 엑셀, 인쇄버튼 */
+.excel-print {
+  display: flex;
+  justify-content: flex-end;
+}
+.excel-print button {
+  background-color: #C0C0C0;
+  color: #fff;
+  border: none;
+  padding: 5px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-right: 8px; /* 각 버튼 사이의 간격 설정 */
+}
 
 
 
-  /* 검색창 */
+/* 검색창 */
 .right input[type="text"] {
-    border: none; /* 검색창 테두리 없애기 */
-    background-color: #f0f0f0; /* 회색 배경 */
-    padding: 5px; /* 패딩 추가 (선택사항) */
-    border-radius: 5px; /* 모서리 둥글게 (선택사항) */
-    width: 300px; /* 가로 길이 설정 */
-    margin-bottom: 20px;
+  border: none; /* 검색창 테두리 없애기 */
+  background-color: #f0f0f0; /* 회색 배경 */
+  padding: 5px; /* 패딩 추가 (선택사항) */
+  border-radius: 5px; /* 모서리 둥글게 (선택사항) */
+  width: 300px; /* 가로 길이 설정 */
+  margin-bottom: 20px;
 }
 
 
@@ -100,29 +97,29 @@
 
 /* 달력 */
 .date-component {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; 
-    margin-bottom: 10px;
-    font-size: 1.7em; 
-  }
-  
-  .date-component label {
-    margin-right: 10px;
-    margin-left: 10px;
-    font-weight: bold;
-    font-size: 1.2em;
-  }
-  
-  .date-separator {
-    font-weight: bold;
-    font-size: 1.5em;
-    margin: 0 10px;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; 
+  margin-bottom: 10px;
+  font-size: 1.7em; 
+}
 
-  .date-component input[type="date"] {
-    font-size: 10px; /* input 요소의 폰트 크기 설정 */
-    padding: 8px; /* input 요소의 내부 여백 설정 */
-    width: 90px; /* input 요소의 너비 설정 */
-  }
+.date-component label {
+  margin-right: 10px;
+  margin-left: 10px;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.date-separator {
+  font-weight: bold;
+  font-size: 1.5em;
+  margin: 0 10px;
+}
+
+.date-component input[type="date"] {
+  font-size: 10px; /* input 요소의 폰트 크기 설정 */
+  padding: 8px; /* input 요소의 내부 여백 설정 */
+  width: 90px; /* input 요소의 너비 설정 */
+}
 
