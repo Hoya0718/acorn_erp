@@ -3,15 +3,13 @@ import ExcelPrint from './ExcelPrint';
 import DangerAlert from './DangerAlert';
 import DeleteModal from './DeleteModal';
 import DateComponent from './DateComponent';
-import Pagination from '../../Customer/modules/PaginationModule';
 import PurchaseList from './PurchaseList';
-import instance from './../../../api/axios';
 import {
   fetchPurchases, handleAddClick, handleUpdateClick, handleDeleteClick, handleSubmitAdd,
   handleSubmitUpdate, handleCheckboxChange, handleSelectAll, handleChangeNewPurchase,
   handleChangeUpdateVendor, handleConfirmDelete, handleCancelForm, handleModalConfirmDelete, handleUpdateClickWrapper,
   handleChangeUpdatePurchase, handleCancelAdd, handleCancelUpdate, handleModalClose, handleDeleteClickWrapper,
-  handleSearch, fetchPageData 
+  handleSearch, fetchPageData
 } from './Functions';
 
 const PurchaseMgmt = () => {
@@ -31,24 +29,9 @@ const PurchaseMgmt = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-    //페이지 네이션 데이터
-    const [filteredData, setFilteredData] = useState(purchases);
-    const [pageData, setPageData] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalItems, setTotalItems] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-
   useEffect(() => {
     fetchPurchases(setPurchases);
   }, []);
-
-  useEffect(() => {
-    fetchPageData(currentPage, rowsPerPage, setFilteredData, setTotalItems); 
-  }, [currentPage, rowsPerPage]);
-
-  useEffect(() => {
-    fetchPageData(currentPage, rowsPerPage, setFilteredData, setTotalItems); 
-  }, [purchases]);
 
   const handleAddClickWrapper = () => {
     handleAddClick(setIsAddClicked, setIsUpdateClicked);
@@ -61,10 +44,6 @@ const PurchaseMgmt = () => {
   const handleDateChange = (start, end) => {
     setStartDate(start);
     setEndDate(end);
-  };
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
   };
 
   const handleCancelForm = () => {
@@ -83,7 +62,7 @@ const PurchaseMgmt = () => {
       </div>
       <hr /><br /><br />
 
-      {showAlert && <DangerAlert onClose={() => setShowAlert(false)} />}    
+      {showAlert && <DangerAlert onClose={() => setShowAlert(false)} />}
 
       <div className="searcher">
         <div className="left">
@@ -94,8 +73,8 @@ const PurchaseMgmt = () => {
           <input type="text" placeholder='🔍 품목명으로 조회' value={searchTerm} onChange={handleSearchChange} />
           <button onClick={handleSearch}>조회 &gt;</button>
         </div>
-      </div>    
-      
+      </div>
+
       <div className='items-subTitle'>
         <span>
           {!isAddClicked && !isUpdateClicked && (
@@ -114,12 +93,9 @@ const PurchaseMgmt = () => {
       </div>
 
       <PurchaseList
-        purchases={filteredData}
-        filteredData={filteredData}
-        setFilteredData={setFilteredData}
+        purchases={purchases}
         selectedPurchases={selectedPurchases}
         selectAll={selectAll}
-        sortBy={sortBy}
         handleCheckboxChange={(purchaseCode) => handleCheckboxChange(purchaseCode, selectedPurchases, setSelectedPurchases)}
         handleSelectAll={() => handleSelectAll(selectAll, purchases, setSelectedPurchases, setSelectAll)}
         handleUpdateClick={handleUpdateClickWrapper}
@@ -134,19 +110,10 @@ const PurchaseMgmt = () => {
         newPurchase={newPurchase}
         updatePurchase={updatePurchase}
         isUpdateClicked={isUpdateClicked}
-        handleUpdateClickWrapper={handleUpdateClickWrapper}
+        sortBy={sortBy}
         searchTerm={searchTerm}
         startDate={startDate}
         endDate={endDate}
-      />
-      <br />
-
-      {/* 페이지네이션 */}
-      <Pagination
-        totalItems={totalItems}
-        itemsPerPage={rowsPerPage}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
       />
 
       <div className="excel-print">

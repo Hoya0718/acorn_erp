@@ -1,15 +1,14 @@
 import axios from '../../../api/axios';
 import DangerAlert from './DangerAlert';
 import { useState, useMemo } from 'react';
-import instance from './../../../api/axios';
 
 export const fetchPurchases = async (setPurchases) => {
   try {
     const response = await axios.get('/purchase/list');
-    setPurchases(response.data);
-    console.log(response.data);
+    const sortedPurchases = sortPurchases(response.data, 'purchaseCode', 'ascending'); // 발주 데이터 정렬
+    setPurchases(sortedPurchases);
   } catch (error) {
-    console.error('Error fetching purchases:', error);
+    console.error('발주 데이터를 가져오는 중 오류 발생:', error);
   }
 };
 
@@ -242,6 +241,7 @@ export const sortPurchases = (purchases, sortBy, sortOrder) => {
   });
 };
 
+
 export const useSortableData = (items, initialSortConfig = { key: null, direction: 'ascending' }) => {
   const [sortConfig, setSortConfig] = useState(initialSortConfig);
 
@@ -264,28 +264,10 @@ export const useSortableData = (items, initialSortConfig = { key: null, directio
     return sortableItems;
   }, [items, sortConfig]);
 
-  const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
+  const requestSort = (key, direction) => {
     setSortConfig({ key, direction });
   };
 
-  return { items: sortedItems, requestSort, sortConfig };
+  return { items: sortedItems, requestSort, sortConfig, setSortConfig }; // setSortConfig 함수를 반환하도록 수정
 };
 
-// 페이지네이션
-export const fetchPageData = async (currentPage, rowsPerPage, setFilteredData, setTotalItems) => {
-  try {
-    const response_pageData = await instance.get(`/purchase/listPage?page=${currentPage - 1}&size=${rowsPerPage}`);
-    const page = response_pageData.data;
-    const formattedPageData = page.content.map(item => ({
-      ...item
-    }));
-    setFilteredData(formattedPageData); // filteredData 업데이트
-    setTotalItems(page.totalElements); // totalItems 업데이트
-  } catch (error) {
-    console.error('페이지 데이터를 가져오는 중 오류 발생:', error);
-  }
-};
