@@ -3,7 +3,8 @@ import VendorList from './VendorList';
 import ExcelPrint from './ExcelPrint';
 import DeleteModal from './DeleteModal';
 import DangerAlert from './DangerAlert';
-import Pagination from '../../Customer/modules/PaginationModule';
+import Pagination from '../../Customer/modules/PaginationModule'; // Pagination 모듈이 필요하다면 임포트
+
 import {
   fetchVendors, handleAddClick, handleUpdateClick, handleDeleteClick, handleSubmitAdd,
   handleSubmitUpdate, handleCheckboxChange, handleSelectAll, handleChangeNewVendor,
@@ -26,33 +27,17 @@ const VendorMgmt = () => {
   const [sortBy, setSortBy] = useState('vendorCode'); //정렬 기준을 상태로 추가, 기본값은 'vendorCode'
   const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 변수
 
-    //페이지 네이션 데이터
-    const [filteredData, setFilteredData] = useState(vendors);
-    const [pageData, setPageData] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalItems, setTotalItems] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+  // 필터된 데이터 상태
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
     fetchVendors(setVendors);
   }, []);
 
-  useEffect(() => {
-    fetchPageData(currentPage, rowsPerPage, setFilteredData, setTotalItems); 
-  }, [currentPage, rowsPerPage]);
-
-  useEffect(() => {
-    fetchPageData(currentPage, rowsPerPage, setFilteredData, setTotalItems); 
-  }, [vendors]);
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  // 검색어 변경 핸들러
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
   };
-
-    // 검색어 변경 핸들러
-    const handleSearchChange = (event) => {
-      setSearchTerm(event.target.value);
-    };
 
   return (
     <div>
@@ -90,10 +75,9 @@ const VendorMgmt = () => {
       </div>
       {/* VendorList 컴포넌트에 필요한 props 모두 전달 */}
       <VendorList
-        vendors={filteredData}
-        filteredData={filteredData}
-        setFilteredData={setFilteredData}
+        vendors={vendors}
         selectedVendors={selectedVendors}
+        setFilteredData={setFilteredData}
         selectAll={selectAll}
         sortBy={sortBy}
         handleCheckboxChange={(vendorCode) => handleCheckboxChange(vendorCode, selectedVendors, setSelectedVendors)}
@@ -113,14 +97,6 @@ const VendorMgmt = () => {
         searchTerm={searchTerm} // 검색어 상태 전달
       />
       <br />
-
-      {/* 페이지네이션 */}
-      <Pagination
-        totalItems={totalItems}
-        itemsPerPage={rowsPerPage}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
 
       {/* 엑셀&인쇄 */}
       <div className="excel-print">
