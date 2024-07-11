@@ -29,7 +29,8 @@ const CustomerStatusTable_Dist = ({ activeLabel, onSort, setColumns, setFilename
                 const data = response_tableData.data;
                 const genderAge = data.genderAge;
                 if (data && Object.keys(data).length > 0) {
-                    //첫행 제목 데이터
+                    
+                    //첫행 제목 데이터  
                     const allCols = new Set();
 
                     let regionData;

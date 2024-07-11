@@ -1,12 +1,8 @@
-// 작성자: 박승희
-// 고객현황 데이터 시각화 "고객분포도" 컴포넌트
-
 import * as React from 'react'
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import "../../Main/Main.css"
 import "../Customer.css"
-import axios from 'axios';
 import instance from '../../../api/axios';
 import { useCustomerStatus } from '../settingModal/CustomerStatusSettingContext';
 // Chart.js 요소 등록
@@ -44,9 +40,7 @@ const Dist = () => {
                     labels: ageChartLabels,
                     datasets: [{
                         data: ageChartValues,
-                        backgroundColor: [
-                            '#FF9F40', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FF6384', '#36A2EB',
-                        ],
+                        backgroundColor: generatePastelColors(ageChartLabels.length),
                     }]
                 };
 
@@ -59,12 +53,9 @@ const Dist = () => {
                     labels: genderChartLabels,
                     datasets: [{
                         data: genderChartValues,
-                        backgroundColor: [
-                            '#FF6384', '#36A2EB',
-                        ],
+                        backgroundColor: generatePastelColors(genderChartLabels.length),
                     }]
                 };
-
 
                 const response_region = await instance.get('/customer/count_region_group');
                 const data_region = response_region.data;
@@ -85,18 +76,7 @@ const Dist = () => {
                 }
                 setRegionChartLabels(labels);
 
-                const generateColors = (numColors) => {
-                    const colors = [];
-                    for (let i = 0; i < numColors; i++) {
-                        const color = `hsl(${Math.floor(Math.random() * 360)}, 100%, 75%)`;
-                        colors.push(color);
-                    }
-                    return colors;
-                };
-                // const regionChartValues = Object.values(data_region);
-
-                const numDataPoints = values.length; // numDataPoints 정의
-                const regionColors = generateColors(numDataPoints);
+                const regionColors = generatePastelColors(values.length);
 
                 setRegionChartData({
                     labels: labels,
@@ -111,9 +91,7 @@ const Dist = () => {
                         labels: labels,
                         datasets: [{
                             data: values,
-                            backgroundColor: [
-                                '#FF6384', '#36A2EB', '#FF9F40', '#FFCE56', '#4BC0C0', '#9966FF',
-                            ],
+                            backgroundColor: generatePastelColors(labels.length),
                         }]
                     }
                 });
@@ -129,7 +107,7 @@ const Dist = () => {
                         charts.push({ data: chartData.ageGroupData, label: '연령별' });
                     }
                     if (checkboxes_dist.region) {
-                        const backgroundColors = generateColors(numDataPoints);
+                        const backgroundColors = generatePastelColors(labels.length);
                         charts.push({
                             data: {
                                 labels: labels,
@@ -153,6 +131,16 @@ const Dist = () => {
     const findMaxLabel = (data) => {
         const maxIndex = data.datasets[0].data.indexOf(Math.max(...data.datasets[0].data));
         return data.labels[maxIndex];
+    };
+
+    const generatePastelColors = (numColors) => {
+        const colors = [];
+        for (let i = 0; i < numColors; i++) {
+            const hue = Math.floor(Math.random() * 360);
+            const pastelColor = `hsl(${hue}, 50%, 75%)`;
+            colors.push(pastelColor);
+        }
+        return colors;
     };
 
     // 두 번째 useEffect: chartData가 업데이트된 후 chartNames 설정
