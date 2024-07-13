@@ -271,18 +271,3 @@ export const useSortableData = (items, initialSortConfig = { key: null, directio
 
   return { items: sortedItems, requestSort, sortConfig };
 };
-
-// 페이지네이션
-export const fetchPageData = async (currentPage, rowsPerPage, setFilteredData, setTotalItems) => {
-  try {
-    const response_pageData = await instance.get(`/vendor/listPage?page=${currentPage - 1}&size=${rowsPerPage}`);
-    const page = response_pageData.data;
-    const formattedPageData = page.content.map(item => ({
-      ...item
-    }));
-    setFilteredData(formattedPageData); // filteredData 업데이트
-    setTotalItems(page.totalElements); // totalItems 업데이트
-  } catch (error) {
-    console.error('페이지 데이터를 가져오는 중 오류 발생:', error);
-  }
-};

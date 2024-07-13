@@ -1,10 +1,13 @@
-import {React, useEffect} from 'react';
+import React, { useState } from 'react';
 import PurchaseForm from './PurchaseForm'; 
 import './Purchase.css';
+import Pagination from 'react-bootstrap/Pagination';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import {
-  handleCheckboxChange, handleSelectAll, handleUpdateClick, handleDeleteClick,
-  handleSubmitAdd, handleSubmitUpdate, handleChangeNewPurchase, handleChangeUpdatePurchase,
-  handleCancelAdd, handleCancelUpdate, handleUpdateClickWrapper, sortVendors, useSortableData
+  handleSubmitAdd, handleCancelAdd, handleChangeNewPurchase,
+  handleSubmitUpdate, handleCancelUpdate, handleChangeUpdatePurchase,
+  handleCheckboxChange, handleSelectAll, useSortableData
 } from './Functions';
 
 const PurchaseList = ({
@@ -14,17 +17,28 @@ const PurchaseList = ({
   setNewPurchase, setSelectedPurchases, setUpdatePurchase, newPurchase, 
   updatePurchase, isUpdateClicked, sortBy, searchTerm, startDate, endDate
 }) => {
+  // useSortableData 훅을 사용하여 purchases 데이터와 정렬 설정을 관리합니다.
+  const { items: sortedPurchases, requestSort, sortConfig, setSortConfig } = useSortableData(purchases, { key: sortBy });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
-  const { items: sortedPurchases, requestSort, sortConfig } = useSortableData(purchases, { key: sortBy });
+  // 페이지네이션을 위한 데이터 계산
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = sortedPurchases.slice(indexOfFirstItem, indexOfLastItem);
 
-  const handleSort = (key) => {
-    const direction = sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
-    requestSort(key, direction);
+  // 페이지 변경 시 호출될 함수
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // 열 클릭 시 정렬 방향 설정
+  const handleColumnClick = (column) => {
+    let direction = 'ascending';
+    if (sortConfig && sortConfig.key === column && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    // setSortConfig 함수를 호출하여 정렬 설정 업데이트
+    setSortConfig({ key: column, direction });
   };
-
-  useEffect(() => {
-    setFilteredData(purchases);
-  }, [purchases]);
 
   return (
     <div>
@@ -38,51 +52,67 @@ const PurchaseList = ({
                 onChange={handleSelectAll}
               />
             </th>
-            <th onClick={() => handleSort('purchaseCode')}>
-              코드 {sortConfig && sortConfig.key === 'purchaseCode' && (
-                sortConfig.direction === 'ascending' ? '▼' : '▲'
-              )}
-            </th>
-            <th onClick={() => handleSort('purchaseName')}>
-              발주 품목명 {sortConfig && sortConfig.key === 'purchaseName' && (
-                sortConfig.direction === 'ascending' ? '▼' : '▲'
-              )}
-            </th>
-            <th onClick={() => handleSort('purchaseUnit')}>
-              발주 단위 {sortConfig && sortConfig.key === 'purchaseUnit' && (
-                sortConfig.direction === 'ascending' ? '▼' : '▲'
-              )}
-            </th>
-            <th onClick={() => handleSort('orderDate')}>
-              발주 일자 {sortConfig && sortConfig.key === 'orderDate' && (
-                sortConfig.direction === 'ascending' ? '▼' : '▲'
-              )}
-            </th>
-            <th onClick={() => handleSort('orderQty')}>
-              발주 수량 {sortConfig && sortConfig.key === 'orderQty' && (
-                sortConfig.direction === 'ascending' ? '▼' : '▲'
-              )}
-            </th>
-            <th onClick={() => handleSort('price')}>
-              가격 {sortConfig && sortConfig.key === 'price' && (
-                sortConfig.direction === 'ascending' ? '▼' : '▲'
-              )}
-            </th>
-            <th onClick={() => handleSort('remark')}>
-              특이사항 {sortConfig && sortConfig.key === 'remark' && (
-                sortConfig.direction === 'ascending' ? '▼' : '▲'
-              )}
-            </th>
+            {/* 각 열에 SortableHeader 컴포넌트를 사용하여 클릭 이벤트와 정렬 설정 전달 */}
+            <SortableHeader
+              label="코드"
+              field="purchaseCode"
+              requestSort={requestSort}
+              sortConfig={sortConfig}
+              handleColumnClick={handleColumnClick}
+            />
+            <SortableHeader
+              label="발주 품목명"
+              field="purchaseName"
+              requestSort={requestSort}
+              sortConfig={sortConfig}
+              handleColumnClick={handleColumnClick}
+            />
+            <SortableHeader
+              label="발주 단위"
+              field="purchaseUnit"
+              requestSort={requestSort}
+              sortConfig={sortConfig}
+              handleColumnClick={handleColumnClick}
+            />
+            <SortableHeader
+              label="발주 일자"
+              field="orderDate"
+              requestSort={requestSort}
+              sortConfig={sortConfig}
+              handleColumnClick={handleColumnClick}
+            />
+            <SortableHeader
+              label="발주 수량"
+              field="orderQty"
+              requestSort={requestSort}
+              sortConfig={sortConfig}
+              handleColumnClick={handleColumnClick}
+            />
+            <SortableHeader
+              label="가격"
+              field="price"
+              requestSort={requestSort}
+              sortConfig={sortConfig}
+              handleColumnClick={handleColumnClick}
+            />
+            <SortableHeader
+              label="특이사항"
+              field="remark"
+              requestSort={requestSort}
+              sortConfig={sortConfig}
+              handleColumnClick={handleColumnClick}
+            />
           </tr>
         </thead>
         <tbody>
+          {/* 추가 및 수정 폼 */}
           {isAddClicked && (
             <PurchaseForm
               handleSubmit={(e) => handleSubmitAdd(e, newPurchase, purchases, setPurchases, setIsAddClicked, setNewPurchase, setSelectedPurchases)}
               handleCancel={() => handleCancelAdd(setIsAddClicked, setNewPurchase)}
-              purchaseData={newPurchase} 
-              handleChange={(field, value) => handleChangeNewPurchase(field, value, newPurchase, setNewPurchase)} 
-              isNewPurchase={true} 
+              purchaseData={newPurchase}
+              handleChange={(field, value) => handleChangeNewPurchase(field, value, newPurchase, setNewPurchase)}
+              isNewPurchase={true}
               showCancel={true} // 추가 상태일 때 취소 버튼 표시
             />
           )}
@@ -90,13 +120,14 @@ const PurchaseList = ({
             <PurchaseForm
               handleSubmit={(e) => handleSubmitUpdate(e, updatePurchase, purchases, setPurchases, setIsUpdateClicked, setUpdatePurchase)}
               handleCancel={() => handleCancelUpdate(setIsUpdateClicked, setUpdatePurchase)}
-              purchaseData={updatePurchase} 
-              handleChange={(field, value) => handleChangeUpdatePurchase(field, value, updatePurchase, setUpdatePurchase)} 
-              isNewPurchase={false} 
+              purchaseData={updatePurchase}
+              handleChange={(field, value) => handleChangeUpdatePurchase(field, value, updatePurchase, setUpdatePurchase)}
+              isNewPurchase={false}
               showCancel={true} // 수정 상태일 때 취소 버튼 표시
             />
           )}
-         {sortedPurchases
+          {/* 현재 페이지의 데이터 표시 */}
+          {currentItems
             .filter((purchase) => {
               const orderDate = new Date(purchase.orderDate);
               return (
@@ -107,7 +138,6 @@ const PurchaseList = ({
               );
             })
             .map((purchase) => (
-              // updatePurchase가 존재하고 purchase.purchaseCode와 updatePurchase.purchaseCode가 같은 경우 해당 행은 숨깁니다.
               !(isUpdateClicked && updatePurchase && purchase.purchaseCode === updatePurchase.purchaseCode) && (
                 <tr key={purchase.purchaseCode}>
                   <td>
@@ -128,8 +158,37 @@ const PurchaseList = ({
               )
             ))}
         </tbody>
-      </table>
+      </table><br/>
+      
+      <div className="d-flex justify-content-center">
+        <Pagination>
+          <Pagination.Prev onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} />
+          <Pagination.Item onClick={() => paginate(1)} active={currentPage === 1}>{1}</Pagination.Item>
+          {currentPage > 3 && <Pagination.Ellipsis />}
+          {currentPage > 2 && <Pagination.Item onClick={() => paginate(currentPage - 1)}>{currentPage - 1}</Pagination.Item>}
+          {currentPage !== 1 && currentPage !== Math.ceil(sortedPurchases.length / itemsPerPage) && <Pagination.Item active>{currentPage}</Pagination.Item>}
+          {currentPage < Math.ceil(sortedPurchases.length / itemsPerPage) - 1 && <Pagination.Item onClick={() => paginate(currentPage + 1)}>{currentPage + 1}</Pagination.Item>}
+          {currentPage < Math.ceil(sortedPurchases.length / itemsPerPage) - 2 && <Pagination.Ellipsis />}
+          <Pagination.Item onClick={() => paginate(Math.ceil(sortedPurchases.length / itemsPerPage))} active={currentPage === Math.ceil(sortedPurchases.length / itemsPerPage)}>{Math.ceil(sortedPurchases.length / itemsPerPage)}</Pagination.Item>
+          <Pagination.Next onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(sortedPurchases.length / itemsPerPage)} />
+        </Pagination>
+      </div>
     </div>
+  );
+};
+
+// 정렬 가능한 헤더 컴포넌트
+const SortableHeader = ({ label, field, requestSort, sortConfig, handleColumnClick }) => {
+  const handleClick = () => {
+    handleColumnClick(field); 
+  };
+
+  return (
+    <th onClick={handleClick}>
+      {label} {sortConfig && sortConfig.key === field && (
+        sortConfig.direction === 'ascending' ? '▲' : '▼'
+      )}
+    </th>
   );
 };
 
