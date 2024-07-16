@@ -34,7 +34,7 @@ const BoardComment = ({ postId, onAddComment }) => {
 
   return (
     <div className="comment-form">
-      <form onSubmit={handleSubmitComment}>
+      <form onSubmit={handleSubmitComment} className="form-container">
         <textarea
           placeholder="댓글을 입력하세요."
           name="content"

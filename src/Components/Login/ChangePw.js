@@ -35,7 +35,7 @@ const ChangePw = () => {
                 navigate('/'); // 성공적으로 비밀번호가 재설정되면 루트 경로로 리디렉션
             }
         } catch (err) {
-            console.error("재설정 실패: ", err + registrationNum);
+            console.error("재설정 실패: ", err);
         }
     };
 

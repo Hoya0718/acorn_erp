@@ -1,43 +1,39 @@
-
 .comment-form {
-    margin-bottom: 20px;
-    padding: 20px;
-    border-radius: 4px;
-  }
-  
-  .comment-form form {
-    display: flex;
-    flex-direction: column;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  
-  .comment-form input[type="text"],
-  .comment-form textarea {
-    margin-bottom: 10px;
-    padding: 8px;
-    font-size: 13px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .comment-form textarea {
-    resize: vertical; /* 세로로만 resize 가능 */
-  }
-  
-  .comment-form button {
-    width: 100px;
-    padding: 8px 10px;
-    font-size: 13px;
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-left: 87%;
-  }
-  
-  .comment-form button:hover {
-    background-color: #5a6268;
-  }
-  
+  border-radius: 4px;
+  padding: 10px; /* 여백 추가 */
+}
+
+.comment-form .form-container {
+  display: flex;
+  align-items: flex-start; /* 세로 정렬 */
+}
+
+.comment-form textarea {
+  flex: 9.5; /* textarea가 90% 너비를 차지하게 설정 */
+  margin: 0; /* margin 제거 */
+  padding: 8px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical; /* 세로로만 resize 가능 */
+}
+
+.comment-form button {
+  flex: 0.5; /* 버튼이 10% 너비를 차지하게 설정 */
+  padding: 21px 10px;
+  font-size: 13px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px; /* textarea와 버튼 사이에 간격 추가 */
+}
+
+.comment-form button:hover {
+  background-color: #5a6268;
+}
+
+.comment-list {
+  margin-top: 20px; /* 댓글 목록과 폼 사이에 여백 추가 */
+}

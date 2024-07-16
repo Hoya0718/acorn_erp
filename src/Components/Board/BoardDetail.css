@@ -1,70 +1,60 @@
-.board-detail-container {
-    width: 60%;
-    padding: 20px;
-    background-color: #eaf1f7;
-    margin: auto;
-    border-radius: 10px;
-  }
-  
-  .board-header {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .board-divider {
-    width: 100%;
-  }
-  
-  .board-detail-content {
-    margin-bottom: 10px;
-  }
-  
-  .board-detail-content h3 {
-    margin-bottom: 10px;
-  }
-  
-  .meta-info {
-    font-size: 14px;
-    color: #777;
-    text-align: right;
-  }
-  
-  .meta-info p {
-    margin: 5px 0;
-  }
-  
-  .comment-section {
-    margin-bottom: 20px;
-  }
-  
-  .comment-list {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .comment-item {
-    border-bottom: 1px solid #ccc;
-    padding: 10px 0;
-  }
-  
-  .button-group {
-    text-align: right;
-    margin-top: 20px;
-  }
-  
-  .btn-secondary {
-    margin-right: 15px;
-    font-size: 15px;
-    padding: 5px 15px;
-  }
-  
-  .icon {
-    margin-left: 87%;
-  }
+.board-detail-container{
+  height:100%;
+}
 
-  @media (max-width: 768px) {
-    .board-detail-content p {
-      font-size: 12px;
-    }
+.board-header{
+  height: 5%;
+}
+
+.board-detail-content {
+  margin-bottom: 10px;
+  height:95%;
+}
+
+.header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #777;
+}
+
+.meta-info {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #777;
+}
+
+.meta-info span {
+  margin-left: 10px;
+}
+
+.icon {
+  margin-left: 10px;
+}
+
+@media (max-width: 768px) {
+  .board-detail-content p {
+    font-size: 12px;
   }
-  
+}
+
+.board-divider {
+  margin-bottom: 5px !important;
+}
+
+.main-board{
+  height: 60%;
+}
+
+.comment-form{
+  height:10%;
+  width:100%;
+}
+
+.comment-section{
+
+  margin-top: 25px;
+  height:auto;
+}

@@ -55,46 +55,47 @@ const BoardDetail = () => {
   return (
     <div className="board-detail-container">
       <div className="board-header">
-        <h2>상세 페이지</h2>
+        <h2>{post.title}</h2>
       </div>
       <hr className="board-divider" />
 
       <div className="board-detail-content">
-        <h3>{post.title} </h3><span>작성자:</span>{post.author}
-        <span className='icon'><ImEye size={18}/> {post.views}&nbsp;&nbsp;&nbsp;
-        <BiComment size={18}/> {post.comments}</span>
-        <br/><br/><br/><p>{post.content}</p><br/><br/><br/>
-        <div className="meta-info">  
-          <p><span>작성일:</span> {post.postDate}</p>
-          <p><span>수정일:</span> {post.lastModifiedDate}</p>
+        <div className="header-info">
+          <span style={{ fontSize: "14px" }}>작성자: {post.userId}</span>
+          <div className="meta-info">
+            <span>작성일: {post.postDate} | 수정일: {post.lastModifiedDate}</span>
+            <span className='icon'>
+              <ImEye size={18} /> {post.views}&nbsp;&nbsp;&nbsp;
+              <BiComment size={18} /> {post.comments}
+            </span>
+          </div>
         </div>
-      </div>
-      <hr />
+        <hr className="board-divider" />
+        <br />
+        <div className="main-board">
+        <p>{post.content}</p>
+        </div>
+        <br />
 
-      <div className="button-group">
-        <Link to="/layout/board" className="btn btn-secondary">
-          메인
-        </Link>
-      </div>
+        <BoardComment postId={id} onAddComment={handleAddComment} />
 
-      <BoardComment postId={id} onAddComment={handleAddComment} />
-
-      <div className="comment-section">
-        <hr className="board-divider"/>
-        {comments[id] && comments[id].length > 0 ? (
-          <ul className="comment-list">
-            {comments[id].map((comment) => (
-              <li key={comment.id} className="comment-item">
-                <p>작성자: {comment.author}</p>
-                <p>{comment.content}</p>
-                <p>작성일: {comment.date}</p>
-                <button onClick={() => handleDeleteComment(comment.id)}>삭제</button>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>등록된 댓글이 없습니다.</p>
-        )}
+        <div className="comment-section">
+          <hr className="board-divider" />
+          {comments[id] && comments[id].length > 0 ? (
+            <ul className="comment-list">
+              {comments[id].map((comment) => (
+                <li key={comment.id} className="comment-item">
+                  <p>작성자: {comment.author}</p>
+                  <p>{comment.content}</p>
+                  <p>작성일: {comment.date}</p>
+                  <button onClick={() => handleDeleteComment(comment.id)}>삭제</button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>등록된 댓글이 없습니다.</p>
+          )}
+        </div>
       </div>
     </div>
   );
